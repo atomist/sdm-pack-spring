@@ -19,8 +19,8 @@ import {
     atLeastOne,
     zeroOrMore,
 } from "@atomist/microgrammar/Rep";
-import { ELEMENT_NAME, XmlTag } from "../commands/editor/support/xml/xmlGrammars";
-import { VersionedArtifact } from "./VersionedArtifact";
+import { VersionedArtifact } from "../../VersionedArtifact";
+import { ELEMENT_NAME, XmlTag } from "./xmlGrammars";
 
 export const ElementContent = /^[a-zA-Z_.0-9\-]+/;
 

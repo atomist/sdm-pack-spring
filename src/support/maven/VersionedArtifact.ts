@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
+// JESS: MOVED from sdm to sdm-pack-spring
+
 export interface IdentifiedArtifact {
 
     group: string;
 
     artifact: string;
+
+    description?: string;
+
 }
 
 /**
@@ -27,4 +32,5 @@ export interface IdentifiedArtifact {
 export interface VersionedArtifact extends IdentifiedArtifact {
 
     version: string;
+
 }
