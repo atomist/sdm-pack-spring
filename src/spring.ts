@@ -22,11 +22,11 @@ import { listLocalDeploys } from "./support/maven/deploy/listLocalDeploys";
 import { ManagedDeploymentTargeter } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
 import { tagRepo } from "@atomist/sdm/util/github/tagRepo";
 import { TryToUpgradeSpringBootVersion } from "./support/spring/editor/tryToUpgradeSpringBootVersion";
-import { springBootGenerator } from "./generators/springBootGenerator";
 import { IsMaven } from "./support/maven/pushTests";
 import { springBootTagger } from "./support/spring/springTagger";
 import { mavenSourceDeployer } from "./support/spring/localSpringBootDeployers";
 import { CommonJavaGeneratorConfig } from "./support/java/generatorConfig";
+import { springBootGenerator } from "./support/spring/generate/springBootGenerator";
 
 // moved from sample-sdm
 

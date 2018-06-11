@@ -5,6 +5,7 @@ const CommonGeneratorConfig = {
 };
 
 /**
+ * A partially populated JavaGeneratorConfig.
  * Customize to change Java generator behavior everywhere
  * @type {{groupId: string}}
  */
