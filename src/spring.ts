@@ -18,15 +18,17 @@ import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitH
 import { ExtensionPack, LocalDeploymentGoal } from "@atomist/sdm";
 import * as deploy from "@atomist/sdm/dsl/deployDsl";
 import { LocalEndpointGoal, LocalUndeploymentGoal } from "@atomist/sdm/goal/common/commonGoals";
-import { listLocalDeploys } from "@atomist/sdm/handlers/commands/listLocalDeploys";
+import { listLocalDeploys } from "./support/maven/listLocalDeploys";
 import { ManagedDeploymentTargeter } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
-import { IsMaven } from "@atomist/sdm/mapping/pushtest/jvm/jvmPushTests";
 import { tagRepo } from "@atomist/sdm/util/github/tagRepo";
-import { springBootTagger } from "@atomist/spring-automation/commands/tag/springTagger";
-import { mavenSourceDeployer } from "../../deploy/localSpringBootDeployers";
-import { CommonJavaGeneratorConfig } from "../../machines/generatorConfig";
 import { TryToUpgradeSpringBootVersion } from "./editors/tryToUpgradeSpringBootVersion";
 import { springBootGenerator } from "./generators/springBootGenerator";
+import { IsMaven } from "./support/maven/pushTests";
+import { springBootTagger } from "./support/spring/springTagger";
+import { mavenSourceDeployer } from "./support/spring/localSpringBootDeployers";
+import { CommonJavaGeneratorConfig } from "./support/java/generatorConfig";
+
+// moved from sample-sdm
 
 export const SpringSupport: ExtensionPack = {
     name: "Spring support",

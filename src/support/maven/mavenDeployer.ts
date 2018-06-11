@@ -38,6 +38,8 @@ import {
     ManagedDeploymentTargetInfo,
 } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
 
+// moved from sample-sdm
+
 /**
  * Managed deployments
  */
