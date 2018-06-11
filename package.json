@@ -1,0 +1,71 @@
+{
+  "name": "@atomist/sdm-pack-spring",
+  "version": "0.1.0",
+  "description": "Spring development automation for your Software Delivery Machine",
+  "author": "Jessica Kerr",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/atomist/sdm-pack-spring#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomist/sdm-pack-spring.git"
+  },
+  "keywords": [
+    "atomist",
+    "automation",
+    "sdm",
+    "extension",
+    "pack",
+    "sonarqube"
+  ],
+  "bugs": {
+    "url": "https://github.com/atomist/sdm-pack-spring/issues"
+  },
+  "dependencies": {
+    "@atomist/automation-client": "0.17.2-20180605032022",
+    "@atomist/sdm": "https://r.atomist.com/SJ7x_U8xBem"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.109",
+    "@types/mocha": "^2.2.48",
+    "@types/node": "^9.4.1",
+    "@types/power-assert": "^1.4.29",
+    "espower-typescript": "^8.1.3",
+    "mocha": "^4.1.0",
+    "npm-run-all": "^4.1.2",
+    "power-assert": "^1.4.4",
+    "rimraf": "^2.6.2",
+    "supervisor": "^0.12.0",
+    "ts-node": "^3.3.0",
+    "tslint": "^5.9.1",
+    "typedoc": "^0.11.1",
+    "typescript": "^2.9.1",
+    "typescript-formatter": "^7.2.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "npm-run-all lint compile test",
+    "clean": "npm-run-all clean:js clean:build",
+    "clean:benchmark": "rimraf isolate-*-v8.log",
+    "clean:build": "rimraf *-v8.log profile.txt build",
+    "clean:dist": "npm-run-all clean clean:npm",
+    "clean:js": "rimraf \"{src,test}/**/*.js\"",
+    "clean:npm": "rimraf node_modules",
+    "compile": "npm-run-all compile:ts",
+    "compile:ts": "tsc --project .",
+    "fmt": "tsfmt --replace",
+    "lint": "tslint --format verbose --project . --exclude \"{build,node_modules}/**\" \"**/*.ts\"",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "mocha --require espower-typescript/guess --exit \"test/**/*.ts\"",
+    "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.ts}\"",
+    "typedoc": "typedoc --mode modules --excludeExternals --out build/typedoc src",
+    "watch:compile": "tsc --project . --watch",
+    "watch": "supervisor --watch build --quiet --exec npm -- run start"
+  },
+  "main": "dist/index.js",
+  "engines": {
+    "node": "9.x.x",
+    "npm": "6.x.x"
+  }
+}
