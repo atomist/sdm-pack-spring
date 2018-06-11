@@ -18,10 +18,10 @@ import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitH
 import { ExtensionPack, LocalDeploymentGoal } from "@atomist/sdm";
 import * as deploy from "@atomist/sdm/dsl/deployDsl";
 import { LocalEndpointGoal, LocalUndeploymentGoal } from "@atomist/sdm/goal/common/commonGoals";
-import { listLocalDeploys } from "./support/maven/listLocalDeploys";
+import { listLocalDeploys } from "./support/maven/deploy/listLocalDeploys";
 import { ManagedDeploymentTargeter } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
 import { tagRepo } from "@atomist/sdm/util/github/tagRepo";
-import { TryToUpgradeSpringBootVersion } from "./editors/tryToUpgradeSpringBootVersion";
+import { TryToUpgradeSpringBootVersion } from "./support/spring/editor/tryToUpgradeSpringBootVersion";
 import { springBootGenerator } from "./generators/springBootGenerator";
 import { IsMaven } from "./support/maven/pushTests";
 import { springBootTagger } from "./support/spring/springTagger";
