@@ -16,8 +16,8 @@
 
 import { MatchingLogic } from "@atomist/microgrammar/Matchers";
 import { PatternMatch } from "@atomist/microgrammar/PatternMatch";
-import { VersionedArtifactMatch } from "./VersionedArtifactMatch";
 import { PathAwareXmlMatchingMachine } from "./PathAwareXmlMatchingMachine";
+import { VersionedArtifactMatch } from "./VersionedArtifactMatch";
 import { XML_TAG_WITH_SIMPLE_VALUE, XmlTag } from "./xmlGrammars";
 
 // JESS: Moved from spring-automation
@@ -26,7 +26,7 @@ import { XML_TAG_WITH_SIMPLE_VALUE, XmlTag } from "./xmlGrammars";
  * avoid dependency management section.
  */
 export class DependencyFinder extends PathAwareXmlMatchingMachine {
-UI
+public UI;
     public dependencies: VersionedArtifactMatch[] = [];
     public offset: number;
 

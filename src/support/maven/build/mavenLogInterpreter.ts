@@ -17,8 +17,8 @@
 import { logger } from "@atomist/automation-client";
 import { Microgrammar } from "@atomist/microgrammar/Microgrammar";
 import { Float, Integer } from "@atomist/microgrammar/Primitives";
-import { InterpretLog } from "@atomist/sdm/spi/log/InterpretedLog";
 import { BuildInfo, TestStatus } from "@atomist/sdm/internal/delivery/build/BuildInfo";
+import { InterpretLog } from "@atomist/sdm/spi/log/InterpretedLog";
 
 // JESS: MOVED from sdm to sdm-pack-spring
 

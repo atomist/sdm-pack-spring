@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-import { predicatePushTest, pushTest, PushTest } from "@atomist/sdm";
-import { fileExists } from "@atomist/automation-client/project/util/projectUtils";
-import { anyFileChangedWithExtension, filesChangedSince } from "@atomist/sdm/util/git/filesChangedSince";
 import { logger } from "@atomist/automation-client";
+import { fileExists } from "@atomist/automation-client/project/util/projectUtils";
+import { predicatePushTest, pushTest, PushTest } from "@atomist/sdm";
+import { anyFileChangedWithExtension, filesChangedSince } from "@atomist/sdm/util/git/filesChangedSince";
 import * as _ from "lodash";
 
 export const IsJava = predicatePushTest(
     "Is Java",
     async p =>
         fileExists(p, "**/*.java", () => true));
-
 
 const FileToWatch = ["java", "html", "json", "yml", "xml", "sh", "kt", "properties"];
 

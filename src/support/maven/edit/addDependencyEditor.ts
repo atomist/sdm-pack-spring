@@ -17,8 +17,8 @@
 import { SimpleProjectEditor } from "@atomist/automation-client/operations/edit/projectEditor";
 
 import * as _ from "lodash";
-import { VersionedArtifact } from "../VersionedArtifact";
 import { DependencyFinder } from "../parse/grammar/DependencyFinder";
+import { VersionedArtifact } from "../VersionedArtifact";
 
 // JESS: Moved to sdm-pack-spring from spring-automation
 

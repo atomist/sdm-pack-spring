@@ -17,16 +17,19 @@
 import { logger } from "@atomist/automation-client";
 import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
 import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
-import { spawn } from "child_process";
 import { lastLinesLogInterpreter } from "@atomist/sdm/api-helper/log/logInterpreters";
+// should local deployment be its own pack? we could pull it out of sdm then
+import { DefaultLocalDeployerOptions,
+    LocalDeployerOptions,
+    SpawnedDeployment,
+    StartupInfo } from "@atomist/sdm/internal/delivery/deploy/local/LocalDeployerOptions";
+import { LookupStrategy, ManagedDeployments, ManagedDeploymentTargetInfo } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
 import {DelimitedWriteProgressLogDecorator} from "@atomist/sdm/log/DelimitedWriteProgressLogDecorator";
 import { DeployableArtifact } from "@atomist/sdm/spi/artifact/ArtifactStore";
 import { Deployer } from "@atomist/sdm/spi/deploy/Deployer";
 import { Deployment } from "@atomist/sdm/spi/deploy/Deployment";
 import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
-// should local deployment be its own pack? we could pull it out of sdm then
-import { DefaultLocalDeployerOptions, LocalDeployerOptions, SpawnedDeployment, StartupInfo } from "@atomist/sdm/internal/delivery/deploy/local/LocalDeployerOptions";
-import { LookupStrategy, ManagedDeployments, ManagedDeploymentTargetInfo } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
+import { spawn } from "child_process";
 
 /**
  * Managed deployments
@@ -52,6 +55,8 @@ export function executableJarDeployer(opts: LocalDeployerOptions): Deployer<Mana
 
 class ExecutableJarDeployer implements Deployer<ManagedDeploymentTargetInfo, Deployment> {
 
+    public logInterpreter = lastLinesLogInterpreter("Executable jar deployment");
+
     constructor(public opts: LocalDeployerOptions) {
     }
 
@@ -64,22 +69,6 @@ class ExecutableJarDeployer implements Deployer<ManagedDeploymentTargetInfo, Dep
 
     public async undeploy(id: ManagedDeploymentTargetInfo, deployment: Deployment, log: ProgressLog): Promise<any> {
         return managedExecutableJarDeployments.terminateIfRunning(id.managedDeploymentKey, LookupStrategy.service);
-    }
-
-    private deploymentFor(ti: ManagedDeploymentTargetInfo): Deployment {
-        const managed = managedExecutableJarDeployments.findDeployment(ti.managedDeploymentKey, LookupStrategy.service);
-        if (!managed) {
-            return undefined;
-        }
-        const port = managed.port;
-        const baseUrl = this.opts.baseUrl;
-        return {
-            endpoint: `${baseUrl}:${port}/${this.contextRoot(ti.managedDeploymentKey)}`,
-        };
-    }
-
-    private contextRoot(id: RemoteRepoRef) {
-        return `/${id.owner}/${id.repo}/staging`;
     }
 
     public async deploy(da: DeployableArtifact,
@@ -135,5 +124,20 @@ class ExecutableJarDeployer implements Deployer<ManagedDeploymentTargetInfo, Dep
         })];
     }
 
-    public logInterpreter = lastLinesLogInterpreter("Executable jar deployment");
+    private contextRoot(id: RemoteRepoRef) {
+        return `/${id.owner}/${id.repo}/staging`;
+    }
+
+    private deploymentFor(ti: ManagedDeploymentTargetInfo): Deployment {
+        const managed = managedExecutableJarDeployments.findDeployment(ti.managedDeploymentKey, LookupStrategy.service);
+        if (!managed) {
+            return undefined;
+        }
+        const port = managed.port;
+        const baseUrl = this.opts.baseUrl;
+        return {
+            endpoint: `${baseUrl}:${port}/${this.contextRoot(ti.managedDeploymentKey)}`,
+        };
+    }
+
 }

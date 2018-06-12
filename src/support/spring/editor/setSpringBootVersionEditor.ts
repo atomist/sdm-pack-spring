@@ -19,8 +19,8 @@ import {
     SimpleProjectEditor,
 } from "@atomist/automation-client/operations/edit/projectEditor";
 import { doWithMatches } from "@atomist/automation-client/project/util/parseUtils";
-import { SpringBootStarter } from "../springConstants";
 import { parentStanzaOfGrammar } from "../../maven/parse/grammar/mavenGrammars";
+import { SpringBootStarter } from "../springConstants";
 
 // JESS: MOVED from spring-automation
 

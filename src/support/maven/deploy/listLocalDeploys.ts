@@ -19,8 +19,8 @@ import { commandHandlerFrom, OnCommand } from "@atomist/automation-client/onComm
 import { Maker } from "@atomist/automation-client/util/constructionUtils";
 import { EmptyParameters } from "@atomist/sdm/api/command/support/EmptyParameters";
 import { DeployedApp, ManagedDeployments } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
-import { managedMavenDeployments } from "./mavenDeployer";
 import { managedExecutableJarDeployments } from "../../java/deploy/executableJarDeployer";
+import { managedMavenDeployments } from "./mavenDeployer";
 
 /**
  * Return a command handler that can list local deploys

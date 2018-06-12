@@ -15,9 +15,9 @@
  */
 
 import { Fingerprint } from "@atomist/automation-client/project/fingerprint/Fingerprint";
+import { FingerprinterRegistration, PushImpactListenerInvocation } from "@atomist/sdm";
 import { dependenciesFingerprintsFromParsedPom } from "./dependenciesFingerprintsFromParsedPom";
 import { extractEffectivePom } from "./effectivePomExtractor";
-import { FingerprinterRegistration, PushImpactListenerInvocation } from "@atomist/sdm";
 
 // JESS: MOVED from sdm to sdm-pack-spring
 

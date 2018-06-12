@@ -16,8 +16,8 @@
 
 import { logger } from "@atomist/automation-client";
 import { Project } from "@atomist/automation-client/project/Project";
-import { SpringBootProjectStructure } from "./SpringBootProjectStructure";
 import { renameClass } from "../../java/javaProjectUtils";
+import { SpringBootProjectStructure } from "./SpringBootProjectStructure";
 
 // JESS: MOVED from spring-automation to sdm-pack-spring
 

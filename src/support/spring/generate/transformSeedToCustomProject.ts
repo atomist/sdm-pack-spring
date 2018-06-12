@@ -18,10 +18,10 @@ import { AnyProjectEditor } from "@atomist/automation-client/operations/edit/pro
 import { chainEditors } from "@atomist/automation-client/operations/edit/projectEditorOps";
 import { cleanReadMe } from "@atomist/automation-client/operations/generate/UniversalSeed";
 import { curry } from "@typed/curry";
-import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
-import { updatePom } from "../../maven/generate/updatePom";
 import { inferStructureAndMovePackage } from "../../java/javaProjectUtils";
+import { updatePom } from "../../maven/generate/updatePom";
 import { inferSpringStructureAndRename } from "./springBootUtils";
+import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 
 // JESS: MOVED from sample-sdm to sdm-pack-spring
 
@@ -36,4 +36,3 @@ export function transformSeedToCustomProject(params: SpringProjectCreationParame
         curry(inferSpringStructureAndRename)(params.serviceClassName),
     );
 }
-

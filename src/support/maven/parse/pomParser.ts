@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { ProjectIdentifier } from "@atomist/sdm/internal/delivery/build/local/projectIdentifier";
 import { promisify } from "util";
 import * as xml2js from "xml2js";
 import { VersionedArtifact } from "../VersionedArtifact";
-import { ProjectIdentifier } from "@atomist/sdm/internal/delivery/build/local/projectIdentifier";
 
 // JESS: MOVED from sdm to sdm-pack-spring
 

@@ -17,15 +17,15 @@
 import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
 import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
 import { AddressChannels } from "@atomist/sdm/api/context/addressChannels";
+import { LocalBuilder, LocalBuildInProgress } from "@atomist/sdm/internal/delivery/build/local/LocalBuilder";
 import { ArtifactStore } from "@atomist/sdm/spi/artifact/ArtifactStore";
 import { AppInfo } from "@atomist/sdm/spi/deploy/Deployment";
 import { InterpretLog, LogInterpretation } from "@atomist/sdm/spi/log/InterpretedLog";
 import { ProgressLog, ProgressLogFactory } from "@atomist/sdm/spi/log/ProgressLog";
 import { ProjectLoader } from "@atomist/sdm/spi/project/ProjectLoader";
 import { asSpawnCommand, ChildProcessResult, spawnAndWatch } from "@atomist/sdm/util/misc/spawned";
-import { LocalBuilder, LocalBuildInProgress } from "@atomist/sdm/internal/delivery/build/local/LocalBuilder";
-import { MavenLogInterpreter } from "./mavenLogInterpreter";
 import { identification } from "../parse/pomParser";
+import { MavenLogInterpreter } from "./mavenLogInterpreter";
 
 // JESS: MOVED from sdm to sdm-pack-spring
 
@@ -38,6 +38,8 @@ import { identification } from "../parse/pomParser";
  * artifacts.
  */
 export class MavenBuilder extends LocalBuilder implements LogInterpretation {
+
+    public logInterpreter: InterpretLog = MavenLogInterpreter;
 
     constructor(artifactStore: ArtifactStore,
                 logFactory: ProgressLogFactory,
@@ -73,22 +75,19 @@ export class MavenBuilder extends LocalBuilder implements LogInterpretation {
             return rb;
         });
     }
-
-    public logInterpreter: InterpretLog = MavenLogInterpreter;
-
 }
 
 class UpdatingBuild implements LocalBuildInProgress {
+
+    public ai: AppInfo;
+
+    public deploymentUnitFile: string;
 
     constructor(public repoRef: RemoteRepoRef,
                 public buildResult: Promise<ChildProcessResult>,
                 public team: string,
                 public url: string) {
     }
-
-    public ai: AppInfo;
-
-    public deploymentUnitFile: string;
 
     get appInfo(): AppInfo {
         return this.ai;

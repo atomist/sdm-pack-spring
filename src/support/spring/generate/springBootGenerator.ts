@@ -20,9 +20,9 @@ import * as utils from "@atomist/automation-client/project/util/projectUtils";
 
 import { SimpleProjectEditor } from "@atomist/automation-client/operations/edit/projectEditor";
 import { GeneratorRegistration } from "@atomist/sdm";
-import { transformSeedToCustomProject } from "./transformSeedToCustomProject";
 import { JavaGeneratorConfig } from "../../java/generate/JavaGeneratorConfig";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
+import { transformSeedToCustomProject } from "./transformSeedToCustomProject";
 
 // JESS: MOVED from sample-sdm to sdm-pack-spring
 

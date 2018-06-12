@@ -18,15 +18,7 @@ import { logger, Success } from "@atomist/automation-client";
 import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
 import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
 import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
-import { spawn } from "child_process";
 import { ExecuteGoalResult } from "@atomist/sdm/api/goal/ExecuteGoalResult";
-import { DelimitedWriteProgressLogDecorator } from "@atomist/sdm/log/DelimitedWriteProgressLogDecorator";
-import { DeployableArtifact } from "@atomist/sdm/spi/artifact/ArtifactStore";
-import { Deployer } from "@atomist/sdm/spi/deploy/Deployer";
-import { Deployment } from "@atomist/sdm/spi/deploy/Deployment";
-import { InterpretedLog, InterpretLog } from "@atomist/sdm/spi/log/InterpretedLog";
-import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
-import { ProjectLoader } from "@atomist/sdm/spi/project/ProjectLoader";
 import {
     DefaultLocalDeployerOptions,
     LocalDeployerOptions,
@@ -37,6 +29,14 @@ import {
     ManagedDeployments,
     ManagedDeploymentTargetInfo,
 } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
+import { DelimitedWriteProgressLogDecorator } from "@atomist/sdm/log/DelimitedWriteProgressLogDecorator";
+import { DeployableArtifact } from "@atomist/sdm/spi/artifact/ArtifactStore";
+import { Deployer } from "@atomist/sdm/spi/deploy/Deployer";
+import { Deployment } from "@atomist/sdm/spi/deploy/Deployment";
+import { InterpretedLog, InterpretLog } from "@atomist/sdm/spi/log/InterpretedLog";
+import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
+import { ProjectLoader } from "@atomist/sdm/spi/project/ProjectLoader";
+import { spawn } from "child_process";
 
 // moved from sample-sdm
 
@@ -96,6 +96,10 @@ class MavenSourceDeployer implements Deployer<ManagedDeploymentTargetInfo> {
         return Success;
     }
 
+    public logInterpreter(log: string): InterpretedLog | undefined {
+        return springBootRunLogInterpreter(log) || shortLogInterpreter(log);
+    }
+
     private async deployProject(ti: ManagedDeploymentTargetInfo,
                                 log: ProgressLog,
                                 project: LocalProject,
@@ -144,10 +148,6 @@ class MavenSourceDeployer implements Deployer<ManagedDeploymentTargetInfo> {
             });
             childProcess.addListener("error", reject);
         });
-    }
-
-    public logInterpreter(log: string): InterpretedLog | undefined {
-        return springBootRunLogInterpreter(log) || shortLogInterpreter(log);
     }
 
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 // this could be in SDM
 const CommonGeneratorConfig = {
     addAtomistWebhook: true,
