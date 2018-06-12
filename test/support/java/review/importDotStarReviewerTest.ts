@@ -18,12 +18,9 @@ import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitH
 import { InMemoryFile } from "@atomist/automation-client/project/mem/InMemoryFile";
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import * as assert from "power-assert";
-import {
-    ImportDotStarCategory,
-    ImportDotStarReviewer,
-} from "../../../../../src/pack/cloud-readiness/reviewer/importDotStarReviewer";
 import { Bad1 } from "./fileIoImportReviewerTest";
-import { fakeListenerInvocation } from "./spring/hardCodedPropertyReviewerTest";
+import { ImportDotStarCategory, ImportDotStarReviewer } from "../../../../src/support/java/review/importDotStarReviewer";
+import { fakeListenerInvocation } from "../../fakeListenerInvocation";
 // JESS: Moved from sample-sdm to sdm-pack-spring
 
 describe("importDotStar", () => {

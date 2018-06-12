@@ -16,8 +16,7 @@
 
 import { ReviewerRegistration } from "@atomist/sdm";
 import { patternMatchReviewer } from "@atomist/sdm/code/review/patternMatchReviewer";
-import { JavaAndKotlinSource } from "./Globs";
-
+import { JavaAndKotlinSource } from "../javaProjectUtils";
 // JESS: Moved from sample-sdm to sdm-pack-spring
 
 export const ImportDotStarCategory = "Lazy import";

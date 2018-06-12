@@ -1,4 +1,3 @@
-
 export { SpringSupport } from "./spring";
 export { LocalExecutableJarDeployer } from "./support/spring/deploy/localSpringBootDeployers";
 export { IsJava } from "./support/java/pushTests";
@@ -10,3 +9,5 @@ export { addDependencyEditor } from "./support/maven/edit/addDependencyEditor";
 export { MavenProjectIdentifier } from "./support/maven/parse/pomParser";
 export { AllJavaFiles, JavaAndKotlinSource } from "./support/java/javaProjectUtils";
 export { MavenFingerprinter } from "./support/maven/fingerprint/MavenFingerprinter"
+export { ImportDotStarCategory, ImportDotStarReviewer } from "./support/java/review/importDotStarReviewer";
+export { ImportFileIoCategory, FileIoImportReviewer } from "./support/java/review/fileIoImportReviewer"
