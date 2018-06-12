@@ -20,7 +20,7 @@ import {
 } from "@atomist/automation-client/operations/edit/projectEditor";
 import { doWithMatches } from "@atomist/automation-client/project/util/parseUtils";
 import { SpringBootStarter } from "../springConstants";
-import { parentStanzaOfGrammar } from "../../maven/grammar/mavenGrammars";
+import { parentStanzaOfGrammar } from "../../maven/parse/grammar/mavenGrammars";
 
 // JESS: MOVED from spring-automation
 

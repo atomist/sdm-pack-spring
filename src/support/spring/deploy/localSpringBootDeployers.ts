@@ -17,8 +17,8 @@
 import { Deployer, ProjectLoader } from "@atomist/sdm";
 import { StartupInfo } from "@atomist/sdm/internal/delivery/deploy/local/LocalDeployerOptions";
 import { ManagedDeploymentTargetInfo } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
-import { mavenDeployer } from "../maven/mavenDeployer";
-import { executableJarDeployer } from "../java/executableJarDeployer";
+import { executableJarDeployer } from "../../java/deploy/executableJarDeployer";
+import { mavenDeployer } from "../../maven/deploy/mavenDeployer";
 
 // JESS: MOVED from sample-sdm
 

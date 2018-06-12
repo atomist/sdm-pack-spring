@@ -15,16 +15,15 @@
  */
 
 import { Fingerprint } from "@atomist/automation-client/project/fingerprint/Fingerprint";
-import { toVersionedArtifact } from "@atomist/sdm/internal/delivery/build/local/maven/artifact";
 import { VersionedArtifact } from "../VersionedArtifact";
 import { computeShaOf } from "@atomist/sdm/util/misc/sha";
-import { coordinates } from "../parse/artifact";
+import { coordinates, toVersionedArtifact } from "../parse/artifact";
 
 // JESS: MOVED from sdm to sdm-pack-spring
 
 /**
  * Don't call except via mavenFingerprinter
- * @param epom xml2js parsed form
+ * @param epom xml2js parsed forml
  * @return {Promise<Fingerprint>}
  */
 export async function dependenciesFingerprintsFromParsedPom(epom: any): Promise<Fingerprint> {
