@@ -1,7 +1,33 @@
-import { predicatePushTest } from "@atomist/sdm";
+import { predicatePushTest, pushTest, PushTest } from "@atomist/sdm";
 import { fileExists } from "@atomist/automation-client/project/util/projectUtils";
+import { anyFileChangedWithExtension, filesChangedSince } from "@atomist/sdm/util/git/filesChangedSince";
+import { logger } from "@atomist/automation-client";
+import * as _ from "lodash";
 
 export const IsJava = predicatePushTest(
     "Is Java",
     async p =>
         fileExists(p, "**/*.java", () => true));
+
+
+const FileToWatch = ["java", "html", "json", "yml", "xml", "sh", "kt", "properties"];
+
+/**
+ * Veto if change to deployment unit doesn't seem important enough to
+ * build and deploy
+ */
+export const MaterialChangeToJavaRepo: PushTest = pushTest("Material change to Java repo", async pci => {
+    const beforeSha: string = _.get(pci, "push.before.sha");
+    const changedFiles = await filesChangedSince(pci.project, beforeSha);
+    if (!changedFiles) {
+        logger.info("Cannot determine if change is material on %j: can't enumerate changed files", pci.id);
+        return true;
+    }
+    logger.debug(`MaterialChangeToJavaRepo: Changed files are [${changedFiles.join(",")}]`);
+    if (anyFileChangedWithExtension(changedFiles, FileToWatch)) {
+        logger.debug("Change is material on %j: changed files=[%s]", pci.id, changedFiles.join(","));
+        return true;
+    }
+    logger.debug("Change is immaterial on %j: changed files=[%s]", pci.id, changedFiles.join(","));
+    return false;
+});
