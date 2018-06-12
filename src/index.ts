@@ -8,11 +8,11 @@ export { VersionedArtifact } from "./support/maven/VersionedArtifact";
 export { addDependencyEditor } from "./support/maven/edit/addDependencyEditor";
 export { MavenProjectIdentifier } from "./support/maven/parse/pomParser";
 export { AllJavaFiles, JavaAndKotlinSource } from "./support/java/javaProjectUtils";
-export { MavenFingerprinter } from "./support/maven/fingerprint/MavenFingerprinter"
+export { MavenFingerprinter } from "./support/maven/fingerprint/MavenFingerprinter";
 export { ImportDotStarCategory, ImportDotStarReviewer } from "./support/java/review/importDotStarReviewer";
-export { ImportFileIoCategory, FileIoImportReviewer } from "./support/java/review/fileIoImportReviewer"
+export { ImportFileIoCategory, FileIoImportReviewer } from "./support/java/review/fileIoImportReviewer";
 export { HardCodedPropertyReviewer, HardcodePropertyCategory } from "./support/spring/review/hardcodedPropertyReviewer";
-export { MavenBuilder } from "./support/maven/build/MavenBuilder"
-export { CommonJavaGeneratorConfig } from "./support/java/generate/generatorConfig"
+export { MavenBuilder } from "./support/maven/build/MavenBuilder";
+export { CommonJavaGeneratorConfig } from "./support/java/generate/generatorConfig";
 export { springBootGenerator } from "./support/spring/generate/springBootGenerator";
-export { ProvidedDependencyReviewer } from "./support/maven/review/providedDependencyReviewer"
+export { ProvidedDependencyReviewer } from "./support/maven/review/providedDependencyReviewer";
