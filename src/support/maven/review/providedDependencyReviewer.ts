@@ -48,7 +48,7 @@ async function findProvidedProperties(p: Project): Promise<ReviewComment[]> {
         return [];
     }
     const parsed = await parsePom(pom);
-    const dependencies = _.get<Array<{ dependency: { scope: string[] } }>>(parsed, "project.dependencies") || [];
+    const dependencies = _.get<Array<{ dependency: { scope: string[] } }>>(parsed, "project.dependencies", []);
     return dependencies
         .map(d => d.dependency[0])
         .filter(dep => !!dep.scope && dep.scope.length === 1 && dep.scope[0] === "provided")

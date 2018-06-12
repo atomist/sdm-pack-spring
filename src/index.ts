@@ -8,5 +8,5 @@ export { springBootTagger } from "./support/spring/springTagger";
 export { VersionedArtifact } from "./support/maven/VersionedArtifact";
 export { addDependencyEditor } from "./support/maven/edit/addDependencyEditor";
 export { MavenProjectIdentifier } from "./support/maven/parse/pomParser";
-export { AllJavaFiles } from "./support/java/javaProjectUtils";
+export { AllJavaFiles, JavaAndKotlinSource } from "./support/java/javaProjectUtils";
 export { MavenFingerprinter } from "./support/maven/fingerprint/MavenFingerprinter"
