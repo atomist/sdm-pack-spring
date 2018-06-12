@@ -23,7 +23,7 @@
   "dependencies": {
     "@atomist/antlr": "^0.2.0",
     "@atomist/automation-client": "0.17.2-20180605032022",
-    "@atomist/sdm": "https://r.atomist.com/SJ7x_U8xBem"
+    "@atomist/sdm": "https://r.atomist.com/HJV_xtcngX"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.109",

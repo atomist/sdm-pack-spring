@@ -47,9 +47,7 @@ export const SpringSupport: ExtensionPack = {
                         },
                 ))
             .addSupportingCommands(listLocalDeploys)
-            .addEditors(
-                TryToUpgradeSpringBootVersion,
-        )
+            .addEditor(TryToUpgradeSpringBootVersion)
             .addGenerators(springBootGenerator({
                 ...CommonJavaGeneratorConfig,
                 seed: new GitHubRepoRef("spring-team", "spring-rest-seed"),
