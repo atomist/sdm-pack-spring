@@ -20,7 +20,7 @@ import { predicatePushTest, pushTest, PushTest } from "@atomist/sdm";
 import { anyFileChangedWithExtension, filesChangedSince } from "@atomist/sdm/util/git/filesChangedSince";
 import * as _ from "lodash";
 
-export const IsJava = predicatePushTest(
+export const IsJava: PushTest = predicatePushTest(
     "Is Java",
     async p =>
         fileExists(p, "**/*.java", () => true));
