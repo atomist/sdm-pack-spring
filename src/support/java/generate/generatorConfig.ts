@@ -25,6 +25,6 @@ const CommonGeneratorConfig = {
  * @type {{groupId: string}}
  */
 export const CommonJavaGeneratorConfig = {
-    addAtomistWebhook: true,
+    ...CommonGeneratorConfig,
     groupId: "atomist",
 };

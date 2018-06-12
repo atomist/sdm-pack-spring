@@ -29,6 +29,8 @@ export const JavaTestFiles = "src/main/test/**/*.java";
 
 export const AllJavaAndKotlinFiles = "**/{*.java,*.kt}";
 
+export const JavaAndKotlinSource = "src/main/**/{*.java,*.kt}";
+
 export const KotlinSourceFiles = "src/main/kotlin/**/*.kt";
 
 /**
