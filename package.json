@@ -23,6 +23,7 @@
   "dependencies": {
     "@atomist/antlr": "^0.2.0",
     "@atomist/automation-client": "0.17.2-20180605032022",
+    "fast-xml-parser": "^3.11.1",
     "properties-reader": "0.0.16"
   },
   "peerDependencies": {
