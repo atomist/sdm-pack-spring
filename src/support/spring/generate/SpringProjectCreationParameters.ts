@@ -16,7 +16,6 @@
 
 import { Parameter } from "@atomist/automation-client";
 import { JavaIdentifierRegExp } from "@atomist/sdm/handlers/commands/support/java/javaPatterns";
-import { camelize } from "tslint/lib/utils";
 import { JavaGeneratorConfig } from "../../java/generate/JavaGeneratorConfig";
 import { JavaProjectCreationParameters } from "../../java/generate/JavaProjectCreationParameters";
 
@@ -51,4 +50,12 @@ export class SpringProjectCreationParameters extends JavaProjectCreationParamete
 
 function toInitialCap(s: string) {
     return s.charAt(0).toUpperCase() + s.substr(1);
+}
+
+/**
+ * Replace hyphens in a rule name by upper-casing the letter after them.
+ * E.g. "foo-bar" -> "fooBar"
+ */
+function camelize(stringWithHyphens: string): string {
+    return stringWithHyphens.replace(/-(.)/g, (_, nextLetter) => (nextLetter as string).toUpperCase());
 }
