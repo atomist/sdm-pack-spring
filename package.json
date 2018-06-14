@@ -23,7 +23,6 @@
   "dependencies": {
     "@atomist/antlr": "^0.2.0",
     "@atomist/automation-client": "0.17.2-20180605032022",
-    "fast-xml-parser": "^3.11.1",
     "properties-reader": "0.0.16"
   },
   "peerDependencies": {
@@ -38,6 +37,7 @@
     "npm-run-all": "^4.1.2",
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.2",
+    "fast-xml-parser": "^3.11.1",
     "supervisor": "^0.12.0",
     "ts-node": "^3.3.0",
     "tslint": "^5.9.1",
