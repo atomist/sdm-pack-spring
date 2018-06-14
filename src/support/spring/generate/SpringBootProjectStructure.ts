@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-import { logger } from "@atomist/automation-client/internal/util/logger";
-import { ProjectAsync } from "@atomist/automation-client/project/Project";
-
 import { JavaFileParser } from "@atomist/antlr/tree/ast/antlr/java/JavaFileParser";
 import { KotlinFileParser } from "@atomist/antlr/tree/ast/antlr/kotlin/KotlinFileParser";
+import { logger } from "@atomist/automation-client/internal/util/logger";
 import { File } from "@atomist/automation-client/project/File";
+import { ProjectAsync } from "@atomist/automation-client/project/Project";
 import { findFileMatches } from "@atomist/automation-client/tree/ast/astUtils";
 import { FileParser } from "@atomist/automation-client/tree/ast/FileParser";
 import { FileParserRegistry } from "@atomist/automation-client/tree/ast/FileParserRegistry";
 import { PathExpression } from "@atomist/tree-path/path/pathExpression";
-import { JavaSourceFiles, KotlinSourceFiles } from "../../java/javaProjectUtils";
+import {
+    JavaSourceFiles,
+    KotlinSourceFiles,
+} from "../../java/javaProjectUtils";
 import { JavaPackageDeclaration } from "../../java/parse/JavaGrammars";
 
 // JESS: MOVED from spring-automation to sdm-pack-spring

@@ -1,8 +1,8 @@
 {
   "name": "@atomist/sdm-pack-spring",
   "version": "0.1.0",
-  "description": "Spring development automation for your Software Delivery Machine",
-  "author": "Jessica Kerr",
+  "description": "Extension Pack for an Atomist SDM to automate delivery of Spring and Spring Boot applications",
+  "author": "Atomist, Inc.",
   "license": "Apache-2.0",
   "homepage": "https://github.com/atomist/sdm-pack-spring#readme",
   "repository": {
@@ -15,7 +15,7 @@
     "sdm",
     "extension",
     "pack",
-    "sonarqube"
+    "spring"
   ],
   "bugs": {
     "url": "https://github.com/atomist/sdm-pack-spring/issues"

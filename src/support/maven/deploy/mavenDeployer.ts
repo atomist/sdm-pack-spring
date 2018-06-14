@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { logger, Success } from "@atomist/automation-client";
+import {
+    logger,
+    Success,
+} from "@atomist/automation-client";
 import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
 import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
 import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
@@ -33,7 +36,10 @@ import { DelimitedWriteProgressLogDecorator } from "@atomist/sdm/log/DelimitedWr
 import { DeployableArtifact } from "@atomist/sdm/spi/artifact/ArtifactStore";
 import { Deployer } from "@atomist/sdm/spi/deploy/Deployer";
 import { Deployment } from "@atomist/sdm/spi/deploy/Deployment";
-import { InterpretedLog, InterpretLog } from "@atomist/sdm/spi/log/InterpretedLog";
+import {
+    InterpretedLog,
+    InterpretLog,
+} from "@atomist/sdm/spi/log/InterpretedLog";
 import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
 import { ProjectLoader } from "@atomist/sdm/spi/project/ProjectLoader";
 import { spawn } from "child_process";

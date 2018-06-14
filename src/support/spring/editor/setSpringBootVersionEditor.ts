@@ -15,9 +15,7 @@
  */
 
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import {
-    SimpleProjectEditor,
-} from "@atomist/automation-client/operations/edit/projectEditor";
+import { SimpleProjectEditor } from "@atomist/automation-client/operations/edit/projectEditor";
 import { doWithMatches } from "@atomist/automation-client/project/util/parseUtils";
 import { parentStanzaOfGrammar } from "../../maven/parse/grammar/mavenGrammars";
 import { SpringBootStarter } from "../springConstants";

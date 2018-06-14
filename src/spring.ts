@@ -15,9 +15,15 @@
  */
 
 import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitHubRepoRef";
-import { ExtensionPack, LocalDeploymentGoal } from "@atomist/sdm";
+import {
+    ExtensionPack,
+    LocalDeploymentGoal,
+} from "@atomist/sdm";
 import * as deploy from "@atomist/sdm/dsl/deployDsl";
-import { LocalEndpointGoal, LocalUndeploymentGoal } from "@atomist/sdm/goal/common/commonGoals";
+import {
+    LocalEndpointGoal,
+    LocalUndeploymentGoal,
+} from "@atomist/sdm/goal/common/commonGoals";
 import { ManagedDeploymentTargeter } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
 import { tagRepo } from "@atomist/sdm/util/github/tagRepo";
 import { CommonJavaGeneratorConfig } from "./support/java/generate/generatorConfig";
@@ -28,12 +34,13 @@ import { TryToUpgradeSpringBootVersion } from "./support/spring/editor/tryToUpgr
 import { springBootGenerator } from "./support/spring/generate/springBootGenerator";
 import { springBootTagger } from "./support/spring/springTagger";
 
-// moved from sample-sdm
+// tslint:disable-next-line:no-var-requires
+const pj = require("../package.json");
 
 export const SpringSupport: ExtensionPack = {
-    name: "Spring support",
-    vendor: "Atomist",
-    version: "0.1.0",
+    name: pj.name,
+    vendor: pj.author.name,
+    version: pj.version,
     configure: sdm => {
         sdm
             .addDeployRules(

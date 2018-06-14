@@ -15,7 +15,10 @@
  */
 
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { Project, ProjectAsync } from "@atomist/automation-client/project/Project";
+import {
+    Project,
+    ProjectAsync,
+} from "@atomist/automation-client/project/Project";
 import { doWithFiles } from "@atomist/automation-client/project/util/projectUtils";
 import { JavaProjectStructure } from "./JavaProjectStructure";
 

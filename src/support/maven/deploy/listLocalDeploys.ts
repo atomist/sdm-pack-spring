@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-import { HandleCommand, HandlerContext, Success } from "@atomist/automation-client";
-import { commandHandlerFrom, OnCommand } from "@atomist/automation-client/onCommand";
+import {
+    HandleCommand,
+    HandlerContext,
+    Success,
+} from "@atomist/automation-client";
+import {
+    commandHandlerFrom,
+    OnCommand,
+} from "@atomist/automation-client/onCommand";
 import { Maker } from "@atomist/automation-client/util/constructionUtils";
 import { EmptyParameters } from "@atomist/sdm/api/command/support/EmptyParameters";
-import { DeployedApp, ManagedDeployments } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
+import {
+    DeployedApp,
+    ManagedDeployments,
+} from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
 import { managedExecutableJarDeployments } from "../../java/deploy/executableJarDeployer";
 import { managedMavenDeployments } from "./mavenDeployer";
 

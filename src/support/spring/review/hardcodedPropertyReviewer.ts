@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-import { DefaultReviewComment, ReviewComment } from "@atomist/automation-client/operations/review/ReviewResult";
+import { logger } from "@atomist/automation-client";
+import {
+    DefaultReviewComment,
+    ReviewComment,
+} from "@atomist/automation-client/operations/review/ReviewResult";
 import { File } from "@atomist/automation-client/project/File";
 import { Project } from "@atomist/automation-client/project/Project";
 import { saveFromFilesAsync } from "@atomist/automation-client/project/util/projectUtils";
 import { ReviewerRegistration } from "@atomist/sdm";
+import * as _ from "lodash";
 
 import * as props from "properties-reader";
-
-import { logger } from "@atomist/automation-client";
-import * as _ from "lodash";
 import { HasSpringPom } from "../pushTests";
 
 // JESS: Moved from sample-sdm to sdm-pack-spring

@@ -3,7 +3,10 @@
  * This is a robust but expensive test as it needs
  * to scan all Java sources
  */
-import { predicatePushTest, PredicatePushTest } from "@atomist/sdm";
+import {
+    predicatePushTest,
+    PredicatePushTest,
+} from "@atomist/sdm";
 import { SpringBootProjectStructure } from "./generate/SpringBootProjectStructure";
 
 export const HasSpringBootApplicationClass: PredicatePushTest = predicatePushTest(

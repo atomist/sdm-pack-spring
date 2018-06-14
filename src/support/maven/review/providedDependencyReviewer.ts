@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-import { DefaultReviewComment, ReviewComment } from "@atomist/automation-client/operations/review/ReviewResult";
+import {
+    DefaultReviewComment,
+    ReviewComment,
+} from "@atomist/automation-client/operations/review/ReviewResult";
 import { File } from "@atomist/automation-client/project/File";
 import { Project } from "@atomist/automation-client/project/Project";
 import { ReviewerRegistration } from "@atomist/sdm";
-import { promisify } from "util";
-import * as xml2js from "xml2js";
 
 import * as _ from "lodash";
+import { promisify } from "util";
+import * as xml2js from "xml2js";
 import { IsMaven } from "../pushTests";
 
 // JESS: Moved from sample-sdm to sdm-pack-spring

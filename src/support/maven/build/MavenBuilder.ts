@@ -17,13 +17,26 @@
 import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
 import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
 import { AddressChannels } from "@atomist/sdm/api/context/addressChannels";
-import { LocalBuilder, LocalBuildInProgress } from "@atomist/sdm/internal/delivery/build/local/LocalBuilder";
+import {
+    LocalBuilder,
+    LocalBuildInProgress,
+} from "@atomist/sdm/internal/delivery/build/local/LocalBuilder";
 import { ArtifactStore } from "@atomist/sdm/spi/artifact/ArtifactStore";
 import { AppInfo } from "@atomist/sdm/spi/deploy/Deployment";
-import { InterpretLog, LogInterpretation } from "@atomist/sdm/spi/log/InterpretedLog";
-import { ProgressLog, ProgressLogFactory } from "@atomist/sdm/spi/log/ProgressLog";
+import {
+    InterpretLog,
+    LogInterpretation,
+} from "@atomist/sdm/spi/log/InterpretedLog";
+import {
+    ProgressLog,
+    ProgressLogFactory,
+} from "@atomist/sdm/spi/log/ProgressLog";
 import { ProjectLoader } from "@atomist/sdm/spi/project/ProjectLoader";
-import { asSpawnCommand, ChildProcessResult, spawnAndWatch } from "@atomist/sdm/util/misc/spawned";
+import {
+    asSpawnCommand,
+    ChildProcessResult,
+    spawnAndWatch,
+} from "@atomist/sdm/util/misc/spawned";
 import { identification } from "../parse/pomParser";
 import { MavenLogInterpreter } from "./mavenLogInterpreter";
 

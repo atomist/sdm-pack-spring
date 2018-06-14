@@ -20,7 +20,10 @@ import {
     zeroOrMore,
 } from "@atomist/microgrammar/Rep";
 import { VersionedArtifact } from "../../VersionedArtifact";
-import { ELEMENT_NAME, XmlTag } from "./xmlGrammars";
+import {
+    ELEMENT_NAME,
+    XmlTag,
+} from "./xmlGrammars";
 
 export const ElementContent = /^[a-zA-Z_.0-9\-]+/;
 

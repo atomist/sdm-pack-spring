@@ -16,7 +16,10 @@
 
 import { Fingerprint } from "@atomist/automation-client/project/fingerprint/Fingerprint";
 import { computeShaOf } from "@atomist/sdm/util/misc/sha";
-import { coordinates, toVersionedArtifact } from "../parse/artifact";
+import {
+    coordinates,
+    toVersionedArtifact,
+} from "../parse/artifact";
 import { VersionedArtifact } from "../VersionedArtifact";
 
 // JESS: MOVED from sdm to sdm-pack-spring

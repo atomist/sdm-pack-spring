@@ -18,7 +18,10 @@ import { MatchingLogic } from "@atomist/microgrammar/Matchers";
 import { PatternMatch } from "@atomist/microgrammar/PatternMatch";
 import { PathAwareXmlMatchingMachine } from "./PathAwareXmlMatchingMachine";
 import { VersionedArtifactMatch } from "./VersionedArtifactMatch";
-import { XML_TAG_WITH_SIMPLE_VALUE, XmlTag } from "./xmlGrammars";
+import {
+    XML_TAG_WITH_SIMPLE_VALUE,
+    XmlTag,
+} from "./xmlGrammars";
 
 // JESS: Moved from spring-automation
 /**

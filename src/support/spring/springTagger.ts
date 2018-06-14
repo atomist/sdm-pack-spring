@@ -15,11 +15,11 @@
  */
 
 import { logger } from "@atomist/automation-client";
-import { SpringBootStarter } from "./springConstants";
 
 import { DefaultTags } from "@atomist/automation-client/operations/tagger/Tagger";
 import { toPromise } from "@atomist/automation-client/project/util/projectUtils";
 import { AllJavaFiles } from "../java/javaProjectUtils";
+import { SpringBootStarter } from "./springConstants";
 
 // moved from spring-automation
 

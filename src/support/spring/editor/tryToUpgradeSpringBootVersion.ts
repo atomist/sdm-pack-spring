@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-import { Parameter, Parameters } from "@atomist/automation-client";
-import { EditModeSuggestion, EditorRegistration } from "@atomist/sdm";
+import {
+    Parameter,
+    Parameters,
+} from "@atomist/automation-client";
+import {
+    EditModeSuggestion,
+    EditorRegistration,
+} from "@atomist/sdm";
 import { setSpringBootVersionEditor } from "./setSpringBootVersionEditor";
 
 // moved from sample-sdm

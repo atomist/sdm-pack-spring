@@ -19,12 +19,18 @@ import { ProjectOperationCredentials } from "@atomist/automation-client/operatio
 import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
 import { lastLinesLogInterpreter } from "@atomist/sdm/api-helper/log/logInterpreters";
 // should local deployment be its own pack? we could pull it out of sdm then
-import { DefaultLocalDeployerOptions,
+import {
+    DefaultLocalDeployerOptions,
     LocalDeployerOptions,
     SpawnedDeployment,
-    StartupInfo } from "@atomist/sdm/internal/delivery/deploy/local/LocalDeployerOptions";
-import { LookupStrategy, ManagedDeployments, ManagedDeploymentTargetInfo } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
-import {DelimitedWriteProgressLogDecorator} from "@atomist/sdm/log/DelimitedWriteProgressLogDecorator";
+    StartupInfo,
+} from "@atomist/sdm/internal/delivery/deploy/local/LocalDeployerOptions";
+import {
+    LookupStrategy,
+    ManagedDeployments,
+    ManagedDeploymentTargetInfo,
+} from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
+import { DelimitedWriteProgressLogDecorator } from "@atomist/sdm/log/DelimitedWriteProgressLogDecorator";
 import { DeployableArtifact } from "@atomist/sdm/spi/artifact/ArtifactStore";
 import { Deployer } from "@atomist/sdm/spi/deploy/Deployer";
 import { Deployment } from "@atomist/sdm/spi/deploy/Deployment";

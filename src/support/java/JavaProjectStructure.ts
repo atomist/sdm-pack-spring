@@ -18,7 +18,10 @@ import { logger } from "@atomist/automation-client";
 import { ProjectAsync } from "@atomist/automation-client/project/Project";
 import { findMatches } from "@atomist/automation-client/project/util/parseUtils";
 import * as _ from "lodash";
-import { JavaSourceFiles, KotlinSourceFiles } from "./javaProjectUtils";
+import {
+    JavaSourceFiles,
+    KotlinSourceFiles,
+} from "./javaProjectUtils";
 import { JavaPackageDeclaration } from "./parse/JavaGrammars";
 
 // Moved from spring-automation

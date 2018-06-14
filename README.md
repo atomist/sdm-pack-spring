@@ -1,34 +1,25 @@
 # sdm-pack-spring
 
-Spring development automation for your Software Delivery Machine
-
-Extension Pack for an Atomist SDM to integrate [SonarQube](https://www.sonarqube.org).
+Extension Pack for an Atomist SDM to automate delivery of Spring and Spring Boot applications.
 
 ## Usage
 
 1. First install the dependency in your SDM project
 
 ```
-$ npm install @atomist/sdm-pack-sonarqube
+$ npm install @atomist/sdm-pack-spring
 ```
 
 2. Install the support
 
 ```
-import { SonarQubeSupport } from "@atomist/sdm-pack-sonarqube";
-
-sdm.addExtensionPack(SonarQubeSupport);
+// tba
 ```
 
 3. Add configuration to your client configuration
 
 ```
-"sonar": {
-    "enabled": true,
-    "url": "<your sonarqube url>",
-    "org": "<your sonarqube org>",
-    "token": "<your sonarqube token>"
-}
+// tba
 ```
 
 ## Support

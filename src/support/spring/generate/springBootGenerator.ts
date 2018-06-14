@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
+import { SimpleProjectEditor } from "@atomist/automation-client/operations/edit/projectEditor";
 import { chainEditors } from "@atomist/automation-client/operations/edit/projectEditorOps";
 import { GeneratorCommandDetails } from "@atomist/automation-client/operations/generate/generatorToCommand";
 import * as utils from "@atomist/automation-client/project/util/projectUtils";
-
-import { SimpleProjectEditor } from "@atomist/automation-client/operations/edit/projectEditor";
 import { GeneratorRegistration } from "@atomist/sdm";
 import { JavaGeneratorConfig } from "../../java/generate/JavaGeneratorConfig";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";

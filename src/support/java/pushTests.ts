@@ -16,8 +16,15 @@
 
 import { logger } from "@atomist/automation-client";
 import { fileExists } from "@atomist/automation-client/project/util/projectUtils";
-import { predicatePushTest, pushTest, PushTest } from "@atomist/sdm";
-import { anyFileChangedWithExtension, filesChangedSince } from "@atomist/sdm/util/git/filesChangedSince";
+import {
+    predicatePushTest,
+    pushTest,
+    PushTest,
+} from "@atomist/sdm";
+import {
+    anyFileChangedWithExtension,
+    filesChangedSince,
+} from "@atomist/sdm/util/git/filesChangedSince";
 import * as _ from "lodash";
 
 export const IsJava: PushTest = predicatePushTest(
