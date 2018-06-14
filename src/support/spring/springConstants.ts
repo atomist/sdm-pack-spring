@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-// JESS: Moved from spring-automation (review whether we need all of it)
-
 export const SpringBootStarter = "spring-boot-starter-parent";
 
 export const SpringBootTags = [ "spring", "spring-boot", "java" ];

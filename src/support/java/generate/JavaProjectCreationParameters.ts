@@ -23,8 +23,6 @@ import {
     MavenGroupIdRegExp,
 } from "@atomist/sdm/handlers/commands/support/java/javaPatterns";
 
-// JESS: MOVED from sample-sdm to sdm-pack-spring
-
 /**
  * Superclass for all Java project generator parameters.
  */

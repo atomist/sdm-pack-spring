@@ -22,8 +22,6 @@ import {
 import { dependenciesFingerprintsFromParsedPom } from "./dependenciesFingerprintsFromParsedPom";
 import { extractEffectivePom } from "./effectivePomExtractor";
 
-// JESS: MOVED from sdm to sdm-pack-spring
-
 /**
  * Public entry point for all Maven fingerprints. Use mvn help:effective-pom
  * to generic effective POM then parse it and turn it into fingerprints.

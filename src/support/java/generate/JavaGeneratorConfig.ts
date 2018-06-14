@@ -16,8 +16,6 @@
 
 import { GeneratorConfig } from "@atomist/sdm";
 
-// JESS: MOVED from sample-sdm to sdm-pack-spring
-
 export interface JavaGeneratorConfig extends GeneratorConfig {
 
     groupId: string;

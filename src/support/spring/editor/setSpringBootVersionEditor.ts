@@ -20,8 +20,6 @@ import { doWithMatches } from "@atomist/automation-client/project/util/parseUtil
 import { parentStanzaOfGrammar } from "../../maven/parse/grammar/mavenGrammars";
 import { SpringBootStarter } from "../springConstants";
 
-// JESS: MOVED from spring-automation
-
 /**
  * Set the Spring Boot version to
  * @param {string} desiredBootVersion

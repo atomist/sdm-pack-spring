@@ -22,8 +22,6 @@ import {
 } from "../parse/artifact";
 import { VersionedArtifact } from "../VersionedArtifact";
 
-// JESS: MOVED from sdm to sdm-pack-spring
-
 /**
  * Don't call except via mavenFingerprinter
  * @param epom xml2js parsed forml

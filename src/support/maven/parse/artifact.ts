@@ -16,8 +16,6 @@
 
 import { VersionedArtifact } from "../VersionedArtifact";
 
-// JESS: MOVED from sdm to sdm-pack-spring
-
 export function coordinates(va: VersionedArtifact): string {
     let coords = `${va.group}:${va.artifact}`;
     if (va.version) {

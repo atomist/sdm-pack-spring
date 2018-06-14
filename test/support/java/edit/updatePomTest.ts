@@ -19,7 +19,7 @@ import * as assert from "power-assert";
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import { updatePom } from "../../../../src/support/maven/generate/updatePom";
 
-// JESS: Moved from spring-automation to sdm-pack-spring
+
 
 describe("updatePom", () => {
 

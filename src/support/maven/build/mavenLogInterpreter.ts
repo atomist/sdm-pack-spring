@@ -26,8 +26,6 @@ import {
 } from "@atomist/sdm/internal/delivery/build/BuildInfo";
 import { InterpretLog } from "@atomist/sdm/spi/log/InterpretedLog";
 
-// JESS: MOVED from sdm to sdm-pack-spring
-
 export const MavenLogInterpreter: InterpretLog<MavenInfo> = log => {
     const timingInfo = timingGrammar.firstMatch(log);
     const data: MavenInfo = {

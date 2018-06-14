@@ -24,7 +24,7 @@ import { replaceReadmeTitle, SetAtomistTeamInApplicationYml } from "../../../../
 import { transformSeedToCustomProject } from "../../../../src/support/spring/generate/transformSeedToCustomProject";
 import { springBootPom } from "./TestPoms";
 
-// JESS: MOVED from sample-sdm to sdm-pack-spring
+
 
 const Readme1 = `# spring-rest-seed
 

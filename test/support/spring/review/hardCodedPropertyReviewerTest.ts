@@ -22,7 +22,7 @@ import * as assert from "power-assert";
 import { HardCodedPropertyReviewer, HardcodePropertyCategory } from "../../../../src/support/spring/review/hardcodedPropertyReviewer";
 import { fakeListenerInvocation } from "../../fakeListenerInvocation";
 
-// JESS: Moved from sample-sdm to sdm-pack-spring
+
 
 describe("HardCodePropertyReviewer", () => {
 

@@ -21,7 +21,7 @@ import * as assert from "power-assert";
 import { addDependencyEditor } from "../../../../src";
 import * as xml from "fast-xml-parser";
 
-// JESS: Moved from spring-automation to sdm-pack-spring
+
 
 describe("DependencyAdditionEditor", () => {
 

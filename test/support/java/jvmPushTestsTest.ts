@@ -21,7 +21,7 @@ import { IsMaven } from "../../../src/support/maven/pushTests";
 import { PushListenerInvocation } from "@atomist/sdm";
 import { IsJava } from "../../../src/support/java/pushTests";
 
-// JESS: MOVED from sdm to sdm-pack-spring
+
 
 describe("jvmPushTests", () => {
 

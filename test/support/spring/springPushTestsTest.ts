@@ -21,7 +21,7 @@ import * as assert from "power-assert";
 import { HasSpringBootApplicationClass } from "../../../src/support/spring/pushTests";
 import { springBootPom } from "./generator/TestPoms";
 
-// JESS: moved from sample-sdm to sdm-pack-spring
+
 
 describe("springPushTests", () => {
 

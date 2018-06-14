@@ -23,8 +23,6 @@ import { ManagedDeploymentTargetInfo } from "@atomist/sdm/internal/delivery/depl
 import { executableJarDeployer } from "../../java/deploy/executableJarDeployer";
 import { mavenDeployer } from "../../maven/deploy/mavenDeployer";
 
-// JESS: MOVED from sample-sdm
-
 /** Successs patterns when Spring Boot starts
  * @type {RegExp}
  */

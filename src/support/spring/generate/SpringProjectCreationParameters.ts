@@ -19,8 +19,6 @@ import { JavaIdentifierRegExp } from "@atomist/sdm/handlers/commands/support/jav
 import { JavaGeneratorConfig } from "../../java/generate/JavaGeneratorConfig";
 import { JavaProjectCreationParameters } from "../../java/generate/JavaProjectCreationParameters";
 
-// JESS: MOVED from sample-sdm to sdm-pack-spring
-
 /**
  * Parameters for creating Spring Boot apps.
  */

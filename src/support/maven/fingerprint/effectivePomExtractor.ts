@@ -19,8 +19,6 @@ import { LocalProject } from "@atomist/automation-client/project/local/LocalProj
 import { promisify } from "util";
 import * as xml2js from "xml2js";
 
-// JESS: MOVED from sdm to sdm-pack-spring
-
 const XmlFile = "effective-pom.xml";
 
 /**

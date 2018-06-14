@@ -27,8 +27,6 @@ import { promisify } from "util";
 import * as xml2js from "xml2js";
 import { IsMaven } from "../pushTests";
 
-// JESS: Moved from sample-sdm to sdm-pack-spring
-
 export const ProvidedDependencyCategory = "Use of `provided` dependencies in Maven POM";
 
 /**

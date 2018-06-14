@@ -22,7 +22,7 @@ import { evaluateExpression } from "@atomist/tree-path/path/expressionEngine";
 import * as assert from "power-assert";
 import { SpringBootAppClassInKotlin, SpringBootProjectStructure } from "../../../../src/support/spring/generate/SpringBootProjectStructure";
 import { KotlinSourceFiles } from "../../../../src/support/java/javaProjectUtils";
-// JESS: Moved from spring-automation to sdm-pack-spring
+
 describe("SpringBootProjectStructure: Java inference", () => {
 
     describe("java support", () => {

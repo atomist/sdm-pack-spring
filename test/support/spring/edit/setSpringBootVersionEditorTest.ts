@@ -22,7 +22,7 @@ import { NodeFsLocalProject } from "@atomist/automation-client/project/local/Nod
 import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
 import * as tmp from "tmp";
 
-// JESS: Moved from spring-automation to sdm-pack-spring
+
 
 describe("setSpringBootVersionEditor", () => {
 

@@ -19,8 +19,6 @@ import { Project } from "@atomist/automation-client/project/Project";
 import { renameClass } from "../../java/javaProjectUtils";
 import { SpringBootProjectStructure } from "./SpringBootProjectStructure";
 
-// JESS: MOVED from spring-automation to sdm-pack-spring
-
 /**
  * Infer the Spring Boot structure and rename the class.
  * @param {string} serviceClassName

@@ -17,7 +17,7 @@
 import * as assert from "power-assert";
 import { SpringBootSuccessPatterns } from "../../../../src/support/spring/deploy/localSpringBootDeployers";
 
-// JESS: moved from sample-sdm to sdm-pack-spring
+
 
 describe("SpringBootSuccessPattern", () => {
 

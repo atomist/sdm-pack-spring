@@ -23,7 +23,6 @@ import {
     XmlTag,
 } from "./xmlGrammars";
 
-// JESS: Moved from spring-automation
 /**
  * Single use matching machine that looks for dependencies,
  * avoid dependency management section.

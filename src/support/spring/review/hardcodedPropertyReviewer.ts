@@ -28,8 +28,6 @@ import * as _ from "lodash";
 import * as props from "properties-reader";
 import { HasSpringPom } from "../pushTests";
 
-// JESS: Moved from sample-sdm to sdm-pack-spring
-
 const PropertyKeysToCheck = [
     "server.port",
     "spring.datasource.url",

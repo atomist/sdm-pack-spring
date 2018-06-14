@@ -23,7 +23,7 @@ import { ProvidedDependencyCategory, ProvidedDependencyReviewer } from "../../..
 import { NonSpringPom } from "../../spring/generator/TestPoms";
 import { fakeListenerInvocation } from "../../fakeListenerInvocation";
 
-// JESS: Moved from sample-sdm to sdm-pack-spring
+
 
 describe("ProvidedDependencyReviewer", () => {
 

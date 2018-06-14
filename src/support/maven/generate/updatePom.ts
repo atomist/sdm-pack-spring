@@ -17,8 +17,6 @@
 import { ProjectAsync } from "@atomist/automation-client/project/Project";
 import { doWithFiles } from "@atomist/automation-client/project/util/projectUtils";
 
-// JESS: MOVED from spring-automation to sdm-pack-spring
-
 /**
  * Record change to POM. Project will subsequently need flushing
  *

@@ -20,8 +20,6 @@ import * as _ from "lodash";
 import { DependencyFinder } from "../parse/grammar/DependencyFinder";
 import { VersionedArtifact } from "../VersionedArtifact";
 
-// JESS: Moved to sdm-pack-spring from spring-automation
-
 /**
  * Add the given dependency to projects. It's not an error
  * if the project doesn't have a POM. The editor will do nothing

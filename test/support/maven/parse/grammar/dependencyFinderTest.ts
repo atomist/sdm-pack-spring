@@ -20,7 +20,7 @@ import { DependencyFinder } from "../../../../../src/support/maven/parse/grammar
 import { springBootPom } from "../../../spring/generator/TestPoms";
 import { XmlTag } from "../../../../../src/support/maven/parse/grammar/xmlGrammars";
 
-// JESS: Moved from spring-automation to sdm-pack-spring
+
 
 describe("DependencyFinder", () => {
 

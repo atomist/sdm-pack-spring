@@ -23,8 +23,6 @@ import { updatePom } from "../../maven/generate/updatePom";
 import { inferSpringStructureAndRename } from "./springBootUtils";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 
-// JESS: MOVED from sample-sdm to sdm-pack-spring
-
 /**
  * Transform a seed to a Spring Boot project
  */

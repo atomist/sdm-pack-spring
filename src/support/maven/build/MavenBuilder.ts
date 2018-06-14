@@ -40,8 +40,6 @@ import {
 import { identification } from "../parse/pomParser";
 import { MavenLogInterpreter } from "./mavenLogInterpreter";
 
-// JESS: MOVED from sdm to sdm-pack-spring
-
 /**
  * Build with Maven in the local automation client.
  * This implementation requires Java and maven on the classpath.

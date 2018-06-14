@@ -17,7 +17,7 @@
 import * as assert from "power-assert";
 import { MavenLogInterpreter } from "../../../../src/support/maven/build/mavenLogInterpreter";
 
-// JESS: MOVED from sdm to sdm-pack-spring
+
 
 describe("MavenLogInterpreter", () => {
 

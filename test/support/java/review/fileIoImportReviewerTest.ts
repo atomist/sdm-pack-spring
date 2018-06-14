@@ -21,7 +21,7 @@ import * as assert from "power-assert";
 import { FileIoImportReviewer, ImportFileIoCategory } from "../../../../src/support/java/review/fileIoImportReviewer";
 import { fakeListenerInvocation } from "../../fakeListenerInvocation";
 
-// JESS: Moved from sample-sdm to sdm-pack-spring
+
 
 describe("fileIoImport", () => {
 

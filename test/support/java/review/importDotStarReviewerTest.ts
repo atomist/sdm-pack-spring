@@ -21,7 +21,7 @@ import * as assert from "power-assert";
 import { Bad1 } from "./fileIoImportReviewerTest";
 import { ImportDotStarCategory, ImportDotStarReviewer } from "../../../../src/support/java/review/importDotStarReviewer";
 import { fakeListenerInvocation } from "../../fakeListenerInvocation";
-// JESS: Moved from sample-sdm to sdm-pack-spring
+
 
 describe("importDotStar", () => {
 

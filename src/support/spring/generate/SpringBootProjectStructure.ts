@@ -29,8 +29,6 @@ import {
 } from "../../java/javaProjectUtils";
 import { JavaPackageDeclaration } from "../../java/parse/JavaGrammars";
 
-// JESS: MOVED from spring-automation to sdm-pack-spring
-
 export const SpringBootAppClassInJava = `//typeDeclaration
                                 [//annotation[@value='@SpringBootApplication']]
                                 /classDeclaration//Identifier`;

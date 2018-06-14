@@ -24,7 +24,7 @@ import { LoggingProgressLog } from "@atomist/sdm/api-helper/log/LoggingProgressL
 import { SingleProjectLoader } from "@atomist/sdm/util/test/SingleProjectLoader";
 import { mavenDeployer } from "../../../../src/support/maven/deploy/mavenDeployer";
 
-// JESS: MOVED from sdm to sdm-pack-spring
+
 
 describe("mavenSourceDeployer", () => {
 

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-// JESS: MOVED from sdm to sdm-pack-spring
-
 export interface IdentifiedArtifact {
 
     group: string;
