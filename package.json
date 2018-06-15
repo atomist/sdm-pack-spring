@@ -21,7 +21,7 @@
     "url": "https://github.com/atomist/sdm-pack-spring/issues"
   },
   "dependencies": {
-    "@atomist/antlr": "^0.2.0",
+    "@atomist/antlr": "^0.3.0",
     "properties-reader": "0.0.16"
   },
   "peerDependencies": {
