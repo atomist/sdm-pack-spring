@@ -35,6 +35,8 @@ import { springBootGenerator } from "./support/spring/generate/springBootGenerat
 import { SpringProjectCreationParameters } from "./support/spring/generate/SpringProjectCreationParameters";
 import { springBootTagger } from "./support/spring/springTagger";
 
+
+console.log("I am Jessitron!");
 // tslint:disable-next-line:no-var-requires
 const pj = require("../package.json");
 
@@ -53,12 +55,12 @@ export const SpringSupport: ExtensionPack = {
                             deployer: mavenSourceDeployer(sdm.configuration.sdm.projectLoader),
                             targeter: ManagedDeploymentTargeter,
                         },
-                    ))
+                ))
             .addSupportingCommands(listLocalDeploys)
             .addEditor(TryToUpgradeSpringBootVersion)
             .addNewRepoWithCodeActions(
                 tagRepo(springBootTagger),
-            );
+        );
     },
 };
 
@@ -72,7 +74,7 @@ export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
                     deployer: mavenSourceDeployer(sdm.configuration.sdm.projectLoader),
                     targeter: ManagedDeploymentTargeter,
                 },
-            ))
+        ))
         .addSupportingCommands(listLocalDeploys);
 }
 
@@ -81,13 +83,13 @@ export const springRestGenerator: GeneratorRegistration<SpringProjectCreationPar
         ...CommonJavaGeneratorConfig,
         seed: new GitHubRepoRef("spring-team", "spring-rest-seed"),
     }, {
-        intent: "create spring",
-    });
+            intent: "create spring",
+        });
 
 export const kotlinRestGenerator: GeneratorRegistration<SpringProjectCreationParameters> =
     springBootGenerator({
-    ...CommonJavaGeneratorConfig,
-    seed: new GitHubRepoRef("johnsonr", "flux-flix-service"),
-}, {
-    intent: "create spring kotlin",
-});
+        ...CommonJavaGeneratorConfig,
+        seed: new GitHubRepoRef("johnsonr", "flux-flix-service"),
+    }, {
+            intent: "create spring kotlin",
+        });
