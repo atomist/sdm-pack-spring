@@ -55,20 +55,22 @@ export const SpringSupport: ExtensionPack = {
                 ))
             .addSupportingCommands(listLocalDeploys)
             .addEditor(TryToUpgradeSpringBootVersion)
-            .addGenerators(springBootGenerator({
-                ...CommonJavaGeneratorConfig,
-                seed: new GitHubRepoRef("spring-team", "spring-rest-seed"),
-            }, {
-                    intent: "create spring",
-                }))
-            .addGenerators(springBootGenerator({
-                ...CommonJavaGeneratorConfig,
-                seed: new GitHubRepoRef("johnsonr", "flux-flix-service"),
-            }, {
-                    intent: "create spring kotlin",
-                }))
             .addNewRepoWithCodeActions(
                 tagRepo(springBootTagger),
         );
     },
 };
+
+export const springRestGenerator = springBootGenerator({
+    ...CommonJavaGeneratorConfig,
+    seed: new GitHubRepoRef("spring-team", "spring-rest-seed"),
+}, {
+    intent: "create spring",
+});
+
+export const kotlinRestGenerator = springBootGenerator({
+    ...CommonJavaGeneratorConfig,
+    seed: new GitHubRepoRef("johnsonr", "flux-flix-service"),
+}, {
+    intent: "create spring kotlin",
+});
