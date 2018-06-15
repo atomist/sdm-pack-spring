@@ -35,7 +35,6 @@ import { springBootGenerator } from "./support/spring/generate/springBootGenerat
 import { SpringProjectCreationParameters } from "./support/spring/generate/SpringProjectCreationParameters";
 import { springBootTagger } from "./support/spring/springTagger";
 
-
 console.log("I am Jessitron!");
 // tslint:disable-next-line:no-var-requires
 const pj = require("../package.json");
