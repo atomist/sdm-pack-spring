@@ -17,7 +17,7 @@
 import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitHubRepoRef";
 import {
     ExtensionPack,
-    LocalDeploymentGoal,
+    LocalDeploymentGoal, SoftwareDeliveryMachine,
 } from "@atomist/sdm";
 import * as deploy from "@atomist/sdm/dsl/deployDsl";
 import {
@@ -52,14 +52,28 @@ export const SpringSupport: ExtensionPack = {
                             deployer: mavenSourceDeployer(sdm.configuration.sdm.projectLoader),
                             targeter: ManagedDeploymentTargeter,
                         },
-                ))
+                    ))
             .addSupportingCommands(listLocalDeploys)
             .addEditor(TryToUpgradeSpringBootVersion)
             .addNewRepoWithCodeActions(
                 tagRepo(springBootTagger),
-        );
+            );
     },
 };
+
+export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
+    sdm.addDeployRules(
+        deploy.when(IsMaven)
+            .itMeans("Maven local deploy")
+            .deployTo(LocalDeploymentGoal, LocalEndpointGoal, LocalUndeploymentGoal)
+            .using(
+                {
+                    deployer: mavenSourceDeployer(sdm.configuration.sdm.projectLoader),
+                    targeter: ManagedDeploymentTargeter,
+                },
+            ))
+        .addSupportingCommands(listLocalDeploys)
+}
 
 export const springRestGenerator = springBootGenerator({
     ...CommonJavaGeneratorConfig,
