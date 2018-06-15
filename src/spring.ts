@@ -72,7 +72,7 @@ export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
                     targeter: ManagedDeploymentTargeter,
                 },
             ))
-        .addSupportingCommands(listLocalDeploys)
+        .addSupportingCommands(listLocalDeploys);
 }
 
 export const springRestGenerator = springBootGenerator({

@@ -1,7 +1,7 @@
 export { SpringSupport,
     kotlinRestGenerator,
     springRestGenerator,
-    configureLocalSpringBootDeploy
+    configureLocalSpringBootDeploy,
 } from "./spring";
 export { LocalExecutableJarDeployer } from "./support/spring/deploy/localSpringBootDeployers";
 export { IsJava, MaterialChangeToJavaRepo } from "./support/java/pushTests";
