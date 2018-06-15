@@ -16,7 +16,7 @@
 
 import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitHubRepoRef";
 import {
-    ExtensionPack,
+    ExtensionPack, GeneratorRegistration,
     LocalDeploymentGoal, SoftwareDeliveryMachine,
 } from "@atomist/sdm";
 import * as deploy from "@atomist/sdm/dsl/deployDsl";
@@ -33,6 +33,7 @@ import { mavenSourceDeployer } from "./support/spring/deploy/localSpringBootDepl
 import { TryToUpgradeSpringBootVersion } from "./support/spring/editor/tryToUpgradeSpringBootVersion";
 import { springBootGenerator } from "./support/spring/generate/springBootGenerator";
 import { springBootTagger } from "./support/spring/springTagger";
+import { SpringProjectCreationParameters } from "./support/spring/generate/SpringProjectCreationParameters";
 
 // tslint:disable-next-line:no-var-requires
 const pj = require("../package.json");
@@ -75,14 +76,16 @@ export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
         .addSupportingCommands(listLocalDeploys);
 }
 
-export const springRestGenerator = springBootGenerator({
-    ...CommonJavaGeneratorConfig,
-    seed: new GitHubRepoRef("spring-team", "spring-rest-seed"),
-}, {
-    intent: "create spring",
-});
+export const springRestGenerator: GeneratorRegistration<SpringProjectCreationParameters> =
+    springBootGenerator({
+        ...CommonJavaGeneratorConfig,
+        seed: new GitHubRepoRef("spring-team", "spring-rest-seed"),
+    }, {
+        intent: "create spring",
+    });
 
-export const kotlinRestGenerator = springBootGenerator({
+export const kotlinRestGenerator: GeneratorRegistration<SpringProjectCreationParameters> =
+    springBootGenerator({
     ...CommonJavaGeneratorConfig,
     seed: new GitHubRepoRef("johnsonr", "flux-flix-service"),
 }, {
