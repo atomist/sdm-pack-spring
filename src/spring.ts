@@ -32,8 +32,8 @@ import { IsMaven } from "./support/maven/pushTests";
 import { mavenSourceDeployer } from "./support/spring/deploy/localSpringBootDeployers";
 import { TryToUpgradeSpringBootVersion } from "./support/spring/editor/tryToUpgradeSpringBootVersion";
 import { springBootGenerator } from "./support/spring/generate/springBootGenerator";
-import { springBootTagger } from "./support/spring/springTagger";
 import { SpringProjectCreationParameters } from "./support/spring/generate/SpringProjectCreationParameters";
+import { springBootTagger } from "./support/spring/springTagger";
 
 // tslint:disable-next-line:no-var-requires
 const pj = require("../package.json");
