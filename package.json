@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@atomist/automation-client": "0.17.2-20180613153815",
-    "@atomist/sdm": "0.2.2-20180614082404",
+    "@atomist/sdm": "^0.2.3-nortissej.custom-seed.20180619234931",
     "@types/lodash": "^4.14.109",
     "@types/mocha": "^2.2.48",
     "@types/node": "^9.4.1",
