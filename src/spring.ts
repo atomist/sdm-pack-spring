@@ -79,7 +79,7 @@ export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
 export const springRestGenerator: GeneratorRegistration<SpringProjectCreationParameters> =
     springBootGenerator({
         ...CommonJavaGeneratorConfig,
-        seed: new GitHubRepoRef("spring-team", "spring-rest-seed"),
+        seed: () => new GitHubRepoRef("spring-team", "spring-rest-seed"),
     }, {
         intent: "create spring",
     });
@@ -87,7 +87,7 @@ export const springRestGenerator: GeneratorRegistration<SpringProjectCreationPar
 export const kotlinRestGenerator: GeneratorRegistration<SpringProjectCreationParameters> =
     springBootGenerator({
     ...CommonJavaGeneratorConfig,
-    seed: new GitHubRepoRef("johnsonr", "flux-flix-service"),
+    seed: () => new GitHubRepoRef("johnsonr", "flux-flix-service"),
 }, {
     intent: "create spring kotlin",
 });

@@ -56,7 +56,7 @@ describe("springBootGenerator", () => {
             const p = InMemoryProject.from(new SimpleRepoId("owner", "repoName"),
                 {path: "README.md", content: Readme1});
             const params = new SpringProjectCreationParameters({
-                seed: new GitHubRepoRef("foo", "bar"),
+                seed: () => new GitHubRepoRef("foo", "bar"),
                 groupId: "atomist",
                 addAtomistWebhook: false,
             });
@@ -74,7 +74,7 @@ describe("springBootGenerator", () => {
                 {path: "README.md", content: Readme1},
                 {path: "pom.xml", content: springBootPom()});
             const params = new SpringProjectCreationParameters({
-                seed: new GitHubRepoRef("foo", "bar"),
+                seed: () => new GitHubRepoRef("foo", "bar"),
                 groupId: "atomist",
                 addAtomistWebhook: false,
             });
@@ -89,7 +89,7 @@ describe("springBootGenerator", () => {
             const p = InMemoryProject.from(new SimpleRepoId("owner", "repoName"),
                 {path: "README.md", content: Readme1});
             const params = new SpringProjectCreationParameters({
-                seed: new GitHubRepoRef("foo", "bar"),
+                seed: () => new GitHubRepoRef("foo", "bar"),
                 groupId: "atomist",
                 addAtomistWebhook: false,
             });
@@ -122,7 +122,7 @@ describe("springBootGenerator", () => {
 
         it("should put in Atomist team id and ensure valid Java with default service class name", async () => {
             const config = {
-                seed: new GitHubRepoRef("spring-team", "spring-rest-seed"),
+                seed: () => new GitHubRepoRef("spring-team", "spring-rest-seed"),
                 intent: "whatever",
                 groupId: "atomist",
                 addAtomistWebhook: false,
@@ -154,7 +154,7 @@ describe("springBootGenerator", () => {
 
         it("should put in Atomist team id and ensure valid Java with entered service class name", async () => {
             const config = {
-                seed: new GitHubRepoRef("spring-team", "spring-rest-seed"),
+                seed: () => new GitHubRepoRef("spring-team", "spring-rest-seed"),
                 intent: "whatever",
                 groupId: "atomist",
                 addAtomistWebhook: false,
