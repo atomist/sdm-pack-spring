@@ -24,11 +24,11 @@ import {
     OnCommand,
 } from "@atomist/automation-client/onCommand";
 import { Maker } from "@atomist/automation-client/util/constructionUtils";
-import { EmptyParameters } from "@atomist/sdm/api/command/support/EmptyParameters";
 import {
     DeployedApp,
     ManagedDeployments,
-} from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
+} from "@atomist/sdm-core";
+import { EmptyParameters } from "@atomist/sdm/api/command/support/EmptyParameters";
 import { managedExecutableJarDeployments } from "../../java/deploy/executableJarDeployer";
 import { managedMavenDeployments } from "./mavenDeployer";
 

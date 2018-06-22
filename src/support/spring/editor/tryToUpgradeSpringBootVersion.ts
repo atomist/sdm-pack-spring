@@ -1,3 +1,4 @@
+import { dryRunEditorCommand } from "@atomist/sdm-core/pack/dry-run/dryRunEditorCommand";
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -65,5 +66,5 @@ export const TryToUpgradeSpringBootVersion: EditorRegistration<UpgradeSpringBoot
     name: "boot-upgrade",
     description: `Upgrade Spring Boot version`,
     intent: "try to upgrade Spring Boot",
-    dryRun: true,
+    editorCommandFactory: dryRunEditorCommand,
 };

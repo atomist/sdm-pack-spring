@@ -15,7 +15,7 @@
  */
 
 import { ReviewerRegistration } from "@atomist/sdm";
-import { patternMatchReviewer } from "@atomist/sdm/code/review/patternMatchReviewer";
+import { patternMatchReviewer } from "@atomist/sdm/api-helper/code/review/patternMatchReviewer";
 import { JavaAndKotlinSource } from "../javaProjectUtils";
 
 export const ImportDotStarCategory = "Lazy import";

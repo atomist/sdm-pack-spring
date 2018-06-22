@@ -15,7 +15,7 @@
  */
 
 import { Fingerprint } from "@atomist/automation-client/project/fingerprint/Fingerprint";
-import { computeShaOf } from "@atomist/sdm/util/misc/sha";
+import { computeShaOf } from "@atomist/sdm/api-helper/misc/sha";
 import {
     coordinates,
     toVersionedArtifact,

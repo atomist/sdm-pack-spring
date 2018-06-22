@@ -19,13 +19,13 @@ import {
     ExtensionPack, GeneratorRegistration,
     LocalDeploymentGoal, SoftwareDeliveryMachine,
 } from "@atomist/sdm";
-import * as deploy from "@atomist/sdm/dsl/deployDsl";
 import {
     LocalEndpointGoal,
     LocalUndeploymentGoal,
-} from "@atomist/sdm/goal/common/commonGoals";
-import { ManagedDeploymentTargeter } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
-import { tagRepo } from "@atomist/sdm/util/github/tagRepo";
+} from "@atomist/sdm-core";
+import { ManagedDeploymentTargeter } from "@atomist/sdm-core";
+import { tagRepo } from "@atomist/sdm-core";
+import * as deploy from "@atomist/sdm/api-helper/dsl/deployDsl";
 import { CommonJavaGeneratorConfig } from "./support/java/generate/generatorConfig";
 import { listLocalDeploys } from "./support/maven/deploy/listLocalDeploys";
 import { IsMaven } from "./support/maven/pushTests";

@@ -23,7 +23,7 @@ import {
 import {
     BuildInfo,
     TestStatus,
-} from "@atomist/sdm/internal/delivery/build/BuildInfo";
+} from "@atomist/sdm/api/goal/GitHubContext";
 import { InterpretLog } from "@atomist/sdm/spi/log/InterpretedLog";
 
 export const MavenLogInterpreter: InterpretLog<MavenInfo> = log => {
