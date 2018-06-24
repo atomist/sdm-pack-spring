@@ -44,17 +44,6 @@ export const SpringSupport: ExtensionPack = {
     version: pj.version,
     configure: sdm => {
         sdm
-            .addDeployRules(
-                deploy.when(IsMaven)
-                    .itMeans("Maven local deploy")
-                    .deployTo(LocalDeploymentGoal, LocalEndpointGoal, LocalUndeploymentGoal)
-                    .using(
-                        {
-                            deployer: mavenSourceDeployer(sdm.configuration.sdm.projectLoader),
-                            targeter: ManagedDeploymentTargeter,
-                        },
-                    ))
-            .addSupportingCommands(listLocalDeploys)
             .addEditor(TryToUpgradeSpringBootVersion)
             .addNewRepoWithCodeActions(
                 tagRepo(springBootTagger),
