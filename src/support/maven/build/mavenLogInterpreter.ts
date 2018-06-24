@@ -122,7 +122,6 @@ const testSummaryGrammar = Microgrammar.fromString<TestStatus>(
         errors: Integer,
     });
 
-
 export interface TestStatus {
 
     passingTests: number;
