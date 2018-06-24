@@ -46,7 +46,7 @@
     "typedoc": "^0.11.1",
     "typescript": "^2.9.1",
     "typescript-formatter": "^7.2.0",
-    "@atomist/sdm-core": "0.3.1-20180622024255"
+    "@atomist/sdm-core": "0.3.1-20180622172537"
   },
   "directories": {
     "test": "test"
