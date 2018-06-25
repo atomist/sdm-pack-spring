@@ -21,7 +21,7 @@ import {
     JavaPackageRegExp,
     MavenArtifactIdRegExp,
     MavenGroupIdRegExp,
-} from "@atomist/sdm/handlers/commands/support/java/javaPatterns";
+} from "@atomist/sdm-core";
 
 /**
  * Superclass for all Java project generator parameters.

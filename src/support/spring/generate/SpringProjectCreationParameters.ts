@@ -15,7 +15,7 @@
  */
 
 import { Parameter } from "@atomist/automation-client";
-import { JavaIdentifierRegExp } from "@atomist/sdm/handlers/commands/support/java/javaPatterns";
+import { JavaIdentifierRegExp } from "@atomist/sdm-core";
 import { JavaGeneratorConfig } from "../../java/generate/JavaGeneratorConfig";
 import { JavaProjectCreationParameters } from "../../java/generate/JavaProjectCreationParameters";
 

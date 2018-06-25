@@ -18,8 +18,8 @@ import {
     Deployer,
     ProjectLoader,
 } from "@atomist/sdm";
-import { StartupInfo } from "@atomist/sdm/internal/delivery/deploy/local/LocalDeployerOptions";
-import { ManagedDeploymentTargetInfo } from "@atomist/sdm/internal/delivery/deploy/local/ManagedDeployments";
+import { StartupInfo } from "@atomist/sdm-core";
+import { ManagedDeploymentTargetInfo } from "@atomist/sdm-core";
 import { executableJarDeployer } from "../../java/deploy/executableJarDeployer";
 import { mavenDeployer } from "../../maven/deploy/mavenDeployer";
 

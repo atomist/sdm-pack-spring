@@ -25,12 +25,14 @@
     "properties-reader": "0.0.16"
   },
   "peerDependencies": {
-    "@atomist/automation-client": ">=0.17.2",
-    "@atomist/sdm": ">= 0.2.3"
+    "@atomist/automation-client": "0.17.3",
+    "@atomist/sdm": "^0.3.0",
+    "@atomist/sdm-core": "^0.3.1"
   },
   "devDependencies": {
-    "@atomist/automation-client": "0.17.2-20180613153815",
-    "@atomist/sdm": "^0.2.3",
+    "@atomist/automation-client": "0.17.4-20180621144910",
+    "@atomist/sdm": "0.3.0-20180625085140",
+    "@atomist/sdm-core": "0.3.1-20180624195956",
     "@types/lodash": "^4.14.109",
     "@types/mocha": "^2.2.48",
     "@types/node": "^9.4.1",

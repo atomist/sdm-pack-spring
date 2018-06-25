@@ -20,10 +20,6 @@ import {
     Float,
     Integer,
 } from "@atomist/microgrammar/Primitives";
-import {
-    BuildInfo,
-    TestStatus,
-} from "@atomist/sdm/internal/delivery/build/BuildInfo";
 import { InterpretLog } from "@atomist/sdm/spi/log/InterpretedLog";
 
 export const MavenLogInterpreter: InterpretLog<MavenInfo> = log => {
@@ -125,3 +121,27 @@ const testSummaryGrammar = Microgrammar.fromString<TestStatus>(
         pendingTests: Integer,
         errors: Integer,
     });
+
+export interface TestStatus {
+
+    passingTests: number;
+
+    pendingTests: number;
+
+    failingTests: number;
+
+    errors: number;
+}
+
+/**
+ * Data common to all builds
+ */
+export interface BuildInfo {
+
+    timeMillis?: number;
+
+    success: boolean;
+
+    testInfo?: TestStatus;
+
+}

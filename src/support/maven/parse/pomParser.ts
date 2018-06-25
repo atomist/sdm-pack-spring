@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ProjectIdentifier } from "@atomist/sdm/internal/delivery/build/local/projectIdentifier";
+import { ProjectIdentifier } from "@atomist/sdm-core";
 import { promisify } from "util";
 import * as xml2js from "xml2js";
 import { VersionedArtifact } from "../VersionedArtifact";
