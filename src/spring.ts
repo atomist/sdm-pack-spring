@@ -27,7 +27,7 @@ import { ManagedDeploymentTargeter } from "@atomist/sdm-core";
 import { tagRepo } from "@atomist/sdm-core";
 import * as deploy from "@atomist/sdm/api-helper/dsl/deployDsl";
 import { CommonJavaGeneratorConfig } from "./support/java/generate/generatorConfig";
-import { listLocalDeploys } from "./support/maven/deploy/listLocalDeploys";
+import { ListLocalDeploys } from "./support/maven/deploy/listLocalDeploys";
 import { IsMaven } from "./support/maven/pushTests";
 import { mavenSourceDeployer } from "./support/spring/deploy/localSpringBootDeployers";
 import { TryToUpgradeSpringBootVersion } from "./support/spring/editor/tryToUpgradeSpringBootVersion";
@@ -45,7 +45,7 @@ export const SpringSupport: ExtensionPack = {
     configure: sdm => {
         sdm
             .addEditor(TryToUpgradeSpringBootVersion)
-            .addNewRepoWithCodeActions(
+            .addNewRepoWithCodeAction(
                 tagRepo(springBootTagger),
             );
     },
@@ -62,7 +62,7 @@ export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
                     targeter: ManagedDeploymentTargeter,
                 },
             ))
-        .addSupportingCommands(listLocalDeploys);
+        .addCommand(ListLocalDeploys);
 }
 
 export const springRestGenerator: GeneratorRegistration<SpringProjectCreationParameters> =
@@ -75,8 +75,8 @@ export const springRestGenerator: GeneratorRegistration<SpringProjectCreationPar
 
 export const kotlinRestGenerator: GeneratorRegistration<SpringProjectCreationParameters> =
     springBootGenerator({
-    ...CommonJavaGeneratorConfig,
-    seed: () => new GitHubRepoRef("johnsonr", "flux-flix-service"),
-}, {
-    intent: "create spring kotlin",
-});
+        ...CommonJavaGeneratorConfig,
+        seed: () => new GitHubRepoRef("johnsonr", "flux-flix-service"),
+    }, {
+        intent: "create spring kotlin",
+    });
