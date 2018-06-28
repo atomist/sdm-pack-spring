@@ -22,8 +22,6 @@ import {
 import { doWithFiles } from "@atomist/automation-client/project/util/projectUtils";
 import { JavaProjectStructure } from "./JavaProjectStructure";
 
-// moved from spring-automations
-
 export const AllJavaFiles = "**/*.java";
 
 export const JavaSourceFiles = "src/main/java/**/*.java";

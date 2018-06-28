@@ -24,7 +24,6 @@ import {
 } from "./javaProjectUtils";
 import { JavaPackageDeclaration } from "./parse/JavaGrammars";
 
-// Moved from spring-automation
 /**
  * Represents Java project structure (nested packages following Java naming conventions)
  * which can be inferred from project contents.
