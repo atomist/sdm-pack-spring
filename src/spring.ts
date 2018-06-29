@@ -26,6 +26,7 @@ import {
 import { ManagedDeploymentTargeter } from "@atomist/sdm-core";
 import { tagRepo } from "@atomist/sdm-core";
 import * as deploy from "@atomist/sdm/api-helper/dsl/deployDsl";
+import { metadata } from "@atomist/sdm/api-helper/misc/extensionPack";
 import { CommonJavaGeneratorConfig } from "./support/java/generate/generatorConfig";
 import { ListLocalDeploys } from "./support/maven/deploy/listLocalDeploys";
 import { IsMaven } from "./support/maven/pushTests";
@@ -35,13 +36,8 @@ import { springBootGenerator } from "./support/spring/generate/springBootGenerat
 import { SpringProjectCreationParameters } from "./support/spring/generate/SpringProjectCreationParameters";
 import { springBootTagger } from "./support/spring/springTagger";
 
-// tslint:disable-next-line:no-var-requires
-const pj = require("../package.json");
-
 export const SpringSupport: ExtensionPack = {
-    name: pj.name,
-    vendor: pj.author.name,
-    version: pj.version,
+    ...metadata(),
     configure: sdm => {
         sdm
             .addEditor(TryToUpgradeSpringBootVersion)
