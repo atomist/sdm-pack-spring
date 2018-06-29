@@ -14,42 +14,28 @@
  * limitations under the License.
  */
 
-import {
-    HandleCommand,
-    HandlerContext,
-    Success,
-} from "@atomist/automation-client";
-import {
-    commandHandlerFrom,
-    OnCommand,
-} from "@atomist/automation-client/onCommand";
-import { Maker } from "@atomist/automation-client/util/constructionUtils";
-import {
-    DeployedApp,
-    ManagedDeployments,
-} from "@atomist/sdm-core";
+import { HandleCommand, HandlerContext, Success } from "@atomist/automation-client";
+import { CommandHandlerRegistration } from "@atomist/sdm";
+import { DeployedApp, ManagedDeployments } from "@atomist/sdm-core";
 import { EmptyParameters } from "@atomist/sdm/api/command/support/EmptyParameters";
 import { managedExecutableJarDeployments } from "../../java/deploy/executableJarDeployer";
 import { managedMavenDeployments } from "./mavenDeployer";
 
 /**
- * Return a command handler that can list local deploys
+ * Command handler that can list local deploys
  * @return {HandleCommand<EmptyParameters>}
  */
-export const listLocalDeploys: Maker<HandleCommand> =
-    () => commandHandlerFrom(
-        handleListDeploys(),
-        EmptyParameters,
-        "listLocalDeploys",
-        "list local deploys",
-        "list local deploys");
+export const ListLocalDeploys: CommandHandlerRegistration = {
+    name: "listLocalDeploys",
+    intent: "list local deploys",
+    description: "list local deploys",
+    listener: async ci => handleListDeploys(ci.context),
+};
 
-function handleListDeploys(): OnCommand<EmptyParameters> {
-    return async ctx => {
-        await handleListDeploysWith("Maven source deployer", managedMavenDeployments, ctx);
-        await handleListDeploysWith("Executable JAR deployer", managedExecutableJarDeployments, ctx);
-        return Success;
-    };
+async function handleListDeploys(ctx: HandlerContext) {
+    await handleListDeploysWith("Maven source deployer", managedMavenDeployments, ctx);
+    await handleListDeploysWith("Executable JAR deployer", managedExecutableJarDeployments, ctx);
+    return Success;
 }
 
 async function handleListDeploysWith(description: string, managedDeployments: ManagedDeployments, ctx: HandlerContext) {
