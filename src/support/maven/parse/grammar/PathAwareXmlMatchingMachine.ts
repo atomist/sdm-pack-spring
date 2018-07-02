@@ -19,8 +19,6 @@ import { MatchingMachine } from "@atomist/microgrammar/Microgrammar";
 import { PatternMatch } from "@atomist/microgrammar/PatternMatch";
 import { OPEN_OR_CLOSE_TAG } from "./xmlGrammars";
 
-// moved from spring-automation
-
 /**
  * Convenient matching engine superclass for matching an XML document, keeping
  * track of the current path.

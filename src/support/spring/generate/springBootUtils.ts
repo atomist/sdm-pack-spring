@@ -25,15 +25,12 @@ import { SpringBootProjectStructure } from "./SpringBootProjectStructure";
  * @param {Project} p
  * @return {Promise<Project>}
  */
-export function inferSpringStructureAndRename(serviceClassName: string, p: Project): Promise<Project> {
-    return SpringBootProjectStructure.inferFromJavaOrKotlinSource(p)
-        .then(structure => {
-            if (structure) {
-                return renameClass(p, structure.applicationClassStem, serviceClassName);
-            } else {
-                logger.warn("Spring Boot project structure not found");
-                return p;
-
-            }
-        });
+export async function inferSpringStructureAndRename(serviceClassName: string, p: Project): Promise<Project> {
+    const structure = await SpringBootProjectStructure.inferFromJavaOrKotlinSource(p);
+    if (structure) {
+        return renameClass(p, structure.applicationClassStem, serviceClassName);
+    } else {
+        logger.warn("Spring Boot project structure not found");
+        return p;
+    }
 }

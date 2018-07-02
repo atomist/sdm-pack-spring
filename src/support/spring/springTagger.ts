@@ -16,14 +16,17 @@
 
 import { logger } from "@atomist/automation-client";
 
-import { DefaultTags } from "@atomist/automation-client/operations/tagger/Tagger";
+import { DefaultTags, Tagger } from "@atomist/automation-client/operations/tagger/Tagger";
 import { toPromise } from "@atomist/automation-client/project/util/projectUtils";
 import { AllJavaFiles } from "../java/javaProjectUtils";
 import { SpringBootStarter } from "./springConstants";
 
-// moved from spring-automation
-
-export const springBootTagger = p => {
+/**
+ * Function to add Spring-related GitHub topics if needed
+ * @param p project to scan
+ * @return {Promise<DefaultTags>}
+ */
+export const springBootTagger: Tagger = p => {
     return p.findFile("pom.xml")
         .then(f => f.getContent())
         .then(content => {

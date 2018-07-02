@@ -77,9 +77,7 @@ export class SpringBootProjectStructure {
 
         // It's in the default package if no match found
         const packageName: { name: string } = JavaPackageDeclaration.firstMatch(fh.file.getContentSync()) || {name: ""};
-
         const appClass = fh.matches[0].$value;
-
         if (packageName && appClass) {
             logger.debug("Successful Spring Boot inference on %j: packageName '%s', '%s'",
                 p.id, packageName.name, appClass);

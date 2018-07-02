@@ -56,8 +56,8 @@ export function springBootGenerator(config: JavaGeneratorConfig,
  */
 export const replaceReadmeTitle =
     (params: SpringProjectCreationParameters) => async p => {
-        return utils.doWithFiles(p, "README.md", readMe => {
-            readMe.recordReplace(/^#[\s\S]*?## /, titleBlock(params));
+        return utils.doWithFiles(p, "README.md", async readMe => {
+            await readMe.replace(/^#[\s\S]*?## /, titleBlock(params));
         });
     };
 

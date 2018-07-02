@@ -36,12 +36,11 @@ export function updatePom<P extends ProjectAsync>(
     version: string,
     description: string,
 ): Promise<P> {
-
-    return doWithFiles(project, "pom.xml", f => {
-        f.recordReplace(/<artifactId>[\S\s]*?<\/artifactId>/, `<artifactId>${artifactId}</artifactId>`)
-            .recordReplace(/<name>[\S\s]*?<\/name>/, `<name>${name}</name>`)
-            .recordReplace(/<groupId>[\S\s]*?<\/groupId>/, `<groupId>${groupId}</groupId>`)
-            .recordReplace(/<version>[\S\s]*?<\/version>/, `<version>${version}</version>`)
-            .recordReplace(/<description>[\S\s]*?<\/description>/, `<description>${description}</description>`);
+    return doWithFiles(project, "pom.xml", async f => {
+        await f.replace(/<artifactId>[\S\s]*?<\/artifactId>/, `<artifactId>${artifactId}</artifactId>`);
+        await f.replace(/<name>[\S\s]*?<\/name>/, `<name>${name}</name>`);
+        await f.replace(/<groupId>[\S\s]*?<\/groupId>/, `<groupId>${groupId}</groupId>`);
+        await f.replace(/<version>[\S\s]*?<\/version>/, `<version>${version}</version>`);
+        await f.replace(/<description>[\S\s]*?<\/description>/, `<description>${description}</description>`);
     });
 }
