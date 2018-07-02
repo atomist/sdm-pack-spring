@@ -17,7 +17,6 @@
 import { logger } from "@atomist/automation-client";
 import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
 import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
-// should local deployment be its own pack? we could pull it out of sdm then
 import {
     DefaultLocalDeployerOptions,
     LocalDeployerOptions,
@@ -36,6 +35,8 @@ import { Deployer } from "@atomist/sdm/spi/deploy/Deployer";
 import { Deployment } from "@atomist/sdm/spi/deploy/Deployment";
 import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
 import { spawn } from "child_process";
+
+// TODO: should local deployment be its own pack? we could pull it out of sdm then
 
 /**
  * Managed deployments

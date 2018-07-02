@@ -44,16 +44,16 @@ export const KotlinSourceFiles = "src/main/kotlin/**/*.kt";
  * @param newPackage   name of package to move to
  * @param globPattern  glob to select files. Defaults to all Java files in the project
  */
-export function movePackage<P extends ProjectAsync>(project: P,
-                                                    oldPackage: string, newPackage: string,
-                                                    globPattern: string = AllJavaAndKotlinFiles): Promise<P> {
+export async function movePackage<P extends ProjectAsync>(project: P,
+                                                          oldPackage: string, newPackage: string,
+                                                          globPattern: string = AllJavaAndKotlinFiles): Promise<P> {
     const pathToReplace = packageToPath(oldPackage);
     const newPath = packageToPath(newPackage);
     logger.debug("Replacing path '%s' with '%s', package '%s' with '%s'",
         pathToReplace, newPath, oldPackage, newPackage);
-    return doWithFiles(project, globPattern, f => {
-        f.recordReplaceAll(oldPackage, newPackage)
-            .recordSetPath(f.path.replace(pathToReplace, newPath));
+    return doWithFiles(project, globPattern, async f => {
+        await f.replaceAll(oldPackage, newPackage);
+        await f.setPath(f.path.replace(pathToReplace, newPath));
     });
 }
 
@@ -80,10 +80,10 @@ export function renameClass<P extends ProjectAsync>(project: P,
                                                     oldClass: string,
                                                     newClass: string): Promise<P> {
     logger.debug("Replacing old class stem '%s' with '%s'", oldClass, newClass);
-    return doWithFiles(project, AllJavaAndKotlinFiles, f => {
+    return doWithFiles(project, AllJavaAndKotlinFiles, async f => {
         if (f.name.includes(oldClass)) {
-            f.recordRename(f.name.replace(oldClass, newClass));
-            f.recordReplaceAll(oldClass, newClass);
+            await f.rename(f.name.replace(oldClass, newClass));
+            await f.replaceAll(oldClass, newClass);
         }
     });
 }
