@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-import { SimpleProjectEditor } from "@atomist/automation-client/operations/edit/projectEditor";
-
+import { CodeTransform } from "@atomist/sdm";
 import * as _ from "lodash";
 import { DependencyFinder } from "../parse/grammar/DependencyFinder";
 import { VersionedArtifact } from "../VersionedArtifact";
 
 /**
  * Add the given dependency to projects. It's not an error
- * if the project doesn't have a POM. The editor will do nothing
+ * if the project doesn't have a POM. The transform will do nothing
  * in this case.
  * @param {VersionedArtifact} va
  * @return {SimpleProjectEditor}
  */
-export function addDependencyEditor(va: VersionedArtifact): SimpleProjectEditor {
+export function addDependencyTransform(va: VersionedArtifact): CodeTransform {
     return async project => {
         const pom = await project.getFile("pom.xml");
         if (pom) {

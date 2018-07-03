@@ -15,8 +15,8 @@
  */
 
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { SimpleProjectEditor } from "@atomist/automation-client/operations/edit/projectEditor";
 import { doWithMatches } from "@atomist/automation-client/project/util/parseUtils";
+import { CodeTransform } from "@atomist/sdm";
 import { parentStanzaOfGrammar } from "../../maven/parse/grammar/mavenGrammars";
 import { SpringBootStarter } from "../springConstants";
 
@@ -25,7 +25,7 @@ import { SpringBootStarter } from "../springConstants";
  * @param {string} desiredBootVersion
  * @return {ProjectEditor<EditResult>}
  */
-export function setSpringBootVersionEditor(desiredBootVersion: string): SimpleProjectEditor {
+export function setSpringBootVersionTransform(desiredBootVersion: string): CodeTransform {
     return p => {
         return doWithMatches(p, "**/pom.xml",
             parentStanzaOfGrammar(SpringBootStarter), m => {
