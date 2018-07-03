@@ -15,10 +15,9 @@
  */
 
 import { SimpleProjectEditor } from "@atomist/automation-client/operations/edit/projectEditor";
-import { chainEditors } from "@atomist/automation-client/operations/edit/projectEditorOps";
 import { GeneratorCommandDetails } from "@atomist/automation-client/operations/generate/generatorToCommand";
 import * as utils from "@atomist/automation-client/project/util/projectUtils";
-import { GeneratorRegistration } from "@atomist/sdm";
+import { chainTransforms, GeneratorRegistration } from "@atomist/sdm";
 import { JavaGeneratorConfig } from "../../java/generate/JavaGeneratorConfig";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 import { transformSeedToCustomProject } from "./transformSeedToCustomProject";
@@ -34,7 +33,7 @@ export function springBootGenerator(config: JavaGeneratorConfig,
                                     // tslint:disable-next-line:max-line-length
                                     details: Partial<GeneratorCommandDetails<SpringProjectCreationParameters>> = {}): GeneratorRegistration<SpringProjectCreationParameters> {
     return {
-        createEditor: (params, ctx) => chainEditors(
+        createEditor: (params, ctx) => chainTransforms(
             replaceReadmeTitle(params),
             SetAtomistTeamInApplicationYml,
             transformSeedToCustomProject(params),

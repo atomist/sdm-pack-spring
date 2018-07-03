@@ -16,24 +16,22 @@
 
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import * as assert from "power-assert";
-import { setSpringBootVersionEditor } from "../../../../src/support/spring/editor/setSpringBootVersionEditor";
+import { setSpringBootVersionTransform } from "../../../../src/support/spring/transform/setSpringBootVersionTransform";
 import { springBootPom } from "../generator/TestPoms";
 import { NodeFsLocalProject } from "@atomist/automation-client/project/local/NodeFsLocalProject";
 import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
 import * as tmp from "tmp";
 
-
-
-describe("setSpringBootVersionEditor", () => {
+describe("setSpringBootVersionTransform", () => {
 
     it("doesn't edit empty project", async () => {
         const p = new InMemoryProject();
-        await setSpringBootVersionEditor("1.3.1")(p);
+        await setSpringBootVersionTransform("1.3.1")(p);
     });
 
     it("actually edits Spring Boot project in memory", done => {
         const p = InMemoryProject.of({ path: "pom.xml", content: springBootPom("1.3.0") });
-        setSpringBootVersionEditor("1.3.1")(p)
+        setSpringBootVersionTransform("1.3.1")(p)
             .then(r => {
                 assert(p.findFileSync("pom.xml").getContentSync().includes("1.3.1"));
             }).then(done, done);
@@ -42,7 +40,7 @@ describe("setSpringBootVersionEditor", () => {
     it("actually edits Spring Boot project on disk", done => {
         const p = tempProject();
         p.addFileSync("pom.xml", springBootPom("1.3.0"));
-        setSpringBootVersionEditor("1.3.1")(p)
+        setSpringBootVersionTransform("1.3.1")(p)
             .then(r => {
                 assert(p.findFileSync("pom.xml").getContentSync().includes("1.3.1"));
             }).then(done, done);

@@ -18,12 +18,10 @@ import { InMemoryFile } from "@atomist/automation-client/project/mem/InMemoryFil
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import { Project } from "@atomist/automation-client/project/Project";
 import * as assert from "power-assert";
-import { addDependencyEditor } from "../../../../src";
+import { addDependencyTransform } from "../../../../src";
 import * as xml from "fast-xml-parser";
 
-
-
-describe("DependencyAdditionEditor", () => {
+describe("addDependencyTransformTest", () => {
 
     it("no POM causes no change, no error", async () => {
         const dae = {
@@ -33,7 +31,7 @@ describe("DependencyAdditionEditor", () => {
         };
         // const pom = PomWithReplaceMe.replace("replaceMe", "");
         const p = InMemoryProject.of();
-        await addDependencyEditor(dae)(p);
+        await addDependencyTransform(dae)(p);
         assert(!(await p.getFile("pom.xml")));
     });
 
@@ -45,7 +43,7 @@ describe("DependencyAdditionEditor", () => {
         };
         const pom = PomWithReplaceMe.replace(ReplaceMe, "");
         const p = projectOfPom(pom);
-        await addDependencyEditor(dae)(p);
+        await addDependencyTransform(dae)(p);
         const newPomContent = p.findFileSync("pom.xml").getContentSync();
         // console.log(newPomContent);
         assert(xml.validate(newPomContent));
@@ -62,7 +60,7 @@ describe("DependencyAdditionEditor", () => {
         };
         const pom = PomWithReplaceMe.replace(ReplaceMe, "");
         const p = projectOfPom(pom);
-        await addDependencyEditor(dae)(p);
+        await addDependencyTransform(dae)(p);
         const newPomContent = p.findFileSync("pom.xml").getContentSync();
         assert(pom === newPomContent);
     });

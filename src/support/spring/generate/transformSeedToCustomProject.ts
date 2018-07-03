@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { AnyProjectEditor } from "@atomist/automation-client/operations/edit/projectEditor";
 import { chainEditors } from "@atomist/automation-client/operations/edit/projectEditorOps";
 import { cleanReadMe } from "@atomist/automation-client/operations/generate/UniversalSeed";
+import { CodeTransform } from "@atomist/sdm";
 import { curry } from "@typed/curry";
 import { inferStructureAndMovePackage } from "../../java/javaProjectUtils";
 import { updatePom } from "../../maven/generate/updatePom";
@@ -24,9 +24,10 @@ import { inferSpringStructureAndRename } from "./springBootUtils";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 
 /**
- * Transform a seed to a Spring Boot project
+ * Transform a seed to a custom Spring Boot project.
+ * Transform suited for use in a Spring Boot generator.
  */
-export function transformSeedToCustomProject(params: SpringProjectCreationParameters): AnyProjectEditor<any> {
+export function transformSeedToCustomProject(params: SpringProjectCreationParameters): CodeTransform {
     return chainEditors(
         curry(cleanReadMe)(params.target.description),
         p => updatePom(p, params.target.repo, params.artifactId, params.groupId, params.version, params.description),

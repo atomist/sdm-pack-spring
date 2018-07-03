@@ -94,10 +94,9 @@ export function renameClass<P extends ProjectAsync>(project: P,
  * @param {Project} p
  * @return {Promise<Project>}
  */
-export function inferStructureAndMovePackage(rootPackage: string, p: Project): Promise<Project> {
-    return JavaProjectStructure.infer(p)
-        .then(structure =>
-            (structure) ?
-                movePackage(p, structure.applicationPackage, rootPackage) :
-                p);
+export async function inferStructureAndMovePackage(rootPackage: string, p: Project): Promise<Project> {
+    const structure = await JavaProjectStructure.infer(p);
+    return !!structure ?
+        movePackage(p, structure.applicationPackage, rootPackage) :
+        p;
 }
