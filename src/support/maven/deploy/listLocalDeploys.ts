@@ -17,7 +17,6 @@
 import { HandleCommand, HandlerContext, Success } from "@atomist/automation-client";
 import { CommandHandlerRegistration } from "@atomist/sdm";
 import { DeployedApp, ManagedDeployments } from "@atomist/sdm-core";
-import { EmptyParameters } from "@atomist/sdm/api/command/support/EmptyParameters";
 import { managedExecutableJarDeployments } from "../../java/deploy/executableJarDeployer";
 import { managedMavenDeployments } from "./mavenDeployer";
 

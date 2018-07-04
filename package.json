@@ -30,9 +30,9 @@
     "@atomist/sdm-core": "^0.3.1"
   },
   "devDependencies": {
-    "@atomist/automation-client": "0.17.4-20180628204109",
-    "@atomist/sdm": "https://r.atomist.com/3558146810",
-    "@atomist/sdm-core": "0.3.2-singular-api.20180628223655",
+    "@atomist/automation-client": "0.18.0-20180704102519",
+    "@atomist/sdm": "0.3.1-20180704121313",
+    "@atomist/sdm-core": "0.3.2-20180704113629",
     "@types/lodash": "^4.14.109",
     "@types/mocha": "^2.2.48",
     "@types/node": "^9.4.1",
@@ -42,7 +42,7 @@
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.2",
     "supervisor": "^0.12.0",
-    "ts-node": "^6.1.1",
+    "ts-node": "^7.0.0",
     "tslint": "^5.9.1",
     "typedoc": "^0.11.1",
     "typescript": "^2.9.2",
