@@ -22,12 +22,13 @@ import { ProjectAsync } from "@atomist/automation-client/project/Project";
 import { findFileMatches } from "@atomist/automation-client/tree/ast/astUtils";
 import { FileParser } from "@atomist/automation-client/tree/ast/FileParser";
 import { FileParserRegistry } from "@atomist/automation-client/tree/ast/FileParserRegistry";
+import { evaluateScalarValue } from "@atomist/tree-path/path/expressionEngine";
 import { PathExpression } from "@atomist/tree-path/path/pathExpression";
+import { JavaPackage, KotlinPackage } from "../../java/JavaProjectStructure";
 import {
     JavaSourceFiles,
     KotlinSourceFiles,
 } from "../../java/javaProjectUtils";
-import { JavaPackageDeclaration } from "../../java/parse/JavaGrammars";
 
 export const SpringBootAppClassInJava = `//typeDeclaration
                                 [//annotation[@value='@SpringBootApplication']]
@@ -66,7 +67,6 @@ export class SpringBootProjectStructure {
                                                             globPattern: string,
                                                             pathExpression: string | PathExpression): Promise<SpringBootProjectStructure> {
         const fileHits = await findFileMatches(p, parserOrRegistry, globPattern, pathExpression);
-
         if (fileHits.length === 0) {
             return null;
         }
@@ -76,7 +76,11 @@ export class SpringBootProjectStructure {
         const fh = fileHits[0];
 
         // It's in the default package if no match found
-        const packageName: { name: string } = JavaPackageDeclaration.firstMatch(fh.file.getContentSync()) || {name: ""};
+        const packageName: { name: string } = {
+            name: evaluateScalarValue(fh.fileNode, JavaPackage) ||
+            evaluateScalarValue(fh.fileNode, KotlinPackage) ||
+            "",
+        };
         const appClass = fh.matches[0].$value;
         if (packageName && appClass) {
             logger.debug("Successful Spring Boot inference on %j: packageName '%s', '%s'",

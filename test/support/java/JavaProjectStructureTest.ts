@@ -54,6 +54,25 @@ describe("JavaProjectStructure", () => {
         }).catch(done);
     });
 
+    it("infer application package when uniquely present, avoiding comments", done => {
+        const p = InMemoryProject.of(
+            {
+                path: "src/main/java/com/smashing/pumpkins/Gish.java",
+                content: javaSource,
+            }, {
+                path: "src/main/java/com/smashing/pumpkins/package-info.java",
+                content: `/**
+ * The classes in this package represent utilities used by the domain.
+ */
+package com.smashing.pumpkins;`,
+            },
+        );
+        JavaProjectStructure.infer(p).then(structure => {
+            assert(structure.applicationPackage === "com.smashing.pumpkins");
+            done();
+        }).catch(done);
+    });
+
     it("infer application package (Kotlin) when uniquely present", done => {
         const p = InMemoryProject.of(
             {

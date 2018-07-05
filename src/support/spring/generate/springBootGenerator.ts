@@ -17,10 +17,11 @@
 import { SimpleProjectEditor } from "@atomist/automation-client/operations/edit/projectEditor";
 import { GeneratorCommandDetails } from "@atomist/automation-client/operations/generate/generatorToCommand";
 import * as utils from "@atomist/automation-client/project/util/projectUtils";
-import { chainTransforms, GeneratorRegistration } from "@atomist/sdm";
+import { GeneratorRegistration } from "@atomist/sdm";
+import { CodeTransform } from "@atomist/sdm/api/registration/ProjectOperationRegistration";
 import { JavaGeneratorConfig } from "../../java/generate/JavaGeneratorConfig";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
-import { transformSeedToCustomProject } from "./transformSeedToCustomProject";
+import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
 
 /**
  * Function to create a Spring Boot generator.
@@ -33,11 +34,11 @@ export function springBootGenerator(config: JavaGeneratorConfig,
                                     // tslint:disable-next-line:max-line-length
                                     details: Partial<GeneratorCommandDetails<SpringProjectCreationParameters>> = {}): GeneratorRegistration<SpringProjectCreationParameters> {
     return {
-        createEditor: (params, ctx) => chainTransforms(
-            replaceReadmeTitle(params),
+        transform: [
+            ReplaceReadmeTitle,
             SetAtomistTeamInApplicationYml,
-            transformSeedToCustomProject(params),
-        ),
+            TransformSeedToCustomProject,
+        ],
         paramsMaker: () => {
             const p = new SpringProjectCreationParameters(config);
             // p.target = new BitBucketRepoCreationParameters();
@@ -53,8 +54,7 @@ export function springBootGenerator(config: JavaGeneratorConfig,
 /**
  * Update the readme
  */
-export const replaceReadmeTitle =
-    (params: SpringProjectCreationParameters) => async p => {
+export const ReplaceReadmeTitle: CodeTransform<SpringProjectCreationParameters> = async (p, _, params) => {
         return utils.doWithFiles(p, "README.md", async readMe => {
             await readMe.replace(/^#[\s\S]*?## /, titleBlock(params));
         });
