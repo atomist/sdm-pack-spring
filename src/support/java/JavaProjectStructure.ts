@@ -18,8 +18,8 @@ import { JavaFileParser } from "@atomist/antlr/tree/ast/antlr/java/JavaFileParse
 import { KotlinFileParser } from "@atomist/antlr/tree/ast/antlr/kotlin/KotlinFileParser";
 import { logger } from "@atomist/automation-client";
 import { ProjectAsync } from "@atomist/automation-client/project/Project";
+import { findMatches } from "@atomist/automation-client/tree/ast/astUtils";
 import * as _ from "lodash";
-import { findMatches } from "../../../node_modules/@atomist/automation-client/tree/ast/astUtils";
 import { JavaSourceFiles, KotlinSourceFiles } from "./javaProjectUtils";
 
 export const JavaPackage = "//packageDeclaration//qualifiedName";

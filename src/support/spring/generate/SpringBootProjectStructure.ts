@@ -22,8 +22,8 @@ import { ProjectAsync } from "@atomist/automation-client/project/Project";
 import { findFileMatches } from "@atomist/automation-client/tree/ast/astUtils";
 import { FileParser } from "@atomist/automation-client/tree/ast/FileParser";
 import { FileParserRegistry } from "@atomist/automation-client/tree/ast/FileParserRegistry";
+import { evaluateScalarValue } from "@atomist/tree-path/path/expressionEngine";
 import { PathExpression } from "@atomist/tree-path/path/pathExpression";
-import { evaluateExpression, evaluateScalar, evaluateScalarValue } from "../../../../node_modules/@atomist/tree-path/path/expressionEngine";
 import { JavaPackage, KotlinPackage } from "../../java/JavaProjectStructure";
 import {
     JavaSourceFiles,
