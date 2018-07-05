@@ -16,13 +16,11 @@
 
 import { logger } from "@atomist/automation-client";
 import { ProjectAsync } from "@atomist/automation-client/project/Project";
-import { findMatches } from "@atomist/automation-client/project/util/parseUtils";
 import * as _ from "lodash";
-import {
-    JavaSourceFiles,
-    KotlinSourceFiles,
-} from "./javaProjectUtils";
-import { JavaPackageDeclaration } from "./parse/JavaGrammars";
+import { JavaSourceFiles, KotlinSourceFiles, } from "./javaProjectUtils";
+import { findMatches } from "../../../node_modules/@atomist/automation-client/tree/ast/astUtils";
+import { JavaFileParser } from "@atomist/antlr/tree/ast/antlr/java/JavaFileParser";
+import { KotlinFileParser } from "@atomist/antlr/tree/ast/antlr/kotlin/KotlinFileParser";
 
 /**
  * Represents Java project structure (nested packages following Java naming conventions)
@@ -38,9 +36,9 @@ export class JavaProjectStructure {
      */
     public static async infer(p: ProjectAsync): Promise<JavaProjectStructure> {
         // Treat Java and Kotlin as one
-        const packages = (await findMatches(p, JavaSourceFiles, JavaPackageDeclaration))
-            .concat(await findMatches(p, KotlinSourceFiles, JavaPackageDeclaration));
-        const uniquePackages = _.uniq(packages.map(pack => pack.name));
+        const packages = (await findMatches(p, JavaFileParser, JavaSourceFiles, "//packageDeclaration//qualifiedName"))
+            .concat(await findMatches(p, KotlinFileParser, KotlinSourceFiles, "//packageHeader//identifier"));
+        const uniquePackages = _.uniq(packages.map(pack => pack.$value));
         if (uniquePackages.length === 0) {
             return undefined;
         }
