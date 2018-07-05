@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
+import { JavaFileParser } from "@atomist/antlr/tree/ast/antlr/java/JavaFileParser";
+import { KotlinFileParser } from "@atomist/antlr/tree/ast/antlr/kotlin/KotlinFileParser";
 import { logger } from "@atomist/automation-client";
 import { ProjectAsync } from "@atomist/automation-client/project/Project";
 import * as _ from "lodash";
-import { JavaSourceFiles, KotlinSourceFiles, } from "./javaProjectUtils";
 import { findMatches } from "../../../node_modules/@atomist/automation-client/tree/ast/astUtils";
-import { JavaFileParser } from "@atomist/antlr/tree/ast/antlr/java/JavaFileParser";
-import { KotlinFileParser } from "@atomist/antlr/tree/ast/antlr/kotlin/KotlinFileParser";
+import { JavaSourceFiles, KotlinSourceFiles } from "./javaProjectUtils";
+
+export const JavaPackage = "//packageDeclaration//qualifiedName";
+
+export const KotlinPackage = "//packageHeader//identifier";
 
 /**
  * Represents Java project structure (nested packages following Java naming conventions)
@@ -36,8 +40,8 @@ export class JavaProjectStructure {
      */
     public static async infer(p: ProjectAsync): Promise<JavaProjectStructure> {
         // Treat Java and Kotlin as one
-        const packages = (await findMatches(p, JavaFileParser, JavaSourceFiles, "//packageDeclaration//qualifiedName"))
-            .concat(await findMatches(p, KotlinFileParser, KotlinSourceFiles, "//packageHeader//identifier"));
+        const packages = (await findMatches(p, JavaFileParser, JavaSourceFiles, JavaPackage))
+            .concat(await findMatches(p, KotlinFileParser, KotlinSourceFiles, KotlinPackage));
         const uniquePackages = _.uniq(packages.map(pack => pack.$value));
         if (uniquePackages.length === 0) {
             return undefined;
