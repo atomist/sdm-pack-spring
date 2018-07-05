@@ -20,11 +20,9 @@ import { SimpleRepoId } from "@atomist/automation-client/operations/common/RepoI
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import * as assert from "power-assert";
 import { SpringProjectCreationParameters } from "../../../../src/support/spring/generate/SpringProjectCreationParameters";
-import { replaceReadmeTitle, SetAtomistTeamInApplicationYml } from "../../../../src/support/spring/generate/springBootGenerator";
-import { transformSeedToCustomProject } from "../../../../src/support/spring/generate/transformSeedToCustomProject";
+import { ReplaceReadmeTitle, SetAtomistTeamInApplicationYml } from "../../../../src/support/spring/generate/springBootGenerator";
 import { springBootPom } from "./TestPoms";
-
-
+import { TransformSeedToCustomProject } from "../../../../src/support/spring/generate/transformSeedToCustomProject";
 
 const Readme1 = `# spring-rest-seed
 
@@ -62,7 +60,7 @@ describe("springBootGenerator", () => {
             });
             params.target.repo = "repoName";
             params.enteredServiceClassName = "foo";
-            await replaceReadmeTitle(params)(p);
+            await ReplaceReadmeTitle(p, null, params);
             const readmeContent = p.findFileSync("README.md").getContentSync();
             assert(readmeContent.includes("# repoName"), "Should include repo name");
             assert(readmeContent.includes("seed project \`foo:bar"),
@@ -80,7 +78,7 @@ describe("springBootGenerator", () => {
             });
             params.target.repo = "repoName";
             params.enteredServiceClassName = "foo";
-            await transformSeedToCustomProject(params)(p, null, null);
+            await TransformSeedToCustomProject(p, null, params);
             const pom = p.findFileSync("pom.xml").getContentSync();
             assert(pom.includes(`<name>${params.target.repo}</name>`), "Name should be repo name");
         });
@@ -96,7 +94,7 @@ describe("springBootGenerator", () => {
             params.target.repo = "repoName";
             params.enteredServiceClassName = "foo";
             params.seed = "turtles";
-            await replaceReadmeTitle(params)(p);
+            await ReplaceReadmeTitle(p, null, params);
             const readmeContent = p.findFileSync("README.md").getContentSync();
             assert(readmeContent.includes("# repoName"), "Should include repo name");
             assert(readmeContent.includes("seed project \`foo:turtles"),

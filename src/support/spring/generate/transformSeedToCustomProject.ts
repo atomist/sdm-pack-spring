@@ -16,7 +16,7 @@
 
 import { chainEditors } from "@atomist/automation-client/operations/edit/projectEditorOps";
 import { cleanReadMe } from "@atomist/automation-client/operations/generate/UniversalSeed";
-import { CodeTransform } from "@atomist/sdm";
+import { CodeTransformRegisterable } from "@atomist/sdm/api/registration/ProjectOperationRegistration";
 import { curry } from "@typed/curry";
 import { inferStructureAndMovePackage } from "../../java/javaProjectUtils";
 import { updatePom } from "../../maven/generate/updatePom";
@@ -27,11 +27,11 @@ import { SpringProjectCreationParameters } from "./SpringProjectCreationParamete
  * Transform a seed to a custom Spring Boot project.
  * Transform suited for use in a Spring Boot generator.
  */
-export function transformSeedToCustomProject(params: SpringProjectCreationParameters): CodeTransform {
+export const TransformSeedToCustomProject: CodeTransformRegisterable<SpringProjectCreationParameters> = async (p, ctx, params) => {
     return chainEditors(
         curry(cleanReadMe)(params.target.description),
-        p => updatePom(p, params.target.repo, params.artifactId, params.groupId, params.version, params.description),
+        async project => updatePom(project, params.target.repo, params.artifactId, params.groupId, params.version, params.description),
         curry(inferStructureAndMovePackage)(params.rootPackage),
         curry(inferSpringStructureAndRename)(params.serviceClassName),
-    );
-}
+    )(p, ctx, params);
+};
