@@ -16,27 +16,13 @@
 
 import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
 import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
-import {
-    LocalBuilder,
-    LocalBuildInProgress,
-} from "@atomist/sdm-core";
-import {
-    asSpawnCommand,
-    ChildProcessResult,
-    spawnAndWatch,
-} from "@atomist/sdm/api-helper/misc/spawned";
+import { SoftwareDeliveryMachine } from "@atomist/sdm";
+import { LocalBuilder, LocalBuildInProgress } from "@atomist/sdm-core";
+import { asSpawnCommand, ChildProcessResult, spawnAndWatch } from "@atomist/sdm/api-helper/misc/spawned";
 import { AddressChannels } from "@atomist/sdm/api/context/addressChannels";
-import { ArtifactStore } from "@atomist/sdm/spi/artifact/ArtifactStore";
 import { AppInfo } from "@atomist/sdm/spi/deploy/Deployment";
-import {
-    InterpretLog,
-    LogInterpretation,
-} from "@atomist/sdm/spi/log/InterpretedLog";
-import {
-    ProgressLog,
-    ProgressLogFactory,
-} from "@atomist/sdm/spi/log/ProgressLog";
-import { ProjectLoader } from "@atomist/sdm/spi/project/ProjectLoader";
+import { InterpretLog, LogInterpretation } from "@atomist/sdm/spi/log/InterpretedLog";
+import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
 import { identification } from "../parse/pomParser";
 import { MavenLogInterpreter } from "./mavenLogInterpreter";
 
@@ -52,11 +38,9 @@ export class MavenBuilder extends LocalBuilder implements LogInterpretation {
 
     public logInterpreter: InterpretLog = MavenLogInterpreter;
 
-    constructor(artifactStore: ArtifactStore,
-                logFactory: ProgressLogFactory,
-                projectLoader: ProjectLoader,
+    constructor(sdm: SoftwareDeliveryMachine,
                 private readonly skipTests: boolean = true) {
-        super("MavenBuilder", artifactStore, projectLoader);
+        super("MavenBuilder", sdm);
     }
 
     protected async startBuild(credentials: ProjectOperationCredentials,
@@ -64,12 +48,12 @@ export class MavenBuilder extends LocalBuilder implements LogInterpretation {
                                atomistTeam: string,
                                log: ProgressLog,
                                addressChannels: AddressChannels): Promise<LocalBuildInProgress> {
-        return this.projectLoader.doWithProject({credentials, id, readOnly: true}, async p => {
+        return this.sdm.configuration.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
             // Find the artifact info from Maven
             const pom = await p.findFile("pom.xml");
             const content = await pom.getContent();
             const va = await identification(content);
-            const appId = {...va, name: va.artifact, id};
+            const appId = { ...va, name: va.artifact, id };
 
             const cmd = "mvn package" + (this.skipTests ? " -DskipTests" : "");
             const buildResult = spawnAndWatch(
