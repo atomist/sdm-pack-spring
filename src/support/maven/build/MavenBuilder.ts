@@ -48,7 +48,7 @@ export class MavenBuilder extends LocalBuilder implements LogInterpretation {
                                atomistTeam: string,
                                log: ProgressLog,
                                addressChannels: AddressChannels): Promise<LocalBuildInProgress> {
-        return this.sdm.configuration.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
+        return this.sdm.configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
             // Find the artifact info from Maven
             const pom = await p.findFile("pom.xml");
             const content = await pom.getContent();
