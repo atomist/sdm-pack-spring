@@ -32,7 +32,7 @@
   "devDependencies": {
     "@atomist/automation-client": "^0.18.0-20180704102519",
     "@atomist/sdm": "0.3.2-nortissej.remove-status-field.20180706202026",
-    "@atomist/sdm-core": "0.3.2-20180706144833",
+    "@atomist/sdm-core": "^0.3.2-latest-sdm.20180706221548",
     "@types/lodash": "^4.14.109",
     "@types/mocha": "^2.2.48",
     "@types/node": "^9.4.1",
