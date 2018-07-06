@@ -21,19 +21,15 @@ import { parentStanzaOfGrammar } from "../../maven/parse/grammar/mavenGrammars";
 import { SpringBootStarter } from "../springConstants";
 
 /**
- * Set the Spring Boot version to
- * @param {string} desiredBootVersion
- * @return {ProjectEditor<EditResult>}
+ * Set the Spring Boot version according to the parameters
  */
-export function setSpringBootVersionTransform(desiredBootVersion: string): CodeTransform {
-    return p => {
-        return doWithMatches(p, "**/pom.xml",
+export const SetSpringBootVersionTransform: CodeTransform<{ desiredBootVersion: string }> =
+    async (p, ctx, params) =>
+        doWithMatches(p, "**/pom.xml",
             parentStanzaOfGrammar(SpringBootStarter), m => {
-                if (m.version.value !== desiredBootVersion) {
+                if (m.version.value !== params.desiredBootVersion) {
                     logger.info("Updating Spring Boot version from [%s] to [%s]",
-                        m.version.value, desiredBootVersion);
-                    m.version.value = desiredBootVersion;
+                        m.version.value, params.desiredBootVersion);
+                    m.version.value = params.desiredBootVersion;
                 }
             });
-    };
-}

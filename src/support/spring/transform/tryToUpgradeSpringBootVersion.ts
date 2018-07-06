@@ -1,7 +1,3 @@
-import { Parameter, Parameters } from "@atomist/automation-client";
-import { CodeTransformRegistration, EditModeSuggestion } from "@atomist/sdm";
-import { dryRunEditorCommand } from "@atomist/sdm-core/pack/dry-run/dryRunEditorCommand";
-import { setSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -17,6 +13,11 @@ import { setSpringBootVersionTransform } from "./setSpringBootVersionTransform";
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { Parameter, Parameters } from "@atomist/automation-client";
+import { CodeTransformRegistration, EditModeSuggestion } from "@atomist/sdm";
+import { dryRunEditorCommand } from "@atomist/sdm-core/pack/dry-run/dryRunEditorCommand";
+import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 
 @Parameters()
 export class UpgradeSpringBootParameters implements EditModeSuggestion {
@@ -52,7 +53,7 @@ export class UpgradeSpringBootParameters implements EditModeSuggestion {
  * @type {HandleCommand<EditOneOrAllParameters>}
  */
 export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpringBootParameters> = {
-    createEditor: params => setSpringBootVersionTransform(params.desiredBootVersion),
+    transform: SetSpringBootVersionTransform,
     paramsMaker: UpgradeSpringBootParameters,
     name: "boot-upgrade",
     description: `Upgrade Spring Boot version`,
