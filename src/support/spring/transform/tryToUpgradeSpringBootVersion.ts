@@ -16,8 +16,8 @@
 
 import { Parameter, Parameters } from "@atomist/automation-client";
 import { CodeTransformRegistration, EditModeSuggestion } from "@atomist/sdm";
-import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 import { makeBuildAware } from "@atomist/sdm/pack/build-aware-transform";
+import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 
 @Parameters()
 export class UpgradeSpringBootParameters implements EditModeSuggestion {
