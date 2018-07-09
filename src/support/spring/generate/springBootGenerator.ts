@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { SimpleProjectEditor } from "@atomist/automation-client/operations/edit/projectEditor";
 import { GeneratorCommandDetails } from "@atomist/automation-client/operations/generate/generatorToCommand";
 import * as utils from "@atomist/automation-client/project/util/projectUtils";
 import { CodeTransform, GeneratorRegistration } from "@atomist/sdm";
@@ -53,9 +52,9 @@ export function springBootGenerator(config: JavaGeneratorConfig,
 /**
  * Update the readme
  */
-export const ReplaceReadmeTitle: CodeTransform<SpringProjectCreationParameters> = async (p, _, params) => {
+export const ReplaceReadmeTitle: CodeTransform<SpringProjectCreationParameters> = async (p, ci) => {
         return utils.doWithFiles(p, "README.md", async readMe => {
-            await readMe.replace(/^#[\s\S]*?## /, titleBlock(params));
+            await readMe.replace(/^#[\s\S]*?## /, titleBlock(ci.parameters));
         });
     };
 
@@ -63,10 +62,10 @@ export const ReplaceReadmeTitle: CodeTransform<SpringProjectCreationParameters> 
  * Replace the ${ATOMIST_TEAM} placeholder in the seed with the id
  * of the team we are generating for
  */
-export const SetAtomistTeamInApplicationYml: SimpleProjectEditor =
-    async (p, ctx) => {
+export const SetAtomistTeamInApplicationYml: CodeTransform =
+    async (p, ci) => {
         return utils.doWithFiles(p, "src/main/resources/application.yml", f =>
-            f.replace(/\${ATOMIST_TEAM}/, ctx.teamId));
+            f.replace(/\${ATOMIST_TEAM}/, ci.context.teamId));
     };
 
 function titleBlock(params: SpringProjectCreationParameters): string {
