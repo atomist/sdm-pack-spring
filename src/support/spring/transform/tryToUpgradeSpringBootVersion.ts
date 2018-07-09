@@ -16,7 +16,7 @@
 
 import { Parameter, Parameters } from "@atomist/automation-client";
 import { CodeTransformRegistration, EditModeSuggestion } from "@atomist/sdm";
-import { dryRunEditorCommand } from "@atomist/sdm-core/pack/dry-run/dryRunEditorCommand";
+import { makeBuildAware } from "@atomist/sdm/pack/build-aware-transform";
 import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 
 @Parameters()
@@ -52,11 +52,10 @@ export class UpgradeSpringBootParameters implements EditModeSuggestion {
  * handler to respond to the build with either a PR and Issue
  * @type {HandleCommand<EditOneOrAllParameters>}
  */
-export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpringBootParameters> = {
+export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpringBootParameters> = makeBuildAware({
     transform: SetSpringBootVersionTransform,
     paramsMaker: UpgradeSpringBootParameters,
     name: "boot-upgrade",
     description: `Upgrade Spring Boot version`,
     intent: "try to upgrade Spring Boot",
-    editorCommandFactory: dryRunEditorCommand,
-};
+});
