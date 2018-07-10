@@ -53,14 +53,14 @@ describe("springBootGenerator", () => {
         it("should get correct content: default seed", async () => {
             const p = InMemoryProject.from(new SimpleRepoId("owner", "repoName"),
                 {path: "README.md", content: Readme1});
-            const params = new SpringProjectCreationParameters({
+            const parameters = new SpringProjectCreationParameters({
                 seed: () => new GitHubRepoRef("foo", "bar"),
                 groupId: "atomist",
                 addAtomistWebhook: false,
             });
-            params.target.repo = "repoName";
-            params.enteredServiceClassName = "foo";
-            await ReplaceReadmeTitle(p, null, params);
+            parameters.target.repo = "repoName";
+            parameters.enteredServiceClassName = "foo";
+            await ReplaceReadmeTitle(p, {parameters} as any);
             const readmeContent = p.findFileSync("README.md").getContentSync();
             assert(readmeContent.includes("# repoName"), "Should include repo name");
             assert(readmeContent.includes("seed project \`foo:bar"),
@@ -86,15 +86,15 @@ describe("springBootGenerator", () => {
         it("should get correct content: entered seed", async () => {
             const p = InMemoryProject.from(new SimpleRepoId("owner", "repoName"),
                 {path: "README.md", content: Readme1});
-            const params = new SpringProjectCreationParameters({
+            const parameters = new SpringProjectCreationParameters({
                 seed: () => new GitHubRepoRef("foo", "bar"),
                 groupId: "atomist",
                 addAtomistWebhook: false,
             });
-            params.target.repo = "repoName";
-            params.enteredServiceClassName = "foo";
-            params.seed = "turtles";
-            await ReplaceReadmeTitle(p, null, params);
+            parameters.target.repo = "repoName";
+            parameters.enteredServiceClassName = "foo";
+            parameters.seed = "turtles";
+            await ReplaceReadmeTitle(p, {parameters} as any);
             const readmeContent = p.findFileSync("README.md").getContentSync();
             assert(readmeContent.includes("# repoName"), "Should include repo name");
             assert(readmeContent.includes("seed project \`foo:turtles"),
@@ -108,8 +108,8 @@ describe("springBootGenerator", () => {
         it("should put in Atomist team id", async () => {
             const p = InMemoryProject.from(new SimpleRepoId("owner", "repoName"),
                 {path: "src/main/resources/application.yml", content: yml1});
-            const ctx = {teamId: "T1000"} as HandlerContext;
-            await SetAtomistTeamInApplicationYml(p, ctx);
+            const context = {teamId: "T1000"} as HandlerContext;
+            await SetAtomistTeamInApplicationYml(p, { context} as any);
             const yml = p.findFileSync("src/main/resources/application.yml").getContentSync();
             assert(yml.includes("/teams/T1000"), "Should include Atomist team");
         });
