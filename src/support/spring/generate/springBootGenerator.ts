@@ -16,38 +16,10 @@
 
 import { GeneratorCommandDetails } from "@atomist/automation-client/operations/generate/generatorToCommand";
 import * as utils from "@atomist/automation-client/project/util/projectUtils";
-import { CodeTransform, GeneratorRegistration } from "@atomist/sdm";
+import { CodeTransform, CodeTransformOrTransforms, GeneratorRegistration } from "@atomist/sdm";
 import { JavaGeneratorConfig } from "../../java/generate/JavaGeneratorConfig";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
-
-/**
- * Function to create a Spring Boot generator.
- * Relies on generic Atomist Java & Spring functionality in spring-automations
- * @param config config for a Java generator, including location of seed
- * @param details allow customization
- * @return {HandleCommand<SpringProjectCreationParameters>}
- */
-export function springBootGenerator(config: JavaGeneratorConfig,
-                                    // tslint:disable-next-line:max-line-length
-                                    details: Partial<GeneratorCommandDetails<SpringProjectCreationParameters>> = {}): GeneratorRegistration<SpringProjectCreationParameters> {
-    return {
-        transform: [
-            ReplaceReadmeTitle,
-            SetAtomistTeamInApplicationYml,
-            TransformSeedToCustomProject,
-        ],
-        paramsMaker: () => {
-            const p = new SpringProjectCreationParameters(config);
-            // p.target = new BitBucketRepoCreationParameters();
-            return p;
-        },
-        name: `springBootGenerator-${config.seed().repo}`,
-        tags: ["spring", "boot", "java", "generator"],
-        ...details as any,
-        intent: details.intent,
-    };
-}
 
 /**
  * Update the readme
@@ -75,4 +47,37 @@ ${params.target.description}
 Based on seed project \`${params.source.repoRef.owner}:${params.source.repoRef.repo}\`
 
 ## `;
+}
+
+/**
+ * Default transformation to turn a Spring Boot seed project into a custom project
+ * @type {(CodeTransform<SpringProjectCreationParameters> | CodeTransform)[]}
+ */
+export const SpringBootGeneratorTransform: CodeTransformOrTransforms<SpringProjectCreationParameters> = [
+    ReplaceReadmeTitle,
+    SetAtomistTeamInApplicationYml,
+    TransformSeedToCustomProject,
+];
+
+/**
+ * Function to create a Spring Boot generator.
+ * @param config config for a Java generator, including location of seed
+ * @param details allow customization
+ * @return {HandleCommand<SpringProjectCreationParameters>}
+ */
+export function springBootGenerator(config: JavaGeneratorConfig,
+                                    // tslint:disable-next-line:max-line-length
+                                    details: Partial<GeneratorCommandDetails<SpringProjectCreationParameters>> = {}): GeneratorRegistration<SpringProjectCreationParameters> {
+    return {
+        transform: SpringBootGeneratorTransform,
+        paramsMaker: () => {
+            const p = new SpringProjectCreationParameters(config);
+            // p.target = new BitBucketRepoCreationParameters();
+            return p;
+        },
+        name: `springBootGenerator-${config.seed().repo}`,
+        tags: ["spring", "boot", "java", "generator"],
+        ...details as any,
+        intent: details.intent,
+    };
 }

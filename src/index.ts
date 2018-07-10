@@ -18,5 +18,5 @@ export { ImportFileIoCategory, FileIoImportReviewer } from "./support/java/revie
 export { HardCodedPropertyReviewer, HardcodePropertyCategory } from "./support/spring/review/hardcodedPropertyReviewer";
 export { MavenBuilder } from "./support/maven/build/MavenBuilder";
 export { CommonJavaGeneratorConfig } from "./support/java/generate/generatorConfig";
-export { springBootGenerator } from "./support/spring/generate/springBootGenerator";
+export * from "./support/spring/generate/springBootGenerator";
 export { ProvidedDependencyReviewer } from "./support/maven/review/providedDependencyReviewer";
