@@ -10,3 +10,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 -   Using `package` in a top comment of a seed project file breaks package renaming in generator. [#8](https://github.com/atomist/sdm-pack-spring/issues/8)
+-   Local jar deployer should not be a const. [#13](https://github.com/atomist/sdm-pack-spring/issues/13)
