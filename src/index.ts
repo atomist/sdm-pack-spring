@@ -3,7 +3,6 @@ export { SpringSupport,
     springRestGenerator,
     configureLocalSpringBootDeploy,
 } from "./spring";
-export { LocalExecutableJarDeployer } from "./support/spring/deploy/localSpringBootDeployers";
 export { IsJava, MaterialChangeToJavaRepo } from "./support/java/pushTests";
 export { IsMaven } from "./support/maven/pushTests";
 export { HasSpringBootApplicationClass, HasSpringBootPom } from "./support/spring/pushTests";

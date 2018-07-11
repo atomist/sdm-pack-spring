@@ -31,12 +31,14 @@ export const SpringBootSuccessPatterns = [
     /Started [A-Za-z0-9_$]+ in [0-9]+.[0-9]+ seconds/,
 ];
 
-export const LocalExecutableJarDeployer: Deployer<ManagedDeploymentTargetInfo> = executableJarDeployer({
-    baseUrl: "http://localhost",
-    lowerPort: 8082,
-    commandLineArgumentsFor: springBootExecutableJarArgs,
-    successPatterns: SpringBootSuccessPatterns,
-});
+export function localExecutableJarDeployer(): Deployer<ManagedDeploymentTargetInfo> {
+  return executableJarDeployer({
+      baseUrl: "http://localhost",
+      lowerPort: 8082,
+      commandLineArgumentsFor: springBootExecutableJarArgs,
+      successPatterns: SpringBootSuccessPatterns,
+  });
+}
 
 function springBootExecutableJarArgs(si: StartupInfo): string[] {
     return [
