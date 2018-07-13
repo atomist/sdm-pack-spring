@@ -41,7 +41,7 @@ export const SpringSupport: ExtensionPack = {
     configure: sdm => {
         sdm
             .addCodeTransformCommand(TryToUpgradeSpringBootVersion)
-            .addNewRepoWithCodeAction(
+            .addNewRepoWithCodeListener(
                 tagRepo(springBootTagger),
             );
     },
