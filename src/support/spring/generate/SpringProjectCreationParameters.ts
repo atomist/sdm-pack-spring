@@ -32,10 +32,11 @@ export class SpringProjectCreationParameters extends JavaProjectCreationParamete
     })
     public enteredServiceClassName: string;
 
-    constructor(config: JavaGeneratorConfig) {
+    constructor(config?: JavaGeneratorConfig) {
         super(config);
-        this.groupId = config.groupId;
-        this.addAtomistWebhook = config.addAtomistWebhook;
+        if (!!config) {
+            this.groupId = config.groupId;
+        }
     }
 
     get serviceClassName() {

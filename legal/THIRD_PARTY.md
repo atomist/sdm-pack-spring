@@ -8,17 +8,9 @@ This page details all runtime OSS dependencies of `@atomist/sdm-pack-spring`.
 
 | License | Count |
 |---------|-------|
-|[Apache-2.0](#apache-20)|1|
 |[BSD-3-Clause](#bsd-3-clause)|1|
 |[GPL-3.0](#gpl-30)|1|
 |[MIT](#mit)|4|
-
-#### Apache-2.0
-Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
-
-| Name | Version | Publisher | Repository |
-|------|---------|-----------|------------|
-|`@atomist/sdm-pack-spring`|`0.1.7`|Atomist, Inc.|[https://github.com/atomist/sdm-pack-spring](https://github.com/atomist/sdm-pack-spring)|
 
 #### BSD-3-Clause
 BSD 3-Clause "New" or "Revised" License - [http://www.opensource.org/licenses/BSD-3-Clause](http://www.opensource.org/licenses/BSD-3-Clause)
