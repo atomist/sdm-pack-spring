@@ -1,4 +1,17 @@
-export { SpringSupport,
+export { ListLocalDeploys } from "./support/maven/deploy/listLocalDeploys";
+export {
+    localExecutableJarDeployer, mavenSourceDeployer,
+    SpringBootSuccessPatterns,
+} from "./support/spring/deploy/localSpringBootDeployers";
+export { mavenDeployer } from "./support/maven/deploy/mavenDeployer";
+export {
+    ReplaceReadmeTitle,
+    SetAtomistTeamInApplicationYml,
+} from "./support/spring/generate/springBootGenerator";
+export { SpringProjectCreationParameters } from "./support/spring/generate/SpringProjectCreationParameters";
+export { TransformSeedToCustomProject } from "./support/spring/generate/transformSeedToCustomProject";
+export {
+    SpringSupport,
     kotlinRestGenerator,
     springRestGenerator,
     configureLocalSpringBootDeploy,
