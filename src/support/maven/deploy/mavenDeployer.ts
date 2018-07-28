@@ -44,8 +44,6 @@ import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
 import { ProjectLoader } from "@atomist/sdm/spi/project/ProjectLoader";
 import { spawn } from "child_process";
 
-// moved from sample-sdm
-
 /**
  * Managed deployments
  */
@@ -67,13 +65,18 @@ export function mavenDeployer(projectLoader: ProjectLoader, opts: LocalDeployerO
     });
 }
 
+/**
+ * Source deployer that uses Maven target
+ */
 class MavenSourceDeployer implements Deployer<ManagedDeploymentTargetInfo> {
 
-    constructor(public projectLoader: ProjectLoader, public opts: LocalDeployerOptions) {
+    constructor(public readonly projectLoader: ProjectLoader, public readonly opts: LocalDeployerOptions) {
     }
 
     public async findDeployments(id: RemoteRepoRef, ti: ManagedDeploymentTargetInfo, creds: ProjectOperationCredentials): Promise<Deployment[]> {
-        const deployedApp = managedMavenDeployments.findDeployment(ti.managedDeploymentKey, LookupStrategy.branch);
+        const deployedApp = managedMavenDeployments.findDeployment(
+            ti.managedDeploymentKey,
+            this.opts.lookupStrategy || LookupStrategy.branch);
         if (!deployedApp) {
             return [];
         }

@@ -40,7 +40,7 @@ export function localExecutableJarDeployer(): Deployer<ManagedDeploymentTargetIn
   });
 }
 
-function springBootExecutableJarArgs(si: StartupInfo): string[] {
+export function springBootExecutableJarArgs(si: StartupInfo): string[] {
     return [
         `--server.port=${si.port}`,
         `--server.contextPath=${si.contextRoot}`,
@@ -56,7 +56,7 @@ export function mavenSourceDeployer(projectLoader: ProjectLoader): Deployer<Mana
     });
 }
 
-function springBootMavenArgs(si: StartupInfo): string[] {
+export function springBootMavenArgs(si: StartupInfo): string[] {
     return [
         `-Dserver.port=${si.port}`,
         `-Dserver.contextPath=${si.contextRoot}`,

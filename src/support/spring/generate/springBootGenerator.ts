@@ -64,6 +64,7 @@ export const SpringBootGeneratorTransform: CodeTransformOrTransforms<SpringProje
  * @param config config for a Java generator, including location of seed
  * @param details allow customization
  * @return {HandleCommand<SpringProjectCreationParameters>}
+ * @deprecated construct GeneratorRegistration directly, using the SpringBootGeneratorTransform in this file
  */
 export function springBootGenerator(config: JavaGeneratorConfig,
                                     // tslint:disable-next-line:max-line-length
