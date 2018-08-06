@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/sdm-pack-spring/tree/HEAD)
 
+### Added
+-   Added support for per-branch local Spring Boot deployment with Maven
+
 ### Fixed
 
 -   Using `package` in a top comment of a seed project file breaks package renaming in generator. [#8](https://github.com/atomist/sdm-pack-spring/issues/8)
