@@ -53,6 +53,12 @@ export interface MavenDeployerOptions {
      */
     commandLineArgumentsFor: (port: number, contextRoot: string) => string[];
 
+    /**
+     * The maximum number of concurrent deployments we allow. This is a valuable
+     * safeguard as too many can crash the machine.
+     */
+    maxConcurrentDeployments: number;
+
 }
 
 /**
@@ -76,7 +82,8 @@ export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoad
         lowerPort: 9090,
         successPatterns: SpringBootSuccessPatterns,
         commandLineArgumentsFor: springBootMavenArgs,
-        baseUrl: os.hostname(),
+        baseUrl: `http://${os.hostname()}`,
+        maxConcurrentDeployments: 5,
     };
     const deployer = new MavenDeployer(optsToUse);
 
@@ -128,6 +135,13 @@ class MavenDeployer {
             await poisonAndWait(existingChildProcess);
         } else {
             logger.info("No existing process for branch '%s' of %s:%s", branch, project.id.owner, project.id.repo);
+            // Check we won't end with a crazy number of child processes
+            const presentCount = Object.keys(this.portToChildProcess)
+                .filter(n => typeof n === "number")
+                .length;
+            if (presentCount >= this.options.maxConcurrentDeployments) {
+                throw new Error(`Unable to deploy project at ${project.id} as limit of ${this.options.maxConcurrentDeployments} has been reached`);
+            }
         }
 
         const childProcess = spawn("mvn",

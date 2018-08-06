@@ -17,7 +17,7 @@
 import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitHubRepoRef";
 import {
     ExtensionPack, GeneratorRegistration,
-    LocalDeploymentGoal, SoftwareDeliveryMachine,
+    LocalDeploymentGoal, SoftwareDeliveryMachine, whenPushSatisfies,
 } from "@atomist/sdm";
 import {
     LocalEndpointGoal,
@@ -27,12 +27,17 @@ import { ManagedDeploymentTargeter } from "@atomist/sdm-core";
 import { tagRepo } from "@atomist/sdm-core";
 import * as deploy from "@atomist/sdm/api-helper/dsl/deployDsl";
 import { metadata } from "@atomist/sdm/api-helper/misc/extensionPack";
+import {
+    executeMavenPerBranchSpringBootDeploy, MavenDeployerOptions,
+    MavenPerBranchSpringBootDeploymentGoal,
+} from "./support/java/deploy/MavenPerBranchSpringBootDeploymentGoal";
 import { CommonJavaGeneratorConfig } from "./support/java/generate/generatorConfig";
 import { ListLocalDeploys } from "./support/maven/deploy/listLocalDeploys";
 import { IsMaven } from "./support/maven/pushTests";
 import { mavenSourceDeployer } from "./support/spring/deploy/localSpringBootDeployers";
 import { springBootGenerator } from "./support/spring/generate/springBootGenerator";
 import { SpringProjectCreationParameters } from "./support/spring/generate/SpringProjectCreationParameters";
+import { HasSpringBootApplicationClass } from "./support/spring/pushTests";
 import { springBootTagger } from "./support/spring/springTagger";
 import { TryToUpgradeSpringBootVersion } from "./support/spring/transform/tryToUpgradeSpringBootVersion";
 
@@ -46,6 +51,14 @@ export const SpringSupport: ExtensionPack = {
             );
     },
 };
+
+export function configureMavenPerBranchSpringBootDeploy(sdm: SoftwareDeliveryMachine,
+                                                        options: Partial<MavenDeployerOptions> = {}) {
+    sdm.addGoalContributions(whenPushSatisfies(HasSpringBootApplicationClass)
+        .setGoals(MavenPerBranchSpringBootDeploymentGoal));
+    sdm.addGoalImplementation("Maven deployment", MavenPerBranchSpringBootDeploymentGoal,
+        executeMavenPerBranchSpringBootDeploy(sdm.configuration.sdm.projectLoader, options));
+}
 
 export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
     sdm.addDeployRules(

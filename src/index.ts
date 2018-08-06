@@ -32,3 +32,4 @@ export { MavenBuilder } from "./support/maven/build/MavenBuilder";
 export { CommonJavaGeneratorConfig } from "./support/java/generate/generatorConfig";
 export * from "./support/spring/generate/springBootGenerator";
 export { ProvidedDependencyReviewer } from "./support/maven/review/providedDependencyReviewer";
+export { configureMavenPerBranchSpringBootDeploy } from "./spring";
