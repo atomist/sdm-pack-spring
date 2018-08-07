@@ -22,19 +22,20 @@
   },
   "dependencies": {
     "@atomist/antlr": "^0.3.0",
+    "@types/lodash": "^4.14.109",
+    "lodash": "^4.17.10",
     "portfinder": "^1.0.13",
     "properties-reader": "0.0.16"
   },
   "peerDependencies": {
-    "@atomist/automation-client": "0.17.3",
-    "@atomist/sdm": "^0.3.0",
-    "@atomist/sdm-core": "^0.3.1"
+    "@atomist/automation-client": "*",
+    "@atomist/sdm": "*",
+    "@atomist/sdm-core": "*"
   },
   "devDependencies": {
-    "@atomist/automation-client": "^0.18.0-20180704102519",
-    "@atomist/sdm": "0.3.2-rename-listener.20180713021926",
-    "@atomist/sdm-core": "https://r.atomist.com/4120894369",
-    "@types/lodash": "^4.14.109",
+    "@atomist/automation-client": "^0.19.5",
+    "@atomist/sdm": "^0.4.0",
+    "@atomist/sdm-core": "^0.4.0",
     "@types/mocha": "^2.2.48",
     "@types/node": "^9.4.1",
     "fast-xml-parser": "^3.11.1",
@@ -44,10 +45,10 @@
     "rimraf": "^2.6.2",
     "supervisor": "^0.12.0",
     "ts-node": "^7.0.0",
-    "tslint": "^5.9.1",
+    "tslint": "^5.11.0",
     "typedoc": "^0.11.1",
     "typescript": "^2.9.2",
-    "typescript-formatter": "^7.2.0"
+    "typescript-formatter": "^7.2.2"
   },
   "directories": {
     "test": "test"
@@ -73,7 +74,7 @@
   },
   "main": "dist/index.js",
   "engines": {
-    "node": "9.x.x",
-    "npm": "6.x.x"
+    "node": ">=8.0.0",
+    "npm": ">=5.0.0"
   }
 }
