@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/0.1.8...HEAD)
 
+### Added
+
+-   Add more exports to index.
+
 ## [0.1.8](https://github.com/atomist/sdm-pack-spring/tree/0.1.8) - 2018-08-08
 
 ### Added
+
 -   Added support for per-branch local Spring Boot deployment with Maven
 
 ### Fixed
