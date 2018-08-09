@@ -16,17 +16,16 @@
 
 import { logger } from "@atomist/automation-client";
 import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
-import { ExecuteGoal, GenericGoal } from "@atomist/sdm";
+import { ExecuteGoal, GenericGoal, GoalInvocation } from "@atomist/sdm";
 import { SpawnedDeployment } from "@atomist/sdm-core";
 import { DelimitedWriteProgressLogDecorator } from "@atomist/sdm/api-helper/log/DelimitedWriteProgressLogDecorator";
-import { LoggingProgressLog } from "@atomist/sdm/api-helper/log/LoggingProgressLog";
 import { poisonAndWait } from "@atomist/sdm/api-helper/misc/spawned";
-import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
 import { ProjectLoader } from "@atomist/sdm/spi/project/ProjectLoader";
 import { ChildProcess, spawn } from "child_process";
 import * as os from "os";
 
 import * as portfinder from "portfinder";
+import { MavenLogInterpreter } from "../../maven/build/mavenLogInterpreter";
 
 /**
  * Goal to deploy to Maven with one process per branch
@@ -91,7 +90,7 @@ export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoad
         const { credentials, id } = goalInvocation;
         try {
             const deployment = await projectLoader.doWithProject({ credentials, id, readOnly: true },
-                project => deployer.deployProject(new LoggingProgressLog("info"), project, goalInvocation.sdmGoal.branch));
+                project => deployer.deployProject(goalInvocation, project));
             await goalInvocation.addressChannels(`Deployed \`${id.owner}/${id.repo}/${goalInvocation.sdmGoal.branch} [${
                 goalInvocation.sdmGoal.sha}]\` at ${deployment.endpoint}`);
             return { code: 0 };
@@ -115,10 +114,9 @@ class MavenDeployer {
     constructor(private readonly options: MavenDeployerOptions) {
     }
 
-    public async deployProject(
-        log: ProgressLog,
-        project: LocalProject,
-        branch: string): Promise<SpawnedDeployment> {
+    public async deployProject(goalInvocation: GoalInvocation,
+                               project: LocalProject): Promise<SpawnedDeployment> {
+        const branch = goalInvocation.sdmGoal.branch;
         const contextRoot = `/${project.id.owner}/${project.id.repo}/${branch}`;
 
         let port = this.repoBranchToPort[project.id.repo + ":" + branch];
@@ -162,7 +160,7 @@ class MavenDeployer {
 
         this.portToChildProcess[port] = childProcess;
 
-        const newLineDelimitedLog = new DelimitedWriteProgressLogDecorator(log, "\n");
+        const newLineDelimitedLog = new DelimitedWriteProgressLogDecorator(goalInvocation.progressLog, "\n");
         childProcess.stdout.on("data", what => newLineDelimitedLog.write(what.toString()));
         childProcess.stderr.on("data", what => newLineDelimitedLog.write(what.toString()));
         return new Promise<SpawnedDeployment>((resolve, reject) => {
@@ -175,11 +173,26 @@ class MavenDeployer {
                     resolve(deployment);
                 }
             });
-            childProcess.addListener("exit", () => {
-                reject(new Error("We should have found success message pattern by now!!"));
+            childProcess.addListener("exit", async () => {
+                await reportFailureToUser(goalInvocation, stdout);
+                logger.error("Maven deployment failure vvvvvvvvvvvvvvvvvvvvvv");
+                logger.error("stdout:\n%s\nstderr:\n%\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                reject(new Error("Maven deployment failure"));
             });
             childProcess.addListener("error", reject);
         });
+    }
+}
+
+async function reportFailureToUser(gi: GoalInvocation, log: string) {
+    const interpretation = MavenLogInterpreter(log);
+    if (!!interpretation) {
+        await gi.addressChannels(`✘ Maven deployment failure for ${gi.id.url}/${gi.sdmGoal.branch}`);
+        if (!!interpretation.relevantPart) {
+            await(gi.addressChannels(`\`\`\`\n${interpretation.relevantPart}\n\`\`\``));
+        } else {
+            await(gi.addressChannels("See SDM log for full Maven output"));
+        }
     }
 }
 
