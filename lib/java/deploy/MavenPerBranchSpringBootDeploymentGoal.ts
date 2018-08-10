@@ -78,12 +78,12 @@ const SpringBootSuccessPatterns = [
 export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoader,
                                                       opts: Partial<MavenDeployerOptions>): ExecuteGoal {
     const optsToUse: MavenDeployerOptions = {
-        ...opts,
         lowerPort: 9090,
         successPatterns: SpringBootSuccessPatterns,
         commandLineArgumentsFor: springBootMavenArgs,
         baseUrl: `http://${os.hostname()}`,
         maxConcurrentDeployments: 5,
+        ...opts,
     };
     const deployer = new MavenDeployer(optsToUse);
 
@@ -164,23 +164,32 @@ class MavenDeployer {
         const newLineDelimitedLog = new DelimitedWriteProgressLogDecorator(goalInvocation.progressLog, "\n");
         childProcess.stdout.on("data", what => newLineDelimitedLog.write(what.toString()));
         childProcess.stderr.on("data", what => newLineDelimitedLog.write(what.toString()));
+        let stdout = "";
+        let stderr = "";
+
         return new Promise<SpawnedDeployment>((resolve, reject) => {
-            let stdout = "";
-            let stderr = "";
             childProcess.stdout.addListener("data", what => {
                 if (!!what) {
-                    stdout += what;
+                    stdout += what.toString();
                 }
                 if (this.options.successPatterns.some(successPattern => successPattern.test(stdout))) {
                     resolve(deployment);
                 }
             });
-            childProcess.stderr.addListener("data", what => stderr += what);
+            childProcess.stderr.addListener("data", what => {
+                if (!!what) {
+                    stderr += what.toString();
+                }
+            });
             childProcess.addListener("exit", async () => {
-                await reportFailureToUser(goalInvocation, stdout);
-                logger.error("Maven deployment failure vvvvvvvvvvvvvvvvvvvvvv");
-                logger.error("stdout:\n%s\nstderr:\n%s\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^", stdout, stderr);
-                reject(new Error("Maven deployment failure"));
+                if (this.options.successPatterns.some(successPattern => successPattern.test(stdout))) {
+                    resolve(deployment);
+                } else {
+                    await reportFailureToUser(goalInvocation, stdout);
+                    logger.error("Maven deployment failure vvvvvvvvvvvvvvvvvvvvvv");
+                    logger.error("stdout:\n%s\nstderr:\n%s\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^", stdout, stderr);
+                    reject(new Error("Maven deployment failure"));
+                }
             });
             childProcess.addListener("error", reject);
         });
