@@ -166,6 +166,7 @@ class MavenDeployer {
         childProcess.stderr.on("data", what => newLineDelimitedLog.write(what.toString()));
         return new Promise<SpawnedDeployment>((resolve, reject) => {
             let stdout = "";
+            let stderr = "";
             childProcess.stdout.addListener("data", what => {
                 if (!!what) {
                     stdout += what;
@@ -174,10 +175,11 @@ class MavenDeployer {
                     resolve(deployment);
                 }
             });
+            childProcess.stderr.addListener("data", what => stderr += what);
             childProcess.addListener("exit", async () => {
                 await reportFailureToUser(goalInvocation, stdout);
                 logger.error("Maven deployment failure vvvvvvvvvvvvvvvvvvvvvv");
-                logger.error("stdout:\n%s\nstderr:\n%\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                logger.error("stdout:\n%s\nstderr:\n%\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^", stdout, stderr);
                 reject(new Error("Maven deployment failure"));
             });
             childProcess.addListener("error", reject);
