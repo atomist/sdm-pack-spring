@@ -179,7 +179,7 @@ class MavenDeployer {
             childProcess.addListener("exit", async () => {
                 await reportFailureToUser(goalInvocation, stdout);
                 logger.error("Maven deployment failure vvvvvvvvvvvvvvvvvvvvvv");
-                logger.error("stdout:\n%s\nstderr:\n%\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^", stdout, stderr);
+                logger.error("stdout:\n%s\nstderr:\n%s\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^", stdout, stderr);
                 reject(new Error("Maven deployment failure"));
             });
             childProcess.addListener("error", reject);
