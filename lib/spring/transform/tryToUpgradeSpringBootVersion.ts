@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-import { Parameter, Parameters } from "@atomist/automation-client";
-import { CodeTransformRegistration, EditModeSuggestion } from "@atomist/sdm";
+import {
+    Parameter,
+    Parameters,
+} from "@atomist/automation-client";
+import {
+    CodeTransformRegistration,
+    EditModeSuggestion,
+} from "@atomist/sdm";
 import { makeBuildAware } from "@atomist/sdm/pack/build-aware-transform";
 import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 

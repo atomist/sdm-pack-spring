@@ -24,7 +24,10 @@ import { FileParser } from "@atomist/automation-client/tree/ast/FileParser";
 import { FileParserRegistry } from "@atomist/automation-client/tree/ast/FileParserRegistry";
 import { evaluateScalarValue } from "@atomist/tree-path/path/expressionEngine";
 import { PathExpression } from "@atomist/tree-path/path/pathExpression";
-import { JavaPackage, KotlinPackage } from "../../java/JavaProjectStructure";
+import {
+    JavaPackage,
+    KotlinPackage,
+} from "../../java/JavaProjectStructure";
 import {
     JavaSourceFiles,
     KotlinSourceFiles,
