@@ -1,7 +1,7 @@
 {
   "name": "@atomist/sdm-pack-spring",
   "version": "0.1.10",
-  "description": "Extension Pack for an Atomist SDM to automate delivery of Spring and Spring Boot applications",
+  "description": "Atomist software delivery machine extension pack for Spring and Spring Boot applications",
   "author": "Atomist, Inc.",
   "license": "Apache-2.0",
   "homepage": "https://github.com/atomist/sdm-pack-spring#readme",
@@ -59,26 +59,24 @@
     "ts-node": "^7.0.0",
     "tslint": "^5.11.0",
     "typedoc": "^0.11.1",
-    "typescript": "^2.9.2",
-    "typescript-formatter": "^7.2.2"
+    "typescript": "^2.9.2"
   },
   "directories": {
     "test": "test"
   },
   "scripts": {
     "autotest": "supervisor --watch index.ts,lib,test --extensions ts --no-restart-on exit --quiet --exec npm -- test",
-    "build": "npm-run-all compile test lint doc",
-    "clean": "npm-run-all clean:compile clean:doc clean:run",
-    "clean:compile": "rimraf build dist git-info.json \"index.{d.ts,js*}\" \"{lib,test}/**/*.{d.ts,js*}\" lib/typings/types.ts",
-    "clean:dist": "npm-run-all clean clean:npm",
+    "build": "run-s compile test lint doc",
+    "clean": "run-p clean:compile clean:doc clean:run",
+    "clean:compile": "rimraf git-info.json \"index.{d.ts,js{,.map}}\" \"{lib,test}/**/*.{d.ts,js{,.map}}\" lib/typings/types.ts",
+    "clean:dist": "run-s clean clean:npm",
     "clean:doc": "rimraf doc",
     "clean:npm": "rimraf node_modules",
     "clean:run": "rimraf *-v8.log profile.txt log",
-    "compile": "npm-run-all compile:ts",
+    "compile": "run-s compile:ts",
     "compile:ts": "tsc --project .",
     "doc": "typedoc --mode modules --ignoreCompilerErrors --exclude \"**/*.d.ts\" --out doc index.ts lib",
-    "fmt": "tsfmt --replace",
-    "lint": "tslint --format verbose --project . --exclude \"{build,node_modules}/**\" --exclude \"**/*.d.ts\" \"**/*.ts\"",
+    "lint": "tslint --format verbose --project . --exclude \"node_modules/**\" --exclude \"**/*.d.ts\" \"**/*.ts\"",
     "lint:fix": "npm run lint -- --fix",
     "test": "mocha --require espower-typescript/guess \"test/**/*.test.ts\"",
     "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\"",
