@@ -212,5 +212,6 @@ function springBootMavenArgs(port: number, contextRoot: string): string[] {
     return [
         `-Dserver.port=${port}`,
         `-Dserver.contextPath=${contextRoot}`,
+        `-Dserver.servlet.contextPath=${contextRoot}`,
     ];
 }

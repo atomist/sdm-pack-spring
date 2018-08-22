@@ -44,6 +44,7 @@ export function springBootExecutableJarArgs(si: StartupInfo): string[] {
     return [
         `--server.port=${si.port}`,
         `--server.contextPath=${si.contextRoot}`,
+        `--server.servlet.contextPath=${si.contextRoot}`,
     ];
 }
 
@@ -60,5 +61,6 @@ export function springBootMavenArgs(si: StartupInfo): string[] {
     return [
         `-Dserver.port=${si.port}`,
         `-Dserver.contextPath=${si.contextRoot}`,
+        `-Dserver.servlet.contextPath=${si.contextRoot}`,
     ];
 }
