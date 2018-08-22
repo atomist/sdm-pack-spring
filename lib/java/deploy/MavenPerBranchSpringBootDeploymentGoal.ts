@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { logger } from "@atomist/automation-client";
+import {HandlerContext, logger, Success} from "@atomist/automation-client";
 import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
-import { ExecuteGoal, GenericGoal, GoalInvocation } from "@atomist/sdm";
+import {CommandHandlerRegistration, ExecuteGoal, GenericGoal, GoalInvocation} from "@atomist/sdm";
 import { SpawnedDeployment } from "@atomist/sdm-core";
 import { DelimitedWriteProgressLogDecorator } from "@atomist/sdm/api-helper/log/DelimitedWriteProgressLogDecorator";
 import { poisonAndWait } from "@atomist/sdm/api-helper/misc/spawned";
@@ -26,6 +26,24 @@ import * as os from "os";
 
 import * as portfinder from "portfinder";
 import { MavenLogInterpreter } from "../../maven/build/mavenLogInterpreter";
+
+export const ListBranchDeploys: CommandHandlerRegistration = {
+    name: "listLocalDeploys",
+    intent: "list branch deploys",
+    description: "list branch deploys",
+    listener: async ci => handleListDeploys(ci.context),
+};
+
+async function handleListDeploysWith(description: string, repoBranchToPort: { [p: string]: number }, ctx: HandlerContext) {
+    const message = `${Object.keys(repoBranchToPort).length} branches currently deployed on ${os.hostname()}:\n${
+        Object.keys(repoBranchToPort).map(s => `${s} deployed on port ${repoBranchToPort[s]}`).join("\n")}`;
+    await ctx.messageClient.respond(message);
+}
+
+async function handleListDeploys(ctx: HandlerContext) {
+    await handleListDeploysWith("Maven branch deployer", deployer.repoBranchToPort, ctx);
+    return Success;
+}
 
 /**
  * Goal to deploy to Maven with one process per branch
@@ -70,6 +88,7 @@ const SpringBootSuccessPatterns = [
     /Started [A-Za-z0-9_$]+ in [0-9]+.[0-9]+ seconds/,
 ];
 
+let deployer: MavenDeployer;
 /**
  * Use Maven per-branch deploy
  * @param projectLoader use to load projects
@@ -85,7 +104,7 @@ export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoad
         maxConcurrentDeployments: 5,
         ...opts,
     };
-    const deployer = new MavenDeployer(optsToUse);
+    deployer = new MavenDeployer(optsToUse);
 
     return async goalInvocation => {
         const { credentials, id } = goalInvocation;
@@ -107,7 +126,7 @@ export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoad
 class MavenDeployer {
 
     // Already allocated ports
-    private readonly repoBranchToPort: { [repoAndBranch: string]: number } = {};
+    public readonly repoBranchToPort: { [repoAndBranch: string]: number } = {};
 
     // Keys are ports: values are child processes
     private readonly portToChildProcess: { [port: number]: ChildProcess } = {};
