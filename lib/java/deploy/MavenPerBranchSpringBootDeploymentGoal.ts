@@ -42,14 +42,14 @@ export const ListBranchDeploys: CommandHandlerRegistration = {
     listener: async ci => handleListDeploys(ci.context),
 };
 
-async function handleListDeploysWith(description: string, repoBranchToPort: { [p: string]: number }, ctx: HandlerContext) {
+async function handleListDeploysWith(description: string, repoBranchToPort: { [key: string]: {sha: string, endpoint: string} }, ctx: HandlerContext) {
     const message = `${Object.keys(repoBranchToPort).length} branches currently deployed on ${os.hostname()}:\n${
-        Object.keys(repoBranchToPort).map(s => `${s} deployed on port ${repoBranchToPort[s]}`).join("\n")}`;
+        Object.keys(repoBranchToPort).map(s => `${s} deployed at sha ${repoBranchToPort[s].sha} here: ${repoBranchToPort[s].endpoint}`).join("\n")}`;
     await ctx.messageClient.respond(message);
 }
 
 async function handleListDeploys(ctx: HandlerContext) {
-    await handleListDeploysWith("Maven branch deployer", deployer.repoBranchToPort, ctx);
+    await handleListDeploysWith("Maven branch deployer", deploymentEndpoints, ctx);
     return Success;
 }
 
@@ -96,7 +96,7 @@ const SpringBootSuccessPatterns = [
     /Started [A-Za-z0-9_$]+ in [0-9]+.[0-9]+ seconds/,
 ];
 
-let deployer: MavenDeployer;
+const deploymentEndpoints: { [key: string]: {sha: string, endpoint: string} } = {};
 /**
  * Use Maven per-branch deploy
  * @param projectLoader use to load projects
@@ -112,15 +112,17 @@ export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoad
         maxConcurrentDeployments: 5,
         ...opts,
     };
-    deployer = new MavenDeployer(optsToUse);
+    const deployer = new MavenDeployer(optsToUse);
 
     return async goalInvocation => {
         const { credentials, id } = goalInvocation;
         try {
             const deployment = await projectLoader.doWithProject({ credentials, id, readOnly: true },
                 project => deployer.deployProject(goalInvocation, project));
-            await goalInvocation.addressChannels(`Deployed \`${id.owner}/${id.repo}/${goalInvocation.sdmGoal.branch} [${
+            const deploymentKey = `${id.owner}/${id.repo}/${goalInvocation.sdmGoal.branch}`;
+            await goalInvocation.addressChannels(`Deployed \`${deploymentKey} [${
                 goalInvocation.sdmGoal.sha}]\` at ${deployment.endpoint}`);
+            deploymentEndpoints[deploymentKey] = {sha: goalInvocation.sdmGoal.sha, endpoint: deployment.endpoint};
             return { code: 0 };
         } catch (err) {
             return { code: 1, message: err.stack };
