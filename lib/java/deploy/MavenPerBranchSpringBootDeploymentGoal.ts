@@ -8,7 +8,7 @@
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on #an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -21,10 +21,12 @@ import {
 } from "@atomist/automation-client";
 import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
 import {
+    BuildGoal,
     CommandHandlerRegistration,
     ExecuteGoal,
-    GenericGoal,
     GoalInvocation,
+    GoalWithPrecondition,
+    IndependentOfEnvironment,
 } from "@atomist/sdm";
 import { SpawnedDeployment } from "@atomist/sdm-core";
 import { DelimitedWriteProgressLogDecorator } from "@atomist/sdm/api-helper/log/DelimitedWriteProgressLogDecorator";
@@ -64,9 +66,14 @@ async function handleListDeploys(ctx: HandlerContext) {
  * Goal to deploy to Maven with one process per branch
  * @type {GenericGoal}
  */
-export const MavenPerBranchSpringBootDeploymentGoal = new GenericGoal(
-    { uniqueName: "mavenDeploy" },
-    "Deploy each branch locally using Maven");
+export const MavenPerBranchSpringBootDeploymentGoal = new GoalWithPrecondition({
+    uniqueName: "mavenDeploy",
+    orderedName: "3-deploy",
+    environment: IndependentOfEnvironment,
+    displayName: "Deploy branch locally with Maven",
+    completedDescription: "Deployed branch locally using Maven",
+    failedDescription: "Local branch deployment failure",
+}, BuildGoal);
 
 export interface MavenDeployerOptions {
 
