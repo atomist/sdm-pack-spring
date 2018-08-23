@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import {HandlerContext, logger, Success} from "@atomist/automation-client";
+import {
+    HandlerContext,
+    logger,
+    Success,
+} from "@atomist/automation-client";
 import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
 import {
     CommandHandlerRegistration,
@@ -38,15 +42,9 @@ import { MavenLogInterpreter } from "../../maven/build/mavenLogInterpreter";
 export const ListBranchDeploys: CommandHandlerRegistration = {
     name: "listLocalDeploys",
     intent: "list branch deploys",
-    description: "list branch deploys",
+    description: "List local deployments of repository across all branches",
     listener: async ci => handleListDeploys(ci.context),
 };
-
-async function handleListDeploysWith(description: string, ctx: HandlerContext) {
-    const message = `${Object.keys(deploymentEndpoints).length} branches currently deployed on ${os.hostname()}:\n${
-        Object.keys(deploymentEndpoints).map(deploymentToString).join("\n")}`;
-    await ctx.messageClient.respond(message);
-}
 
 function deploymentToString(deploymentKey: string) {
     const deployment = deploymentEndpoints[deploymentKey];
@@ -56,7 +54,9 @@ function deploymentToString(deploymentKey: string) {
 }
 
 async function handleListDeploys(ctx: HandlerContext) {
-    await handleListDeploysWith("Maven branch deployer", ctx);
+    const message = `${Object.keys(deploymentEndpoints).length} branches currently deployed on ${os.hostname()}:\n${
+        Object.keys(deploymentEndpoints).map(deploymentToString).join("\n")}`;
+    await ctx.messageClient.respond(message);
     return Success;
 }
 
@@ -127,9 +127,8 @@ export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoad
             const deployment = await projectLoader.doWithProject({ credentials, id, readOnly: true },
                 project => deployer.deployProject(goalInvocation, project));
             const deploymentKey = `${id.owner}/${id.repo}/${goalInvocation.sdmGoal.branch}`;
-            await goalInvocation.addressChannels(`Deployed \`${deploymentKey} [${
-                goalInvocation.sdmGoal.sha}]\` at ${deployment.endpoint}`);
-            deploymentEndpoints[deploymentKey] = {sha: goalInvocation.sdmGoal.sha, endpoint: deployment.endpoint};
+            await goalInvocation.addressChannels(`Deployed \`${deploymentKey} [${goalInvocation.sdmGoal.sha}]\` at ${deployment.endpoint}`);
+            deploymentEndpoints[deploymentKey] = { sha: goalInvocation.sdmGoal.sha, endpoint: deployment.endpoint };
             return { code: 0 };
         } catch (err) {
             return { code: 1, message: err.stack };
