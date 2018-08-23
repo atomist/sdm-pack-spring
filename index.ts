@@ -47,6 +47,9 @@ export {
     ImportDotStarCategory,
     ImportDotStarReviewer,
 } from "./lib/java/review/importDotStarReviewer";
+export {
+    ListBranchDeploys,
+} from "./lib/java/deploy/MavenPerBranchSpringBootDeploymentGoal";
 
 export {
     MavenBuilder,
