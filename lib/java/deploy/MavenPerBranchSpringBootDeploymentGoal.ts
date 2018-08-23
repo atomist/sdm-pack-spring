@@ -42,14 +42,21 @@ export const ListBranchDeploys: CommandHandlerRegistration = {
     listener: async ci => handleListDeploys(ci.context),
 };
 
-async function handleListDeploysWith(description: string, repoBranchToPort: { [key: string]: {sha: string, endpoint: string} }, ctx: HandlerContext) {
-    const message = `${Object.keys(repoBranchToPort).length} branches currently deployed on ${os.hostname()}:\n${
-        Object.keys(repoBranchToPort).map(s => `${s} deployed at sha ${repoBranchToPort[s].sha} here: ${repoBranchToPort[s].endpoint}`).join("\n")}`;
+async function handleListDeploysWith(description: string, ctx: HandlerContext) {
+    const message = `${Object.keys(deploymentEndpoints).length} branches currently deployed on ${os.hostname()}:\n${
+        Object.keys(deploymentEndpoints).map(deploymentToString).join("\n")}`;
     await ctx.messageClient.respond(message);
 }
 
+function deploymentToString(deploymentKey: string) {
+    const deployment = deploymentEndpoints[deploymentKey];
+    const abbreviatedSha = deployment.sha.slice(0, 7);
+    const deploymentEndpoint = deployment.endpoint;
+    return `${deploymentKey} deployed at sha ${abbreviatedSha} here: ${deploymentEndpoint}`;
+}
+
 async function handleListDeploys(ctx: HandlerContext) {
-    await handleListDeploysWith("Maven branch deployer", deploymentEndpoints, ctx);
+    await handleListDeploysWith("Maven branch deployer", ctx);
     return Success;
 }
 
