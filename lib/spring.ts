@@ -16,8 +16,11 @@
 
 import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitHubRepoRef";
 import {
-    ExtensionPack, GeneratorRegistration,
-    LocalDeploymentGoal, SoftwareDeliveryMachine, whenPushSatisfies,
+    ExtensionPack,
+    GeneratorRegistration,
+    LocalDeploymentGoal,
+    SoftwareDeliveryMachine,
+    whenPushSatisfies,
 } from "@atomist/sdm";
 import {
     LocalEndpointGoal,
@@ -27,7 +30,6 @@ import {
 } from "@atomist/sdm-core";
 import * as deploy from "@atomist/sdm/api-helper/dsl/deployDsl";
 import { metadata } from "@atomist/sdm/api-helper/misc/extensionPack";
-
 import {
     executeMavenPerBranchSpringBootDeploy,
     MavenDeployerOptions,

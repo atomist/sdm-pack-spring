@@ -16,7 +16,11 @@
 
 import { GeneratorCommandDetails } from "@atomist/automation-client/operations/generate/generatorToCommand";
 import * as utils from "@atomist/automation-client/project/util/projectUtils";
-import { CodeTransform, CodeTransformOrTransforms, GeneratorRegistration } from "@atomist/sdm";
+import {
+    CodeTransform,
+    CodeTransformOrTransforms,
+    GeneratorRegistration,
+} from "@atomist/sdm";
 import { JavaGeneratorConfig } from "../../java/generate/JavaGeneratorConfig";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";

@@ -24,7 +24,6 @@ import { Project } from "@atomist/automation-client/project/Project";
 import { saveFromFilesAsync } from "@atomist/automation-client/project/util/projectUtils";
 import { ReviewerRegistration } from "@atomist/sdm";
 import * as _ from "lodash";
-
 import * as props from "properties-reader";
 import { HasSpringPom } from "../pushTests";
 

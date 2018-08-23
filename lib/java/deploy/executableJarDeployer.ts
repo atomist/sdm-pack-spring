@@ -20,13 +20,11 @@ import { RemoteRepoRef } from "@atomist/automation-client/operations/common/Repo
 import {
     DefaultLocalDeployerOptions,
     LocalDeployerOptions,
-    SpawnedDeployment,
-    StartupInfo,
-} from "@atomist/sdm-core";
-import {
     LookupStrategy,
     ManagedDeployments,
     ManagedDeploymentTargetInfo,
+    SpawnedDeployment,
+    StartupInfo,
 } from "@atomist/sdm-core";
 import { DelimitedWriteProgressLogDecorator } from "@atomist/sdm/api-helper/log/DelimitedWriteProgressLogDecorator";
 import { lastLinesLogInterpreter } from "@atomist/sdm/api-helper/log/logInterpreters";

@@ -16,7 +16,6 @@
 
 import { runCommand } from "@atomist/automation-client/action/cli/commandLine";
 import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
-
 import { xmlParseString } from "../xmlParseString";
 
 const XmlFile = "effective-pom.xml";

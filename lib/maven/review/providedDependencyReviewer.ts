@@ -22,7 +22,6 @@ import { File } from "@atomist/automation-client/project/File";
 import { Project } from "@atomist/automation-client/project/Project";
 import { ReviewerRegistration } from "@atomist/sdm";
 import * as _ from "lodash";
-
 import { IsMaven } from "../pushTests";
 import { xmlParseString } from "../xmlParseString";
 

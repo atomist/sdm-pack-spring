@@ -20,7 +20,10 @@ import { logger } from "@atomist/automation-client";
 import { ProjectAsync } from "@atomist/automation-client/project/Project";
 import { findMatches } from "@atomist/automation-client/tree/ast/astUtils";
 import * as _ from "lodash";
-import { JavaSourceFiles, KotlinSourceFiles } from "./javaProjectUtils";
+import {
+    JavaSourceFiles,
+    KotlinSourceFiles,
+} from "./javaProjectUtils";
 
 export const JavaPackage = "//packageDeclaration//qualifiedName";
 

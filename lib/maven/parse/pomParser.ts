@@ -15,7 +15,6 @@
  */
 
 import { ProjectIdentifier } from "@atomist/sdm-core";
-
 import { VersionedArtifact } from "../VersionedArtifact";
 import { xmlParseString } from "../xmlParseString";
 
