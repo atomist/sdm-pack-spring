@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/0.1.10...HEAD)
 
+### Added
+
+-   Add command to list branch deploys. [#20](https://github.com/atomist/sdm-pack-spring/issues/20)
+
 ## [0.1.10](https://github.com/atomist/sdm-pack-spring/compare/0.1.9...0.1.10) - 2018-08-22
 
 ## [0.1.9](https://github.com/atomist/sdm-pack-spring/compare/0.1.8...0.1.9) - 2018-08-09
