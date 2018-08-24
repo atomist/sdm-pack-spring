@@ -20,13 +20,13 @@ import {
 } from "@atomist/automation-client";
 import {
     CodeTransformRegistration,
-    EditModeSuggestion,
 } from "@atomist/sdm";
+import { TransformModeSuggestion } from "@atomist/sdm/api/command/target/TransformModeSuggestion";
 import { makeBuildAware } from "@atomist/sdm/pack/build-aware-transform";
 import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 
 @Parameters()
-export class UpgradeSpringBootParameters implements EditModeSuggestion {
+export class UpgradeSpringBootParameters implements TransformModeSuggestion {
 
     @Parameter({
         displayName: "Desired Spring Boot version",
