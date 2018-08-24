@@ -69,7 +69,7 @@ export const MavenPerBranchSpringBootDeploymentGoal = new GoalWithPrecondition({
     uniqueName: "mavenDeploy",
     orderedName: "3-deploy",
     environment: IndependentOfEnvironment,
-    displayName: "Deploy branch locally",
+    displayName: "deploy branch locally",
     completedDescription: "Deployed branch locally",
     failedDescription: "Local branch deployment failure",
 }, BuildGoal);
