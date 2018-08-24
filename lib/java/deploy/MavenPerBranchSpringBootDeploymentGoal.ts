@@ -134,7 +134,7 @@ export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoad
                 project => deployer.deployProject(goalInvocation, project));
             const deploymentKey = `${id.owner}/${id.repo}/${goalInvocation.sdmGoal.branch}`;
             deploymentEndpoints[deploymentKey] = { sha: goalInvocation.sdmGoal.sha, endpoint: deployment.endpoint };
-            return { code: 0 };
+            return { code: 0, targetUrl: deployment.endpoint };
         } catch (err) {
             return { code: 1, message: err.stack };
         }
