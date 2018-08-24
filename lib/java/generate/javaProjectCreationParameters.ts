@@ -14,41 +14,35 @@
  * limitations under the License.
  */
 
-import { Parameter } from "@atomist/automation-client";
-import { Parameters } from "@atomist/automation-client/decorators";
-import { SeedDrivenGeneratorParametersSupport } from "@atomist/sdm";
 import { JavaPackageRegExp, MavenArtifactIdRegExp, MavenGroupIdRegExp } from "../javaPatterns";
 
 /**
- * Superclass for all Java project generator parameters.
+ * Java project generator parameters definitions.
  */
-@Parameters()
-export abstract class JavaProjectCreationParameters extends SeedDrivenGeneratorParametersSupport {
+export const JavaProjectCreationParameters = {
 
-    @Parameter({
+    enteredArtifactId: {
         ...MavenArtifactIdRegExp,
         displayName: "artifactId",
         required: false,
+        defaultValue: "",
         order: 51,
-    })
-    public enteredArtifactId: string = "";
+    },
 
-    @Parameter({
+    groupId: {
         ...MavenGroupIdRegExp,
         required: true,
         order: 50,
-    })
-    public groupId: string;
+    },
 
-    @Parameter({
+    rootPackage: {
         ...JavaPackageRegExp,
         required: true,
         order: 53,
-    })
-    public rootPackage: string;
+    },
 
-    get artifactId() {
-        return this.enteredArtifactId || this.target.repo;
-    }
+    // get artifactId() {
+    //     return this.enteredArtifactId || this.target.repo;
+    // }
 
-}
+};

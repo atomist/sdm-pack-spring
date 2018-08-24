@@ -20,7 +20,7 @@ import { SimpleRepoId } from "@atomist/automation-client/operations/common/RepoI
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import * as assert from "power-assert";
 import { ReplaceReadmeTitle, SetAtomistTeamInApplicationYml } from "../../../lib/spring/generate/springBootGenerator";
-import { SpringProjectCreationParameters } from "../../../lib/spring/generate/SpringProjectCreationParameters";
+import { SpringProjectCreationParameters } from "../../../lib/spring/generate/springProjectCreationParameters";
 import { TransformSeedToCustomProject } from "../../../lib/spring/generate/transformSeedToCustomProject";
 import { springBootPom } from "./TestPoms";
 

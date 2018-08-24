@@ -21,7 +21,7 @@ import { curry } from "@typed/curry";
 import { inferStructureAndMovePackage } from "../../java/javaProjectUtils";
 import { updatePom } from "../../maven/generate/updatePom";
 import { inferSpringStructureAndRename } from "./springBootUtils";
-import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
+import { SpringProjectCreationParameters } from "./springProjectCreationParameters";
 
 /**
  * Transform a seed to a custom Spring Boot project.

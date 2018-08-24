@@ -16,7 +16,7 @@
 
 import * as utils from "@atomist/automation-client/project/util/projectUtils";
 import { CodeTransform, CodeTransformOrTransforms, } from "@atomist/sdm";
-import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
+import { SpringProjectCreationParameters } from "./springProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
 
 /**

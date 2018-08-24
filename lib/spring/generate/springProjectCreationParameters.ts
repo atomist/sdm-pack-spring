@@ -14,38 +14,37 @@
  * limitations under the License.
  */
 
-import { Parameter } from "@atomist/automation-client";
-import { JavaGeneratorConfig } from "../../java/generate/JavaGeneratorConfig";
-import { JavaProjectCreationParameters } from "../../java/generate/JavaProjectCreationParameters";
+import { JavaProjectCreationParameters } from "../../java/generate/javaProjectCreationParameters";
 import { JavaIdentifierRegExp } from "../../java/javaPatterns";
 
 /**
  * Parameters for creating Spring Boot apps.
  */
-export class SpringProjectCreationParameters extends JavaProjectCreationParameters {
+export const SpringProjectCreationParameters = {
 
-    @Parameter({
+    ...JavaProjectCreationParameters,
+
+    enteredServiceClassName: {
         displayName: "Class Name",
         description: "name for the service class",
         ...JavaIdentifierRegExp,
         required: false,
-    })
-    public enteredServiceClassName: string;
+    },
 
-    constructor(config?: JavaGeneratorConfig) {
-        super(config);
-        if (!!config) {
-            this.groupId = config.groupId;
-        }
-    }
+    // constructor(config?: JavaGeneratorConfig) {
+    //     super(config);
+    //     if (!!config) {
+    //         this.groupId = config.groupId;
+    //     }
+    // }
+    //
+    // get serviceClassName() {
+    //     return !!this.enteredServiceClassName ?
+    //         toInitialCap(this.enteredServiceClassName) :
+    //         toInitialCap(camelize(this.artifactId));
+    // }
 
-    get serviceClassName() {
-        return !!this.enteredServiceClassName ?
-            toInitialCap(this.enteredServiceClassName) :
-            toInitialCap(camelize(this.artifactId));
-    }
-
-}
+};
 
 function toInitialCap(s: string) {
     return s.charAt(0).toUpperCase() + s.substr(1);
