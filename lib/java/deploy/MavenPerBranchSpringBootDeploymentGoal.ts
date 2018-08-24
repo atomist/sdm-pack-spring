@@ -196,7 +196,7 @@ class MavenDeployer {
         }
         const deployment = {
             childProcess,
-            endpoint: `${this.options.baseUrl}:${port}/${contextRoot}`,
+            endpoint: `${this.options.baseUrl}:${port}${contextRoot}`,
         };
 
         this.portToChildProcess[port] = childProcess;
