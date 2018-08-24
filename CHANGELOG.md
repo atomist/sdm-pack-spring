@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/0.1.12...HEAD)
+## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/0.1.13...HEAD)
+
+## [0.1.13](https://github.com/atomist/sdm-pack-spring/compare/0.1.12...0.1.13) - 2018-08-24
 
 ## [0.1.12](https://github.com/atomist/sdm-pack-spring/compare/0.1.11...0.1.12) - 2018-08-24
 
