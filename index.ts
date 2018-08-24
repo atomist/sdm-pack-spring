@@ -17,8 +17,6 @@
 export {
     configureLocalSpringBootDeploy,
     configureMavenPerBranchSpringBootDeploy,
-    kotlinRestGenerator,
-    springRestGenerator,
     SpringSupport,
 } from "./lib/spring";
 
