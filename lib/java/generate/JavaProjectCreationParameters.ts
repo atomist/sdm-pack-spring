@@ -17,11 +17,7 @@
 import { Parameter } from "@atomist/automation-client";
 import { Parameters } from "@atomist/automation-client/decorators";
 import { SeedDrivenGeneratorParametersSupport } from "@atomist/sdm";
-import {
-    JavaPackageRegExp,
-    MavenArtifactIdRegExp,
-    MavenGroupIdRegExp,
-} from "@atomist/sdm-core";
+import { JavaPackageRegExp, MavenArtifactIdRegExp, MavenGroupIdRegExp } from "../javaPatterns";
 
 /**
  * Superclass for all Java project generator parameters.

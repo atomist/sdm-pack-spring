@@ -15,9 +15,9 @@
  */
 
 import { Parameter } from "@atomist/automation-client";
-import { JavaIdentifierRegExp } from "@atomist/sdm-core";
 import { JavaGeneratorConfig } from "../../java/generate/JavaGeneratorConfig";
 import { JavaProjectCreationParameters } from "../../java/generate/JavaProjectCreationParameters";
+import { JavaIdentifierRegExp } from "../../java/javaPatterns";
 
 /**
  * Parameters for creating Spring Boot apps.

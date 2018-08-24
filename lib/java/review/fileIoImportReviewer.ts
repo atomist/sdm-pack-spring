@@ -16,13 +16,12 @@
 
 import { ReviewerRegistration } from "@atomist/sdm";
 import { patternMatchReviewer } from "@atomist/sdm/api-helper/code/review/patternMatchReviewer";
-import { JavaAndKotlinSource } from "../javaProjectUtils";
 
 export const ImportFileIoCategory = "Import java.io.File";
 
 export const FileIoImportReviewer: ReviewerRegistration = patternMatchReviewer(
     ImportFileIoCategory,
-    {globPattern: JavaAndKotlinSource, severity: "warn"},
+    {globPattern: "src/main/java/**/*.java", severity: "warn"},
     {
         name: ImportFileIoCategory,
         antiPattern: "import java.io.File",
