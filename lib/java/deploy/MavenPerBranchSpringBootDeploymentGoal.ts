@@ -37,7 +37,6 @@ import {
     spawn,
 } from "child_process";
 import * as os from "os";
-
 import * as portfinder from "portfinder";
 import { MavenLogInterpreter } from "../../maven/build/mavenLogInterpreter";
 
@@ -52,7 +51,7 @@ function deploymentToString(deploymentKey: string) {
     const deployment = deploymentEndpoints[deploymentKey];
     const abbreviatedSha = deployment.sha.slice(0, 7);
     const deploymentEndpoint = deployment.endpoint;
-    return `${deploymentKey} deployed at sha ${abbreviatedSha} here: ${deploymentEndpoint}`;
+    return `${deploymentKey} deployed ${abbreviatedSha} at ${deploymentEndpoint}`;
 }
 
 async function handleListDeploys(ctx: HandlerContext) {
@@ -70,8 +69,8 @@ export const MavenPerBranchSpringBootDeploymentGoal = new GoalWithPrecondition({
     uniqueName: "mavenDeploy",
     orderedName: "3-deploy",
     environment: IndependentOfEnvironment,
-    displayName: "Deploy branch locally with Maven",
-    completedDescription: "Deployed branch locally using Maven",
+    displayName: "Deploy branch locally",
+    completedDescription: "Deployed branch locally",
     failedDescription: "Local branch deployment failure",
 }, BuildGoal);
 
@@ -134,7 +133,6 @@ export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoad
             const deployment = await projectLoader.doWithProject({ credentials, id, readOnly: true },
                 project => deployer.deployProject(goalInvocation, project));
             const deploymentKey = `${id.owner}/${id.repo}/${goalInvocation.sdmGoal.branch}`;
-            await goalInvocation.addressChannels(`Deployed \`${deploymentKey} [${goalInvocation.sdmGoal.sha}]\` at ${deployment.endpoint}`);
             deploymentEndpoints[deploymentKey] = { sha: goalInvocation.sdmGoal.sha, endpoint: deployment.endpoint };
             return { code: 0 };
         } catch (err) {
