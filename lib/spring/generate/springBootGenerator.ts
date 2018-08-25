@@ -15,8 +15,8 @@
  */
 
 import * as utils from "@atomist/automation-client/project/util/projectUtils";
-import { CodeTransform, CodeTransformOrTransforms, } from "@atomist/sdm";
-import { SpringProjectCreationParameters } from "./springProjectCreationParameters";
+import { CodeTransform, CodeTransformOrTransforms } from "@atomist/sdm";
+import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
 
 /**
@@ -39,7 +39,7 @@ export const SetAtomistTeamInApplicationYml: CodeTransform =
     };
 
 function titleBlock(params: SpringProjectCreationParameters): string {
-    return `# ${params.target.repo}
+    return `# ${params.target.repoRef.repo}
 ${params.target.description}
 
 Based on seed project \`${params.source.repoRef.owner}:${params.source.repoRef.repo}\`

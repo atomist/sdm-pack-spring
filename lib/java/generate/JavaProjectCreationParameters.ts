@@ -14,12 +14,26 @@
  * limitations under the License.
  */
 
+import { SeedDrivenGeneratorParameters } from "@atomist/automation-client/operations/generate/SeedDrivenGeneratorParameters";
 import { JavaPackageRegExp, MavenArtifactIdRegExp, MavenGroupIdRegExp } from "../javaPatterns";
+
+export interface JavaProjectCreationParameters extends SeedDrivenGeneratorParameters {
+
+    enteredArtifactId?: string;
+
+    groupId: string;
+
+    rootPackage: string;
+
+    version: string;
+
+    description?: string;
+}
 
 /**
  * Java project generator parameters definitions.
  */
-export const JavaProjectCreationParameters = {
+export const JavaProjectCreationParameterDefinitions = {
 
     enteredArtifactId: {
         ...MavenArtifactIdRegExp,
@@ -41,8 +55,14 @@ export const JavaProjectCreationParameters = {
         order: 53,
     },
 
-    // get artifactId() {
-    //     return this.enteredArtifactId || this.target.repo;
-    // }
+    version: {
+        pattern: /.*/,
+        required: false,
+        defaultValue: "0.1.0-SNAPSHOT",
+    },
 
 };
+
+export function artifactId(params: JavaProjectCreationParameters): string {
+    return params.enteredArtifactId || params.target.repoRef.repo;
+}

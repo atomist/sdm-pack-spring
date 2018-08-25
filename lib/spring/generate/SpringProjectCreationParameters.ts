@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
-import { JavaProjectCreationParameters } from "../../java/generate/javaProjectCreationParameters";
+import {
+    artifactId,
+    JavaProjectCreationParameterDefinitions,
+    JavaProjectCreationParameters,
+} from "../../java/generate/JavaProjectCreationParameters";
 import { JavaIdentifierRegExp } from "../../java/javaPatterns";
+
+export interface SpringProjectCreationParameters extends JavaProjectCreationParameters {
+
+    enteredServiceClassName?: string;
+
+}
 
 /**
  * Parameters for creating Spring Boot apps.
  */
-export const SpringProjectCreationParameters = {
+export const SpringProjectCreationParameterDefinitons = {
 
-    ...JavaProjectCreationParameters,
+    ...JavaProjectCreationParameterDefinitions,
 
     enteredServiceClassName: {
         displayName: "Class Name",
@@ -30,21 +40,13 @@ export const SpringProjectCreationParameters = {
         ...JavaIdentifierRegExp,
         required: false,
     },
-
-    // constructor(config?: JavaGeneratorConfig) {
-    //     super(config);
-    //     if (!!config) {
-    //         this.groupId = config.groupId;
-    //     }
-    // }
-    //
-    // get serviceClassName() {
-    //     return !!this.enteredServiceClassName ?
-    //         toInitialCap(this.enteredServiceClassName) :
-    //         toInitialCap(camelize(this.artifactId));
-    // }
-
 };
+
+export function serviceClassName(params: SpringProjectCreationParameters) {
+    return !!params.enteredServiceClassName ?
+        toInitialCap(params.enteredServiceClassName) :
+        toInitialCap(camelize(artifactId(params)));
+}
 
 function toInitialCap(s: string) {
     return s.charAt(0).toUpperCase() + s.substr(1);
