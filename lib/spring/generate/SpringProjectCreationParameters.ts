@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { ParametersObject } from "@atomist/sdm";
 import {
     artifactId,
     JavaProjectCreationParameterDefinitions,
@@ -21,16 +22,24 @@ import {
 } from "../../java/generate/JavaProjectCreationParameters";
 import { JavaIdentifierRegExp } from "../../java/javaPatterns";
 
+/**
+ * Parameter interface for Spring Boot project creation
+ */
 export interface SpringProjectCreationParameters extends JavaProjectCreationParameters {
 
+    /**
+     * Service class name to use. Derived from artifact name
+     * if not defined.
+     */
     enteredServiceClassName?: string;
 
 }
 
 /**
  * Parameters for creating Spring Boot apps.
+ * Based on Java project creation parameters.
  */
-export const SpringProjectCreationParameterDefinitons = {
+export const SpringProjectCreationParameterDefinitions: ParametersObject = {
 
     ...JavaProjectCreationParameterDefinitions,
 
