@@ -1,6 +1,6 @@
 # @atomist/sdm-pack-spring
 
-[![npm version](https://badge.fury.io/js/%40atomist%2Fsdm-pack-spring.svg)](https://badge.fury.io/js/%40atomist%2Fsdm-pack-spring)
+[![atomist sdm goals](http://badge.atomist.com/T29E48P34/atomist/sdm-pack-spring/e514504a-2927-468c-8f8a-93568636b896)](https://app.atomist.com/workspace/T29E48P34) [![npm version](https://badge.fury.io/js/%40atomist%2Fsdm-pack-spring.svg)](https://badge.fury.io/js/%40atomist%2Fsdm-pack-spring)
 
 [Atomist][atomist] software delivery machine (SDM) extension pack
 providing automated creation, building, and delivery of
@@ -79,7 +79,7 @@ Command | Reason
 ### Release
 
 Releases are handled via the [Atomist SDM][atomist-sdm].  Just press
-the release button in the Atomist dashboard or Slack.
+the 'Approve' button in the Atomist dashboard or Slack.
 
 [atomist-sdm]: https://github.com/atomist/atomist-sdm (Atomist Software Delivery Machine)
 
