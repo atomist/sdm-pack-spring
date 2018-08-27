@@ -58,7 +58,7 @@ If you find a problem, please create an [issue][].
 
 ## Development
 
-You will need to install [node][] to build and test this project.
+You will need to install [Node][node] to build and test this project.
 
 [node]: https://nodejs.org/ (Node.js)
 
