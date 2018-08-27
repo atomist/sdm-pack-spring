@@ -85,6 +85,7 @@ export {
 export * from "./lib/spring/generate/springBootTransforms";
 export {
     SpringProjectCreationParameters,
+    SpringProjectCreationParameterDefinitions,
 } from "./lib/spring/generate/SpringProjectCreationParameters";
 export {
     TransformSeedToCustomProject,
