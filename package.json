@@ -2,7 +2,11 @@
   "name": "@atomist/sdm-pack-spring",
   "version": "1.0.0",
   "description": "Atomist software delivery machine extension pack for Spring and Spring Boot applications",
-  "author": "Atomist, Inc.",
+  "author": {
+    "name": "Atomist",
+    "email": "support@atomist.com",
+    "url": "https://atomist.com/"
+  },
   "license": "Apache-2.0",
   "homepage": "https://github.com/atomist/sdm-pack-spring#readme",
   "repository": {
