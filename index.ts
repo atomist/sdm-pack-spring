@@ -17,8 +17,6 @@
 export {
     configureLocalSpringBootDeploy,
     configureMavenPerBranchSpringBootDeploy,
-    kotlinRestGenerator,
-    springRestGenerator,
     SpringSupport,
 } from "./lib/spring";
 
@@ -84,7 +82,7 @@ export {
     mavenSourceDeployer,
     SpringBootSuccessPatterns,
 } from "./lib/spring/deploy/localSpringBootDeployers";
-export * from "./lib/spring/generate/springBootGenerator";
+export * from "./lib/spring/generate/springBootTransforms";
 export {
     SpringProjectCreationParameters,
 } from "./lib/spring/generate/SpringProjectCreationParameters";

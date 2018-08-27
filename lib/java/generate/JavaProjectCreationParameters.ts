@@ -14,41 +14,66 @@
  * limitations under the License.
  */
 
-import { Parameter } from "@atomist/automation-client";
-import { Parameters } from "@atomist/automation-client/decorators";
-import { SeedDrivenGeneratorParametersSupport } from "@atomist/sdm";
+import { SeedDrivenGeneratorParameters } from "@atomist/automation-client/operations/generate/SeedDrivenGeneratorParameters";
+import { ParametersObject } from "@atomist/sdm";
 import { JavaPackageRegExp, MavenArtifactIdRegExp, MavenGroupIdRegExp } from "../javaPatterns";
 
 /**
- * Superclass for all Java project generator parameters.
+ * Parameter interface for Java project creation.
  */
-@Parameters()
-export abstract class JavaProjectCreationParameters extends SeedDrivenGeneratorParametersSupport {
+export interface JavaProjectCreationParameters extends SeedDrivenGeneratorParameters {
 
-    @Parameter({
+    enteredArtifactId?: string;
+
+    groupId: string;
+
+    rootPackage: string;
+
+    version: string;
+
+    description?: string;
+}
+
+/**
+ * Java project generator parameters definitions.
+ */
+export const JavaProjectCreationParameterDefinitions: ParametersObject = {
+
+    enteredArtifactId: {
         ...MavenArtifactIdRegExp,
         displayName: "artifactId",
         required: false,
+        defaultValue: "",
         order: 51,
-    })
-    public enteredArtifactId: string = "";
+    },
 
-    @Parameter({
+    groupId: {
         ...MavenGroupIdRegExp,
         required: true,
         order: 50,
-    })
-    public groupId: string;
+    },
 
-    @Parameter({
+    rootPackage: {
         ...JavaPackageRegExp,
         required: true,
         order: 53,
-    })
-    public rootPackage: string;
+    },
 
-    get artifactId() {
-        return this.enteredArtifactId || this.target.repo;
-    }
+    version: {
+        pattern: /.*/,
+        description: "Version to use",
+        required: false,
+        defaultValue: "0.1.0-SNAPSHOT",
+    },
 
+};
+
+/**
+ * Compute the artifact id to use from the given parameters.
+ * Falls back to repo name if not provided
+ * @param {JavaProjectCreationParameters} params
+ * @return {string}
+ */
+export function artifactId(params: JavaProjectCreationParameters): string {
+    return params.enteredArtifactId || params.target.repoRef.repo;
 }

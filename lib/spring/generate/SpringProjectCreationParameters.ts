@@ -14,37 +14,47 @@
  * limitations under the License.
  */
 
-import { Parameter } from "@atomist/automation-client";
-import { JavaGeneratorConfig } from "../../java/generate/JavaGeneratorConfig";
-import { JavaProjectCreationParameters } from "../../java/generate/JavaProjectCreationParameters";
+import { ParametersObject } from "@atomist/sdm";
+import {
+    artifactId,
+    JavaProjectCreationParameterDefinitions,
+    JavaProjectCreationParameters,
+} from "../../java/generate/JavaProjectCreationParameters";
 import { JavaIdentifierRegExp } from "../../java/javaPatterns";
 
 /**
- * Parameters for creating Spring Boot apps.
+ * Parameter interface for Spring Boot project creation
  */
-export class SpringProjectCreationParameters extends JavaProjectCreationParameters {
+export interface SpringProjectCreationParameters extends JavaProjectCreationParameters {
 
-    @Parameter({
+    /**
+     * Service class name to use. Derived from artifact name
+     * if not defined.
+     */
+    enteredServiceClassName?: string;
+
+}
+
+/**
+ * Parameters for creating Spring Boot apps.
+ * Based on Java project creation parameters.
+ */
+export const SpringProjectCreationParameterDefinitions: ParametersObject = {
+
+    ...JavaProjectCreationParameterDefinitions,
+
+    enteredServiceClassName: {
         displayName: "Class Name",
         description: "name for the service class",
         ...JavaIdentifierRegExp,
         required: false,
-    })
-    public enteredServiceClassName: string;
+    },
+};
 
-    constructor(config?: JavaGeneratorConfig) {
-        super(config);
-        if (!!config) {
-            this.groupId = config.groupId;
-        }
-    }
-
-    get serviceClassName() {
-        return !!this.enteredServiceClassName ?
-            toInitialCap(this.enteredServiceClassName) :
-            toInitialCap(camelize(this.artifactId));
-    }
-
+export function serviceClassName(params: SpringProjectCreationParameters) {
+    return !!params.enteredServiceClassName ?
+        toInitialCap(params.enteredServiceClassName) :
+        toInitialCap(camelize(artifactId(params)));
 }
 
 function toInitialCap(s: string) {
