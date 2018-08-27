@@ -1,7 +1,7 @@
 # @atomist/sdm-pack-spring
 
 [![atomist sdm goals](http://badge.atomist.com/T29E48P34/atomist/sdm-pack-spring/e514504a-2927-468c-8f8a-93568636b896)](https://app.atomist.com/workspace/T29E48P34)
-[![npm version](https://badge.fury.io/js/%40atomist%2Fsdm-pack-spring.svg)](https://badge.fury.io/js/%40atomist%2Fsdm-pack-spring)
+[![npm version](https://img.shields.io/npm/v/@atomist/sdm-pack-spring/next.svg)](https://www.npmjs.com/package/@atomist/sdm-pack-spring/v/next)
 
 [Atomist][atomist] software delivery machine (SDM) extension pack
 providing automated creation, building, and delivery of
