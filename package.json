@@ -24,8 +24,8 @@
   "types": "./index.d.ts",
   "dependencies": {
     "@atomist/antlr": "^0.3.0",
-    "@atomist/microgrammar": "^0.9.1",
-    "@atomist/tree-path": "^0.2.2",
+    "@atomist/microgrammar": "^0.8.0",
+    "@atomist/tree-path": "^0.1.9",
     "@typed/curry": "^1.0.1",
     "@types/lodash": "^4.14.109",
     "@types/properties-reader": "0.0.1",
