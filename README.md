@@ -58,24 +58,24 @@ If you find a problem, please create an [issue][].
 
 ## Development
 
-You will need to install [Node][node] to build and test this project.
+You will need to install [Node.js][node] to build and test this project.
 
 [node]: https://nodejs.org/ (Node.js)
 
 ### Build and test
 
-Use the following package scripts to build, test, and perform other
-development tasks.
+Install dependencies.
 
-Command | Reason
-------- | ------
-`npm install` | install project dependencies
-`npm run build` | compile, test, lint, and generate docs
-`npm run lint` | run TSLint against the TypeScript
-`npm run compile` | generate types from GraphQL and compile TypeScript
-`npm test` | run tests
-`npm run autotest` | run tests every time a file changes
-`npm run clean` | remove files generated during build
+```
+$ npm install
+```
+
+Use the `build` package script to compile, test, lint, and build the
+documentation.
+
+```
+$ npm run build
+```
 
 ### Release
 
