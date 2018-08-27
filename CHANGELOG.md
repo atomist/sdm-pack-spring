@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/0.1.15...HEAD)
 
+### Changed
+
+-   **BREAKING** Switch to newer style parameters object from decorator model
+for Spring generator parameters
+
 ## [0.1.15](https://github.com/atomist/sdm-pack-spring/compare/0.1.14...0.1.15) - 2018-08-25
 
 ## [0.1.14](https://github.com/atomist/sdm-pack-spring/compare/0.1.13...0.1.14) - 2018-08-24
