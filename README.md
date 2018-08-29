@@ -7,6 +7,8 @@
 providing automated creation, building, and delivery of
 [Spring][spring] and [Spring Boot][spring-boot] applications.
 
+Also includes Maven and Java support.
+
 [spring]: https://spring.io/ (Spring)
 [spring-boot]: http://spring.io/projects/spring-boot (Spring Boot)
 
