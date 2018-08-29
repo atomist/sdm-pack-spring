@@ -24,12 +24,6 @@ export {
     executableJarDeployer,
 } from "./lib/java/deploy/executableJarDeployer";
 export {
-    CommonJavaGeneratorConfig,
-} from "./lib/java/generate/generatorConfig";
-export {
-    JavaGeneratorConfig,
-} from "./lib/java/generate/JavaGeneratorConfig";
-export {
     AllJavaFiles,
     JavaAndKotlinSource,
 } from "./lib/java/javaProjectUtils";
