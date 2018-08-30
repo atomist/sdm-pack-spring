@@ -33,10 +33,10 @@ export const ProvidedDependencyCategory = "Use of `provided` dependencies in Mav
 export const ProvidedDependencyReviewer: ReviewerRegistration = {
     name: ProvidedDependencyCategory,
     pushTest: IsMaven,
-    action: async pil => {
+    inspection: async project => {
         return {
-            repoId: pil.id,
-            comments: await findProvidedProperties(pil.project),
+            repoId: project.id,
+            comments: await findProvidedProperties(project),
         };
     },
 };

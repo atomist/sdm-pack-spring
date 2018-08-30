@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-import { ExtensionPack, LocalDeploymentGoal, SoftwareDeliveryMachine, whenPushSatisfies } from "@atomist/sdm";
-import { LocalEndpointGoal, LocalUndeploymentGoal, ManagedDeploymentTargeter, tagRepo } from "@atomist/sdm-core";
-import * as deploy from "@atomist/sdm/api-helper/dsl/deployDsl";
+import { ExtensionPack, SoftwareDeliveryMachine, whenPushSatisfies } from "@atomist/sdm";
+import { tagRepo } from "@atomist/sdm-core";
 import { metadata } from "@atomist/sdm/api-helper/misc/extensionPack";
 import {
     executeMavenPerBranchSpringBootDeploy,
     MavenDeployerOptions,
     MavenPerBranchSpringBootDeploymentGoal,
 } from "./java/deploy/MavenPerBranchSpringBootDeploymentGoal";
-import { ListLocalDeploys } from "./maven/deploy/listLocalDeploys";
-import { IsMaven } from "./maven/pushTests";
-import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
 import { HasSpringBootApplicationClass } from "./spring/pushTests";
 import { springBootTagger } from "./spring/springTagger";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
@@ -49,6 +45,7 @@ export function configureMavenPerBranchSpringBootDeploy(sdm: SoftwareDeliveryMac
         executeMavenPerBranchSpringBootDeploy(sdm.configuration.sdm.projectLoader, options));
 }
 
+/*
 export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
     sdm.addDeployRules(
         deploy.when(IsMaven)
@@ -62,3 +59,4 @@ export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
         ))
         .addCommand(ListLocalDeploys);
 }
+*/
