@@ -15,7 +15,7 @@
  */
 
 export {
-    // configureLocalSpringBootDeploy,
+    configureLocalSpringBootDeploy,
     configureMavenPerBranchSpringBootDeploy,
     SpringSupport,
 } from "./lib/spring";
