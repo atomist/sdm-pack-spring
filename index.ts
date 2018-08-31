@@ -77,6 +77,7 @@ export {
     SpringBootSuccessPatterns,
 } from "./lib/spring/deploy/localSpringBootDeployers";
 export * from "./lib/spring/generate/springBootTransforms";
+export { addSpringInitializrGenerator } from "./lib/spring/generate/springInitializrGenerator";
 export {
     SpringProjectCreationParameters,
     SpringProjectCreationParameterDefinitions,
