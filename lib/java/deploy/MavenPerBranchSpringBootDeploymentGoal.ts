@@ -39,6 +39,7 @@ import {
 import * as os from "os";
 import * as portfinder from "portfinder";
 import { MavenLogInterpreter } from "../../maven/build/mavenLogInterpreter";
+import { determineMavenCommand } from "../../maven/MavenCommand";
 
 export const ListBranchDeploys: CommandHandlerRegistration = {
     name: "listLocalDeploys",
@@ -183,7 +184,7 @@ class MavenDeployer {
             }
         }
 
-        const childProcess = spawn("mvn",
+        const childProcess = spawn(determineMavenCommand(project),
             [
                 "spring-boot:run",
             ].concat(this.options.commandLineArgumentsFor(port, contextRoot)),
