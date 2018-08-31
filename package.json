@@ -34,10 +34,14 @@
     "@types/lodash": "^4.14.109",
     "@types/properties-reader": "0.0.1",
     "@types/xml2js": "^0.4.3",
+    "@types/decompress": "^4.2.3",
     "lodash": "^4.17.10",
     "portfinder": "^1.0.13",
     "properties-reader": "0.0.16",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.4.19",
+    "decompress": "^4.2.0",
+    "axios": "^0.18.0",
+    "tmp-promise": "^1.0.5"
   },
   "peerDependencies": {
     "@atomist/automation-client": "*",
@@ -46,7 +50,7 @@
   },
   "devDependencies": {
     "@atomist/automation-client": "https://r.atomist.com/3293731453",
-    "@atomist/sdm": "https://r.atomist.com/414889522",
+    "@atomist/sdm": "https://r.atomist.com/3852032057",
     "@atomist/sdm-core": "https://r.atomist.com/3357344100",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.5.7",
