@@ -29,18 +29,6 @@ describe("MavenCommandTests", () => {
     it("should use maven wrapper if POSIX wrapper is present", async () => {
         const project = InMemoryProject.of({path: "mvnw", content: ""});
         const command = determineMavenCommand(project);
-        assert(command === "mvnw");
-    });
-
-    it("should use maven wrapper if Windows wrapper is present", async () => {
-        const project = InMemoryProject.of({path: "mvnw.cmd", content: ""});
-        const command = determineMavenCommand(project);
-        assert(command === "mvnw");
-    });
-
-    it("should use maven wrapper if both wrappers are present", async () => {
-        const project = InMemoryProject.of({path: "mvnw.cmd", content: ""}, {path: "mvnw", content: ""});
-        const command = determineMavenCommand(project);
-        assert(command === "mvnw");
+        assert(command === "./mvnw");
     });
 });

@@ -15,10 +15,13 @@
  */
 
 import { Project } from "@atomist/automation-client/project/Project";
+import * as os from "os";
 
 export function determineMavenCommand(p: Project): string {
-    if (p.fileExistsSync("mvnw") || p.fileExistsSync("mvnw.cmd")) {
+    if (p.fileExistsSync("mvnw.cmd") && os.platform() === "win32") {
        return "mvnw";
+    } else if (p.fileExistsSync("mvnw")) {
+        return "./mvnw";
     } else {
         return "mvn";
     }
