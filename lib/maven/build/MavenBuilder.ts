@@ -33,9 +33,9 @@ import {
     LogInterpretation,
 } from "@atomist/sdm/spi/log/InterpretedLog";
 import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
+import { determineMavenCommand } from "../MavenCommand";
 import { identification } from "../parse/pomParser";
 import { MavenLogInterpreter } from "./mavenLogInterpreter";
-import { determineMavenCommand } from "../MavenCommand";
 
 /* tslint:disable:max-classes-per-file */
 
