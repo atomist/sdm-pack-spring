@@ -61,8 +61,11 @@ export function mavenSourceDeployer(projectLoader: ProjectLoader): Deployer<Mana
 
 export function springBootMavenArgs(si: StartupInfo): string[] {
     return [
-        `-Dserver.port=${si.port}`,
-        `-Dserver.contextPath=${si.contextRoot}`,
-        `-Dserver.servlet.contextPath=${si.contextRoot}`,
+        `-Drun.jvmArguments="-Dserver.port=${si.port}"`,
+        `-Drun.jvmArguments="-Dserver.contextPath=${si.contextRoot}"`,
+        `-Drun.jvmArguments="-Dserver.servlet.contextPath=${si.contextRoot}"`,
+        `-Dspring-boot.run.jvmArguments="-Dserver.port=${si.port}"`,
+        `-Dspring-boot.run.jvmArguments="-Dserver.contextPath=${si.contextRoot}"`,
+        `-Dspring-boot.run.jvmArguments="-Dserver.servlet.contextPath=${si.contextRoot}"`,
     ];
 }
