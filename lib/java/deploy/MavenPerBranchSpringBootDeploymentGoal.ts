@@ -251,11 +251,11 @@ async function reportFailureToUser(gi: GoalInvocation, log: string) {
 
 function springBootMavenArgs(port: number, contextRoot: string): string[] {
     return [
-        `-Drun.jvmArguments="-Dserver.port=${port}"`,
-        `-Drun.jvmArguments="-Dserver.contextPath=${contextRoot}"`,
-        `-Drun.jvmArguments="-Dserver.servlet.contextPath=${contextRoot}"`,
-        `-Dspring-boot.run.jvmArguments="-Dserver.port=${port}"`,
-        `-Dspring-boot.run.jvmArguments="-Dserver.contextPath=${contextRoot}"`,
-        `-Dspring-boot.run.jvmArguments="-Dserver.servlet.contextPath=${contextRoot}"`,
+        `-Dspring-boot.run.arguments="--server.port=${port}"`,
+        `-Dspring-boot.run.arguments="--server.contextPath=${contextRoot}"`,
+        `-Dspring-boot.run.arguments="--server.servlet.contextPath=${contextRoot}"`,
+        `-Drun.arguments="--server.port=${port}"`,
+        `-Drun.arguments="--server.contextPath=${contextRoot}"`,
+        `-Drun.arguments="--server.servlet.contextPath=${contextRoot}"`,
     ];
 }
