@@ -42,10 +42,10 @@ export const HardcodePropertyCategory = "Hardcoded properties";
 export const HardCodedPropertyReviewer: ReviewerRegistration = {
     name: HardcodePropertyCategory,
     pushTest: HasSpringPom,
-    action: async pil => {
+    inspection: async project => {
         return {
-            repoId: pil.id,
-            comments: await badPropertiesStrings(pil.project),
+            repoId: project.id,
+            comments: await badPropertiesStrings(project),
         };
     },
 };

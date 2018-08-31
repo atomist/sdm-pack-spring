@@ -14,9 +14,21 @@
  * limitations under the License.
  */
 
-import { ExtensionPack, LocalDeploymentGoal, SoftwareDeliveryMachine, whenPushSatisfies } from "@atomist/sdm";
-import { LocalEndpointGoal, LocalUndeploymentGoal, ManagedDeploymentTargeter, tagRepo } from "@atomist/sdm-core";
-import * as deploy from "@atomist/sdm/api-helper/dsl/deployDsl";
+import {
+    AnyPush,
+    ExtensionPack,
+    LocalDeploymentGoal,
+    SoftwareDeliveryMachine,
+    whenPushSatisfies,
+} from "@atomist/sdm";
+import {
+    LocalEndpointGoal,
+    LocalUndeploymentGoal,
+    ManagedDeploymentTargeter,
+    tagRepo,
+} from "@atomist/sdm-core";
+import { executeDeploy } from "@atomist/sdm/api-helper/goal/executeDeploy";
+import { executeUndeploy } from "@atomist/sdm/api-helper/goal/executeUndeploy";
 import { metadata } from "@atomist/sdm/api-helper/misc/extensionPack";
 import {
     executeMavenPerBranchSpringBootDeploy,
@@ -37,7 +49,7 @@ export const SpringSupport: ExtensionPack = {
             .addCodeTransformCommand(TryToUpgradeSpringBootVersion)
             .addNewRepoWithCodeListener(
                 tagRepo(springBootTagger),
-        );
+            );
     },
 };
 
@@ -50,15 +62,35 @@ export function configureMavenPerBranchSpringBootDeploy(sdm: SoftwareDeliveryMac
 }
 
 export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
-    sdm.addDeployRules(
-        deploy.when(IsMaven)
-            .itMeans("Maven local deploy")
-            .deployTo(LocalDeploymentGoal, LocalEndpointGoal, LocalUndeploymentGoal)
-            .using(
-                {
-                    deployer: mavenSourceDeployer(sdm.configuration.sdm.projectLoader),
-                    targeter: ManagedDeploymentTargeter,
-                },
-        ))
-        .addCommand(ListLocalDeploys);
+    const deployToLocal = {
+        deployer: mavenSourceDeployer(sdm.configuration.sdm.projectLoader),
+        targeter: ManagedDeploymentTargeter,
+        deployGoal: LocalDeploymentGoal,
+        endpointGoal: LocalEndpointGoal,
+        undeployGoal: LocalUndeploymentGoal,
+    };
+    sdm.addGoalImplementation("Local deployer",
+        deployToLocal.deployGoal,
+        executeDeploy(
+            sdm.configuration.sdm.artifactStore,
+            sdm.configuration.sdm.repoRefResolver,
+            deployToLocal.endpointGoal, deployToLocal),
+        {
+            pushTest: IsMaven,
+            logInterpreter: deployToLocal.deployer.logInterpreter,
+        },
+    );
+    sdm.addKnownSideEffect(
+        deployToLocal.endpointGoal,
+        deployToLocal.deployGoal.definition.displayName,
+        AnyPush);
+    sdm.addGoalImplementation("Local undeployer",
+        deployToLocal.undeployGoal,
+        executeUndeploy(deployToLocal),
+        {
+            pushTest: IsMaven,
+            logInterpreter: deployToLocal.deployer.logInterpreter,
+        },
+    );
+    sdm.addCommand(ListLocalDeploys);
 }

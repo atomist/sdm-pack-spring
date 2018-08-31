@@ -20,7 +20,6 @@ import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemory
 import { InMemoryFile } from "@atomist/automation-client/project/mem/InMemoryFile";
 import * as assert from "power-assert";
 import { ProvidedDependencyCategory, ProvidedDependencyReviewer } from "../../../lib/maven/review/providedDependencyReviewer";
-import { fakeListenerInvocation } from "../../fakeListenerInvocation";
 import { NonSpringPom } from "../../spring/generator/TestPoms";
 
 describe("ProvidedDependencyReviewer", () => {
@@ -28,14 +27,14 @@ describe("ProvidedDependencyReviewer", () => {
     it("should not find any problems in empty project", async () => {
         const id = new GitHubRepoRef("a", "b");
         const p = InMemoryProject.from(id);
-        const r = await ProvidedDependencyReviewer.action(fakeListenerInvocation(p) as any);
+        const r = await ProvidedDependencyReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 0);
     });
 
     it("pass harmless POM", async () => {
         const id = new GitHubRepoRef("a", "b");
         const p = InMemoryProject.from(id, new InMemoryFile("pom.xml", NonSpringPom));
-        const r = await ProvidedDependencyReviewer.action(fakeListenerInvocation(p) as any);
+        const r = await ProvidedDependencyReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 0);
     });
 
@@ -43,7 +42,7 @@ describe("ProvidedDependencyReviewer", () => {
         const id = new GitHubRepoRef("a", "b");
         const f = new InMemoryFile("pom.xml", ProvidedPom);
         const p = InMemoryProject.from(id, f);
-        const r = await ProvidedDependencyReviewer.action(fakeListenerInvocation(p) as any);
+        const r = await ProvidedDependencyReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 1);
         const comment =  r.comments[0];
         assert.equal(comment.category, ProvidedDependencyCategory);
