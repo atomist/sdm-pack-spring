@@ -41,6 +41,7 @@ import {
 import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
 import { ProjectLoader } from "@atomist/sdm/spi/project/ProjectLoader";
 import { spawn } from "child_process";
+import { determineMavenCommand } from "../MavenCommand";
 
 /**
  * Managed deployments
@@ -135,7 +136,7 @@ class MavenSourceDeployer implements Deployer<ManagedDeploymentTargetInfo> {
             contextRoot: `/${branchId.owner}/${branchId.repo}/${branchId.branch}`,
         };
 
-        const childProcess = spawn("mvn",
+        const childProcess = spawn(determineMavenCommand(project),
             [
                 "spring-boot:run",
             ].concat(this.opts.commandLineArgumentsFor(startupInfo)),

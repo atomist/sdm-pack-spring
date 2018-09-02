@@ -39,6 +39,7 @@ import {
 import * as os from "os";
 import * as portfinder from "portfinder";
 import { MavenLogInterpreter } from "../../maven/build/mavenLogInterpreter";
+import { determineMavenCommand } from "../../maven/MavenCommand";
 
 export const ListBranchDeploys: CommandHandlerRegistration = {
     name: "listLocalDeploys",
@@ -183,7 +184,7 @@ class MavenDeployer {
             }
         }
 
-        const childProcess = spawn("mvn",
+        const childProcess = spawn(determineMavenCommand(project),
             [
                 "spring-boot:run",
             ].concat(this.options.commandLineArgumentsFor(port, contextRoot)),
@@ -250,8 +251,9 @@ async function reportFailureToUser(gi: GoalInvocation, log: string) {
 
 function springBootMavenArgs(port: number, contextRoot: string): string[] {
     return [
-        `-Dserver.port=${port}`,
-        `-Dserver.contextPath=${contextRoot}`,
-        `-Dserver.servlet.contextPath=${contextRoot}`,
+        "-Dspring-boot.run.arguments=--server.port=" + port + ",--server.contextPath=" + contextRoot +
+        ",--server.servlet.contextPath=" + contextRoot,
+        "-Drun.arguments=--Dserver.port=" + port + ",--server.contextPath=" + contextRoot +
+        ",--server.servlet.contextPath=" + contextRoot,
     ];
 }

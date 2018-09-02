@@ -33,6 +33,7 @@ import {
     LogInterpretation,
 } from "@atomist/sdm/spi/log/InterpretedLog";
 import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
+import { determineMavenCommand } from "../MavenCommand";
 import { identification } from "../parse/pomParser";
 import { MavenLogInterpreter } from "./mavenLogInterpreter";
 
@@ -67,7 +68,7 @@ export class MavenBuilder extends LocalBuilder implements LogInterpretation {
             const va = await identification(content);
             const appId = { ...va, name: va.artifact, id };
 
-            const cmd = "mvn package" + (this.skipTests ? " -DskipTests" : "");
+            const cmd = `${determineMavenCommand(p)} package` + (this.skipTests ? " -DskipTests" : "");
             const buildResult = spawnAndWatch(
                 asSpawnCommand(cmd),
                 {
