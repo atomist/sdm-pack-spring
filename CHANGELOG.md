@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.1...HEAD)
 
+### Fixed
+
+-   Spring Boot Maven plugin doesn't pass parameters when forked. [#7](https://github.com/atomist/sdm-pack-spring/issues/7)
+
 ## [1.0.0-M.1](https://github.com/atomist/sdm-pack-spring/compare/0.1.18...1.0.0-M.1) - 2018-08-27
 
 ## [0.1.18](https://github.com/atomist/sdm-pack-spring/compare/0.1.17...0.1.18) - 2018-08-27
@@ -18,7 +22,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 -   **BREAKING** Switch to newer style parameters object from decorator model
-for Spring generator parameters
 
 ## [0.1.15](https://github.com/atomist/sdm-pack-spring/compare/0.1.14...0.1.15) - 2018-08-25
 
