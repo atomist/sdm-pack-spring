@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.1...HEAD)
 
+### Added
+
+-   Add code generator that uses start.spring.io as a seed. [#34](https://github.com/atomist/sdm-pack-spring/issues/34)
+
 ### Fixed
 
 -   Spring Boot Maven plugin doesn't pass parameters when forked. [#7](https://github.com/atomist/sdm-pack-spring/issues/7)
