@@ -116,6 +116,7 @@ const SpringInitializrProjectCreationParameterDefinitions: ParametersObject = {
         displayName: "Spring Boot dependencies",
         description: "comma separated list of dependencies",
         required: false,
+        defaultValue: "web,actuator",
     },
 
     bootVersion: {
