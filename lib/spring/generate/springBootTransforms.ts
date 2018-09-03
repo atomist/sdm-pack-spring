@@ -35,7 +35,7 @@ export const ReplaceReadmeTitle: CodeTransform<SpringProjectCreationParameters> 
 export const SetAtomistTeamInApplicationYml: CodeTransform =
     async (p, ci) => {
         return utils.doWithFiles(p, "src/main/resources/application.yml", f =>
-            f.replace(/\${ATOMIST_TEAM}/, ci.context.teamId));
+            f.replace(/\${ATOMIST_TEAM}/, ci.teamId));
     };
 
 function titleBlock(params: SpringProjectCreationParameters): string {
