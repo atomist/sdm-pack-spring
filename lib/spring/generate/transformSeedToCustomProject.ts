@@ -51,7 +51,7 @@ export const TransformSeedToCustomProject: CodeTransform<SpringProjectCreationPa
  */
 export function cleanReadMe(description: string, project: Project): Promise<Project> {
     return doWithFiles(project, "README.md", readMe => {
-        readMe.replace(/^#[\\s\\S]*?## Development/, `# ${project.name}
+        return readMe.replace(/^#[\\s\\S]*?## Development/, `# ${project.name}
 This project contains ${description}.
 
 ## Development`);
