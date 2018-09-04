@@ -34,7 +34,7 @@ describe("updatePom", () => {
 
     it("should edit simple POM", done => {
         const p = InMemoryProject.from(
-            { owner: "wicked", repo: "defying-gravity" },
+            { owner: "wicked", repo: "defying-gravity", url: "" },
             { path: "pom.xml", content: SimplePom },
         );
         p.addFileSync("src/main/java/Foo.java", "public class Foo {}");
@@ -58,7 +58,7 @@ describe("updatePom", () => {
     // TODO this should succeed
     it.skip("should edit POM with second artifact and out of order", done => {
         const p = InMemoryProject.from(
-            { owner: "wicked", repo: "defying-gravity" },
+            { owner: "wicked", repo: "defying-gravity", url: "" },
             { path: "pom.xml", content: PomWithDualArtifact },
         );
         p.addFileSync("src/main/java/Foo.java", "public class Foo {}");

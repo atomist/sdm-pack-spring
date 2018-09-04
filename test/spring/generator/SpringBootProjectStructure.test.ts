@@ -162,7 +162,7 @@ const SimplePom = `<?xml version="1.0" encoding="UTF-8"?>
 
 export const GishJavaPath = "src/main/java/com/smashing/pumpkins/Gish.java";
 export const GishProject: Project = InMemoryProject.from(
-    {owner: "smashing-pumpkins", repo: "gish"},
+    {owner: "smashing-pumpkins", repo: "gish", url: ""},
     {
         path: GishJavaPath,
         content: javaSource,
@@ -173,7 +173,7 @@ export const GishProject: Project = InMemoryProject.from(
 );
 
 export const GishProjectWithComment: Project = InMemoryProject.from(
-    {owner: "smashing-pumpkins", repo: "gish"},
+    {owner: "smashing-pumpkins", repo: "gish", url: ""},
     {
         path: GishJavaPath,
         content: javaSource.replace("@SpringBootApplication", "@SpringBootApplication // ha ha trying to fool you"),
@@ -186,7 +186,7 @@ export const GishProjectWithComment: Project = InMemoryProject.from(
 export const GishKotlinPath = "src/main/kotlin/com/smashing/pumpkins/Gish.kt";
 
 export const KotlinGishProject: Project = InMemoryProject.from(
-    {owner: "smashing-pumpkins", repo: "gish"},
+    {owner: "smashing-pumpkins", repo: "gish", url: ""},
     {
         path: GishKotlinPath,
         content: kotlinSource,
