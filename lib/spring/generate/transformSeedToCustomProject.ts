@@ -38,5 +38,5 @@ export const TransformSeedToCustomProject: CodeTransform<SpringProjectCreationPa
             params.description || params.target.repoRef.repo),
         curry(inferStructureAndMovePackage)(params.rootPackage),
         curry(inferSpringStructureAndRename)(serviceClassName(params)),
-    )(p, ctx, params);
+    )(p, ctx.context, params);
 };

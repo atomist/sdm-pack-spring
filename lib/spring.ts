@@ -22,14 +22,16 @@ import {
     whenPushSatisfies,
 } from "@atomist/sdm";
 import {
-    LocalEndpointGoal,
-    LocalUndeploymentGoal,
     ManagedDeploymentTargeter,
     tagRepo,
 } from "@atomist/sdm-core";
 import { executeDeploy } from "@atomist/sdm/api-helper/goal/executeDeploy";
 import { executeUndeploy } from "@atomist/sdm/api-helper/goal/executeUndeploy";
 import { metadata } from "@atomist/sdm/api-helper/misc/extensionPack";
+import {
+    LocalEndpointGoal,
+    LocalUndeploymentGoal,
+} from "@atomist/sdm/pack/well-known-goals/commonGoals";
 import {
     executeMavenPerBranchSpringBootDeploy,
     MavenDeployerOptions,
@@ -47,7 +49,7 @@ export const SpringSupport: ExtensionPack = {
     configure: sdm => {
         sdm
             .addCodeTransformCommand(TryToUpgradeSpringBootVersion)
-            .addNewRepoWithCodeListener(
+            .addFirstPushListener(
                 tagRepo(springBootTagger),
             );
     },
@@ -80,7 +82,7 @@ export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
             logInterpreter: deployToLocal.deployer.logInterpreter,
         },
     );
-    sdm.addKnownSideEffect(
+    sdm.addGoalSideEffect(
         deployToLocal.endpointGoal,
         deployToLocal.deployGoal.definition.displayName,
         AnyPush);
