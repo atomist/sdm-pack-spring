@@ -17,6 +17,7 @@
 import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitHubRepoRef";
 import { SimpleRepoId } from "@atomist/automation-client/operations/common/RepoId";
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
+import { ParametersInvocation } from "@atomist/sdm/api/listener/ParametersInvocation";
 import * as assert from "power-assert";
 import {
     ReplaceReadmeTitle,
@@ -94,7 +95,8 @@ describe("springBootTransforms", () => {
             } as any,
             version,
         };
-        await TransformSeedToCustomProject(p, null, params);
+        const context = { context: null, addressChannels: null, credentials: null} as ParametersInvocation<SpringProjectCreationParameters>;
+        await TransformSeedToCustomProject(p, context, params);
         const pom = p.findFileSync("pom.xml").getContentSync();
         assert(pom.includes(`<name>repoName</name>`), "Name should be repo name");
         assert(pom.includes(`<version>${version}</version>`), "Version should be correct");
@@ -104,7 +106,7 @@ describe("springBootTransforms", () => {
     it("should put in Atomist team id", async () => {
         const p = InMemoryProject.from(new SimpleRepoId("owner", "repoName"),
             {path: "src/main/resources/application.yml", content: yml1});
-        await SetAtomistTeamInApplicationYml(p, {teamId: "T1000"} as any);
+        await SetAtomistTeamInApplicationYml(p, {context: { workspaceId: "T1000"}} as any);
         const yml = p.findFileSync("src/main/resources/application.yml").getContentSync();
         assert(yml.includes("/teams/T1000"), "Should include Atomist team");
     });
