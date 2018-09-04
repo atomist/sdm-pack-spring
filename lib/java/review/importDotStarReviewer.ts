@@ -20,6 +20,10 @@ import { JavaAndKotlinSource } from "../javaProjectUtils";
 
 export const ImportDotStarCategory = "Lazy import";
 
+/**
+ * Flag lazy imports such as "import * from java.io"
+ * @type {ReviewerRegistration}
+ */
 export const ImportDotStarReviewer: ReviewerRegistration = patternMatchReviewer(
     ImportDotStarCategory,
     {globPattern: JavaAndKotlinSource, severity: "info"},

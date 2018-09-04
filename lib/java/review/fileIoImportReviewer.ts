@@ -20,6 +20,11 @@ import { JavaAndKotlinSource } from "../javaProjectUtils";
 
 export const ImportFileIoCategory = "Import java.io.File";
 
+/**
+ * Flag import of java.io.File. This is not normally
+ * a good idea in a cloud native application.
+ * @type {ReviewerRegistration}
+ */
 export const FileIoImportReviewer: ReviewerRegistration = patternMatchReviewer(
     ImportFileIoCategory,
     {globPattern: JavaAndKotlinSource, severity: "warn"},

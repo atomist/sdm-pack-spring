@@ -21,7 +21,9 @@ import { parentStanzaOfGrammar } from "../../maven/parse/grammar/mavenGrammars";
 import { SpringBootStarter } from "../springConstants";
 
 /**
- * Set the Spring Boot version according to the parameters
+ * Set the Spring Boot version according to the parameters.
+ * Will act on all pom files found in the project, not just in the root,
+ * so works on monorepos.
  */
 export const SetSpringBootVersionTransform: CodeTransform<{ desiredBootVersion: string }> =
     async (p, ctx, params) =>
