@@ -25,8 +25,16 @@ import {
     KotlinSourceFiles,
 } from "./javaProjectUtils";
 
+/**
+ * Path expression using the Java grammar for a Java package declaration
+ * @type {string}
+ */
 export const JavaPackage = "//packageDeclaration//qualifiedName";
 
+/**
+ * Path expression using the Kotlin grammar for a Java package declaration
+ * @type {string}
+ */
 export const KotlinPackage = "//packageHeader//identifier";
 
 /**
@@ -70,7 +78,7 @@ export class JavaProjectStructure {
     /**
      * @param applicationPackage The first Java package found in the project.
      */
-    constructor(public applicationPackage: string) {
+    private constructor(public readonly applicationPackage: string) {
     }
 
 }
