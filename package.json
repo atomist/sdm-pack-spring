@@ -29,7 +29,6 @@
   "dependencies": {
     "@atomist/antlr": "^0.3.0",
     "@atomist/microgrammar": "^0.8.0",
-    "@atomist/tree-path": "undefined",
     "@typed/curry": "^1.0.1",
     "@types/lodash": "^4.14.109",
     "@types/properties-reader": "0.0.1",
