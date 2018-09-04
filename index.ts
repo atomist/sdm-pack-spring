@@ -96,3 +96,6 @@ export {
 export {
     springBootTagger,
 } from "./lib/spring/springTagger";
+
+export * from "./lib/maven/inspection/findDependenciesCommand";
+export * from "./lib/maven/inspection/findDependencies";

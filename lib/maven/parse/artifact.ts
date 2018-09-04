@@ -16,14 +16,6 @@
 
 import { VersionedArtifact } from "../VersionedArtifact";
 
-export function coordinates(va: VersionedArtifact): string {
-    let coords = `${va.group}:${va.artifact}`;
-    if (va.version) {
-        coords += `:${va.version}`;
-    }
-    return coords;
-}
-
 /**
  * Convert Maven POM XML parser format to our VersionedArtifact
  * @param raw
