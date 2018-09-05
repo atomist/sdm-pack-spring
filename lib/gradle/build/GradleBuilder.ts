@@ -16,10 +16,15 @@
 
 import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
 import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
+import { Microgrammar } from "@atomist/microgrammar/Microgrammar";
+import {
+    Literal,
+} from "@atomist/microgrammar/Primitives";
 import {
     LocalBuilder,
     LocalBuildInProgress,
 } from "@atomist/sdm-core";
+import { StringCapturingProgressLog } from "@atomist/sdm/api-helper/log/StringCapturingProgressLog";
 import {
     asSpawnCommand,
     ChildProcessResult,
@@ -32,11 +37,11 @@ import {
     LogInterpretation,
 } from "@atomist/sdm/spi/log/InterpretedLog";
 import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
-import { MavenLogInterpreter } from "../../maven/build/mavenLogInterpreter";
 import { determineGradleCommand } from "../GradleCommand";
+import { GradleLogInterpreter } from "./gradleLogInterpreter";
 
 export class GradleBuilder extends LocalBuilder implements LogInterpretation {
-    public logInterpreter: InterpretLog = MavenLogInterpreter;
+    public logInterpreter: InterpretLog = GradleLogInterpreter;
 
     protected async startBuild(credentials: ProjectOperationCredentials,
                                id: RemoteRepoRef,
@@ -44,7 +49,16 @@ export class GradleBuilder extends LocalBuilder implements LogInterpretation {
                                log: ProgressLog,
                                addressChannels: AddressChannels): Promise<LocalBuildInProgress> {
         return this.sdm.configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
-            const cmd = `${determineGradleCommand(p)} clean build`;
+            const propertiesOutput = new StringCapturingProgressLog();
+            await spawnAndWatch(
+                asSpawnCommand(`${determineGradleCommand(p)} properties`),
+                {
+                    cwd: p.baseDir,
+                },
+                propertiesOutput);
+            const appName = nameGrammar.firstMatch(propertiesOutput.log);
+
+            const cmd = `${determineGradleCommand(p)} --console=plain clean build`;
             const buildResult = spawnAndWatch(
                 asSpawnCommand(cmd),
                 {
@@ -56,11 +70,15 @@ export class GradleBuilder extends LocalBuilder implements LogInterpretation {
 
             const rb = new UpdatingBuild(id, buildResult, atomistTeam, log.url);
             rb.ai = null; // TODO
-            rb.deploymentUnitFile = ""; // TODO: `${p.baseDir}/target/${appId.name}-${appId.version}.jar`;
+            rb.deploymentUnitFile = `${p.baseDir}/build/libs/${appName}.jar`;
             return rb;
         });
     }
 }
+
+const nameGrammar = Microgrammar.fromString<{ name: string }>("name: ${name}", {
+    name: Literal,
+});
 
 class UpdatingBuild implements LocalBuildInProgress {
 
