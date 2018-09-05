@@ -34,7 +34,7 @@ export function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
         intent: "spring initializr",
         description: "Create a new Spring Boot project using Spring Initializr",
         parameters: SpringInitializrProjectCreationParameterDefinitions,
-        startingPoint: springInitializrProject,
+        startingPoint: params => springInitializrProject(sdm, params),
         transform: [
             SetAtomistTeamInApplicationYml,
             TransformSeedToCustomProject,
@@ -42,7 +42,7 @@ export function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
     });
 }
 
-function springInitializrProject(params: SpringInitializrProjectCreationParameters): Promise<Project> {
+function springInitializrProject(sdm: SoftwareDeliveryMachine, params: SpringInitializrProjectCreationParameters): Promise<Project> {
     const url = "https://start.spring.io/starter.zip";
     const tmpDir = tmp.dirSync({unsafeCleanup: true});
     const cwd = tmpDir.name;
@@ -50,16 +50,20 @@ function springInitializrProject(params: SpringInitializrProjectCreationParamete
     const filename = url.substring(lastSlash + 1);
     const zipFile = path.join(cwd, filename);
     const urlParameters = getUrlParameters(params);
-    return downloadFileAs(url, zipFile, urlParameters)
+    const headers = {
+        "User-Agent": "atomist/" + sdm.configuration.name + "-" + sdm.configuration.version,
+    };
+    return downloadFileAs(url, zipFile, urlParameters, headers)
         .then(() => decompress(zipFile, cwd))
         .then(() => fs.unlinkSync(zipFile))
         .then(() => new NodeFsLocalProject("spring-initializr-project", cwd));
 }
 
-function downloadFileAs(url: string, outputFilename: string, params?: any): Promise<any> {
+function downloadFileAs(url: string, outputFilename: string, params?: any, headers?: any): Promise<any> {
     return doWithRetry(() => axios.get(url, {
         params,
         headers: {
+            ...headers,
             "Accept": "application/octet-stream",
             "Content-Type": "application/zip",
         },
