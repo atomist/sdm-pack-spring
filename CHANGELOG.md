@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.3...HEAD)
 
+### Added
+
+-   Add user agent to Spring Initializr call. [#41](https://github.com/atomist/sdm-pack-spring/issues/41)
+
 ## [1.0.0-M.3](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.1...1.0.0-M.3) - 2018-09-04
 
 ### Added
