@@ -51,7 +51,7 @@ function springInitializrProject(sdm: SoftwareDeliveryMachine, params: SpringIni
     const zipFile = path.join(cwd, filename);
     const urlParameters = getUrlParameters(params);
     const headers = {
-        "User-Agent": "atomist/" + sdm.configuration.name + "-" + sdm.configuration.name,
+        "User-Agent": "atomist/" + sdm.configuration.name + "-" + sdm.configuration.version,
     };
     return downloadFileAs(url, zipFile, urlParameters, headers)
         .then(() => decompress(zipFile, cwd))
