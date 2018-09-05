@@ -52,7 +52,7 @@ function springInitializrProject(sdm: SoftwareDeliveryMachine, params: SpringIni
     const urlParameters = getUrlParameters(params);
     const headers = {
         "User-Agent": "atomist/" + sdm.configuration.name + "-" + sdm.configuration.name,
-    }
+    };
     return downloadFileAs(url, zipFile, urlParameters, headers)
         .then(() => decompress(zipFile, cwd))
         .then(() => fs.unlinkSync(zipFile))
