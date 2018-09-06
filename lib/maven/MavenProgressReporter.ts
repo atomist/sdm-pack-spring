@@ -29,7 +29,7 @@ export const MvnProgressTests: ProgressTest[] = [{
     phase: "pre-hook",
 }, {
     test: /> mvn ([\S]*)/i,
-    phase: "$1",
+    phase: "mvn $1",
 }, {
     test: /Invoking goal hook: post/i,
     phase: "post-hook",
