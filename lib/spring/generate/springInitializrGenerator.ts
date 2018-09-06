@@ -45,7 +45,7 @@ export function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
     });
 }
 
-function getSpringInitializrMetaData() : any {
+function getSpringInitializrMetaData(): any {
     return doWithRetry(() => axios.get("https://start.spring.io", {
         headers: {
             Accept: "application/vnd.initializr.v2.1+json",
