@@ -28,7 +28,10 @@ import {
 } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
 
+let metaData: any;
+
 export function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
+    getSpringInitializrMetaData();
     sdm.addGeneratorCommand<SpringInitializrProjectCreationParameters>({
         name: "start.spring.io",
         intent: "spring initializr",
@@ -42,7 +45,22 @@ export function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
     });
 }
 
+function getSpringInitializrMetaData() : any {
+    return doWithRetry(() => axios.get("https://start.spring.io", {
+        headers: {
+            Accept: "application/vnd.initializr.v2.1+json",
+        }}), "metadata").then(response => metaData = response.data);
+}
+
+function validateParameters(params: SpringInitializrProjectCreationParameters) {
+    const springBootVersions = metaData.bootVersion.values.id as string[];
+    if (!springBootVersions.includes(params.bootVersion)) {
+        throw new Error("Spring Boot version is invalid");
+    }
+}
+
 function springInitializrProject(sdm: SoftwareDeliveryMachine, params: SpringInitializrProjectCreationParameters): Promise<Project> {
+    validateParameters(params);
     const url = "https://start.spring.io/starter.zip";
     const tmpDir = tmp.dirSync({unsafeCleanup: true});
     const cwd = tmpDir.name;
@@ -50,8 +68,9 @@ function springInitializrProject(sdm: SoftwareDeliveryMachine, params: SpringIni
     const filename = url.substring(lastSlash + 1);
     const zipFile = path.join(cwd, filename);
     const urlParameters = getUrlParameters(params);
+    const packageJson = require("../../../package.json");
     const headers = {
-        "User-Agent": "atomist/" + sdm.configuration.name + "-" + sdm.configuration.version,
+        "User-Agent": "atomist/sdm-pack-spring-" + packageJson.version,
     };
     return downloadFileAs(url, zipFile, urlParameters, headers)
         .then(() => decompress(zipFile, cwd))
