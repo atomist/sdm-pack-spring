@@ -45,8 +45,8 @@ import {
 } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
 
-export function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
-    getSpringInitializrMetaData().then(response =>
+export async function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
+    await getSpringInitializrMetaData().then(response =>
         sdm.addGeneratorCommand<SpringInitializrProjectCreationParameters>({
             name: "start.spring.io",
             intent: "spring initializr",
