@@ -40,25 +40,21 @@ import {
     MavenGroupIdRegExp,
 } from "../../java/javaPatterns";
 import { SetAtomistTeamInApplicationYml } from "./springBootTransforms";
-import {
-    SpringProjectCreationParameters,
-} from "./SpringProjectCreationParameters";
+import { SpringProjectCreationParameters, } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
 
 export async function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
-    await getSpringInitializrMetaData().then(response =>
-        sdm.addGeneratorCommand<SpringInitializrProjectCreationParameters>({
-            name: "start.spring.io",
-            intent: "spring initializr",
-            description: "Create a new Spring Boot project using Spring Initializr",
-            paramsMaker: () => new SpringInitializrProjectCreationParameters(response),
-            startingPoint: params => springInitializrProject(sdm, params),
-            transform: [
-                SetAtomistTeamInApplicationYml,
-                TransformSeedToCustomProject,
-            ],
-        }),
-    );
+    sdm.addGeneratorCommand<SpringInitializrProjectCreationParameters>({
+        name: "start.spring.io",
+        intent: "spring initializr",
+        description: "Create a new Spring Boot project using Spring Initializr",
+        paramsMaker: () => new SpringInitializrProjectCreationParameters(),
+        startingPoint: params => springInitializrProject(sdm, params),
+        transform: [
+            SetAtomistTeamInApplicationYml,
+            TransformSeedToCustomProject,
+        ],
+    });
 }
 
 async function getSpringInitializrMetaData(): Promise<any> {
@@ -67,7 +63,8 @@ async function getSpringInitializrMetaData(): Promise<any> {
         headers: {
             "User-Agent": "atomist/sdm-pack-spring-" + packageJson.version,
             "Accept": "application/vnd.initializr.v2.1+json",
-        }}), "metadata").then(response => response.data);
+        }
+    }), "metadata").then(response => response.data);
 }
 
 function springInitializrProject(sdm: SoftwareDeliveryMachine, params: SpringInitializrProjectCreationParameters): Promise<Project> {
@@ -208,7 +205,10 @@ export class SpringInitializrProjectCreationParameters implements SmartParameter
     })
     public enteredArtifactId?: string = "";
 
-    constructor(private readonly metaData: any) {
+    private metaData: any;
+
+    constructor() {
+        getSpringInitializrMetaData().then(response => this.metaData = response);
     }
 
     public bindAndValidate(): ValidationResult | Promise<ValidationResult> {
@@ -259,7 +259,7 @@ export class SpringInitializrProjectCreationParameters implements SmartParameter
             }
         }
         if (validationErrors && validationErrors.length > 0) {
-            return { message: validationErrors.join("\n")};
+            return {message: validationErrors.join("\n")};
         }
     }
 }
