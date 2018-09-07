@@ -43,15 +43,12 @@ import { SetAtomistTeamInApplicationYml } from "./springBootTransforms";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
 
-const springBootMetaData: any = {};
-
 export async function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
-    await getSpringInitializrMetaData().then(response => springBootMetaData.metaData = response);
     sdm.addGeneratorCommand<SpringInitializrProjectCreationParameters>({
         name: "start.spring.io",
         intent: "spring initializr",
         description: "Create a new Spring Boot project using Spring Initializr",
-        paramsMaker: () => new SpringInitializrProjectCreationParameters(),
+        paramsMaker: () => new SpringInitializrProjectCreationParameters(getSpringInitializrMetaData()),
         startingPoint: params => springInitializrProject(sdm, params),
         transform: [
             SetAtomistTeamInApplicationYml,
@@ -208,55 +205,62 @@ export class SpringInitializrProjectCreationParameters implements SmartParameter
     })
     public enteredArtifactId?: string = "";
 
+    constructor(private readonly metaData: Promise<any>) {}
+
     public bindAndValidate(): ValidationResult | Promise <ValidationResult> {
-        const validationErrors = [];
-        if (this.bootVersion) {
-            const springBootVersions = springBootMetaData.metaData.bootVersion.values.map((v: any) => v.id) as string[];
-            if (!springBootVersions.includes(this.bootVersion)) {
-                validationErrors.push("Spring Boot version is invalid, should be one of: " + springBootVersions.join(", "));
+        this.metaData.then(springBootMetaData => {
+            const validationErrors = [];
+            if (this.bootVersion) {
+                const springBootVersions = springBootMetaData.bootVersion.values.map((v: any) => v.id) as string[];
+                if (!springBootVersions.includes(this.bootVersion)) {
+                    validationErrors.push("Spring Boot version is invalid, should be one of: " + springBootVersions.join(", "));
+                }
             }
-        }
-        if (this.packaging) {
-            const packagings = springBootMetaData.metaData.packaging.values.map((v: any) => v.id) as string[];
-            if (!packagings.includes(this.packaging)) {
-                validationErrors.push("Packaging is invalid, should be one of: " + packagings.join(", "));
+            if (this.packaging) {
+                const packagings = springBootMetaData.packaging.values.map((v: any) => v.id) as string[];
+                if (!packagings.includes(this.packaging)) {
+                    validationErrors.push("Packaging is invalid, should be one of: " + packagings.join(", "));
+                }
             }
-        }
-        if (this.language) {
-            const languages = springBootMetaData.metaData.language.values.map((v: any) => v.id) as string[];
-            if (!languages.includes(this.language)) {
-                validationErrors.push("Language is invalid, should be one of: " + languages.join(", "));
+            if (this.language) {
+                const languages = springBootMetaData.language.values.map((v: any) => v.id) as string[];
+                if (!languages.includes(this.language)) {
+                    validationErrors.push("Language is invalid, should be one of: " + languages.join(", "));
+                }
             }
-        }
-        if (this.projectType) {
-            const types = springBootMetaData.metaData.type.values.map((v: any) => v.id) as string[];
-            if (!types.includes(this.projectType)) {
-                validationErrors.push("Project type is invalid, should be one of: " + types.join(", "));
+            if (this.projectType) {
+                const types = springBootMetaData.type.values.map((v: any) => v.id) as string[];
+                if (!types.includes(this.projectType)) {
+                    validationErrors.push("Project type is invalid, should be one of: " + types.join(", "));
+                }
             }
-        }
-        if (this.javaVersion) {
-            const versions = springBootMetaData.metaData.javaVersion.values.map((v: any) => v.id) as string[];
-            if (!versions.includes(this.javaVersion)) {
-                validationErrors.push("Java version is invalid, should be one of: " + versions.join(", "));
+            if (this.javaVersion) {
+                const versions = springBootMetaData.javaVersion.values.map((v: any) => v.id) as string[];
+                if (!versions.includes(this.javaVersion)) {
+                    validationErrors.push("Java version is invalid, should be one of: " + versions.join(", "));
+                }
             }
-        }
-        if (this.javaVersion) {
-            const versions = springBootMetaData.metaData.javaVersion.values.map((v: any) => v.id) as string[];
-            if (!versions.includes(this.javaVersion)) {
-                validationErrors.push("Java version is invalid, should be one of: " + versions.join(", "));
+            if (this.javaVersion) {
+                const versions = springBootMetaData.javaVersion.values.map((v: any) => v.id) as string[];
+                if (!versions.includes(this.javaVersion)) {
+                    validationErrors.push("Java version is invalid, should be one of: " + versions.join(", "));
+                }
             }
-        }
-        if (this.dependencies) {
-            const dependencyGroups = springBootMetaData.metaData.dependencies.values.map((v: any) => v.values) as any[];
-            const knownDependencies = [].concat(...dependencyGroups).map((v: any) => v.id) as string[];
-            const dependencies = this.dependencies.split(",");
-            const wrongDependencies = dependencies.filter(d => !knownDependencies.includes(d));
-            if (wrongDependencies) {
-                validationErrors.push("Unknown dependencies found: " + wrongDependencies.join(", "));
+            if (this.dependencies) {
+                const dependencyGroups = springBootMetaData.dependencies.values.map((v: any) => v.values) as any[];
+                const knownDependencies = [].concat(...dependencyGroups).map((v: any) => v.id) as string[];
+                const dependencies = this.dependencies.split(",");
+                const wrongDependencies = dependencies.filter(d => !knownDependencies.includes(d));
+                if (wrongDependencies) {
+                    validationErrors.push("Unknown dependencies found: " + wrongDependencies.join(", "));
+                }
             }
-        }
-        if (validationErrors && validationErrors.length > 0) {
-            return {message: validationErrors.join("\n")};
-        }
+            if (validationErrors && validationErrors.length > 0) {
+                return {message: validationErrors.join("\n")};
+            } else {
+                return Promise.resolve({});
+            }
+        });
+
     }
 }
