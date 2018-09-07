@@ -93,7 +93,7 @@ function validateParameters(params: SpringInitializrProjectCreationParameters) {
         const dependencyGroups = metaData.dependencies.values.map((v: any) => v.values) as any[];
         const knownDependencies = [].concat(...dependencyGroups).map((v: any) => v.id) as string[];
         const dependencies = params.dependencies.split(",");
-        const wrongDependencies = dependencies.filter(d => knownDependencies.includes(d));
+        const wrongDependencies = dependencies.filter(d => !knownDependencies.includes(d));
         if (wrongDependencies) {
             throw new Error("Unknowm dependencies found: " + wrongDependencies.join(", "));
         }
