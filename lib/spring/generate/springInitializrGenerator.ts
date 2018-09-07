@@ -18,6 +18,7 @@ import { RemoteLocator } from "@atomist/automation-client/operations/common/para
 import { RepoCreationParameters } from "@atomist/automation-client/operations/generate/RepoCreationParameters";
 import {
     SmartParameters,
+    ValidationError,
     ValidationResult,
 } from "@atomist/automation-client/SmartParameters";
 import { doWithRetry } from "@atomist/automation-client/util/retry";
@@ -207,8 +208,8 @@ export class SpringInitializrProjectCreationParameters implements SmartParameter
 
     constructor(private readonly metaData: Promise<any>) {}
 
-    public bindAndValidate(): ValidationResult | Promise <ValidationResult> {
-        this.metaData.then(springBootMetaData => {
+    public bindAndValidate(): Promise <ValidationResult> {
+        return this.metaData.then(springBootMetaData => {
             const validationErrors = [];
             if (this.bootVersion) {
                 const springBootVersions = springBootMetaData.bootVersion.values.map((v: any) => v.id) as string[];
@@ -256,9 +257,9 @@ export class SpringInitializrProjectCreationParameters implements SmartParameter
                 }
             }
             if (validationErrors && validationErrors.length > 0) {
-                return {message: validationErrors.join("\n")};
+                return Promise.resolve({message: validationErrors.join("\n")} as ValidationError);
             } else {
-                return Promise.resolve({});
+                return null;
             }
         });
 
