@@ -53,9 +53,49 @@ function getSpringInitializrMetaData(): any {
 }
 
 function validateParameters(params: SpringInitializrProjectCreationParameters) {
-    const springBootVersions = metaData.bootVersion.values.map((v: any) => v.id) as string[];
-    if (!springBootVersions.includes(params.bootVersion)) {
-        throw new Error("Spring Boot version is invalid");
+    if (params.bootVersion) {
+        const springBootVersions = metaData.bootVersion.values.map((v: any) => v.id) as string[];
+        if (!springBootVersions.includes(params.bootVersion)) {
+            throw new Error("Spring Boot version is invalid, should be one of: " + springBootVersions.join(", "));
+        }
+    }
+    if (params.packaging) {
+        const packagings = metaData.packaging.values.map((v: any) => v.id) as string[];
+        if (!packagings.includes(params.packaging)) {
+            throw new Error("Packaging is invalid, should be one of: " + packagings.join(", "));
+        }
+    }
+    if (params.language) {
+        const languages = metaData.language.values.map((v: any) => v.id) as string[];
+        if (!languages.includes(params.language)) {
+            throw new Error("Language is invalid, should be one of: " + languages.join(", "));
+        }
+    }
+    if (params.projectType) {
+        const types = metaData.type.values.map((v: any) => v.id) as string[];
+        if (!types.includes(params.projectType)) {
+            throw new Error("Project type is invalid, should be one of: " + types.join(", "));
+        }
+    }
+    if (params.javaVersion) {
+        const versions = metaData.javaVersion.values.map((v: any) => v.id) as string[];
+        if (!versions.includes(params.javaVersion)) {
+            throw new Error("Java version is invalid, should be one of: " + versions.join(", "));
+        }
+    }
+    if (params.javaVersion) {
+        const versions = metaData.javaVersion.values.map((v: any) => v.id) as string[];
+        if (!versions.includes(params.javaVersion)) {
+            throw new Error("Java version is invalid, should be one of: " + versions.join(", "));
+        }
+    }
+    if (params.dependencies) {
+        const knownDependencies = metaData.dependencies.values.flatMap((v: any) => v.values).map((v: any) => v.id) as string[]
+        const dependencies = params.dependencies.split(",");
+        const wrongDependencies = dependencies.filter(d => knownDependencies.includes(d))
+        if(wrongDependencies) {
+            throw new Error("Unknowm dependencies found: " + wrongDependencies.join(", "));
+        }
     }
 }
 
@@ -129,17 +169,13 @@ const SpringInitializrProjectCreationParameterDefinitions: ParametersObject = {
     projectType: {
         displayName: "Project Type",
         description: "type of project",
-        validInput: "maven-project or gradle-project",
-        pattern: /^(maven-project|gradle-project)$/,
         required: false,
-        defaultValue: "maven-project",
     },
 
     dependencies: {
         displayName: "Spring Boot dependencies",
         description: "comma separated list of dependencies",
         required: false,
-        defaultValue: "web,actuator",
     },
 
     bootVersion: {
@@ -151,25 +187,19 @@ const SpringInitializrProjectCreationParameterDefinitions: ParametersObject = {
     language: {
         displayName: "Programming language",
         description: "language (java, kotlin or groovy, default java)",
-        pattern: /^(java|kotlin|groovy)$/,
         required: false,
-        defaultValue: "java",
     },
 
     javaVersion: {
         displayName: "Java version level",
         description: "Java version level (8 or 10, default 8)",
-        pattern: /^(8|10)$/,
         required: false,
-        defaultValue: "8",
     },
 
     packaging: {
         displayName: "Packaging",
         description: "packaging (jar or war, default jar)",
-        pattern: /^(jar|war)$/,
         required: false,
-        defaultValue: "jar",
     },
 
     ...SpringProjectCreationParameterDefinitions,
