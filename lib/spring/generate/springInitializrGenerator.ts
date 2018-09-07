@@ -14,16 +14,33 @@
  * limitations under the License.
  */
 
+import { RemoteLocator } from "@atomist/automation-client/operations/common/params/RemoteLocator";
+import { RepoCreationParameters } from "@atomist/automation-client/operations/generate/RepoCreationParameters";
+import {
+    SmartParameters,
+    ValidationResult,
+} from "@atomist/automation-client/SmartParameters";
 import { doWithRetry } from "@atomist/automation-client/util/retry";
-import { NodeFsLocalProject, ParametersObject, Project, SoftwareDeliveryMachine } from "@atomist/sdm";
+import {
+    NodeFsLocalProject,
+    Parameter,
+    Parameters,
+    Project,
+    SoftwareDeliveryMachine,
+} from "@atomist/sdm";
 import axios from "axios";
 import * as decompress from "decompress";
 import * as fs from "fs";
 import * as path from "path";
 import * as tmp from "tmp-promise";
+import {
+    JavaIdentifierRegExp,
+    JavaPackageRegExp,
+    MavenArtifactIdRegExp,
+    MavenGroupIdRegExp,
+} from "../../java/javaPatterns";
 import { SetAtomistTeamInApplicationYml } from "./springBootTransforms";
 import {
-    SpringProjectCreationParameterDefinitions,
     SpringProjectCreationParameters,
 } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
@@ -36,7 +53,7 @@ export function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
         name: "start.spring.io",
         intent: "spring initializr",
         description: "Create a new Spring Boot project using Spring Initializr",
-        parameters: SpringInitializrProjectCreationParameterDefinitions,
+        paramsMaker: SpringInitializrProjectCreationParameters,
         startingPoint: params => springInitializrProject(sdm, params),
         transform: [
             SetAtomistTeamInApplicationYml,
@@ -52,56 +69,7 @@ function getSpringInitializrMetaData(): any {
         }}), "metadata").then(response => metaData = response.data);
 }
 
-function validateParameters(params: SpringInitializrProjectCreationParameters) {
-    if (params.bootVersion) {
-        const springBootVersions = metaData.bootVersion.values.map((v: any) => v.id) as string[];
-        if (!springBootVersions.includes(params.bootVersion)) {
-            throw new Error("Spring Boot version is invalid, should be one of: " + springBootVersions.join(", "));
-        }
-    }
-    if (params.packaging) {
-        const packagings = metaData.packaging.values.map((v: any) => v.id) as string[];
-        if (!packagings.includes(params.packaging)) {
-            throw new Error("Packaging is invalid, should be one of: " + packagings.join(", "));
-        }
-    }
-    if (params.language) {
-        const languages = metaData.language.values.map((v: any) => v.id) as string[];
-        if (!languages.includes(params.language)) {
-            throw new Error("Language is invalid, should be one of: " + languages.join(", "));
-        }
-    }
-    if (params.projectType) {
-        const types = metaData.type.values.map((v: any) => v.id) as string[];
-        if (!types.includes(params.projectType)) {
-            throw new Error("Project type is invalid, should be one of: " + types.join(", "));
-        }
-    }
-    if (params.javaVersion) {
-        const versions = metaData.javaVersion.values.map((v: any) => v.id) as string[];
-        if (!versions.includes(params.javaVersion)) {
-            throw new Error("Java version is invalid, should be one of: " + versions.join(", "));
-        }
-    }
-    if (params.javaVersion) {
-        const versions = metaData.javaVersion.values.map((v: any) => v.id) as string[];
-        if (!versions.includes(params.javaVersion)) {
-            throw new Error("Java version is invalid, should be one of: " + versions.join(", "));
-        }
-    }
-    if (params.dependencies) {
-        const dependencyGroups = metaData.dependencies.values.map((v: any) => v.values) as any[];
-        const knownDependencies = [].concat(...dependencyGroups).map((v: any) => v.id) as string[];
-        const dependencies = params.dependencies.split(",");
-        const wrongDependencies = dependencies.filter(d => !knownDependencies.includes(d));
-        if (wrongDependencies) {
-            throw new Error("Unknowm dependencies found: " + wrongDependencies.join(", "));
-        }
-    }
-}
-
 function springInitializrProject(sdm: SoftwareDeliveryMachine, params: SpringInitializrProjectCreationParameters): Promise<Project> {
-    validateParameters(params);
     const url = "https://start.spring.io/starter.zip";
     const tmpDir = tmp.dirSync({unsafeCleanup: true});
     const cwd = tmpDir.name;
@@ -152,56 +120,142 @@ function getUrlParameters(params: SpringInitializrProjectCreationParameters): an
     };
 }
 
-interface SpringInitializrProjectCreationParameters extends SpringProjectCreationParameters {
-    projectType: string;
+@Parameters()
+export class SpringInitializrProjectCreationParameters implements SmartParameters, SpringProjectCreationParameters {
 
-    dependencies?: string;
-
-    language: string;
-
-    bootVersion?: string;
-
-    packaging: string;
-
-    javaVersion: string;
-}
-
-const SpringInitializrProjectCreationParameterDefinitions: ParametersObject = {
-    projectType: {
+    @Parameter({
         displayName: "Project Type",
         description: "type of project",
         required: false,
-    },
+    })
+    public projectType?: string;
 
-    dependencies: {
+    @Parameter({
         displayName: "Spring Boot dependencies",
         description: "comma separated list of dependencies",
         required: false,
-    },
+    })
+    public dependencies?: string;
 
-    bootVersion: {
-        displayName: "Spring Boot version",
-        description: "Version of Spring Boot you want to use",
-        required: false,
-    },
-
-    language: {
+    @Parameter({
         displayName: "Programming language",
         description: "language (java, kotlin or groovy, default java)",
         required: false,
-    },
+    })
+    public language?: string;
 
-    javaVersion: {
-        displayName: "Java version level",
-        description: "Java version level (8 or 10, default 8)",
+    @Parameter({
+        displayName: "Spring Boot version",
+        description: "Version of Spring Boot you want to use",
         required: false,
-    },
+    })
+    public bootVersion?: string;
 
-    packaging: {
+    @Parameter({
         displayName: "Packaging",
         description: "packaging (jar or war, default jar)",
         required: false,
-    },
+    })
+    public packaging?: string;
 
-    ...SpringProjectCreationParameterDefinitions,
-};
+    @Parameter({
+        displayName: "Java version level",
+        description: "Java version level (8 or 10, default 8)",
+        required: false,
+    })
+    public javaVersion?: string;
+
+    @Parameter({
+        ...MavenGroupIdRegExp,
+        required: true,
+        order: 50,
+    })
+    public groupId: string;
+
+    @Parameter({
+        ...JavaPackageRegExp,
+        required: true,
+        order: 53,
+    })
+    public rootPackage: string;
+
+    @Parameter({
+        pattern: /.*/,
+        description: "Version to use",
+        required: false,
+    })
+    public version: string = "0.1.0-SNAPSHOT";
+
+    @Parameter({
+        displayName: "Class Name",
+        description: "name for the service class",
+        ...JavaIdentifierRegExp,
+        required: false,
+    })
+    public enteredServiceClassName?: string;
+
+    public addAtomistWebhook: boolean = true;
+    public source: RemoteLocator;
+    public target: RepoCreationParameters;
+    public description?: string;
+
+    @Parameter({
+        ...MavenArtifactIdRegExp,
+        displayName: "artifactId",
+        required: false,
+        order: 51,
+    })
+    public enteredArtifactId?: string = "";
+
+    public bindAndValidate(): ValidationResult | Promise<ValidationResult> {
+        const validationErrors = [];
+        if (this.bootVersion) {
+            const springBootVersions = metaData.bootVersion.values.map((v: any) => v.id) as string[];
+            if (!springBootVersions.includes(this.bootVersion)) {
+                validationErrors.push("Spring Boot version is invalid, should be one of: " + springBootVersions.join(", "));
+            }
+        }
+        if (this.packaging) {
+            const packagings = metaData.packaging.values.map((v: any) => v.id) as string[];
+            if (!packagings.includes(this.packaging)) {
+                validationErrors.push("Packaging is invalid, should be one of: " + packagings.join(", "));
+            }
+        }
+        if (this.language) {
+            const languages = metaData.language.values.map((v: any) => v.id) as string[];
+            if (!languages.includes(this.language)) {
+                validationErrors.push("Language is invalid, should be one of: " + languages.join(", "));
+            }
+        }
+        if (this.projectType) {
+            const types = metaData.type.values.map((v: any) => v.id) as string[];
+            if (!types.includes(this.projectType)) {
+                validationErrors.push("Project type is invalid, should be one of: " + types.join(", "));
+            }
+        }
+        if (this.javaVersion) {
+            const versions = metaData.javaVersion.values.map((v: any) => v.id) as string[];
+            if (!versions.includes(this.javaVersion)) {
+                validationErrors.push("Java version is invalid, should be one of: " + versions.join(", "));
+            }
+        }
+        if (this.javaVersion) {
+            const versions = metaData.javaVersion.values.map((v: any) => v.id) as string[];
+            if (!versions.includes(this.javaVersion)) {
+                validationErrors.push("Java version is invalid, should be one of: " + versions.join(", "));
+            }
+        }
+        if (this.dependencies) {
+            const dependencyGroups = metaData.dependencies.values.map((v: any) => v.values) as any[];
+            const knownDependencies = [].concat(...dependencyGroups).map((v: any) => v.id) as string[];
+            const dependencies = this.dependencies.split(",");
+            const wrongDependencies = dependencies.filter(d => !knownDependencies.includes(d));
+            if (wrongDependencies) {
+                validationErrors.push("Unknown dependencies found: " + wrongDependencies.join(", "));
+            }
+        }
+        if (validationErrors && validationErrors.length > 0) {
+            return { message: validationErrors.join("\n")};
+        }
+    }
+}
