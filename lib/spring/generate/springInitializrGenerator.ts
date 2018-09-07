@@ -45,7 +45,7 @@ export function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
     });
 }
 
-function getSpringInitializrMetaData() : any {
+function getSpringInitializrMetaData(): any {
     return doWithRetry(() => axios.get("https://start.spring.io", {
         headers: {
             Accept: "application/vnd.initializr.v2.1+json",
@@ -53,7 +53,7 @@ function getSpringInitializrMetaData() : any {
 }
 
 function validateParameters(params: SpringInitializrProjectCreationParameters) {
-    const springBootVersions = metaData.bootVersion.values.id as string[];
+    const springBootVersions = metaData.bootVersion.values.map((v: any) => v.id) as string[];
     if (!springBootVersions.includes(params.bootVersion)) {
         throw new Error("Spring Boot version is invalid");
     }
