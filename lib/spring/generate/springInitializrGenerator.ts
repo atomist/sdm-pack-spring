@@ -45,28 +45,29 @@ import {
 } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
 
-let metaData: any;
-
 export function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
-    getSpringInitializrMetaData();
-    sdm.addGeneratorCommand<SpringInitializrProjectCreationParameters>({
-        name: "start.spring.io",
-        intent: "spring initializr",
-        description: "Create a new Spring Boot project using Spring Initializr",
-        paramsMaker: SpringInitializrProjectCreationParameters,
-        startingPoint: params => springInitializrProject(sdm, params),
-        transform: [
-            SetAtomistTeamInApplicationYml,
-            TransformSeedToCustomProject,
-        ],
-    });
+    getSpringInitializrMetaData().then(response =>
+        sdm.addGeneratorCommand<SpringInitializrProjectCreationParameters>({
+            name: "start.spring.io",
+            intent: "spring initializr",
+            description: "Create a new Spring Boot project using Spring Initializr",
+            paramsMaker: () => new SpringInitializrProjectCreationParameters(response),
+            startingPoint: params => springInitializrProject(sdm, params),
+            transform: [
+                SetAtomistTeamInApplicationYml,
+                TransformSeedToCustomProject,
+            ],
+        }),
+    );
 }
 
-function getSpringInitializrMetaData(): any {
+async function getSpringInitializrMetaData(): Promise<any> {
+    const packageJson = require("../../../package.json");
     return doWithRetry(() => axios.get("https://start.spring.io", {
         headers: {
-            Accept: "application/vnd.initializr.v2.1+json",
-        }}), "metadata").then(response => metaData = response.data);
+            "User-Agent": "atomist/sdm-pack-spring-" + packageJson.version,
+            "Accept": "application/vnd.initializr.v2.1+json",
+        }}), "metadata").then(response => response.data);
 }
 
 function springInitializrProject(sdm: SoftwareDeliveryMachine, params: SpringInitializrProjectCreationParameters): Promise<Project> {
@@ -160,7 +161,7 @@ export class SpringInitializrProjectCreationParameters implements SmartParameter
 
     @Parameter({
         displayName: "Java version level",
-        description: "Java version level (8 or 10, default 8)",
+        description: "Java version level (1.8 or 10, default 1.8)",
         required: false,
     })
     public javaVersion?: string;
@@ -207,46 +208,49 @@ export class SpringInitializrProjectCreationParameters implements SmartParameter
     })
     public enteredArtifactId?: string = "";
 
+    constructor(private readonly metaData: any) {
+    }
+
     public bindAndValidate(): ValidationResult | Promise<ValidationResult> {
         const validationErrors = [];
         if (this.bootVersion) {
-            const springBootVersions = metaData.bootVersion.values.map((v: any) => v.id) as string[];
+            const springBootVersions = this.metaData.bootVersion.values.map((v: any) => v.id) as string[];
             if (!springBootVersions.includes(this.bootVersion)) {
                 validationErrors.push("Spring Boot version is invalid, should be one of: " + springBootVersions.join(", "));
             }
         }
         if (this.packaging) {
-            const packagings = metaData.packaging.values.map((v: any) => v.id) as string[];
+            const packagings = this.metaData.packaging.values.map((v: any) => v.id) as string[];
             if (!packagings.includes(this.packaging)) {
                 validationErrors.push("Packaging is invalid, should be one of: " + packagings.join(", "));
             }
         }
         if (this.language) {
-            const languages = metaData.language.values.map((v: any) => v.id) as string[];
+            const languages = this.metaData.language.values.map((v: any) => v.id) as string[];
             if (!languages.includes(this.language)) {
                 validationErrors.push("Language is invalid, should be one of: " + languages.join(", "));
             }
         }
         if (this.projectType) {
-            const types = metaData.type.values.map((v: any) => v.id) as string[];
+            const types = this.metaData.type.values.map((v: any) => v.id) as string[];
             if (!types.includes(this.projectType)) {
                 validationErrors.push("Project type is invalid, should be one of: " + types.join(", "));
             }
         }
         if (this.javaVersion) {
-            const versions = metaData.javaVersion.values.map((v: any) => v.id) as string[];
+            const versions = this.metaData.javaVersion.values.map((v: any) => v.id) as string[];
             if (!versions.includes(this.javaVersion)) {
                 validationErrors.push("Java version is invalid, should be one of: " + versions.join(", "));
             }
         }
         if (this.javaVersion) {
-            const versions = metaData.javaVersion.values.map((v: any) => v.id) as string[];
+            const versions = this.metaData.javaVersion.values.map((v: any) => v.id) as string[];
             if (!versions.includes(this.javaVersion)) {
                 validationErrors.push("Java version is invalid, should be one of: " + versions.join(", "));
             }
         }
         if (this.dependencies) {
-            const dependencyGroups = metaData.dependencies.values.map((v: any) => v.values) as any[];
+            const dependencyGroups = this.metaData.dependencies.values.map((v: any) => v.values) as any[];
             const knownDependencies = [].concat(...dependencyGroups).map((v: any) => v.id) as string[];
             const dependencies = this.dependencies.split(",");
             const wrongDependencies = dependencies.filter(d => !knownDependencies.includes(d));
