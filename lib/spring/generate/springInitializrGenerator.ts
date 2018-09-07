@@ -40,10 +40,13 @@ import {
     MavenGroupIdRegExp,
 } from "../../java/javaPatterns";
 import { SetAtomistTeamInApplicationYml } from "./springBootTransforms";
-import { SpringProjectCreationParameters, } from "./SpringProjectCreationParameters";
+import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
 
+const springBootMetaData: any = {};
+
 export async function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
+    await getSpringInitializrMetaData().then(response => springBootMetaData.metaData = response);
     sdm.addGeneratorCommand<SpringInitializrProjectCreationParameters>({
         name: "start.spring.io",
         intent: "spring initializr",
@@ -63,7 +66,7 @@ async function getSpringInitializrMetaData(): Promise<any> {
         headers: {
             "User-Agent": "atomist/sdm-pack-spring-" + packageJson.version,
             "Accept": "application/vnd.initializr.v2.1+json",
-        }
+        },
     }), "metadata").then(response => response.data);
 }
 
@@ -205,52 +208,46 @@ export class SpringInitializrProjectCreationParameters implements SmartParameter
     })
     public enteredArtifactId?: string = "";
 
-    private metaData: any;
-
-    constructor() {
-        getSpringInitializrMetaData().then(response => this.metaData = response);
-    }
-
-    public bindAndValidate(): ValidationResult | Promise<ValidationResult> {
+    public bindAndValidate(): ValidationResult | Promise <ValidationResult> {
         const validationErrors = [];
         if (this.bootVersion) {
-            const springBootVersions = this.metaData.bootVersion.values.map((v: any) => v.id) as string[];
+            const springBootVersions = springBootMetaData.metaData.bootVersion.values.map((v: any) => v.id) as string[];
             if (!springBootVersions.includes(this.bootVersion)) {
                 validationErrors.push("Spring Boot version is invalid, should be one of: " + springBootVersions.join(", "));
             }
         }
         if (this.packaging) {
-            const packagings = this.metaData.packaging.values.map((v: any) => v.id) as string[];
+            const packagings = springBootMetaData.metaData.packaging.values.map((v: any) => v.id) as string[];
             if (!packagings.includes(this.packaging)) {
                 validationErrors.push("Packaging is invalid, should be one of: " + packagings.join(", "));
             }
         }
         if (this.language) {
-            const languages = this.metaData.language.values.map((v: any) => v.id) as string[];
+            const languages = springBootMetaData.metaData.language.values.map((v: any) => v.id) as string[];
             if (!languages.includes(this.language)) {
                 validationErrors.push("Language is invalid, should be one of: " + languages.join(", "));
             }
         }
         if (this.projectType) {
-            const types = this.metaData.type.values.map((v: any) => v.id) as string[];
+            const types = springBootMetaData.metaData.type.values.map((v: any) => v.id) as string[];
             if (!types.includes(this.projectType)) {
                 validationErrors.push("Project type is invalid, should be one of: " + types.join(", "));
             }
         }
         if (this.javaVersion) {
-            const versions = this.metaData.javaVersion.values.map((v: any) => v.id) as string[];
+            const versions = springBootMetaData.metaData.javaVersion.values.map((v: any) => v.id) as string[];
             if (!versions.includes(this.javaVersion)) {
                 validationErrors.push("Java version is invalid, should be one of: " + versions.join(", "));
             }
         }
         if (this.javaVersion) {
-            const versions = this.metaData.javaVersion.values.map((v: any) => v.id) as string[];
+            const versions = springBootMetaData.metaData.javaVersion.values.map((v: any) => v.id) as string[];
             if (!versions.includes(this.javaVersion)) {
                 validationErrors.push("Java version is invalid, should be one of: " + versions.join(", "));
             }
         }
         if (this.dependencies) {
-            const dependencyGroups = this.metaData.dependencies.values.map((v: any) => v.values) as any[];
+            const dependencyGroups = springBootMetaData.metaData.dependencies.values.map((v: any) => v.values) as any[];
             const knownDependencies = [].concat(...dependencyGroups).map((v: any) => v.id) as string[];
             const dependencies = this.dependencies.split(",");
             const wrongDependencies = dependencies.filter(d => !knownDependencies.includes(d));
