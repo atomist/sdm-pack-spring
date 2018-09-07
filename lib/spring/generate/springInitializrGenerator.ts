@@ -90,10 +90,10 @@ function validateParameters(params: SpringInitializrProjectCreationParameters) {
         }
     }
     if (params.dependencies) {
-        const knownDependencies = metaData.dependencies.values.flatMap((v: any) => v.values).map((v: any) => v.id) as string[]
+        const knownDependencies = metaData.dependencies.values.flatMap((v: any) => v.values).map((v: any) => v.id) as string[];
         const dependencies = params.dependencies.split(",");
-        const wrongDependencies = dependencies.filter(d => knownDependencies.includes(d))
-        if(wrongDependencies) {
+        const wrongDependencies = dependencies.filter(d => knownDependencies.includes(d));
+        if (wrongDependencies) {
             throw new Error("Unknowm dependencies found: " + wrongDependencies.join(", "));
         }
     }
