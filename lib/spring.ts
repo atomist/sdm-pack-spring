@@ -43,6 +43,12 @@ import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
 import { HasSpringBootApplicationClass } from "./spring/pushTests";
 import { springBootTagger } from "./spring/springTagger";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
+import {
+    executeGradlePerBranchSpringBootDeploy,
+    GradleDeployerOptions,
+    GradlePerBranchSpringBootDeploymentGoal
+} from "./gradle/build/GradlePerBranchSpringBootDeploymentGoal";
+import { IsGradle } from "./gradle/gradlePushTests";
 
 export const SpringSupport: ExtensionPack = {
     ...metadata(),
@@ -57,10 +63,18 @@ export const SpringSupport: ExtensionPack = {
 
 export function configureMavenPerBranchSpringBootDeploy(sdm: SoftwareDeliveryMachine,
                                                         options: Partial<MavenDeployerOptions> = {}) {
-    sdm.addGoalContributions(whenPushSatisfies(HasSpringBootApplicationClass)
+    sdm.addGoalContributions(whenPushSatisfies(HasSpringBootApplicationClass, IsMaven)
         .setGoals(MavenPerBranchSpringBootDeploymentGoal));
     sdm.addGoalImplementation("Maven deployment", MavenPerBranchSpringBootDeploymentGoal,
         executeMavenPerBranchSpringBootDeploy(sdm.configuration.sdm.projectLoader, options));
+}
+
+export function configureGradlePerBranchSpringBootDeploy(sdm: SoftwareDeliveryMachine,
+                                                         options: Partial<GradleDeployerOptions> = {}) {
+    sdm.addGoalContributions(whenPushSatisfies(HasSpringBootApplicationClass, IsGradle)
+        .setGoals(GradlePerBranchSpringBootDeploymentGoal));
+    sdm.addGoalImplementation("Gradle deployment", GradlePerBranchSpringBootDeploymentGoal,
+        executeGradlePerBranchSpringBootDeploy(sdm.configuration.sdm.projectLoader, options));
 }
 
 export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
