@@ -40,6 +40,7 @@ import * as os from "os";
 import * as portfinder from "portfinder";
 import { MavenLogInterpreter } from "../../maven/build/mavenLogInterpreter";
 import { determineMavenCommand } from "../../maven/MavenCommand";
+import { SpringBootSuccessPatterns } from "../../spring/springLoggingPatterns";
 
 export const ListBranchDeploys: CommandHandlerRegistration = {
     name: "listLocalDeploys",
@@ -99,16 +100,6 @@ export interface MavenDeployerOptions {
     maxConcurrentDeployments: number;
 
 }
-
-/**
- * Successs patterns when Spring Boot starts on Tomcat
- * @type {RegExp}
- */
-const SpringBootSuccessPatterns = [
-    /Tomcat started on port/,
-    /Tomcat initialized with port/,
-    /Started [A-Za-z0-9_$]+ in [0-9]+.[0-9]+ seconds/,
-];
 
 const deploymentEndpoints: { [key: string]: {sha: string, endpoint: string} } = {};
 /**

@@ -16,13 +16,12 @@
 
 export {
     configureLocalSpringBootDeploy,
+    configureGradlePerBranchSpringBootDeploy,
     configureMavenPerBranchSpringBootDeploy,
     SpringSupport,
 } from "./lib/spring";
 
-export {
-    executableJarDeployer,
-} from "./lib/java/deploy/executableJarDeployer";
+export { executableJarDeployer } from "./lib/java/deploy/executableJarDeployer";
 export {
     AllJavaFiles,
     JavaAndKotlinSource,
@@ -39,52 +38,29 @@ export {
     ImportDotStarCategory,
     ImportDotStarReviewer,
 } from "./lib/java/review/importDotStarReviewer";
-export {
-    ListBranchDeploys,
-} from "./lib/java/deploy/MavenPerBranchSpringBootDeploymentGoal";
-
-export {
-    MavenBuilder,
-} from "./lib/maven/build/MavenBuilder";
-export {
-    ListLocalDeploys,
-} from "./lib/maven/deploy/listLocalDeploys";
-export {
-    mavenDeployer,
-} from "./lib/maven/deploy/mavenDeployer";
-export {
-    MavenFingerprinter,
-} from "./lib/maven/fingerprint/MavenFingerprinter";
-export {
-    MavenProjectIdentifier,
-} from "./lib/maven/parse/pomParser";
-export {
-    IsMaven,
-} from "./lib/maven/pushTests";
-export {
-    ProvidedDependencyReviewer,
-} from "./lib/maven/review/providedDependencyReviewer";
-export {
-    addDependencyTransform,
-} from "./lib/maven/transform/addDependencyTransform";
-export {
-    VersionedArtifact,
-} from "./lib/maven/VersionedArtifact";
-
+export { ListBranchDeploys } from "./lib/java/deploy/MavenPerBranchSpringBootDeploymentGoal";
+export { MavenBuilder } from "./lib/maven/build/MavenBuilder";
+export { GradleSingleModuleBuilder } from "./lib/gradle/build/GradleSingleModuleBuilder";
+export { ListLocalDeploys } from "./lib/maven/deploy/listLocalDeploys";
+export { mavenDeployer } from "./lib/maven/deploy/mavenDeployer";
+export { MavenFingerprinter } from "./lib/maven/fingerprint/MavenFingerprinter";
+export { MavenProjectIdentifier } from "./lib/maven/parse/pomParser";
+export { IsMaven } from "./lib/maven/pushTests";
+export { ProvidedDependencyReviewer } from "./lib/maven/review/providedDependencyReviewer";
+export { addDependencyTransform } from "./lib/maven/transform/addDependencyTransform";
+export { VersionedArtifact } from "./lib/maven/VersionedArtifact";
 export {
     localExecutableJarDeployer,
     mavenSourceDeployer,
-    SpringBootSuccessPatterns,
 } from "./lib/spring/deploy/localSpringBootDeployers";
+export { SpringBootSuccessPatterns } from "./lib/spring/springLoggingPatterns";
 export * from "./lib/spring/generate/springBootTransforms";
 export { addSpringInitializrGenerator } from "./lib/spring/generate/springInitializrGenerator";
 export {
     SpringProjectCreationParameters,
     SpringProjectCreationParameterDefinitions,
 } from "./lib/spring/generate/SpringProjectCreationParameters";
-export {
-    TransformSeedToCustomProject,
-} from "./lib/spring/generate/transformSeedToCustomProject";
+export { TransformSeedToCustomProject } from "./lib/spring/generate/transformSeedToCustomProject";
 export {
     HasSpringBootApplicationClass,
     HasSpringBootPom,
@@ -93,11 +69,7 @@ export {
     HardCodedPropertyReviewer,
     HardcodePropertyCategory,
 } from "./lib/spring/review/hardcodedPropertyReviewer";
-export {
-    springBootTagger,
-} from "./lib/spring/springTagger";
-
+export { springBootTagger } from "./lib/spring/springTagger";
 export * from "./lib/maven/MavenProgressReporter";
-
 export * from "./lib/maven/inspection/findDependenciesCommand";
 export * from "./lib/maven/inspection/findDependencies";

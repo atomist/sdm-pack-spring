@@ -17,9 +17,7 @@
 import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
 import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
 import { Microgrammar } from "@atomist/microgrammar/Microgrammar";
-import {
-    Literal,
-} from "@atomist/microgrammar/Primitives";
+import { Literal } from "@atomist/microgrammar/Primitives";
 import { SoftwareDeliveryMachine } from "@atomist/sdm";
 import {
     LocalBuilder,
@@ -36,10 +34,18 @@ import {
     LogInterpretation,
 } from "@atomist/sdm/spi/log/InterpretedLog";
 import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
-import { determineGradleCommand } from "../GradleCommand";
+import { determineGradleCommand } from "../gradleCommand";
 import { GradleLogInterpreter } from "./gradleLogInterpreter";
 import { UpdatingBuild } from "./UpdatingBuild";
 
+/**
+ * Build with Gradle in the local automation client.
+ * This implementation requires Java and maven on the classpath.
+ * Note it is NOT intended for use for multiple organizations. It's OK
+ * for one organization to use inside its firewall, but there is potential
+ * vulnerability in builds of unrelated tenants getting at each others
+ * artifacts.
+ */
 export class GradleSingleModuleBuilder extends LocalBuilder implements LogInterpretation {
     public logInterpreter: InterpretLog = GradleLogInterpreter;
 

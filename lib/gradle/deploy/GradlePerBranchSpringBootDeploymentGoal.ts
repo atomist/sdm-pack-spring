@@ -38,8 +38,9 @@ import {
 } from "child_process";
 import * as os from "os";
 import * as portfinder from "portfinder";
+import { SpringBootSuccessPatterns } from "../../spring/springLoggingPatterns";
 import { GradleLogInterpreter } from "../build/gradleLogInterpreter";
-import { determineGradleCommand } from "../GradleCommand";
+import { determineGradleCommand } from "../gradleCommand";
 
 export const ListBranchDeploys: CommandHandlerRegistration = {
     name: "listLocalDeploys",
@@ -63,7 +64,7 @@ async function handleListDeploys(ctx: HandlerContext) {
 }
 
 /**
- * Goal to deploy to Maven with one process per branch
+ * Goal to deploy to Gradle with one process per branch
  * @type {GenericGoal}
  */
 export const GradlePerBranchSpringBootDeploymentGoal = new GoalWithPrecondition({
@@ -99,16 +100,6 @@ export interface GradleDeployerOptions {
     maxConcurrentDeployments: number;
 
 }
-
-/**
- * Successs patterns when Spring Boot starts on Tomcat
- * @type {RegExp}
- */
-const SpringBootSuccessPatterns = [
-    /Tomcat started on port/,
-    /Tomcat initialized with port/,
-    /Started [A-Za-z0-9_$]+ in [0-9]+.[0-9]+ seconds/,
-];
 
 const deploymentEndpoints: { [key: string]: {sha: string, endpoint: string} } = {};
 /**
