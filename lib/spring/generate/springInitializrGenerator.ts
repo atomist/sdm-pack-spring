@@ -40,7 +40,7 @@ import {
     MavenArtifactIdRegExp,
     MavenGroupIdRegExp,
 } from "../../java/javaPatterns";
-import { AddBootRunArgsSupport } from "./gradleBuildTransforms";
+import { AddGradleBootRunArgsSupport } from "./gradleBuildTransforms";
 import { SetAtomistTeamInApplicationYml } from "./springBootTransforms";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
@@ -54,7 +54,7 @@ export async function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine)
         startingPoint: params => springInitializrProject(sdm, params),
         transform: [
             SetAtomistTeamInApplicationYml,
-            AddBootRunArgsSupport,
+            AddGradleBootRunArgsSupport,
             TransformSeedToCustomProject,
         ],
     });
