@@ -46,7 +46,10 @@ import {
 import { ListLocalDeploys } from "./maven/deploy/listLocalDeploys";
 import { IsMaven } from "./maven/pushTests";
 import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
-import { HasSpringBootApplicationClass } from "./spring/pushTests";
+import {
+    HasSpringBootApplicationClass,
+    HasSpringBootPom
+} from "./spring/pushTests";
 import { springBootTagger } from "./spring/springTagger";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
 
@@ -63,7 +66,7 @@ export const SpringSupport: ExtensionPack = {
 
 export function configureMavenPerBranchSpringBootDeploy(sdm: SoftwareDeliveryMachine,
                                                         options: Partial<MavenDeployerOptions> = {}) {
-    sdm.addGoalContributions(whenPushSatisfies(HasSpringBootApplicationClass, IsMaven)
+    sdm.addGoalContributions(whenPushSatisfies(HasSpringBootPom, HasSpringBootApplicationClass, IsMaven)
         .setGoals(MavenPerBranchSpringBootDeploymentGoal));
     sdm.addGoalImplementation("Maven deployment", MavenPerBranchSpringBootDeploymentGoal,
         executeMavenPerBranchSpringBootDeploy(sdm.configuration.sdm.projectLoader, options));
