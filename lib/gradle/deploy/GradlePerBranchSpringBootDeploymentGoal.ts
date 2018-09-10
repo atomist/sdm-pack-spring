@@ -251,7 +251,7 @@ async function reportFailureToUser(gi: GoalInvocation, log: string) {
 
 function springBootGradleArgs(port: number, contextRoot: string): string[] {
     return [
-        "--args='--server.port=" + port + " --server.contextPath=" + contextRoot +
-        " --server.servlet.contextPath=" + contextRoot + "'",
+        "-Pargs='--server.port=" + port + ",--server.contextPath=" + contextRoot +
+        ",--server.servlet.contextPath=" + contextRoot + "'",
     ];
 }
