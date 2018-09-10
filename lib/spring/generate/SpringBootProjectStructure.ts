@@ -33,10 +33,20 @@ import {
     KotlinSourceFiles,
 } from "../../java/javaProjectUtils";
 
+/**
+ * Path expression for a class name annotated with Spring Boot.
+ * Uses Java formal grammar.
+ * @type {string}
+ */
 export const SpringBootAppClassInJava = `//typeDeclaration
                                 [//annotation[@value='@SpringBootApplication']]
                                 /classDeclaration//Identifier`;
 
+/**
+ * Path expression for a class name annotated with Spring Boot.
+ * Uses Kotlin formal grammar.
+ * @type {string}
+ */
 export const SpringBootAppClassInKotlin = `//classDeclaration
                                 [//annotation[@value='@SpringBootApplication']]
                                 //Identifier`;
@@ -106,7 +116,9 @@ export class SpringBootProjectStructure {
      * @param applicationClass Name of the application class within the given package
      * @param appClassFile path to the file containing the @SpringBootApplication annotation
      */
-    constructor(public applicationPackage: string, public applicationClass: string, public appClassFile: File) {
+    private constructor(public readonly applicationPackage: string,
+                        public readonly applicationClass: string,
+                        public readonly appClassFile: File) {
     }
 
 }

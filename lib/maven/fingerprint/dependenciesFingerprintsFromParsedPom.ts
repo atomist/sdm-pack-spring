@@ -17,9 +17,9 @@
 import { Fingerprint } from "@atomist/automation-client/project/fingerprint/Fingerprint";
 import { computeShaOf } from "@atomist/sdm/api-helper/misc/sha";
 import {
-    coordinates,
     toVersionedArtifact,
 } from "../parse/artifact";
+import { coordinates } from "../parse/grammar/VersionedArtifactMatch";
 import { VersionedArtifact } from "../VersionedArtifact";
 
 /**
@@ -28,11 +28,7 @@ import { VersionedArtifact } from "../VersionedArtifact";
  * @return {Promise<Fingerprint>}
  */
 export async function dependenciesFingerprintsFromParsedPom(epom: any): Promise<Fingerprint> {
-    const dependencies: VersionedArtifact[] =
-        epom.project.dependencies[0].dependency.map(toVersionedArtifact);
-    const sorted = dependencies
-        .sort((d1, d2) => coordinates(d1) > coordinates(d2) ? 1 : -1);
-    const json = JSON.stringify(sorted);
+    const json = JSON.stringify(dependenciesFromParsedPom(epom));
     return {
         name: "dependencies",
         abbreviation: "deps",
@@ -40,4 +36,12 @@ export async function dependenciesFingerprintsFromParsedPom(epom: any): Promise<
         sha: computeShaOf(json),
         data: json,
     };
+}
+
+export function dependenciesFromParsedPom(epom: any): VersionedArtifact[] {
+    const dependencies: VersionedArtifact[] =
+        epom.project.dependencies[0].dependency.map(toVersionedArtifact);
+    const sorted = dependencies
+        .sort((d1, d2) => coordinates(d1) > coordinates(d2) ? 1 : -1);
+    return sorted;
 }

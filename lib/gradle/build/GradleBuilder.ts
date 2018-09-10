@@ -56,7 +56,8 @@ export class GradleBuilder extends LocalBuilder implements LogInterpretation {
                     cwd: p.baseDir,
                 },
                 propertiesOutput);
-            const appName = nameGrammar.firstMatch(propertiesOutput.log);
+            const appName = nameGrammar.firstMatch(propertiesOutput.log).$matched;
+            const version = versionGrammar.firstMatch(propertiesOutput.log).$matched;
 
             const cmd = `${determineGradleCommand(p)} --console=plain clean build`;
             const buildResult = spawnAndWatch(
@@ -69,14 +70,24 @@ export class GradleBuilder extends LocalBuilder implements LogInterpretation {
                 });
 
             const rb = new UpdatingBuild(id, buildResult, atomistTeam, log.url);
-            rb.ai = null; // TODO
+            rb.ai = { id, name: appName, version };
             rb.deploymentUnitFile = `${p.baseDir}/build/libs/${appName}.jar`;
             return rb;
         });
     }
 }
 
+export interface GradleInfo {
+    timeMillis?: number;
+
+    success: boolean;
+}
+
 const nameGrammar = Microgrammar.fromString<{ name: string }>("name: ${name}", {
+    name: Literal,
+});
+
+const versionGrammar = Microgrammar.fromString<{ name: string }>("version: ${name}", {
     name: Literal,
 });
 

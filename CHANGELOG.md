@@ -5,7 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.1...HEAD)
+## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.3...HEAD)
+
+### Added
+
+-   Add user agent to Spring Initializr call. [#41](https://github.com/atomist/sdm-pack-spring/issues/41)
+-   Add MavenProgressReporter. [#c5259ec](https://github.com/atomist/sdm-pack-spring/commit/c5259ecca2dbae3c1c30be66c8ac0e2cb84db5d4)
+
+### Changed
+
+-   Consider reading defaults from metadata rather than hardcoding them. [#40](https://github.com/atomist/sdm-pack-spring/issues/40)
+
+## [1.0.0-M.3](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.1...1.0.0-M.3) - 2018-09-04
 
 ### Added
 

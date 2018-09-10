@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-import { VersionedArtifact } from "../VersionedArtifact";
+import { CodeInspectionRegistration } from "@atomist/sdm";
+import { Dependencies, FindDependencies } from "./findDependencies";
 
-/**
- * Convert Maven POM XML parser format to our VersionedArtifact
- * @param raw
- * @return {VersionedArtifact}
- */
-export function toVersionedArtifact(raw: any): VersionedArtifact {
-    return {
-        group: raw.groupId[0],
-        artifact: raw.artifactId[0],
-        version: raw.version[0],
-        description: !!raw.description ? raw.description[0] : undefined,
-    };
-}
+export const FindDependenciesCommand: CodeInspectionRegistration<Dependencies> = {
+
+    name: "mavenDependencies",
+    intent: "fingerprint dependencies",
+    inspection: FindDependencies,
+
+};

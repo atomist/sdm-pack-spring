@@ -1,9 +1,9 @@
 import { logger } from "@atomist/automation-client";
 import { InterpretLog } from "@atomist/sdm/spi/log/InterpretedLog";
-import { MavenInfo } from "../../maven/build/mavenLogInterpreter";
+import { GradleInfo } from "./GradleBuilder";
 
-export const GradleLogInterpreter: InterpretLog<MavenInfo> = log => {
-    const data: MavenInfo = {
+export const GradleLogInterpreter: InterpretLog<GradleInfo> = log => {
+    const data: GradleInfo = {
         success: log.includes("BUILD SUCCESSFUL"),
     };
     if (!log) {

@@ -70,7 +70,7 @@ export interface ArtifactContainer {
  * @param {string} containerElementName
  * @return {Microgrammar<ArtifactContainer>}
  */
-function artifactContainerGrammar(containerElementName: string, group?: string, artifact?: string) {
+function artifactContainerGrammar(containerElementName: string, group?: string, artifact?: string): Microgrammar<ArtifactContainer> {
     return Microgrammar.fromDefinitions<ArtifactContainer>({
         _start: `<${containerElementName}>`,
         _gav: GavGrammar,
@@ -84,10 +84,10 @@ function artifactContainerGrammar(containerElementName: string, group?: string, 
     });
 }
 
-export const ParentStanzaGrammar =
+export const ParentStanzaGrammar: Microgrammar<ArtifactContainer> =
     artifactContainerGrammar("parent");
 
-export function parentStanzaOfGrammar(artifact: string) {
+export function parentStanzaOfGrammar(artifact: string): Microgrammar<ArtifactContainer> {
     return artifactContainerGrammar("parent", artifact);
 }
 

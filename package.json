@@ -31,17 +31,17 @@
     "@atomist/microgrammar": "^0.8.0",
     "@atomist/tree-path": "^0.1.9",
     "@typed/curry": "^1.0.1",
+    "@types/decompress": "^4.2.3",
     "@types/lodash": "^4.14.109",
     "@types/properties-reader": "0.0.1",
     "@types/xml2js": "^0.4.3",
-    "@types/decompress": "^4.2.3",
+    "axios": "^0.18.0",
+    "decompress": "^4.2.0",
     "lodash": "^4.17.10",
     "portfinder": "^1.0.13",
     "properties-reader": "0.0.16",
-    "xml2js": "^0.4.19",
-    "decompress": "^4.2.0",
-    "axios": "^0.18.0",
-    "tmp-promise": "^1.0.5"
+    "tmp-promise": "^1.0.5",
+    "xml2js": "^0.4.19"
   },
   "peerDependencies": {
     "@atomist/automation-client": "*",
@@ -49,9 +49,9 @@
     "@atomist/sdm-core": "*"
   },
   "devDependencies": {
-    "@atomist/automation-client": "1.0.0-master.20180903210158",
-    "@atomist/sdm": "1.0.0-master.20180904005606",
-    "@atomist/sdm-core": "1.0.0-master.20180904003112",
+    "@atomist/automation-client": "1.0.0-M.3",
+    "@atomist/sdm": "1.0.0-M.3",
+    "@atomist/sdm-core": "1.0.0-M.3",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.5.7",
     "@types/power-assert": "^1.5.0",
