@@ -20,6 +20,7 @@ import { Microgrammar } from "@atomist/microgrammar/Microgrammar";
 import {
     Literal,
 } from "@atomist/microgrammar/Primitives";
+import { SoftwareDeliveryMachine } from "@atomist/sdm";
 import {
     LocalBuilder,
     LocalBuildInProgress,
@@ -41,6 +42,10 @@ import { UpdatingBuild } from "./UpdatingBuild";
 
 export class GradleBuilder extends LocalBuilder implements LogInterpretation {
     public logInterpreter: InterpretLog = GradleLogInterpreter;
+
+    constructor(sdm: SoftwareDeliveryMachine) {
+        super("GradleBuilder", sdm);
+    }
 
     protected async startBuild(credentials: ProjectOperationCredentials,
                                id: RemoteRepoRef,
