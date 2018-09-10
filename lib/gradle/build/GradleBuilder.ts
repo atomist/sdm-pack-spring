@@ -27,11 +27,9 @@ import {
 import { StringCapturingProgressLog } from "@atomist/sdm/api-helper/log/StringCapturingProgressLog";
 import {
     asSpawnCommand,
-    ChildProcessResult,
     spawnAndWatch,
 } from "@atomist/sdm/api-helper/misc/spawned";
 import { AddressChannels } from "@atomist/sdm/api/context/addressChannels";
-import { AppInfo } from "@atomist/sdm/spi/deploy/Deployment";
 import {
     InterpretLog,
     LogInterpretation,
@@ -39,6 +37,7 @@ import {
 import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
 import { determineGradleCommand } from "../GradleCommand";
 import { GradleLogInterpreter } from "./gradleLogInterpreter";
+import { UpdatingBuild } from "./UpdatingBuild";
 
 export class GradleBuilder extends LocalBuilder implements LogInterpretation {
     public logInterpreter: InterpretLog = GradleLogInterpreter;
@@ -90,20 +89,3 @@ const nameGrammar = Microgrammar.fromString<{ name: string }>("name: ${name}", {
 const versionGrammar = Microgrammar.fromString<{ name: string }>("version: ${name}", {
     name: Literal,
 });
-
-class UpdatingBuild implements LocalBuildInProgress {
-
-    public ai: AppInfo;
-
-    public deploymentUnitFile: string;
-
-    constructor(public repoRef: RemoteRepoRef,
-                public buildResult: Promise<ChildProcessResult>,
-                public team: string,
-                public url: string) {
-    }
-
-    get appInfo(): AppInfo {
-        return this.ai;
-    }
-}
