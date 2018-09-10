@@ -33,6 +33,12 @@ import {
     LocalUndeploymentGoal,
 } from "@atomist/sdm/pack/well-known-goals/commonGoals";
 import {
+    executeGradlePerBranchSpringBootDeploy,
+    GradleDeployerOptions,
+    GradlePerBranchSpringBootDeploymentGoal,
+} from "./gradle/build/GradlePerBranchSpringBootDeploymentGoal";
+import { IsGradle } from "./gradle/gradlePushTests";
+import {
     executeMavenPerBranchSpringBootDeploy,
     MavenDeployerOptions,
     MavenPerBranchSpringBootDeploymentGoal,
@@ -43,12 +49,6 @@ import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
 import { HasSpringBootApplicationClass } from "./spring/pushTests";
 import { springBootTagger } from "./spring/springTagger";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
-import {
-    executeGradlePerBranchSpringBootDeploy,
-    GradleDeployerOptions,
-    GradlePerBranchSpringBootDeploymentGoal
-} from "./gradle/build/GradlePerBranchSpringBootDeploymentGoal";
-import { IsGradle } from "./gradle/gradlePushTests";
 
 export const SpringSupport: ExtensionPack = {
     ...metadata(),
