@@ -66,6 +66,17 @@ export const MavenIncrementPatchCommand = asSpawnCommand("./mvnw build-helper:pa
  * @param goalInvocation
  * @constructor
  */
-export const MavenCompilePreparation: PrepareForGoalExecution = async (p: GitProject, goalInvocation: GoalInvocation) => {
-    return mavenPackage(p, goalInvocation.progressLog, true);
-};
+export const MavenCompilePreparation: PrepareForGoalExecution = mavenPackagePreparation([{
+    name: "skipTests",
+    value: "true",
+}]);
+
+/**
+ * Constructs a PrepareForGoalExecution taking additional command line args
+ * @param args
+ */
+export function mavenPackagePreparation(args: Array<{ name: string, value: string }> = []): PrepareForGoalExecution {
+    return async (p: GitProject, goalInvocation: GoalInvocation) => {
+        return mavenPackage(p, goalInvocation.progressLog, args);
+    };
+}

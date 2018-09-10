@@ -74,7 +74,7 @@ export class MavenBuilder extends LocalBuilder implements LogInterpretation {
             const va = await identification(content);
             const appId = { ...va, name: va.artifact, id };
 
-            const buildResult = mavenPackage(p, log, this.skipTests);
+            const buildResult = mavenPackage(p, log, this.skipTests ? [{ name: "skipTests" }] : []);
             const rb = new UpdatingBuild(id, buildResult, atomistTeam, log.url);
             rb.ai = appId;
             rb.deploymentUnitFile = this.deploymentUnitFileLocator(p, va);
@@ -103,10 +103,10 @@ class UpdatingBuild implements LocalBuildInProgress {
 
 export async function mavenPackage(p: GitProject,
                                    progressLog: ProgressLog,
-                                   skipTests: boolean = false): Promise<ChildProcessResult> {
+                                   args: Array<{ name: string, value?: string }> = []): Promise<ChildProcessResult> {
     const useMavenWrapper = hasMavenWrapper(p);
     const mavenExec = useMavenWrapper ? "./mvnw" : "mvn";
-    const cmd = `${mavenExec} package${skipTests ? " -DskipTests" : ""}`;
+    const cmd = `${mavenExec} package ${args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`).join(" ")}`;
     return spawnAndWatch(
         asSpawnCommand(cmd),
         {
