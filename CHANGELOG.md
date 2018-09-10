@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Add user agent to Spring Initializr call. [#41](https://github.com/atomist/sdm-pack-spring/issues/41)
 -   Add MavenProgressReporter. [#c5259ec](https://github.com/atomist/sdm-pack-spring/commit/c5259ecca2dbae3c1c30be66c8ac0e2cb84db5d4)
+-   Add Maven goal preparations and version helpers. [#45](https://github.com/atomist/sdm-pack-spring/issues/45)
 
 ### Changed
 
