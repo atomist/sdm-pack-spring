@@ -26,7 +26,6 @@ import {
     LocalBuildInProgress,
 } from "@atomist/sdm-core";
 import {
-    asSpawnCommand,
     ChildProcessResult,
     spawnAndWatch,
 } from "@atomist/sdm/api-helper/misc/spawned";
@@ -105,10 +104,13 @@ export async function mavenPackage(p: GitProject,
                                    progressLog: ProgressLog,
                                    args: Array<{ name: string, value?: string }> = []): Promise<ChildProcessResult> {
     const useMavenWrapper = hasMavenWrapper(p);
-    const mavenExec = useMavenWrapper ? "./mvnw" : "mvn";
-    const cmd = `${mavenExec} package ${args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`).join(" ")}`;
-    return spawnAndWatch(
-        asSpawnCommand(cmd),
+    // TODO fix the following ./mvnw isn't going to work on windows, or is it???
+    const command = useMavenWrapper ? "./mvnw" : "mvn";
+    return spawnAndWatch({
+            command,
+            args: ["package", ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
+        }
+        ,
         {
             cwd: p.baseDir,
         },
