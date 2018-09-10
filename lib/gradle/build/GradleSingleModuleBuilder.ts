@@ -40,11 +40,11 @@ import { determineGradleCommand } from "../GradleCommand";
 import { GradleLogInterpreter } from "./gradleLogInterpreter";
 import { UpdatingBuild } from "./UpdatingBuild";
 
-export class GradleBuilder extends LocalBuilder implements LogInterpretation {
+export class GradleSingleModuleBuilder extends LocalBuilder implements LogInterpretation {
     public logInterpreter: InterpretLog = GradleLogInterpreter;
 
     constructor(sdm: SoftwareDeliveryMachine) {
-        super("GradleBuilder", sdm);
+        super("GradleSingleModuleBuilder", sdm);
     }
 
     protected async startBuild(credentials: ProjectOperationCredentials,
