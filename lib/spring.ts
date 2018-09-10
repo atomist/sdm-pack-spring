@@ -36,7 +36,7 @@ import {
     executeGradlePerBranchSpringBootDeploy,
     GradleDeployerOptions,
     GradlePerBranchSpringBootDeploymentGoal,
-} from "./gradle/build/GradlePerBranchSpringBootDeploymentGoal";
+} from "./gradle/deploy/GradlePerBranchSpringBootDeploymentGoal";
 import { IsGradle } from "./gradle/gradlePushTests";
 import {
     executeMavenPerBranchSpringBootDeploy,

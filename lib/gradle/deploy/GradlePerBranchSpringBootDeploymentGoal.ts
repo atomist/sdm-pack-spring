@@ -39,7 +39,7 @@ import {
 import * as os from "os";
 import * as portfinder from "portfinder";
 import { determineGradleCommand } from "../GradleCommand";
-import { GradleLogInterpreter } from "./gradleLogInterpreter";
+import { GradleLogInterpreter } from "../build/gradleLogInterpreter";
 
 export const ListBranchDeploys: CommandHandlerRegistration = {
     name: "listLocalDeploys",
@@ -251,8 +251,7 @@ async function reportFailureToUser(gi: GoalInvocation, log: string) {
 
 function springBootGradleArgs(port: number, contextRoot: string): string[] {
     return [
-        "-Dserver.port=" + port,
-        "-Dserver.contextPath=" + contextRoot,
-        "-Dserver.servlet.contextPath=" + contextRoot,
+        "--args='--server.port=" + port + " --server.contextPath=" + contextRoot +
+        " --server.servlet.contextPath=" + contextRoot + "'",
     ];
 }
