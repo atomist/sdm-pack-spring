@@ -55,7 +55,7 @@ export class MavenBuilder extends LocalBuilder implements LogInterpretation {
     public logInterpreter: InterpretLog = MavenLogInterpreter;
 
     constructor(sdm: SoftwareDeliveryMachine,
-                private readonly skipTests: boolean = false,
+                private readonly args: Array<{ name: string, value?: string }> = [],
                 private readonly deploymentUnitFileLocator: (p: LocalProject, mpi: VersionedArtifact) => string =
                     (p, mpi) => `${p.baseDir}/target/${mpi.artifact}-${mpi.version}.jar`) {
         super("MavenBuilder", sdm);
@@ -73,7 +73,7 @@ export class MavenBuilder extends LocalBuilder implements LogInterpretation {
             const va = await identification(content);
             const appId = { ...va, name: va.artifact, id };
 
-            const buildResult = mavenPackage(p, log, this.skipTests ? [{ name: "skipTests" }] : []);
+            const buildResult = mavenPackage(p, log, this.args);
             const rb = new UpdatingBuild(id, buildResult, atomistTeam, log.url);
             rb.ai = appId;
             rb.deploymentUnitFile = this.deploymentUnitFileLocator(p, va);
