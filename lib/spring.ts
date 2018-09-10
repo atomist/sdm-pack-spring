@@ -48,7 +48,7 @@ import { IsMaven } from "./maven/pushTests";
 import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
 import {
     HasSpringBootApplicationClass,
-    HasSpringBootPom
+    HasSpringBootPom,
 } from "./spring/pushTests";
 import { springBootTagger } from "./spring/springTagger";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
