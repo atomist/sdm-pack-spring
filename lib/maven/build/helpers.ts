@@ -11,6 +11,7 @@ import { ProjectVersioner } from "@atomist/sdm-core/internal/delivery/build/loca
 import {
     asSpawnCommand,
     spawnAndWatch,
+    SpawnCommand,
 } from "@atomist/sdm/api-helper/misc/spawned";
 import * as df from "dateformat";
 import { MavenProjectIdentifier } from "../parse/pomParser";
@@ -56,7 +57,7 @@ async function changeMavenVersion(version: string, baseDir: string, progressLog:
         progressLog);
 }
 
-export const MavenIncrementPatchCommand = asSpawnCommand("./mvnw build-helper:parse-version versions:set -DnewVersion=" +
+export const MavenIncrementPatchCommand: SpawnCommand = asSpawnCommand("./mvnw build-helper:parse-version versions:set -DnewVersion=" +
     "\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}" +
     "-\${parsedVersion.qualifier} versions:commit");
 
