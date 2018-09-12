@@ -34,7 +34,7 @@ export class XmldocFileParser implements FileParser {
         try {
             const document: xmldoc.XmlDocument = new xmldoc.XmlDocument(await f.getContent());
             // console.log("DOC is " + JSON.stringify(document));
-            return new XmldocTreeNode(document, undefined);
+            return new XmldocTreeNodeImpl(document, undefined);
         } catch (err) {
             logger.warn("Could not parse XML document at '%s'", f.path, err);
             return undefined;
@@ -43,13 +43,24 @@ export class XmldocFileParser implements FileParser {
 
 }
 
-class XmldocTreeNode implements TreeNode {
+/**
+ * Allows further operations specific to XML elements
+ */
+export interface XmlDocTreeNode extends TreeNode {
+
+    /**
+     * Value inside the element: Not the same as it's value
+     */
+    innerValue: string;
+}
+
+class XmldocTreeNodeImpl implements XmlDocTreeNode {
 
     public get $children(): TreeNode[] {
         return this.xd.children
             .filter(kid => kid.type === "element")
             .map(k =>
-                new XmldocTreeNode(k as XmlElement, this));
+                new XmldocTreeNodeImpl(k as XmlElement, this));
     }
 
     public get $name(): string {
@@ -60,8 +71,16 @@ class XmldocTreeNode implements TreeNode {
         return this.xd.startTagPosition - 1;
     }
 
+    /**
+     * This is the full element value
+     * @return {string}
+     */
     public get $value(): string {
         return this.xd.toString({ preserveWhitespace: true, compressed: false, trimmed: false });
+    }
+
+    public get innerValue(): string {
+        return this.xd.val;
     }
 
     constructor(private readonly xd: xmldoc.XmlElement,
