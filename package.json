@@ -29,7 +29,7 @@
   "dependencies": {
     "@atomist/antlr": "^0.3.0",
     "@atomist/microgrammar": "^0.8.0",
-    "@atomist/tree-path": "^0.1.9",
+    "@atomist/tree-path": "https://r.atomist.com/1089073149",
     "@typed/curry": "^1.0.1",
     "@types/decompress": "^4.2.3",
     "@types/lodash": "^4.14.109",

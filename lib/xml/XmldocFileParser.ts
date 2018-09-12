@@ -17,7 +17,7 @@
 import { logger } from "@atomist/automation-client";
 import { FileParser } from "@atomist/automation-client/tree/ast/FileParser";
 import { ProjectFile } from "@atomist/sdm";
-import { TreeNode } from "@atomist/tree-path/TreeNode";
+import { TreeNode } from "@atomist/tree-path";
 
 import * as xmldoc from "xmldoc";
 import { XmlElement } from "xmldoc";
@@ -66,6 +66,11 @@ class XmldocTreeNode implements TreeNode {
 
     constructor(private readonly xd: xmldoc.XmlElement,
                 public readonly $parent: TreeNode) {
+        // Add attributes to self
+        for (const propName of Object.getOwnPropertyNames(this.xd.attr)) {
+            (this as any)[propName] = this.xd.attr[propName];
+            logger.debug("Copying property '%s' of '%s': Now have %j", propName, this.xd.attr[propName], this);
+        }
     }
 
 }

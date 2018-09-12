@@ -17,13 +17,14 @@
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import { doWithAllMatches, findMatches } from "@atomist/automation-client/tree/ast/astUtils";
 import { InMemoryProjectFile, ProjectFile } from "@atomist/sdm";
-import { TreeVisitor, visit } from "@atomist/tree-path/visitor";
+import { TreeVisitor, visit } from "@atomist/tree-path";
 import * as assert from "assert";
 import { XmldocFileParser } from "../../lib/xml/XmldocFileParser";
 import { springBootPom } from "../spring/generator/TestPoms";
+import { TreeNode } from "@atomist/tree-path";
 
 function positionVerifier(rawdoc: string): TreeVisitor {
-    return n => {
+    return (n: TreeNode) => {
         if (!!n.$parent) {
             assert.strictEqual(n.$value, rawdoc.substr(n.$offset, n.$value.length),
                 "Invalid node offset");
@@ -107,6 +108,26 @@ describe("xmldocFileParser", () => {
                 f.getContentSync().substr(matches[0].$offset));
         });
 
+        it("should locate node with attribute", async () => {
+            const f: ProjectFile = new InMemoryProjectFile("pom.xml", RootAndSingleChildElementWithAttribute);
+            const p = InMemoryProject.of(f);
+            const matches = await findMatches(p, new XmldocFileParser(),
+                "*.xml",
+                "//kid");
+            assert.strictEqual(matches.length, 1);
+            assert.strictEqual(matches[0].$value, "<kid myAtt=\"whatever\">name</kid>");
+        });
+
+        it("should locate node with attribute narrowing by attribute", async () => {
+            const f: ProjectFile = new InMemoryProjectFile("pom.xml", RootAndSingleChildElementWithAttribute);
+            const p = InMemoryProject.of(f);
+            const matches = await findMatches(p, new XmldocFileParser(),
+                "*.xml",
+                "//kid[@myAtt='whatever']");
+            assert.strictEqual(matches.length, 1);
+            assert.strictEqual(matches[0].$value, "<kid myAtt=\"whatever\">name</kid>");
+        });
+
         it("should update groupId", async () => {
             let f: ProjectFile = new InMemoryProjectFile("pom.xml", springBootPom());
             const p = InMemoryProject.of(f);
@@ -134,4 +155,9 @@ const RootOnly = `<?xml version="1.0" encoding="utf-8"?>
 const RootAndSingleChildElement = `<?xml version="1.0" encoding="utf-8"?>  
 <Root xmlns="http://www.adventure-works.com">
     <kid>name</kid>
+</Root>`;
+
+const RootAndSingleChildElementWithAttribute = `<?xml version="1.0" encoding="utf-8"?>  
+<Root xmlns="http://www.adventure-works.com">
+    <kid myAtt="whatever">name</kid>
 </Root>`;

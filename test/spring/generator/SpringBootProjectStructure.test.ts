@@ -18,7 +18,7 @@ import { KotlinFileParser } from "@atomist/antlr/tree/ast/antlr/kotlin/KotlinFil
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import { Project } from "@atomist/automation-client/project/Project";
 import { findFileMatches } from "@atomist/automation-client/tree/ast/astUtils";
-import { evaluateExpression } from "@atomist/tree-path/path/expressionEngine";
+import { evaluateExpression } from "@atomist/tree-path";
 import * as assert from "power-assert";
 import { KotlinSourceFiles } from "../../../lib/java/javaProjectUtils";
 import { SpringBootAppClassInKotlin, SpringBootProjectStructure } from "../../../lib/spring/generate/SpringBootProjectStructure";
