@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { PatternMatch } from "@atomist/microgrammar/PatternMatch";
+import { PatternMatch } from "@atomist/microgrammar/lib/PatternMatch";
 import { VersionedArtifact } from "../../VersionedArtifact";
 import { XmlTag } from "./xmlGrammars";
 
