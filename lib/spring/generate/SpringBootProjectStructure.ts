@@ -15,7 +15,7 @@
  */
 
 import { JavaFileParser, KotlinFileParser } from "@atomist/antlr";
-import { logger } from "@atomist/automation-client/internal/util/logger";
+import { logger } from "@atomist/automation-client";
 import { File } from "@atomist/automation-client/project/File";
 import { ProjectAsync } from "@atomist/automation-client/project/Project";
 import { findFileMatches } from "@atomist/automation-client/tree/ast/astUtils";
