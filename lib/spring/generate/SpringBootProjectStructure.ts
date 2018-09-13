@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { JavaFileParser } from "@atomist/antlr/tree/ast/antlr/java/JavaFileParser";
-import { KotlinFileParser } from "@atomist/antlr/tree/ast/antlr/kotlin/KotlinFileParser";
+import { JavaFileParser, KotlinFileParser } from "@atomist/antlr";
 import { logger } from "@atomist/automation-client/internal/util/logger";
 import { File } from "@atomist/automation-client/project/File";
 import { ProjectAsync } from "@atomist/automation-client/project/Project";

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { KotlinFileParser } from "@atomist/antlr/tree/ast/antlr/kotlin/KotlinFileParser";
+import { KotlinFileParser } from "@atomist/antlr";
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import { Project } from "@atomist/automation-client/project/Project";
 import { findFileMatches } from "@atomist/automation-client/tree/ast/astUtils";
