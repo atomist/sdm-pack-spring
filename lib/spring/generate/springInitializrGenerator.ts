@@ -210,6 +210,7 @@ export class SpringInitializrProjectCreationParameters implements SmartParameter
 
     constructor(private readonly metaData: Promise<any>) {}
 
+    /* tslint:disable:cyclomatic-complexity */
     public bindAndValidate(): Promise <ValidationResult> {
         return this.metaData.then(springBootMetaData => {
             const validationErrors = [];

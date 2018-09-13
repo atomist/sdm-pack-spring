@@ -19,8 +19,7 @@ import { FileParser } from "@atomist/automation-client/tree/ast/FileParser";
 import { ProjectFile } from "@atomist/sdm";
 import { TreeNode } from "@atomist/tree-path";
 
-import * as xmldoc from "xmldoc";
-import { XmlElement } from "xmldoc";
+import { XmlDocument, XmlElement } from "xmldoc";
 
 /**
  * FileParser implementation that uses xmldoc library.
@@ -32,7 +31,7 @@ export class XmldocFileParser implements FileParser<XmlDocTreeNode> {
 
     public async toAst(f: ProjectFile): Promise<XmlDocTreeNode> {
         try {
-            const document: xmldoc.XmlDocument = new xmldoc.XmlDocument(await f.getContent());
+            const document = new XmlDocument(await f.getContent());
             // console.log("DOC is " + JSON.stringify(document));
             return new XmldocTreeNodeImpl(document, undefined);
         } catch (err) {
@@ -88,9 +87,9 @@ class XmldocTreeNodeImpl implements XmlDocTreeNode {
         return this.xd.val;
     }
 
-    constructor(private readonly xd: xmldoc.XmlElement,
+    constructor(private readonly xd: XmlElement,
                 public readonly $parent: TreeNode) {
-        // Add attributes to self
+        // Add attributes to this
         for (const propName of Object.getOwnPropertyNames(this.xd.attr)) {
             (this as any)[propName] = this.xd.attr[propName];
             logger.debug("Copying property '%s' of '%s': Now have %j", propName, this.xd.attr[propName], this);
