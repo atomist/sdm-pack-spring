@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Microgrammar } from "@atomist/microgrammar/Microgrammar";
 import {
     atLeastOne,
+    Microgrammar,
     zeroOrMore,
-} from "@atomist/microgrammar/Rep";
+} from "@atomist/microgrammar";
 import { VersionedArtifact } from "../../VersionedArtifact";
 import {
     ELEMENT_NAME,

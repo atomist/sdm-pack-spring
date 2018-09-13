@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { MatchingLogic } from "@atomist/microgrammar/Matchers";
-import { PatternMatch } from "@atomist/microgrammar/PatternMatch";
+import { MatchingLogic } from "@atomist/microgrammar";
+import { PatternMatch } from "@atomist/microgrammar/lib/PatternMatch";
 import { PathAwareXmlMatchingMachine } from "./PathAwareXmlMatchingMachine";
 import { VersionedArtifactMatch } from "./VersionedArtifactMatch";
 import {

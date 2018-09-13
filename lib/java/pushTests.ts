@@ -25,7 +25,6 @@ import {
     anyFileChangedWithExtension,
     filesChangedSince,
 } from "@atomist/sdm/api-helper/misc/git/filesChangedSince";
-import * as _ from "lodash";
 
 export const IsJava: PushTest = predicatePushTest(
     "Is Java",
@@ -39,8 +38,7 @@ const FileToWatch = ["java", "html", "json", "yml", "xml", "sh", "kt", "properti
  * build and deploy
  */
 export const MaterialChangeToJavaRepo: PushTest = pushTest("Material change to Java repo", async pci => {
-    const beforeSha: string = _.get(pci, "push.before.sha");
-    const changedFiles = await filesChangedSince(pci.project, beforeSha);
+    const changedFiles = await filesChangedSince(pci.project, pci.push);
     if (!changedFiles) {
         logger.info("Cannot determine if change is material on %j: can't enumerate changed files", pci.id);
         return true;

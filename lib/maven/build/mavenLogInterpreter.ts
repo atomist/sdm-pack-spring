@@ -15,11 +15,11 @@
  */
 
 import { logger } from "@atomist/automation-client";
-import { Microgrammar } from "@atomist/microgrammar/Microgrammar";
 import {
     Float,
     Integer,
-} from "@atomist/microgrammar/Primitives";
+    Microgrammar,
+} from "@atomist/microgrammar";
 import { InterpretLog } from "@atomist/sdm/spi/log/InterpretedLog";
 
 export const MavenLogInterpreter: InterpretLog<MavenInfo> = log => {
