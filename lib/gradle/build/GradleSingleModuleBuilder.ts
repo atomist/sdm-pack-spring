@@ -16,9 +16,9 @@
 
 import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
 import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
-import { 
-    Microgrammar,
+import {
     Literal,
+    Microgrammar,
 } from "@atomist/microgrammar";
 import { SoftwareDeliveryMachine } from "@atomist/sdm";
 import {
