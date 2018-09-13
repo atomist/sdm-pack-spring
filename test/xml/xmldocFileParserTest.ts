@@ -19,7 +19,7 @@ import { doWithAllMatches, findMatches } from "@atomist/automation-client/tree/a
 import { InMemoryProjectFile, ProjectFile } from "@atomist/sdm";
 import { TreeNode, TreeVisitor, visit } from "@atomist/tree-path";
 import * as assert from "assert";
-import { XmldocFileParser, XmlDocTreeNode } from "../../lib/xml/XmldocFileParser";
+import { isXmlDocTreeNode, XmldocFileParser, XmlDocTreeNode } from "../../lib/xml/XmldocFileParser";
 import { springBootPom } from "../spring/generator/TestPoms";
 
 function positionVerifier(rawdoc: string): TreeVisitor {
@@ -196,7 +196,7 @@ describe("xmldocFileParser", () => {
                 "*.xml",
                 "/bookstore/book/price[?above35]",
                 {
-                    above35: (n: XmlDocTreeNode) => parseInt(n.innerValue, 10) > 35,
+                    above35: n => isXmlDocTreeNode(n) && parseInt(n.innerValue, 10) > 35,
                 });
             assert.deepStrictEqual(matches.map(m => (m as any as XmlDocTreeNode).innerValue), [
                 "49.99",

@@ -26,11 +26,11 @@ import { XmlElement } from "xmldoc";
  * FileParser implementation that uses xmldoc library.
  * Preserves and exposes positions.
  */
-export class XmldocFileParser implements FileParser {
+export class XmldocFileParser implements FileParser<XmlDocTreeNode> {
 
     public rootName = "xml";
 
-    public async toAst(f: ProjectFile): Promise<TreeNode> {
+    public async toAst(f: ProjectFile): Promise<XmlDocTreeNode> {
         try {
             const document: xmldoc.XmlDocument = new xmldoc.XmlDocument(await f.getContent());
             // console.log("DOC is " + JSON.stringify(document));
@@ -52,6 +52,11 @@ export interface XmlDocTreeNode extends TreeNode {
      * Value inside the element: Not the same as it's value
      */
     innerValue: string;
+}
+
+export function isXmlDocTreeNode(tn: TreeNode): tn is XmlDocTreeNode {
+    const maybe = tn as XmlDocTreeNode;
+    return !!maybe.innerValue;
 }
 
 class XmldocTreeNodeImpl implements XmlDocTreeNode {
