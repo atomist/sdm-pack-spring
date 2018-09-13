@@ -28,7 +28,10 @@ export const MvnProgressTests: ProgressTest[] = [{
     test: /Invoking goal hook: pre/i,
     phase: "pre-hook",
 }, {
-    test: /> mvn ([\S]*)/i,
+    test: /> mvn ([\S]*)/i, // this captures the maven command we run
+    phase: "mvn $1",
+}, {
+    test: /--- [\S]*:[\S]*:([\S]*) \(/i, // this captures the maven goals as they execute
     phase: "mvn $1",
 }, {
     test: /Invoking goal hook: post/i,
