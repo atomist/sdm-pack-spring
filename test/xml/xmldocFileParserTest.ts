@@ -203,6 +203,34 @@ describe("xmldocFileParser", () => {
                 "39.95"]);
         });
 
+        it("should add author", async () => {
+            const childrensAuthors = "/bookstore/book[@category='children']/author";
+            const f: ProjectFile = new InMemoryProjectFile("books.xml", BookSample);
+            const p = InMemoryProject.of(f);
+            const matches = await findMatches(p, new XmldocFileParser(),
+                "*.xml", childrensAuthors,
+            );
+            assert.strictEqual(matches.length, 1);
+            assert.deepStrictEqual(matches.map(m => m.$value), [
+                "<author>J K. Rowling</author>"]);
+            assert.deepStrictEqual(matches.map(m => (m as any as XmlDocTreeNode).innerValue), [
+                "J K. Rowling"]);
+
+            // Note that this isn't perfect as we need last
+            await doWithAllMatches(p, new XmldocFileParser(),
+                "*.xml",
+                childrensAuthors,
+                m => {
+                    return m.append("<author>Dr Seuss</author>");
+                });
+            const matchesNow = await findMatches(p, new XmldocFileParser(),
+                "*.xml", childrensAuthors,
+            );
+            assert.strictEqual(matchesNow.length, 2);
+            assert.deepStrictEqual(matchesNow.map(m => (m as any as XmlDocTreeNode).innerValue), [
+                "J K. Rowling", "Dr Seuss"]);
+        });
+
     });
 
 });
