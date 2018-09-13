@@ -33,7 +33,7 @@ describe("MavenFingerprinter", () => {
         const fp = await new MavenFingerprinter().action({ project: Seed } as PushImpactListenerInvocation);
         const f1 = JSON.parse(fp[0].data);
         assert(f1.length > 0);
-        f1.forEach((f: any) => assert.equal(f.group, "org.springframework.boot"));
+        f1.forEach((f: any) => assert(["org.springframework.boot", "com.atomist"].includes(f.group)));
     }).timeout(40000);
 
 });
