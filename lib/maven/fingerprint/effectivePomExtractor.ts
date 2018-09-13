@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { runCommand } from "@atomist/automation-client/action/cli/commandLine";
+import { execIn } from "@atomist/automation-client";
 import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
 import { xmlParseString } from "../xmlParseString";
 
@@ -28,7 +28,7 @@ const XmlFile = "effective-pom.xml";
  */
 export async function extractEffectivePom(p: LocalProject): Promise<any> {
     try {
-        await runCommand(`mvn help:effective-pom -Doutput=${XmlFile}`, { cwd: p.baseDir });
+        await execIn(p.baseDir, `mvn`, [`help:effective-pom`, `-Doutput=${XmlFile}`]);
         const f = await p.findFile(XmlFile);
         const xml = await f.getContent();
         const parsed = await xmlParseString(xml);

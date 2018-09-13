@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Microgrammar } from "@atomist/microgrammar/Microgrammar";
+import { Microgrammar } from "@atomist/microgrammar";
 import * as assert from "power-assert";
 import { DependencyFinder } from "../../../../lib/maven/parse/grammar/DependencyFinder";
 import { XmlTag } from "../../../../lib/maven/parse/grammar/xmlGrammars";

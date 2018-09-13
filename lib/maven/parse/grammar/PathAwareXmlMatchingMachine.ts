@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { MatchingLogic } from "@atomist/microgrammar/Matchers";
-import { MatchingMachine } from "@atomist/microgrammar/Microgrammar";
-import { PatternMatch } from "@atomist/microgrammar/PatternMatch";
+import {
+    MatchingLogic,
+    MatchingMachine ,
+} from "@atomist/microgrammar";
+import { PatternMatch } from "@atomist/microgrammar/lib/PatternMatch";
 import { OPEN_OR_CLOSE_TAG } from "./xmlGrammars";
 
 /**

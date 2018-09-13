@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { Microgrammar } from "@atomist/microgrammar/Microgrammar";
-import { optional } from "@atomist/microgrammar/Ops";
+import {
+    Microgrammar,
+    optional,
+} from "@atomist/microgrammar";
 
 /**
  * Pattern for a legal XML element name
