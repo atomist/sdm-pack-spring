@@ -27,7 +27,7 @@ import { SpringBootProjectStructure } from "./generate/SpringBootProjectStructur
  */
 export const HasSpringBootApplicationClass: PredicatePushTest = predicatePushTest(
     "Has Spring Boot @Application class",
-    async p => await HasSpringBootPom.predicate(p) && !!(await SpringBootProjectStructure.inferFromJavaOrKotlinSource(p)));
+    async p => !!(await SpringBootProjectStructure.inferFromJavaOrKotlinSource(p)));
 
 /**
  * Does this project's POM use Spring boot?

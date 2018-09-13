@@ -38,9 +38,9 @@ import {
 } from "child_process";
 import * as os from "os";
 import * as portfinder from "portfinder";
-import { MavenLogInterpreter } from "../../maven/build/mavenLogInterpreter";
-import { determineMavenCommand } from "../../maven/MavenCommand";
 import { SpringBootSuccessPatterns } from "../../spring/springLoggingPatterns";
+import { GradleLogInterpreter } from "../build/gradleLogInterpreter";
+import { determineGradleCommand } from "../gradleCommand";
 
 export const ListBranchDeploys: CommandHandlerRegistration = {
     name: "listLocalDeploys",
@@ -64,11 +64,11 @@ async function handleListDeploys(ctx: HandlerContext) {
 }
 
 /**
- * Goal to deploy to Maven with one process per branch
+ * Goal to deploy to Gradle with one process per branch
  * @type {GenericGoal}
  */
-export const MavenPerBranchSpringBootDeploymentGoal = new GoalWithPrecondition({
-    uniqueName: "mavenDeploy",
+export const GradlePerBranchSpringBootDeploymentGoal = new GoalWithPrecondition({
+    uniqueName: "gradleDeploy",
     orderedName: "3-deploy",
     environment: IndependentOfEnvironment,
     displayName: "deploy branch locally",
@@ -76,7 +76,7 @@ export const MavenPerBranchSpringBootDeploymentGoal = new GoalWithPrecondition({
     failedDescription: "Local branch deployment failure",
 }, BuildGoal);
 
-export interface MavenDeployerOptions {
+export interface GradleDeployerOptions {
 
     lowerPort: number;
 
@@ -107,17 +107,17 @@ const deploymentEndpoints: { [key: string]: {sha: string, endpoint: string} } = 
  * @param projectLoader use to load projects
  * @param opts options
  */
-export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoader,
-                                                      opts: Partial<MavenDeployerOptions>): ExecuteGoal {
-    const optsToUse: MavenDeployerOptions = {
+export function executeGradlePerBranchSpringBootDeploy(projectLoader: ProjectLoader,
+                                                       opts: Partial<GradleDeployerOptions>): ExecuteGoal {
+    const optsToUse: GradleDeployerOptions = {
         lowerPort: 9090,
         successPatterns: SpringBootSuccessPatterns,
-        commandLineArgumentsFor: springBootMavenArgs,
+        commandLineArgumentsFor: springBootGradleArgs,
         baseUrl: `http://${os.hostname()}`,
         maxConcurrentDeployments: 5,
         ...opts,
     };
-    const deployer = new MavenDeployer(optsToUse);
+    const deployer = new GradleDeployer(optsToUse);
 
     return async goalInvocation => {
         const { credentials, id } = goalInvocation;
@@ -136,7 +136,7 @@ export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoad
 /**
  * Holds state
  */
-class MavenDeployer {
+class GradleDeployer {
 
     // Already allocated ports
     public readonly repoBranchToPort: { [repoAndBranch: string]: number } = {};
@@ -144,7 +144,7 @@ class MavenDeployer {
     // Keys are ports: values are child processes
     private readonly portToChildProcess: { [port: number]: ChildProcess } = {};
 
-    constructor(private readonly options: MavenDeployerOptions) {
+    constructor(private readonly options: GradleDeployerOptions) {
     }
 
     public async deployProject(goalInvocation: GoalInvocation,
@@ -175,16 +175,16 @@ class MavenDeployer {
             }
         }
 
-        const childProcess = spawn(determineMavenCommand(project),
+        const childProcess = spawn(determineGradleCommand(project),
             [
-                "spring-boot:run",
+                "bootRun",
             ].concat(this.options.commandLineArgumentsFor(port, contextRoot)),
             {
                 cwd: project.baseDir,
             });
         if (!childProcess.pid) {
-            throw new Error("Fatal error deploying using Maven--is `mvn` on your automation node path?\n" +
-                "Attempted to execute `mvn: spring-boot:run`");
+            throw new Error("Fatal error deploying using Maven--is `gradle` on your automation node path?\n" +
+                "Attempted to execute `gradle bootRun`");
         }
         const deployment = {
             childProcess,
@@ -218,9 +218,9 @@ class MavenDeployer {
                     resolve(deployment);
                 } else {
                     await reportFailureToUser(goalInvocation, stdout);
-                    logger.error("Maven deployment failure vvvvvvvvvvvvvvvvvvvvvv");
+                    logger.error("Gradle deployment failure vvvvvvvvvvvvvvvvvvvvvv");
                     logger.error("stdout:\n%s\nstderr:\n%s\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^", stdout, stderr);
-                    reject(new Error("Maven deployment failure"));
+                    reject(new Error("Gradle deployment failure"));
                 }
             });
             childProcess.addListener("error", reject);
@@ -229,9 +229,9 @@ class MavenDeployer {
 }
 
 async function reportFailureToUser(gi: GoalInvocation, log: string) {
-    const interpretation = MavenLogInterpreter(log);
+    const interpretation = GradleLogInterpreter(log);
     if (!!interpretation) {
-        await gi.addressChannels(`✘ Maven deployment failure for ${gi.id.url}/${gi.sdmGoal.branch}`);
+        await gi.addressChannels(`✘ Gradle deployment failure for ${gi.id.url}/${gi.sdmGoal.branch}`);
         if (!!interpretation.relevantPart) {
             await(gi.addressChannels(`\`\`\`\n${interpretation.relevantPart}\n\`\`\``));
         } else {
@@ -240,11 +240,9 @@ async function reportFailureToUser(gi: GoalInvocation, log: string) {
     }
 }
 
-function springBootMavenArgs(port: number, contextRoot: string): string[] {
+function springBootGradleArgs(port: number, contextRoot: string): string[] {
     return [
-        "-Dspring-boot.run.arguments=--server.port=" + port + ",--server.contextPath=" + contextRoot +
-        ",--server.servlet.contextPath=" + contextRoot,
-        "-Drun.arguments=--Dserver.port=" + port + ",--server.contextPath=" + contextRoot +
+        "-Pargs=--server.port=" + port + ",--server.contextPath=" + contextRoot +
         ",--server.servlet.contextPath=" + contextRoot,
     ];
 }

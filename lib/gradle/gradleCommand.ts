@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-import * as assert from "power-assert";
-import { SpringBootSuccessPatterns } from "../../../lib/spring/springLoggingPatterns";
+import { Project } from "@atomist/automation-client/project/Project";
+import * as os from "os";
 
-describe("SpringBootSuccessPattern", () => {
-
-    it("should match", () => {
-        const s = "Started SpringRestSeedApplication in 3.931 seconds";
-        assert(SpringBootSuccessPatterns[2].test(s));
-    });
-
-    it("should match slow deployment", () => {
-        const s = "Started SpringRestSeedApplication25 in 36.931 seconds";
-        assert(SpringBootSuccessPatterns[2].test(s));
-    });
-
-});
+export function determineGradleCommand(p: Project): string {
+    if (p.fileExistsSync("gradlew.bat") && os.platform() === "win32") {
+       return "gradlew";
+    } else if (p.fileExistsSync("gradlew")) {
+        return "./gradlew";
+    } else {
+        return "gradle";
+    }
+}

@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-import * as assert from "power-assert";
-import { SpringBootSuccessPatterns } from "../../../lib/spring/springLoggingPatterns";
+import {
+    PredicatePushTest,
+    predicatePushTest,
+} from "@atomist/sdm";
 
-describe("SpringBootSuccessPattern", () => {
-
-    it("should match", () => {
-        const s = "Started SpringRestSeedApplication in 3.931 seconds";
-        assert(SpringBootSuccessPatterns[2].test(s));
-    });
-
-    it("should match slow deployment", () => {
-        const s = "Started SpringRestSeedApplication25 in 36.931 seconds";
-        assert(SpringBootSuccessPatterns[2].test(s));
-    });
-
-});
+/**
+ * Is this a Gradle project
+ * @constructor
+ */
+export const IsGradle: PredicatePushTest = predicatePushTest(
+    "Is Gradle",
+    async p => !!(await p.getFile("build.gradle")) || !!(await p.getFile("build.gradle.kt")));

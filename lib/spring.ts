@@ -33,6 +33,12 @@ import {
     LocalUndeploymentGoal,
 } from "@atomist/sdm/pack/well-known-goals/commonGoals";
 import {
+    executeGradlePerBranchSpringBootDeploy,
+    GradleDeployerOptions,
+    GradlePerBranchSpringBootDeploymentGoal,
+} from "./gradle/deploy/GradlePerBranchSpringBootDeploymentGoal";
+import { IsGradle } from "./gradle/gradlePushTests";
+import {
     executeMavenPerBranchSpringBootDeploy,
     MavenDeployerOptions,
     MavenPerBranchSpringBootDeploymentGoal,
@@ -40,7 +46,10 @@ import {
 import { ListLocalDeploys } from "./maven/deploy/listLocalDeploys";
 import { IsMaven } from "./maven/pushTests";
 import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
-import { HasSpringBootApplicationClass } from "./spring/pushTests";
+import {
+    HasSpringBootApplicationClass,
+    HasSpringBootPom,
+} from "./spring/pushTests";
 import { springBootTagger } from "./spring/springTagger";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
 
@@ -57,10 +66,18 @@ export const SpringSupport: ExtensionPack = {
 
 export function configureMavenPerBranchSpringBootDeploy(sdm: SoftwareDeliveryMachine,
                                                         options: Partial<MavenDeployerOptions> = {}) {
-    sdm.addGoalContributions(whenPushSatisfies(HasSpringBootApplicationClass)
+    sdm.addGoalContributions(whenPushSatisfies(HasSpringBootPom, HasSpringBootApplicationClass, IsMaven)
         .setGoals(MavenPerBranchSpringBootDeploymentGoal));
     sdm.addGoalImplementation("Maven deployment", MavenPerBranchSpringBootDeploymentGoal,
         executeMavenPerBranchSpringBootDeploy(sdm.configuration.sdm.projectLoader, options));
+}
+
+export function configureGradlePerBranchSpringBootDeploy(sdm: SoftwareDeliveryMachine,
+                                                         options: Partial<GradleDeployerOptions> = {}) {
+    sdm.addGoalContributions(whenPushSatisfies(HasSpringBootApplicationClass, IsGradle)
+        .setGoals(GradlePerBranchSpringBootDeploymentGoal));
+    sdm.addGoalImplementation("Gradle deployment", GradlePerBranchSpringBootDeploymentGoal,
+        executeGradlePerBranchSpringBootDeploy(sdm.configuration.sdm.projectLoader, options));
 }
 
 export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {

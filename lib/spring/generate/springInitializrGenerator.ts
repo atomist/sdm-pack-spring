@@ -40,6 +40,7 @@ import {
     MavenArtifactIdRegExp,
     MavenGroupIdRegExp,
 } from "../../java/javaPatterns";
+import { AddGradleBootRunArgsSupport } from "./gradleBuildTransforms";
 import { SetAtomistTeamInApplicationYml } from "./springBootTransforms";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
@@ -53,6 +54,7 @@ export async function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine)
         startingPoint: params => springInitializrProject(sdm, params),
         transform: [
             SetAtomistTeamInApplicationYml,
+            AddGradleBootRunArgsSupport,
             TransformSeedToCustomProject,
         ],
     });
@@ -252,7 +254,7 @@ export class SpringInitializrProjectCreationParameters implements SmartParameter
                 const knownDependencies = [].concat(...dependencyGroups).map((v: any) => v.id) as string[];
                 const dependencies = this.dependencies.split(",");
                 const wrongDependencies = dependencies.filter(d => !knownDependencies.includes(d));
-                if (wrongDependencies) {
+                if (wrongDependencies && wrongDependencies.length > 0) {
                     validationErrors.push("Unknown dependencies found: " + wrongDependencies.join(", "));
                 }
             }

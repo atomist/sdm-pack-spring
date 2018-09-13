@@ -24,14 +24,7 @@ import {
 } from "@atomist/sdm-core";
 import { executableJarDeployer } from "../../java/deploy/executableJarDeployer";
 import { mavenDeployer } from "../../maven/deploy/mavenDeployer";
-
-/** Successs patterns when Spring Boot starts
- * @type {RegExp}
- */
-export const SpringBootSuccessPatterns = [
-    /Tomcat started on port/,
-    /Started [A-Za-z0-9_$]+ in [0-9]+.[0-9]+ seconds/,
-];
+import { SpringBootSuccessPatterns } from "../springLoggingPatterns";
 
 export function localExecutableJarDeployer(): Deployer<ManagedDeploymentTargetInfo> {
   return executableJarDeployer({

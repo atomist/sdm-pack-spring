@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import * as assert from "power-assert";
-import { SpringBootSuccessPatterns } from "../../../lib/spring/springLoggingPatterns";
+import * as utils from "@atomist/automation-client/project/util/projectUtils";
+import { CodeTransform } from "@atomist/sdm";
 
-describe("SpringBootSuccessPattern", () => {
-
-    it("should match", () => {
-        const s = "Started SpringRestSeedApplication in 3.931 seconds";
-        assert(SpringBootSuccessPatterns[2].test(s));
+export const AddGradleBootRunArgsSupport: CodeTransform = async (p, ci) => {
+    return utils.doWithFiles(p, "build.gradle", async buildFile => {
+        const content = await buildFile.getContent();
+        const bootRunArgsSupport = `
+bootRun {
+    if (project.hasProperty('args')) {
+        args project.args.split(',')
+    }
+}
+        `;
+        await buildFile.setContent(content +  bootRunArgsSupport);
     });
-
-    it("should match slow deployment", () => {
-        const s = "Started SpringRestSeedApplication25 in 36.931 seconds";
-        assert(SpringBootSuccessPatterns[2].test(s));
-    });
-
-});
+};
