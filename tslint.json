@@ -15,7 +15,7 @@
             true,
             "never-prefix"
         ],
-        "max-classes-per-file": [],
+        "max-classes-per-file": 7,
         "max-line-length": [
           true,
           150
