@@ -17,15 +17,14 @@
 import {
     GitProject,
     Project,
-    RemoteRepoRef,
 } from "@atomist/automation-client";
 import { PushListenerInvocation } from "@atomist/sdm";
 
 export function fakeListenerInvocation(project: Project): PushListenerInvocation {
     return {
-        push: {id: new Date().getTime() + "_", branch: "master"},
+        push: {id: Date.now() + "_", branch: "master"},
         project: project as any as GitProject,
-        id: project.id,
+        id: project.id as any,
         context: null,
         addressChannels: null,
         credentials: null,

@@ -18,6 +18,7 @@ import {
     HandlerContext,
     LocalProject,
     logger,
+    poisonAndWait,
     Success,
 } from "@atomist/automation-client";
 import {
@@ -28,7 +29,6 @@ import {
     GoalInvocation,
     GoalWithPrecondition,
     IndependentOfEnvironment,
-    poisonAndWait,
     ProjectLoader,
 } from "@atomist/sdm";
 import { SpawnedDeployment } from "@atomist/sdm-core";

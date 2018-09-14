@@ -16,6 +16,7 @@
 
 import {
     doWithRetry,
+    Parameters,
     RemoteLocator,
     RepoCreationParameters,
     SmartParameters,
@@ -25,7 +26,6 @@ import {
 import {
     NodeFsLocalProject,
     Parameter,
-    Parameters,
     Project,
     SoftwareDeliveryMachine,
 } from "@atomist/sdm";

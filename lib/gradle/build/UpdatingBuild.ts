@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { RemoteRepoRef } from "@atomist/automation-client";
 import {
-    AppInfo,
     ChildProcessResult,
-} from "@atomist/sdm";
+    RemoteRepoRef,
+} from "@atomist/automation-client";
+import { AppInfo } from "@atomist/sdm";
 import { LocalBuildInProgress } from "@atomist/sdm-core";
 
 export class UpdatingBuild implements LocalBuildInProgress {

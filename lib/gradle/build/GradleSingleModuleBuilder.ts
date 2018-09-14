@@ -15,8 +15,10 @@
  */
 
 import {
+    asSpawnCommand,
     ProjectOperationCredentials,
     RemoteRepoRef,
+    spawnAndWatch,
 } from "@atomist/automation-client";
 import {
     Literal,
@@ -24,12 +26,10 @@ import {
 } from "@atomist/microgrammar";
 import {
     AddressChannels,
-    asSpawnCommand,
     InterpretLog,
     LogInterpretation,
     ProgressLog,
     SoftwareDeliveryMachine,
-    spawnAndWatch,
     StringCapturingProgressLog,
 } from "@atomist/sdm";
 import {

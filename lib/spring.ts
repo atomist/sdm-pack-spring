@@ -20,8 +20,6 @@ import {
     executeUndeploy,
     ExtensionPack,
     LocalDeploymentGoal,
-    LocalEndpointGoal,
-    LocalUndeploymentGoal,
     metadata,
     SoftwareDeliveryMachine,
     whenPushSatisfies,
@@ -30,6 +28,10 @@ import {
     ManagedDeploymentTargeter,
     tagRepo,
 } from "@atomist/sdm-core";
+import {
+    LocalEndpointGoal,
+    LocalUndeploymentGoal,
+} from "@atomist/sdm/lib/pack/well-known-goals/commonGoals";
 import {
     executeGradlePerBranchSpringBootDeploy,
     GradleDeployerOptions,

@@ -16,6 +16,10 @@
 
 import {
     asSpawnCommand,
+    spawnAndWatch,
+    SpawnCommand,
+} from "@atomist/automation-client";
+import {
     ExecuteGoalResult,
     GitProject,
     GoalInvocation,
@@ -23,8 +27,6 @@ import {
     ProgressLog,
     Project,
     SdmGoalEvent,
-    spawnAndWatch,
-    SpawnCommand,
 } from "@atomist/sdm";
 import { ProjectVersioner } from "@atomist/sdm-core";
 import * as df from "dateformat";

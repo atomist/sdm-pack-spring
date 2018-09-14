@@ -15,20 +15,20 @@
  */
 
 import {
+    ChildProcessResult,
     ProjectOperationCredentials,
     RemoteRepoRef,
+    spawnAndWatch,
 } from "@atomist/automation-client";
 import {
     AddressChannels,
     AppInfo,
-    ChildProcessResult,
     GitProject,
     InterpretLog,
     LocalProject,
     LogInterpretation,
     ProgressLog,
     SoftwareDeliveryMachine,
-    spawnAndWatch,
 } from "@atomist/sdm";
 import {
     LocalBuilder,
