@@ -25,11 +25,11 @@ import { XmlDocument, XmlElement } from "xmldoc";
  * FileParser implementation that uses xmldoc library.
  * Preserves and exposes positions.
  */
-export class XmldocFileParser implements FileParser<XmlDocTreeNode> {
+export class XmldocFileParser implements FileParser<XmldocTreeNode> {
 
     public rootName = "xml";
 
-    public async toAst(f: ProjectFile): Promise<XmlDocTreeNode> {
+    public async toAst(f: ProjectFile): Promise<XmldocTreeNode> {
         try {
             const document = new XmlDocument(await f.getContent());
             // console.log("DOC is " + JSON.stringify(document));
@@ -45,22 +45,29 @@ export class XmldocFileParser implements FileParser<XmlDocTreeNode> {
 /**
  * Allows further operations specific to XML elements
  */
-export interface XmlDocTreeNode extends TreeNode {
+export interface XmldocTreeNode extends TreeNode {
 
     /**
      * Value inside the element: Not the same as it's value
      */
     innerValue: string;
+
+    /**
+     * Specialize return type
+     * @return {XmldocTreeNode[]}
+     */
+    $children: XmldocTreeNode[];
+
 }
 
-export function isXmlDocTreeNode(tn: TreeNode): tn is XmlDocTreeNode {
-    const maybe = tn as XmlDocTreeNode;
+export function isXmldocTreeNode(tn: TreeNode): tn is XmldocTreeNode {
+    const maybe = tn as XmldocTreeNode;
     return !!maybe.innerValue;
 }
 
-class XmldocTreeNodeImpl implements XmlDocTreeNode {
+class XmldocTreeNodeImpl implements XmldocTreeNode {
 
-    public get $children(): TreeNode[] {
+    public get $children(): XmldocTreeNode[] {
         return this.xd.children
             .filter(kid => kid.type === "element")
             .map(k =>

@@ -16,9 +16,9 @@
 
 import { CodeTransform } from "@atomist/sdm";
 import * as _ from "lodash";
+import { indent } from "../../util/formatUtils";
 import { DependencyFinder } from "../parse/grammar/DependencyFinder";
 import { VersionedArtifact } from "../VersionedArtifact";
-import { indent } from "../../util/formatUtils";
 
 /**
  * Add the given dependency to projects. It's not an error
