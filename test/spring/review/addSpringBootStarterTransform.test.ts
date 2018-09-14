@@ -16,8 +16,8 @@
 
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import * as assert from "power-assert";
-import { addSpringBootStarterTransform } from "../../../lib/spring/transform/addSpringBootStarterTransform";
 import { findDeclaredDependencies } from "../../../lib/maven/parse/fromPom";
+import { addSpringBootStarterTransform } from "../../../lib/spring/transform/addSpringBootStarterTransform";
 import { springBootPom } from "../generator/TestPoms";
 
 describe("addSpringBootStarterTransform", () => {

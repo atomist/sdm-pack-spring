@@ -15,10 +15,10 @@
  */
 
 import { logger } from "@atomist/automation-client/internal/util/logger";
-import { CodeTransform } from "@atomist/sdm";
-import { findDeclaredDependencies } from "../../maven/parse/fromPom";
-import * as _ from "lodash";
 import { doWithAllMatches } from "@atomist/automation-client/tree/ast/astUtils";
+import { CodeTransform } from "@atomist/sdm";
+import * as _ from "lodash";
+import { findDeclaredDependencies } from "../../maven/parse/fromPom";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 
 export function addSpringBootStarterTransform(artifact: string,

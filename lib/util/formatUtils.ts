@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 export function indent(what: string, indentToUse: string, n: number): string {
     return what.split("\n")
         .map(line => {
