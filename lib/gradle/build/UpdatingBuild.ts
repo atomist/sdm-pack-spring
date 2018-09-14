@@ -15,11 +15,11 @@
  */
 
 import { RemoteRepoRef } from "@atomist/automation-client";
-import { LocalBuildInProgress } from "@atomist/sdm-core";
 import {
     AppInfo,
     ChildProcessResult,
 } from "@atomist/sdm";
+import { LocalBuildInProgress } from "@atomist/sdm-core";
 
 export class UpdatingBuild implements LocalBuildInProgress {
 

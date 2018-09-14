@@ -20,6 +20,14 @@ import {
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import {
+    DelimitedWriteProgressLogDecorator,
+    DeployableArtifact,
+    Deployer,
+    Deployment,
+    lastLinesLogInterpreter,
+    ProgressLog,
+} from "@atomist/sdm";
+import {
     DefaultLocalDeployerOptions,
     LocalDeployerOptions,
     LookupStrategy,
@@ -28,14 +36,6 @@ import {
     SpawnedDeployment,
     StartupInfo,
 } from "@atomist/sdm-core";
-import {
-    DelimitedWriteProgressLogDecorator,
-    DeployableArtifact,
-    Deployer,
-    Deployment,
-    lastLinesLogInterpreter,
-    ProgressLog,
-} from "@atomist/sdm";
 import { spawn } from "child_process";
 
 // TODO: should local deployment be its own pack? we could pull it out of sdm then

@@ -22,14 +22,6 @@ import {
     Success,
 } from "@atomist/automation-client";
 import {
-    DefaultLocalDeployerOptions,
-    LocalDeployerOptions,
-    LookupStrategy,
-    ManagedDeployments,
-    ManagedDeploymentTargetInfo,
-    SpawnedDeployment,
-} from "@atomist/sdm-core";
-import {
     DelimitedWriteProgressLogDecorator,
     DeployableArtifact,
     Deployer,
@@ -40,6 +32,14 @@ import {
     ProgressLog,
     ProjectLoader,
 } from "@atomist/sdm";
+import {
+    DefaultLocalDeployerOptions,
+    LocalDeployerOptions,
+    LookupStrategy,
+    ManagedDeployments,
+    ManagedDeploymentTargetInfo,
+    SpawnedDeployment,
+} from "@atomist/sdm-core";
 import { spawn } from "child_process";
 import { determineMavenCommand } from "../MavenCommand";
 
