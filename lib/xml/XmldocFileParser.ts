@@ -31,9 +31,10 @@ export class XmldocFileParser implements FileParser<XmldocTreeNode> {
 
     public async toAst(f: ProjectFile): Promise<XmldocTreeNode> {
         try {
-            const document = new XmlDocument(await f.getContent());
+            const content = await f.getContent();
+            const document = new XmlDocument(content);
             // console.log("DOC is " + JSON.stringify(document));
-            return new XmldocTreeNodeImpl(document, undefined);
+            return new XmldocTreeNodeImpl(document, undefined, content);
         } catch (err) {
             logger.warn("Could not parse XML document at '%s'", f.path, err);
             return undefined;
@@ -71,7 +72,7 @@ class XmldocTreeNodeImpl implements XmldocTreeNode {
         return this.xd.children
             .filter(kid => kid.type === "element")
             .map(k =>
-                new XmldocTreeNodeImpl(k as XmlElement, this));
+                new XmldocTreeNodeImpl(k as XmlElement, this, this.rawDoc));
     }
 
     public get $name(): string {
@@ -87,7 +88,25 @@ class XmldocTreeNodeImpl implements XmldocTreeNode {
      * @return {string}
      */
     public get $value(): string {
-        return this.xd.toString({ preserveWhitespace: true, compressed: false, trimmed: false });
+        // toString may not be accurate, as per xmldoc readme, but we can work with it
+        // as the offset will be accurate
+        const fromXmldocToString = this.xd.toString({ preserveWhitespace: true, compressed: false, trimmed: false });
+        const fromRawDoc = this.rawDoc.substr(this.$offset, fromXmldocToString.length);
+        if (fromRawDoc !== fromXmldocToString) {
+            // In this case, check we have all the non whitespace characters from the toString value
+            const nonWhitespaceCount = fromXmldocToString.replace(/\s+/g, "").length;
+            let included = 0;
+            let str = "";
+            for (let i = 0; i < fromXmldocToString.length && included < nonWhitespaceCount; i++) {
+                const c = this.rawDoc.substr(this.$offset).charAt(i);
+                if (!["\n", " ", "\t", "\r"].includes(c)) {
+                    ++included;
+                }
+                str += c;
+            }
+            return str;
+        }
+        return fromXmldocToString;
     }
 
     public get innerValue(): string {
@@ -95,7 +114,8 @@ class XmldocTreeNodeImpl implements XmldocTreeNode {
     }
 
     constructor(private readonly xd: XmlElement,
-                public readonly $parent: TreeNode) {
+                public readonly $parent: TreeNode,
+                private readonly rawDoc: string) {
         // Add attributes to this
         for (const propName of Object.getOwnPropertyNames(this.xd.attr)) {
             (this as any)[propName] = this.xd.attr[propName];
