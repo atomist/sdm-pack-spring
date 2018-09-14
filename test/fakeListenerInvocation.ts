@@ -23,7 +23,7 @@ export function fakeListenerInvocation(project: Project): PushListenerInvocation
     return {
         push: {id: new Date().getTime() + "_", branch: "master"},
         project: project as any as GitProject,
-        id: project.id as RemoteRepoRef,
+        id: project.id,
         context: null,
         addressChannels: null,
         credentials: null,
