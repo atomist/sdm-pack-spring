@@ -21,7 +21,10 @@ import { findFileMatches } from "@atomist/automation-client/tree/ast/astUtils";
 import { evaluateExpression } from "@atomist/tree-path";
 import * as assert from "power-assert";
 import { KotlinSourceFiles } from "../../../lib/java/javaProjectUtils";
-import { SpringBootAppClassInKotlin, SpringBootProjectStructure } from "../../../lib/spring/generate/SpringBootProjectStructure";
+import {
+    SpringBootAppClassInKotlin,
+    SpringBootProjectStructure,
+} from "../../../lib/spring/generate/SpringBootProjectStructure";
 
 describe("SpringBootProjectStructure: Java inference", () => {
 

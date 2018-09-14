@@ -18,7 +18,10 @@ import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitH
 import { InMemoryFile } from "@atomist/automation-client/project/mem/InMemoryFile";
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import * as assert from "power-assert";
-import { ImportDotStarCategory, ImportDotStarReviewer } from "../../../lib/java/review/importDotStarReviewer";
+import {
+    ImportDotStarCategory,
+    ImportDotStarReviewer,
+} from "../../../lib/java/review/importDotStarReviewer";
 import { Bad1 } from "./fileIoImportReviewer.test";
 
 describe("importDotStar", () => {

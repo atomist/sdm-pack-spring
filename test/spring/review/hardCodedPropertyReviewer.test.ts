@@ -19,7 +19,10 @@ import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemory
 
 import { InMemoryFile } from "@atomist/automation-client/project/mem/InMemoryFile";
 import * as assert from "power-assert";
-import { HardCodedPropertyReviewer, HardcodePropertyCategory } from "../../../lib/spring/review/hardcodedPropertyReviewer";
+import {
+    HardCodedPropertyReviewer,
+    HardcodePropertyCategory,
+} from "../../../lib/spring/review/hardcodedPropertyReviewer";
 
 describe("HardCodePropertyReviewer", () => {
 

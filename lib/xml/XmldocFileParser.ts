@@ -19,7 +19,10 @@ import { FileParser } from "@atomist/automation-client/tree/ast/FileParser";
 import { ProjectFile } from "@atomist/sdm";
 import { TreeNode } from "@atomist/tree-path";
 
-import { XmlDocument, XmlElement } from "xmldoc";
+import {
+    XmlDocument,
+    XmlElement,
+} from "xmldoc";
 
 /**
  * FileParser implementation that uses xmldoc library.

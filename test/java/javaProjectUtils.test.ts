@@ -17,7 +17,10 @@
 import { InMemoryFile } from "@atomist/automation-client/project/mem/InMemoryFile";
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import * as assert from "power-assert";
-import { movePackage, renameClass } from "../../lib/java/javaProjectUtils";
+import {
+    movePackage,
+    renameClass,
+} from "../../lib/java/javaProjectUtils";
 
 describe("javaProjectUtils", () => {
 
