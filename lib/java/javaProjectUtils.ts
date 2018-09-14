@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { logger } from "@atomist/automation-client";
 import {
+    doWithFiles,
+    logger,
     Project,
     ProjectAsync,
-} from "@atomist/automation-client/project/Project";
-import { doWithFiles } from "@atomist/automation-client/project/util/projectUtils";
+} from "@atomist/automation-client";
 import { JavaProjectStructure } from "./JavaProjectStructure";
 
 export const AllJavaFiles = "**/*.java";

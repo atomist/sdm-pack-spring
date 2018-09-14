@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import { logger } from "@atomist/automation-client";
-import { fileExists } from "@atomist/automation-client/project/util/projectUtils";
 import {
+    fileExists,
+    logger,
+} from "@atomist/automation-client";
+import {
+    anyFileChangedWithExtension,
+    filesChangedSince,
     predicatePushTest,
     pushTest,
     PushTest,
 } from "@atomist/sdm";
-import {
-    anyFileChangedWithExtension,
-    filesChangedSince,
-} from "@atomist/sdm/api-helper/misc/git/filesChangedSince";
 
 export const IsJava: PushTest = predicatePushTest(
     "Is Java",

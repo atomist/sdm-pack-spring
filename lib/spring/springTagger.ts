@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import { logger } from "@atomist/automation-client";
-
 import {
-    DefaultTags,
+    DefaultTaggerTags,
+    logger,
     Tagger,
-} from "@atomist/automation-client/operations/tagger/Tagger";
-import { toPromise } from "@atomist/automation-client/project/util/projectUtils";
+    toPromise,
+} from "@atomist/automation-client";
+
 import { AllJavaFiles } from "../java/javaProjectUtils";
 import { SpringBootStarter } from "./springConstants";
 
 /**
  * Function to add Spring-related GitHub topics if needed
  * @param p project to scan
- * @return {Promise<DefaultTags>}
+ * @return {Promise<DefaultTaggerTags>}
  */
 export const springBootTagger: Tagger = p => {
     return p.findFile("pom.xml")
@@ -46,11 +46,11 @@ export const springBootTagger: Tagger = p => {
                     if (javaFiles.length > 0) {
                         tags.push("java");
                     }
-                    return new DefaultTags(p.id, tags);
+                    return new DefaultTaggerTags(p.id, tags);
                 });
         })
         .catch(err => {
             logger.warn("Tag error: " + err);
-            return new DefaultTags(p.id, []);
+            return new DefaultTaggerTags(p.id, []);
         });
 };

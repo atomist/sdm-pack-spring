@@ -15,7 +15,7 @@
  */
 
 import { logger } from "@atomist/automation-client";
-import { InterpretLog } from "@atomist/sdm/spi/log/InterpretedLog";
+import { InterpretLog } from "@atomist/sdm";
 import { GradleInfo } from "./GradleSingleModuleBuilder";
 
 export const GradleLogInterpreter: InterpretLog<GradleInfo> = log => {

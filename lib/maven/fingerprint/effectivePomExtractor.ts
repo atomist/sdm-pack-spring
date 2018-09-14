@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { execIn } from "@atomist/automation-client";
-import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
+import {
+    execIn,
+    LocalProject,
+} from "@atomist/automation-client";
 import { xmlParseString } from "../xmlParseString";
 
 const XmlFile = "effective-pom.xml";

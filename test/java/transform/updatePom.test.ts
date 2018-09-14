@@ -16,7 +16,7 @@
 
 import * as assert from "power-assert";
 
-import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
+import { InMemoryProject } from "@atomist/automation-client";
 import { updatePom } from "../../../lib/maven/generate/updatePom";
 
 describe("updatePom", () => {

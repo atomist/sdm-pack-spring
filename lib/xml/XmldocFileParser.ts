@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { logger } from "@atomist/automation-client";
-import { FileParser } from "@atomist/automation-client/tree/ast/FileParser";
+import {
+    FileParser,
+    logger,
+} from "@atomist/automation-client";
 import { ProjectFile } from "@atomist/sdm";
 import { TreeNode } from "@atomist/tree-path";
 

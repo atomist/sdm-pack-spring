@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitHubRepoRef";
-import { GitCommandGitProject } from "@atomist/automation-client/project/git/GitCommandGitProject";
+import {
+    GitCommandGitProject,
+    GitHubRepoRef,
+} from "@atomist/automation-client";
 
 import * as assert from "assert";
 import { FindDependency } from "../../../lib/maven/inspection/findDependencyCommand";

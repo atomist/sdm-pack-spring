@@ -20,7 +20,7 @@ import {
     Integer,
     Microgrammar,
 } from "@atomist/microgrammar";
-import { InterpretLog } from "@atomist/sdm/spi/log/InterpretedLog";
+import { InterpretLog } from "@atomist/sdm";
 
 export const MavenLogInterpreter: InterpretLog<MavenInfo> = log => {
     const timingInfo = timingGrammar.firstMatch(log);

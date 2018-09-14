@@ -18,9 +18,11 @@ import {
     JavaFileParser,
     KotlinFileParser,
 } from "@atomist/antlr";
-import { logger } from "@atomist/automation-client";
-import { ProjectAsync } from "@atomist/automation-client/project/Project";
-import { findMatches } from "@atomist/automation-client/tree/ast/astUtils";
+import {
+    findMatches,
+    logger,
+    ProjectAsync,
+} from "@atomist/automation-client";
 import * as _ from "lodash";
 import {
     JavaSourceFiles,

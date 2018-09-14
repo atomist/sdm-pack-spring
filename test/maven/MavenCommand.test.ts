@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
+import { InMemoryProject } from "@atomist/automation-client";
 import * as assert from "power-assert";
 import { determineMavenCommand } from "../../lib/maven/MavenCommand";
 

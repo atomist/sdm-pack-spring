@@ -15,9 +15,11 @@
  */
 
 import { KotlinFileParser } from "@atomist/antlr";
-import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
-import { Project } from "@atomist/automation-client/project/Project";
-import { findFileMatches } from "@atomist/automation-client/tree/ast/astUtils";
+import {
+    findFileMatches,
+    InMemoryProject,
+    Project,
+} from "@atomist/automation-client";
 import { evaluateExpression } from "@atomist/tree-path";
 import * as assert from "power-assert";
 import { KotlinSourceFiles } from "../../../lib/java/javaProjectUtils";

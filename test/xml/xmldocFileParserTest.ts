@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import {
     doWithAllMatches,
     findMatches,
-} from "@atomist/automation-client/tree/ast/astUtils";
+    InMemoryProject,
+} from "@atomist/automation-client";
 import {
     InMemoryProjectFile,
     ProjectFile,
@@ -169,7 +169,7 @@ describe("xmldocFileParser", () => {
                 "*.xml",
                 "/bookstore/book/title");
             assert.strictEqual(matches.length, 4);
-            assert.deepStrictEqual(matches.map(m => (m as XmlDocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as any as XmlDocTreeNode).innerValue), [
                 "Everyday Italian",
                 "Harry Potter",
                 "XQuery Kick Start",
@@ -183,7 +183,7 @@ describe("xmldocFileParser", () => {
                 "*.xml",
                 "/bookstore/book[1]/title");
             assert.strictEqual(matches.length, 1);
-            assert.deepStrictEqual(matches.map(m => (m as XmlDocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as any as XmlDocTreeNode).innerValue), [
                 "Everyday Italian"]);
         });
 
@@ -195,7 +195,7 @@ describe("xmldocFileParser", () => {
                 "*.xml",
                 "/bookstore/book/price");
             assert.strictEqual(matches.length, 4);
-            assert.deepStrictEqual(matches.map(m => (m as XmlDocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as any as XmlDocTreeNode).innerValue), [
                 "30.00",
                 "29.99",
                 "49.99",
@@ -212,7 +212,7 @@ describe("xmldocFileParser", () => {
                 {
                     above35: n => isXmlDocTreeNode(n) && parseInt(n.innerValue, 10) > 35,
                 });
-            assert.deepStrictEqual(matches.map(m => (m as XmlDocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as any as XmlDocTreeNode).innerValue), [
                 "49.99",
                 "39.95"]);
         });
@@ -227,7 +227,7 @@ describe("xmldocFileParser", () => {
             assert.strictEqual(matches.length, 1);
             assert.deepStrictEqual(matches.map(m => m.$value), [
                 "<author>J K. Rowling</author>"]);
-            assert.deepStrictEqual(matches.map(m => (m as XmlDocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as any as XmlDocTreeNode).innerValue), [
                 "J K. Rowling"]);
 
             // Note that this isn't perfect as we need last
@@ -241,7 +241,7 @@ describe("xmldocFileParser", () => {
                 "*.xml", childrensAuthors,
             );
             assert.strictEqual(matchesNow.length, 2);
-            assert.deepStrictEqual(matchesNow.map(m => (m as XmlDocTreeNode).innerValue), [
+            assert.deepStrictEqual(matchesNow.map(m => (m as any as XmlDocTreeNode).innerValue), [
                 "J K. Rowling", "Dr Seuss"]);
         });
 

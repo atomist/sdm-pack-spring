@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Fingerprint } from "@atomist/automation-client/project/fingerprint/Fingerprint";
-import { computeShaOf } from "@atomist/sdm/api-helper/misc/sha";
+import { Fingerprint } from "@atomist/automation-client";
+import { computeShaOf } from "@atomist/sdm";
 import {
     toVersionedArtifact,
 } from "../parse/artifact";

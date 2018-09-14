@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { ProjectAsync } from "@atomist/automation-client/project/Project";
-import { doWithFiles } from "@atomist/automation-client/project/util/projectUtils";
+import {
+    doWithFiles,
+    ProjectAsync,
+} from "@atomist/automation-client";
 
 /**
  * Record change to POM. Project will subsequently need flushing

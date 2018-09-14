@@ -16,9 +16,9 @@
 
 import {
     ProgressTest,
+    ReportProgress,
     testProgressReporter,
-} from "@atomist/sdm/api-helper/goal/progress/progress";
-import { ReportProgress } from "@atomist/sdm/api/goal/progress/ReportProgress";
+} from "@atomist/sdm";
 
 /**
  * Default progress tests for our Maven-based builds

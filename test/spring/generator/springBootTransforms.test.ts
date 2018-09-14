@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitHubRepoRef";
-import { SimpleRepoId } from "@atomist/automation-client/operations/common/RepoId";
-import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
-import { ParametersInvocation } from "@atomist/sdm/api/listener/ParametersInvocation";
+import {
+    GitHubRepoRef,
+    InMemoryProject,
+    SimpleRepoId,
+} from "@atomist/automation-client";
+import { ParametersInvocation } from "@atomist/sdm";
 import * as assert from "power-assert";
 import {
     ReplaceReadmeTitle,
