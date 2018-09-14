@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
-import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
+import {
+    ProjectOperationCredentials,
+    RemoteRepoRef,
+} from "@atomist/automation-client";
 import {
     Literal,
     Microgrammar,
 } from "@atomist/microgrammar";
-import { SoftwareDeliveryMachine } from "@atomist/sdm";
+import {
+    AddressChannels,
+    asSpawnCommand,
+    InterpretLog,
+    LogInterpretation,
+    ProgressLog,
+    SoftwareDeliveryMachine,
+    spawnAndWatch,
+    StringCapturingProgressLog,
+} from "@atomist/sdm";
 import {
     LocalBuilder,
     LocalBuildInProgress,
 } from "@atomist/sdm-core";
-import { StringCapturingProgressLog } from "@atomist/sdm/api-helper/log/StringCapturingProgressLog";
-import {
-    asSpawnCommand,
-    spawnAndWatch,
-} from "@atomist/sdm/api-helper/misc/spawned";
-import { AddressChannels } from "@atomist/sdm/api/context/addressChannels";
-import {
-    InterpretLog,
-    LogInterpretation,
-} from "@atomist/sdm/spi/log/InterpretedLog";
-import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
 import { determineGradleCommand } from "../gradleCommand";
 import { GradleLogInterpreter } from "./gradleLogInterpreter";
 import { UpdatingBuild } from "./UpdatingBuild";

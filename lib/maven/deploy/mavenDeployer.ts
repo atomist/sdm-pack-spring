@@ -15,12 +15,12 @@
  */
 
 import {
+    LocalProject,
     logger,
+    ProjectOperationCredentials,
+    RemoteRepoRef,
     Success,
 } from "@atomist/automation-client";
-import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
-import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
-import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
 import {
     DefaultLocalDeployerOptions,
     LocalDeployerOptions,
@@ -29,17 +29,17 @@ import {
     ManagedDeploymentTargetInfo,
     SpawnedDeployment,
 } from "@atomist/sdm-core";
-import { DelimitedWriteProgressLogDecorator } from "@atomist/sdm/api-helper/log/DelimitedWriteProgressLogDecorator";
-import { ExecuteGoalResult } from "@atomist/sdm/api/goal/ExecuteGoalResult";
-import { DeployableArtifact } from "@atomist/sdm/spi/artifact/ArtifactStore";
-import { Deployer } from "@atomist/sdm/spi/deploy/Deployer";
-import { Deployment } from "@atomist/sdm/spi/deploy/Deployment";
 import {
+    DelimitedWriteProgressLogDecorator,
+    DeployableArtifact,
+    Deployer,
+    Deployment,
+    ExecuteGoalResult,
     InterpretedLog,
     InterpretLog,
-} from "@atomist/sdm/spi/log/InterpretedLog";
-import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
-import { ProjectLoader } from "@atomist/sdm/spi/project/ProjectLoader";
+    ProgressLog,
+    ProjectLoader,
+} from "@atomist/sdm";
 import { spawn } from "child_process";
 import { determineMavenCommand } from "../MavenCommand";
 

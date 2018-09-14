@@ -18,12 +18,14 @@ import {
     JavaFileParser,
     KotlinFileParser,
 } from "@atomist/antlr";
-import { logger } from "@atomist/automation-client";
-import { File } from "@atomist/automation-client/project/File";
-import { ProjectAsync } from "@atomist/automation-client/project/Project";
-import { findFileMatches } from "@atomist/automation-client/tree/ast/astUtils";
-import { FileParser } from "@atomist/automation-client/tree/ast/FileParser";
-import { FileParserRegistry } from "@atomist/automation-client/tree/ast/FileParserRegistry";
+import {
+    File,
+    FileParser,
+    FileParserRegistry,
+    findFileMatches,
+    logger,
+    ProjectAsync,
+} from "@atomist/automation-client";
 import {
     evaluateScalarValue,
     PathExpression,

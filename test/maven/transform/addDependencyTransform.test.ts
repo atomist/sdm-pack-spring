@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { InMemoryFile } from "@atomist/automation-client/project/mem/InMemoryFile";
-import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
-import { Project } from "@atomist/automation-client/project/Project";
+import {
+    InMemoryFile,
+    InMemoryProject,
+    Project,
+} from "@atomist/automation-client";
 import * as xml from "fast-xml-parser";
 import * as assert from "power-assert";
 import { addDependencyTransform } from "../../../lib/maven/transform/addDependencyTransform";

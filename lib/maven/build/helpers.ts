@@ -15,6 +15,7 @@
  */
 
 import {
+    asSpawnCommand,
     ExecuteGoalResult,
     GitProject,
     GoalInvocation,
@@ -22,13 +23,10 @@ import {
     ProgressLog,
     Project,
     SdmGoalEvent,
-} from "@atomist/sdm";
-import { ProjectVersioner } from "@atomist/sdm-core/internal/delivery/build/local/projectVersioner";
-import {
-    asSpawnCommand,
     spawnAndWatch,
     SpawnCommand,
-} from "@atomist/sdm/api-helper/misc/spawned";
+} from "@atomist/sdm";
+import { ProjectVersioner } from "@atomist/sdm-core";
 import * as df from "dateformat";
 import { MavenProjectIdentifier } from "../parse/pomParser";
 import { mavenPackage } from "./MavenBuilder";

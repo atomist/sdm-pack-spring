@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { logger } from "@atomist/automation-client";
-
 import {
     DefaultTags,
+    logger,
     Tagger,
-} from "@atomist/automation-client/operations/tagger/Tagger";
-import { toPromise } from "@atomist/automation-client/project/util/projectUtils";
+    toPromise,
+} from "@atomist/automation-client";
+
 import { AllJavaFiles } from "../java/javaProjectUtils";
 import { SpringBootStarter } from "./springConstants";
 

@@ -16,8 +16,13 @@
 
 import {
     AnyPush,
+    executeDeploy,
+    executeUndeploy,
     ExtensionPack,
     LocalDeploymentGoal,
+    LocalEndpointGoal,
+    LocalUndeploymentGoal,
+    metadata,
     SoftwareDeliveryMachine,
     whenPushSatisfies,
 } from "@atomist/sdm";
@@ -25,13 +30,6 @@ import {
     ManagedDeploymentTargeter,
     tagRepo,
 } from "@atomist/sdm-core";
-import { executeDeploy } from "@atomist/sdm/api-helper/goal/executeDeploy";
-import { executeUndeploy } from "@atomist/sdm/api-helper/goal/executeUndeploy";
-import { metadata } from "@atomist/sdm/api-helper/misc/extensionPack";
-import {
-    LocalEndpointGoal,
-    LocalUndeploymentGoal,
-} from "@atomist/sdm/pack/well-known-goals/commonGoals";
 import {
     executeGradlePerBranchSpringBootDeploy,
     GradleDeployerOptions,

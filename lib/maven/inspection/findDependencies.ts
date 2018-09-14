@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isLocalProject } from "@atomist/automation-client/project/local/LocalProject";
+import { isLocalProject } from "@atomist/automation-client";
 import { CodeInspection } from "@atomist/sdm";
 import * as _ from "lodash";
 import { dependenciesFromParsedPom } from "../fingerprint/dependenciesFingerprintsFromParsedPom";

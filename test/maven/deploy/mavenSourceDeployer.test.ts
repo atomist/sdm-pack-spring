@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitHubRepoRef";
-import { Project } from "@atomist/automation-client/project/Project";
+import {
+    GitCommandGitProject,
+    GitHubRepoRef,
+    InMemoryProject,
+    Project,
+} from "@atomist/automation-client";
 
-import { GitCommandGitProject } from "@atomist/automation-client/project/git/GitCommandGitProject";
-import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
-import { LoggingProgressLog } from "@atomist/sdm/api-helper/log/LoggingProgressLog";
-import { SingleProjectLoader } from "@atomist/sdm/api-helper/test/SingleProjectLoader";
+import {
+    LoggingProgressLog,
+    SingleProjectLoader,
+} from "@atomist/sdm";
 import * as assert from "power-assert";
 import { mavenDeployer } from "../../../lib/maven/deploy/mavenDeployer";
 

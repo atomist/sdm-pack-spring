@@ -14,28 +14,26 @@
  * limitations under the License.
  */
 
-import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
-import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
 import {
+    ProjectOperationCredentials,
+    RemoteRepoRef,
+} from "@atomist/automation-client";
+import {
+    AddressChannels,
+    AppInfo,
+    ChildProcessResult,
     GitProject,
+    InterpretLog,
     LocalProject,
+    LogInterpretation,
+    ProgressLog,
     SoftwareDeliveryMachine,
+    spawnAndWatch,
 } from "@atomist/sdm";
 import {
     LocalBuilder,
     LocalBuildInProgress,
 } from "@atomist/sdm-core";
-import {
-    ChildProcessResult,
-    spawnAndWatch,
-} from "@atomist/sdm/api-helper/misc/spawned";
-import { AddressChannels } from "@atomist/sdm/api/context/addressChannels";
-import { AppInfo } from "@atomist/sdm/spi/deploy/Deployment";
-import {
-    InterpretLog,
-    LogInterpretation,
-} from "@atomist/sdm/spi/log/InterpretedLog";
-import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
 import { identification } from "../parse/pomParser";
 import { VersionedArtifact } from "../VersionedArtifact";
 import { MavenLogInterpreter } from "./mavenLogInterpreter";

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { logger } from "@atomist/automation-client";
 import {
     DefaultReviewComment,
+    File,
+    logger,
+    Project,
     ReviewComment,
-} from "@atomist/automation-client/operations/review/ReviewResult";
-import { File } from "@atomist/automation-client/project/File";
-import { Project } from "@atomist/automation-client/project/Project";
-import { saveFromFilesAsync } from "@atomist/automation-client/project/util/projectUtils";
+    saveFromFilesAsync,
+} from "@atomist/automation-client";
 import { ReviewerRegistration } from "@atomist/sdm";
 import * as _ from "lodash";
 import * as props from "properties-reader";

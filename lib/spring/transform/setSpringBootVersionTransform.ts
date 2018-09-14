@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { logger } from "@atomist/automation-client";
-import { doWithMatches } from "@atomist/automation-client/project/util/parseUtils";
+import {
+    doWithMatches,
+    logger,
+} from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import { parentStanzaOfGrammar } from "../../maven/parse/grammar/mavenGrammars";
 import { SpringBootStarter } from "../springConstants";

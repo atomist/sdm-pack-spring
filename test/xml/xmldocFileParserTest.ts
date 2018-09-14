@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import {
     doWithAllMatches,
     findMatches,
-} from "@atomist/automation-client/tree/ast/astUtils";
+    InMemoryProject,
+} from "@atomist/automation-client";
 import {
     InMemoryProjectFile,
     ProjectFile,

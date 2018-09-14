@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
-import { GitProject } from "@atomist/automation-client/project/git/GitProject";
-import { Project } from "@atomist/automation-client/project/Project";
+import {
+    GitProject,
+    Project,
+    RemoteRepoRef,
+} from "@atomist/automation-client";
 import { PushListenerInvocation } from "@atomist/sdm";
 
 export function fakeListenerInvocation(project: Project): PushListenerInvocation {

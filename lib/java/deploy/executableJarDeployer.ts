@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { logger } from "@atomist/automation-client";
-import { ProjectOperationCredentials } from "@atomist/automation-client/operations/common/ProjectOperationCredentials";
-import { RemoteRepoRef } from "@atomist/automation-client/operations/common/RepoId";
+import {
+    logger,
+    ProjectOperationCredentials,
+    RemoteRepoRef,
+} from "@atomist/automation-client";
 import {
     DefaultLocalDeployerOptions,
     LocalDeployerOptions,
@@ -26,12 +28,14 @@ import {
     SpawnedDeployment,
     StartupInfo,
 } from "@atomist/sdm-core";
-import { DelimitedWriteProgressLogDecorator } from "@atomist/sdm/api-helper/log/DelimitedWriteProgressLogDecorator";
-import { lastLinesLogInterpreter } from "@atomist/sdm/api-helper/log/logInterpreters";
-import { DeployableArtifact } from "@atomist/sdm/spi/artifact/ArtifactStore";
-import { Deployer } from "@atomist/sdm/spi/deploy/Deployer";
-import { Deployment } from "@atomist/sdm/spi/deploy/Deployment";
-import { ProgressLog } from "@atomist/sdm/spi/log/ProgressLog";
+import {
+    DelimitedWriteProgressLogDecorator,
+    DeployableArtifact,
+    Deployer,
+    Deployment,
+    lastLinesLogInterpreter,
+    ProgressLog,
+} from "@atomist/sdm";
 import { spawn } from "child_process";
 
 // TODO: should local deployment be its own pack? we could pull it out of sdm then

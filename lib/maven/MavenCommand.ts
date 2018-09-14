@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Project } from "@atomist/automation-client/project/Project";
+import { Project } from "@atomist/automation-client";
 import * as os from "os";
 
 export function determineMavenCommand(p: Project): string {

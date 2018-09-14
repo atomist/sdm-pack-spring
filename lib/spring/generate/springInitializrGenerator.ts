@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { RemoteLocator } from "@atomist/automation-client/operations/common/params/RemoteLocator";
-import { RepoCreationParameters } from "@atomist/automation-client/operations/generate/RepoCreationParameters";
 import {
+    doWithRetry,
+    RemoteLocator,
+    RepoCreationParameters,
     SmartParameters,
     ValidationError,
     ValidationResult,
-} from "@atomist/automation-client/SmartParameters";
-import { doWithRetry } from "@atomist/automation-client/util/retry";
+} from "@atomist/automation-client";
 import {
     NodeFsLocalProject,
     Parameter,
