@@ -19,7 +19,10 @@ import { CodeInspection } from "@atomist/sdm";
 
 import * as _ from "lodash";
 import { extractVersionedArtifact } from "../../maven/parse/fromPom";
-import { XmldocFileParser, XmldocTreeNode } from "../../xml/XmldocFileParser";
+import {
+    XmldocFileParser,
+    XmldocTreeNode,
+} from "../../xml/XmldocFileParser";
 
 /**
  * SpringBoot version
