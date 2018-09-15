@@ -31,6 +31,12 @@ export interface Dependencies {
     dependencies: VersionedArtifact[];
 }
 
+/**
+ * Find dependencies from the effective POM
+ * @param {Project} p
+ * @return {Promise<any>}
+ * @constructor
+ */
 export const FindDependencies: CodeInspection<Dependencies> = async p => {
     if (!isLocalProject(p)) {
         throw new Error(`Fingerprinting only works on local projects: had ${p.id.url}`);
@@ -47,21 +53,11 @@ export const FindDependencies: CodeInspection<Dependencies> = async p => {
 };
 
 export const FindDependenciesOfGroup: CodeInspection<Dependencies, { group: string }> = async (p, i) => {
-    if (!isLocalProject(p)) {
-        throw new Error(`Fingerprinting only works on local projects: had ${p.id.url}`);
-    }
-
-    try {
-        await p.findFile("pom.xml");
-        const epom = await extractEffectivePom(p);
-        return {
-            dependencies:
-                dependenciesFromParsedPom(epom).filter(d => d.group === i.parameters.group),
-        };
-    } catch {
-        // If we can't find a pom, just exit
-        return { dependencies: [] };
-    }
+    const deps = await FindDependencies(p, i);
+    return {
+        dependencies: deps.dependencies
+            .filter(d => d.group === i.parameters.group),
+    };
 };
 
 /**
