@@ -16,6 +16,7 @@
 
 import { CodeTransform } from "@atomist/sdm";
 import * as _ from "lodash";
+import { indent } from "../../util/formatUtils";
 import { DependencyFinder } from "../parse/grammar/DependencyFinder";
 import { VersionedArtifact } from "../VersionedArtifact";
 
@@ -47,16 +48,4 @@ export function addDependencyTransform(va: VersionedArtifact): CodeTransform {
         }
         return project;
     };
-}
-
-function indent(what: string, indentToUse: string, n: number): string {
-    return what.split("\n")
-        .map(line => {
-            let pad = "";
-            for (let i = 0; i < n; i++) {
-                pad += indentToUse;
-            }
-            return pad + line;
-        })
-        .join("\n");
 }

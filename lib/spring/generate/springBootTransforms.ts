@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import * as utils from "@atomist/automation-client/project/util/projectUtils";
 import {
     CodeTransform,
     CodeTransformOrTransforms,
-    doWithFiles,
 } from "@atomist/sdm";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";

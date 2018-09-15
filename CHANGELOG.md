@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 -   Add Maven goal preparations and version helpers. [#45](https://github.com/atomist/sdm-pack-spring/issues/45)
 -   Gradle support. [#44](https://github.com/atomist/sdm-pack-spring/issues/44)
 -   XML path expression support in `XmldocFileParser`
+-   Add Spring Boot add starter transform
 
 ### Changed
 
