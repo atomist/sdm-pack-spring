@@ -43,7 +43,7 @@ async function findDeclaredDependenciesWith(p: Project,
         glob,
         pathExpression,
         m => {
-            return extractVersionedArtifact(m as any as XmldocTreeNode);
+            return extractVersionedArtifact(m as XmldocTreeNode);
         }, functionRegistry);
     return { dependencies };
 }
