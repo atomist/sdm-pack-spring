@@ -48,7 +48,7 @@ export function addDependencyTransform(va: VersionedArtifact): CodeTransform {
                 await doWithAllMatches(p, new XmldocFileParser(), "pom.xml",
                     `//project/dependencies/dependency[/artifactId[@innerValue='${lastDep.artifact}']]`,
                     m => {
-                        m.append("\n" + indent(dependencyStanza(va)));
+                        m.append("\n" + indent(dependencyStanza(va), "   ", 2));
                     });
             }
         }
