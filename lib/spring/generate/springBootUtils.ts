@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { logger } from "@atomist/automation-client";
-import { Project } from "@atomist/automation-client/project/Project";
+import {
+    logger,
+    Project,
+} from "@atomist/automation-client";
 import { renameClass } from "../../java/javaProjectUtils";
 import { SpringBootProjectStructure } from "./SpringBootProjectStructure";
 

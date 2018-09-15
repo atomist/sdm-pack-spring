@@ -16,22 +16,22 @@
 
 import {
     HandlerContext,
+    LocalProject,
     logger,
+    poisonAndWait,
     Success,
 } from "@atomist/automation-client";
-import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
 import {
     BuildGoal,
     CommandHandlerRegistration,
+    DelimitedWriteProgressLogDecorator,
     ExecuteGoal,
     GoalInvocation,
     GoalWithPrecondition,
     IndependentOfEnvironment,
+    ProjectLoader,
 } from "@atomist/sdm";
 import { SpawnedDeployment } from "@atomist/sdm-core";
-import { DelimitedWriteProgressLogDecorator } from "@atomist/sdm/api-helper/log/DelimitedWriteProgressLogDecorator";
-import { poisonAndWait } from "@atomist/sdm/api-helper/misc/spawned";
-import { ProjectLoader } from "@atomist/sdm/spi/project/ProjectLoader";
 import {
     ChildProcess,
     spawn,

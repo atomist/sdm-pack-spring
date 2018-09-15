@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitHubRepoRef";
-import { InMemoryFile } from "@atomist/automation-client/project/mem/InMemoryFile";
-import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
+import {
+    GitHubRepoRef,
+    InMemoryFile,
+    InMemoryProject,
+} from "@atomist/automation-client";
 import * as assert from "power-assert";
 import {
     ImportDotStarCategory,

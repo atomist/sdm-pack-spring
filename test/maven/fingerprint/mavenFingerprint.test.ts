@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitHubRepoRef";
-import { GitCommandGitProject } from "@atomist/automation-client/project/git/GitCommandGitProject";
+import {
+    GitCommandGitProject,
+    GitHubRepoRef,
+} from "@atomist/automation-client";
 import { PushImpactListenerInvocation } from "@atomist/sdm";
 import * as assert from "power-assert";
 import { MavenFingerprinter } from "../../../lib/maven/fingerprint/MavenFingerprinter";

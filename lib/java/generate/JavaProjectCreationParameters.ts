@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SeedDrivenGeneratorParameters } from "@atomist/automation-client/operations/generate/SeedDrivenGeneratorParameters";
+import { SeedDrivenGeneratorParameters } from "@atomist/automation-client";
 import { ParametersObject } from "@atomist/sdm";
 import {
     JavaPackageRegExp,

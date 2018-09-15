@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
+import { InMemoryProject } from "@atomist/automation-client";
 
 import { PushListenerInvocation } from "@atomist/sdm";
 import * as assert from "power-assert";

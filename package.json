@@ -27,7 +27,7 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "dependencies": {
-    "@atomist/antlr": "1.0.0-master.20180913084531",
+    "@atomist/antlr": "1.0.0-master.20180914132826",
     "@atomist/microgrammar": "1.0.0-master.20180829162516",
     "@atomist/tree-path": "1.0.0-master.20180913033718",
     "@typed/curry": "^1.0.1",
@@ -53,9 +53,9 @@
     "@atomist/sdm-core": "*"
   },
   "devDependencies": {
-    "@atomist/automation-client": "1.0.0-master.20180913124508",
-    "@atomist/sdm": "1.0.0-master.20180913101258",
-    "@atomist/sdm-core": "1.0.0-master.20180913110440",
+    "@atomist/automation-client": "1.0.0-master.20180914125809",
+    "@atomist/sdm": "1.0.0-master.20180914132622",
+    "@atomist/sdm-core": "1.0.0-master.20180914124429",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.5.7",
     "@types/power-assert": "^1.5.0",

@@ -26,7 +26,7 @@ import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
  * Update the readme
  */
 export const ReplaceReadmeTitle: CodeTransform<SpringProjectCreationParameters> = async (p, ci) => {
-        return utils.doWithFiles(p, "README.md", async readMe => {
+        return doWithFiles(p, "README.md", async readMe => {
             await readMe.replace(/^#[\s\S]*?## /, titleBlock(ci.parameters));
         });
     };
@@ -37,7 +37,7 @@ export const ReplaceReadmeTitle: CodeTransform<SpringProjectCreationParameters> 
  */
 export const SetAtomistTeamInApplicationYml: CodeTransform =
     async (p, ci) => {
-        return utils.doWithFiles(p, "src/main/resources/application.yml", f =>
+        return doWithFiles(p, "src/main/resources/application.yml", f =>
             f.replace(/\${ATOMIST_TEAM}/, ci.context.workspaceId));
     };
 

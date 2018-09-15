@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { chainEditors } from "@atomist/automation-client/operations/edit/projectEditorOps";
+import { chainEditors } from "@atomist/automation-client";
 import {
     CodeTransform,
     doWithFiles,

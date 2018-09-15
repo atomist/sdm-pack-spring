@@ -20,7 +20,6 @@ export {
     configureMavenPerBranchSpringBootDeploy,
     SpringSupport,
 } from "./lib/spring";
-
 export { executableJarDeployer } from "./lib/java/deploy/executableJarDeployer";
 export {
     AllJavaFiles,
@@ -72,6 +71,7 @@ export {
 export {
     springBootTagger,
 } from "./lib/spring/springTagger";
+export * from "./lib/java/javaPatterns";
 export * from "./lib/maven/build/helpers";
 export * from "./lib/maven/MavenProgressReporter";
 export * from "./lib/maven/inspection/findDependenciesCommand";

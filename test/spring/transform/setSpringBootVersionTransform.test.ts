@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { LocalProject } from "@atomist/automation-client/project/local/LocalProject";
-import { NodeFsLocalProject } from "@atomist/automation-client/project/local/NodeFsLocalProject";
-import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
+import {
+    InMemoryProject,
+    LocalProject,
+    NodeFsLocalProject,
+} from "@atomist/automation-client";
 import * as assert from "power-assert";
 import * as tmp from "tmp";
 import { SetSpringBootVersionTransform } from "../../../lib/spring/transform/setSpringBootVersionTransform";

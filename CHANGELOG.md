@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 -   Consider reading defaults from metadata rather than hardcoding them. [#40](https://github.com/atomist/sdm-pack-spring/issues/40)
+-   Move from src to lib in dependencies. [#48](https://github.com/atomist/sdm-pack-spring/issues/48)
 
 ## [1.0.0-M.3](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.1...1.0.0-M.3) - 2018-09-04
 

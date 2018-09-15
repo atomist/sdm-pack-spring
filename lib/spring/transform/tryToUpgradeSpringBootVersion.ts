@@ -20,9 +20,9 @@ import {
 } from "@atomist/automation-client";
 import {
     CodeTransformRegistration,
+    TransformModeSuggestion,
 } from "@atomist/sdm";
-import { TransformModeSuggestion } from "@atomist/sdm/api/command/target/TransformModeSuggestion";
-import { makeBuildAware } from "@atomist/sdm/pack/build-aware-transform";
+import { makeBuildAware } from "@atomist/sdm/lib/pack/build-aware-transform";
 import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 
 @Parameters()
