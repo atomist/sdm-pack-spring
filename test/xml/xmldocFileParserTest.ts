@@ -183,7 +183,7 @@ describe("xmldocFileParser", () => {
                 "*.xml",
                 "/bookstore/book/title");
             assert.strictEqual(matches.length, 4);
-            assert.deepStrictEqual(matches.map(m => (m as any as XmldocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as XmldocTreeNode).innerValue), [
                 "Everyday Italian",
                 "Harry Potter",
                 "XQuery Kick Start",
@@ -197,7 +197,7 @@ describe("xmldocFileParser", () => {
                 "*.xml",
                 "/bookstore/book[1]/title");
             assert.strictEqual(matches.length, 1);
-            assert.deepStrictEqual(matches.map(m => (m as any as XmldocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as XmldocTreeNode).innerValue), [
                 "Everyday Italian"]);
         });
 
@@ -209,7 +209,7 @@ describe("xmldocFileParser", () => {
                 "*.xml",
                 "/bookstore/book/price");
             assert.strictEqual(matches.length, 4);
-            assert.deepStrictEqual(matches.map(m => (m as any as XmldocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as XmldocTreeNode).innerValue), [
                 "30.00",
                 "29.99",
                 "49.99",
@@ -226,7 +226,7 @@ describe("xmldocFileParser", () => {
                 {
                     above35: n => isXmldocTreeNode(n) && parseInt(n.innerValue, 10) > 35,
                 });
-            assert.deepStrictEqual(matches.map(m => (m as any as XmldocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as XmldocTreeNode).innerValue), [
                 "49.99",
                 "39.95"]);
         });
@@ -241,7 +241,7 @@ describe("xmldocFileParser", () => {
             assert.strictEqual(matches.length, 1);
             assert.deepStrictEqual(matches.map(m => m.$value), [
                 "<author>J K. Rowling</author>"]);
-            assert.deepStrictEqual(matches.map(m => (m as any as XmldocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as XmldocTreeNode).innerValue), [
                 "J K. Rowling"]);
 
             // Note that this isn't perfect as we need last
@@ -255,7 +255,7 @@ describe("xmldocFileParser", () => {
                 "*.xml", childrensAuthors,
             );
             assert.strictEqual(matchesNow.length, 2);
-            assert.deepStrictEqual(matchesNow.map(m => (m as any as XmldocTreeNode).innerValue), [
+            assert.deepStrictEqual(matchesNow.map(m => (m as XmldocTreeNode).innerValue), [
                 "J K. Rowling", "Dr Seuss"]);
         });
 
