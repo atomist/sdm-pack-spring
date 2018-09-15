@@ -19,7 +19,10 @@ import { CodeInspection } from "@atomist/sdm";
 import * as _ from "lodash";
 import { dependenciesFromParsedPom } from "../fingerprint/dependenciesFingerprintsFromParsedPom";
 import { extractEffectivePom } from "../fingerprint/effectivePomExtractor";
-import { coordinates, VersionedArtifact } from "../VersionedArtifact";
+import {
+    coordinates,
+    VersionedArtifact,
+} from "../VersionedArtifact";
 
 /**
  * Dependencies of a project

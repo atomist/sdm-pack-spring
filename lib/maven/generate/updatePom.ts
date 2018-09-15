@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { doWithFiles, Project } from "@atomist/automation-client";
+import {
+    doWithFiles,
+    Project,
+} from "@atomist/automation-client";
 
 /**
  * Record change to POM. Project will subsequently need flushing

@@ -19,7 +19,10 @@ import { computeShaOf } from "@atomist/sdm";
 import {
     toVersionedArtifact,
 } from "../parse/artifact";
-import { coordinates, VersionedArtifact } from "../VersionedArtifact";
+import {
+    coordinates,
+    VersionedArtifact,
+} from "../VersionedArtifact";
 
 /**
  * Don't call except via mavenFingerprinter
