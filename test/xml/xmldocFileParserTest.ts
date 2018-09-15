@@ -30,9 +30,9 @@ import {
 } from "@atomist/tree-path";
 import * as assert from "assert";
 import {
-    isXmlDocTreeNode,
+    isXmldocTreeNode,
     XmldocFileParser,
-    XmlDocTreeNode,
+    XmldocTreeNode,
 } from "../../lib/xml/XmldocFileParser";
 import { springBootPom } from "../spring/generator/TestPoms";
 
@@ -155,6 +155,20 @@ describe("xmldocFileParser", () => {
             assert(f.getContentSync().includes("<groupId>atomist"), f.getContentSync());
         });
 
+        it("correctly gets dependency value from Spring Boot project", async () => {
+            const p = InMemoryProject.of({ path: "pom.xml", content: springBootPom() });
+            await doWithAllMatches(p, new XmldocFileParser(), "pom.xml",
+                `//project/dependencies/dependency[/artifactId][2]`,
+                m => {
+                    const expected = `<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jetty</artifactId>
+		</dependency>`;
+                    assert.strictEqual(m.$value.length, expected.length);
+                    assert.strictEqual(m.$value, expected);
+                });
+        });
+
     });
 
     // See https://www.w3schools.com/xml/xpath_examples.asp.
@@ -169,7 +183,7 @@ describe("xmldocFileParser", () => {
                 "*.xml",
                 "/bookstore/book/title");
             assert.strictEqual(matches.length, 4);
-            assert.deepStrictEqual(matches.map(m => (m as any as XmlDocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as any as XmldocTreeNode).innerValue), [
                 "Everyday Italian",
                 "Harry Potter",
                 "XQuery Kick Start",
@@ -183,7 +197,7 @@ describe("xmldocFileParser", () => {
                 "*.xml",
                 "/bookstore/book[1]/title");
             assert.strictEqual(matches.length, 1);
-            assert.deepStrictEqual(matches.map(m => (m as any as XmlDocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as any as XmldocTreeNode).innerValue), [
                 "Everyday Italian"]);
         });
 
@@ -195,7 +209,7 @@ describe("xmldocFileParser", () => {
                 "*.xml",
                 "/bookstore/book/price");
             assert.strictEqual(matches.length, 4);
-            assert.deepStrictEqual(matches.map(m => (m as any as XmlDocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as any as XmldocTreeNode).innerValue), [
                 "30.00",
                 "29.99",
                 "49.99",
@@ -210,9 +224,9 @@ describe("xmldocFileParser", () => {
                 "*.xml",
                 "/bookstore/book/price[?above35]",
                 {
-                    above35: n => isXmlDocTreeNode(n) && parseInt(n.innerValue, 10) > 35,
+                    above35: n => isXmldocTreeNode(n) && parseInt(n.innerValue, 10) > 35,
                 });
-            assert.deepStrictEqual(matches.map(m => (m as any as XmlDocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as any as XmldocTreeNode).innerValue), [
                 "49.99",
                 "39.95"]);
         });
@@ -227,7 +241,7 @@ describe("xmldocFileParser", () => {
             assert.strictEqual(matches.length, 1);
             assert.deepStrictEqual(matches.map(m => m.$value), [
                 "<author>J K. Rowling</author>"]);
-            assert.deepStrictEqual(matches.map(m => (m as any as XmlDocTreeNode).innerValue), [
+            assert.deepStrictEqual(matches.map(m => (m as any as XmldocTreeNode).innerValue), [
                 "J K. Rowling"]);
 
             // Note that this isn't perfect as we need last
@@ -241,7 +255,7 @@ describe("xmldocFileParser", () => {
                 "*.xml", childrensAuthors,
             );
             assert.strictEqual(matchesNow.length, 2);
-            assert.deepStrictEqual(matchesNow.map(m => (m as any as XmlDocTreeNode).innerValue), [
+            assert.deepStrictEqual(matchesNow.map(m => (m as any as XmldocTreeNode).innerValue), [
                 "J K. Rowling", "Dr Seuss"]);
         });
 
