@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { doWithAllMatches, logger } from "@atomist/automation-client";
+import {
+    doWithAllMatches,
+    logger,
+} from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import * as _ from "lodash";
 import { findDeclaredDependencies } from "../../maven/parse/fromPom";
