@@ -18,7 +18,10 @@ import { GitHubRepoRef } from "@atomist/automation-client/operations/common/GitH
 import { InMemoryFile } from "@atomist/automation-client/project/mem/InMemoryFile";
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
 import * as assert from "power-assert";
-import { FileIoImportReviewer, ImportFileIoCategory } from "../../../lib/java/review/fileIoImportReviewer";
+import {
+    FileIoImportReviewer,
+    ImportFileIoCategory,
+} from "../../../lib/java/review/fileIoImportReviewer";
 
 describe("fileIoImport", () => {
 

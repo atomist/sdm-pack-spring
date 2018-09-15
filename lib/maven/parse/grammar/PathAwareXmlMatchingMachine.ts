@@ -16,7 +16,7 @@
 
 import {
     MatchingLogic,
-    MatchingMachine ,
+    MatchingMachine,
 } from "@atomist/microgrammar";
 import { PatternMatch } from "@atomist/microgrammar/lib/PatternMatch";
 import { OPEN_OR_CLOSE_TAG } from "./xmlGrammars";

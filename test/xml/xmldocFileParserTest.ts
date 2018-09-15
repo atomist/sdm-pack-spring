@@ -15,11 +15,25 @@
  */
 
 import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemoryProject";
-import { doWithAllMatches, findMatches } from "@atomist/automation-client/tree/ast/astUtils";
-import { InMemoryProjectFile, ProjectFile } from "@atomist/sdm";
-import { TreeNode, TreeVisitor, visit } from "@atomist/tree-path";
+import {
+    doWithAllMatches,
+    findMatches,
+} from "@atomist/automation-client/tree/ast/astUtils";
+import {
+    InMemoryProjectFile,
+    ProjectFile,
+} from "@atomist/sdm";
+import {
+    TreeNode,
+    TreeVisitor,
+    visit,
+} from "@atomist/tree-path";
 import * as assert from "assert";
-import { isXmldocTreeNode, XmldocFileParser, XmldocTreeNode } from "../../lib/xml/XmldocFileParser";
+import {
+    isXmldocTreeNode,
+    XmldocFileParser,
+    XmldocTreeNode,
+} from "../../lib/xml/XmldocFileParser";
 import { springBootPom } from "../spring/generator/TestPoms";
 
 function positionVerifier(rawdoc: string): TreeVisitor {

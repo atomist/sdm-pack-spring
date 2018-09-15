@@ -16,7 +16,11 @@
 
 import { SeedDrivenGeneratorParameters } from "@atomist/automation-client/operations/generate/SeedDrivenGeneratorParameters";
 import { ParametersObject } from "@atomist/sdm";
-import { JavaPackageRegExp, MavenArtifactIdRegExp, MavenGroupIdRegExp } from "../javaPatterns";
+import {
+    JavaPackageRegExp,
+    MavenArtifactIdRegExp,
+    MavenGroupIdRegExp,
+} from "../javaPatterns";
 
 /**
  * Parameter interface for Java project creation.

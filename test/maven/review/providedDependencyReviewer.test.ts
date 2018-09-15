@@ -19,7 +19,10 @@ import { InMemoryProject } from "@atomist/automation-client/project/mem/InMemory
 
 import { InMemoryFile } from "@atomist/automation-client/project/mem/InMemoryFile";
 import * as assert from "power-assert";
-import { ProvidedDependencyCategory, ProvidedDependencyReviewer } from "../../../lib/maven/review/providedDependencyReviewer";
+import {
+    ProvidedDependencyCategory,
+    ProvidedDependencyReviewer,
+} from "../../../lib/maven/review/providedDependencyReviewer";
 import { NonSpringPom } from "../../spring/generator/TestPoms";
 
 describe("ProvidedDependencyReviewer", () => {

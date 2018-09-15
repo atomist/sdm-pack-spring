@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-import { CodeInspection, CodeInspectionRegistration, ParametersObject } from "@atomist/sdm";
-import { MavenArtifactIdRegExp, MavenGroupIdRegExp } from "../../java/javaPatterns";
+import {
+    CodeInspection,
+    CodeInspectionRegistration,
+    ParametersObject,
+} from "@atomist/sdm";
+import {
+    MavenArtifactIdRegExp,
+    MavenGroupIdRegExp,
+} from "../../java/javaPatterns";
 import { VersionedArtifact } from "../VersionedArtifact";
 import { FindDependencies } from "./findDependencies";
 

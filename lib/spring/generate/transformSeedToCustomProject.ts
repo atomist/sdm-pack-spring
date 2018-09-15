@@ -25,7 +25,10 @@ import { artifactId } from "../../java/generate/JavaProjectCreationParameters";
 import { inferStructureAndMovePackage } from "../../java/javaProjectUtils";
 import { updatePom } from "../../maven/generate/updatePom";
 import { inferSpringStructureAndRename } from "./springBootUtils";
-import { serviceClassName, SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
+import {
+    serviceClassName,
+    SpringProjectCreationParameters,
+} from "./SpringProjectCreationParameters";
 
 /**
  * Transform a seed to a custom Spring Boot project.

@@ -15,8 +15,8 @@
  */
 
 import {
-    PredicatePushTest,
     predicatePushTest,
+    PredicatePushTest,
 } from "@atomist/sdm";
 
 /**

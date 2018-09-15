@@ -17,7 +17,10 @@
 import { Project } from "@atomist/automation-client/project/Project";
 import { gatherFromMatches } from "@atomist/automation-client/tree/ast/astUtils";
 import { FunctionRegistry } from "@atomist/tree-path";
-import { XmldocFileParser, XmldocTreeNode } from "../../xml/XmldocFileParser";
+import {
+    XmldocFileParser,
+    XmldocTreeNode,
+} from "../../xml/XmldocFileParser";
 import { Dependencies } from "../inspection/findDependencies";
 import { VersionedArtifact } from "../VersionedArtifact";
 
