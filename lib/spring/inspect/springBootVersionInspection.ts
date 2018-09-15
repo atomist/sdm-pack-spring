@@ -58,7 +58,7 @@ export const SpringBootVersionInspection: CodeInspection<SpringBootVersions> = a
     await doWithAllMatches(p,
         new XmldocFileParser(),
         "**/pom.xml",
-        "//parent",
+        "//parent[/artifactId[@innerValue='spring-boot-starter-parent']]",
         m => {
             const va = extractVersionedArtifact(m as any as XmldocTreeNode);
             const found = versions.find(v => v.version === va.version);

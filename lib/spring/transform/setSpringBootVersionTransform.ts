@@ -27,7 +27,7 @@ export const SetSpringBootVersionTransform: CodeTransform<{ desiredBootVersion: 
     async (p, ctx) =>
         doWithAllMatches(p, new XmldocFileParser(),
             "**/pom.xml",
-            "//parent/version",
+            "//parent[/artifactId[@innerValue='spring-boot-starter-parent']]/version",
             n => {
                 n.$value = ctx.parameters.desiredBootVersion;
             });
