@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Atomist, Inc.
+ * Copyright © 2018 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,6 @@ import { VersionedArtifact } from "../../VersionedArtifact";
 import { XmlTag } from "./xmlGrammars";
 
 export type ReleaseType = "major" | "minor" | "patch";
-
-export function coordinates(va: VersionedArtifact): string {
-    let coords = `${va.group}:${va.artifact}`;
-    if (va.version) {
-        coords += `:${va.version}`;
-    }
-    return coords;
-}
 
 /**
  * We need to store offsets here so we can edit

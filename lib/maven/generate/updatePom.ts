@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import {
-    doWithFiles,
-    ProjectAsync,
-} from "@atomist/automation-client";
+import { doWithFiles, Project } from "@atomist/automation-client";
 
 /**
  * Record change to POM. Project will subsequently need flushing
@@ -30,14 +27,14 @@ import {
  * @param {string} description
  * @return project promise, project will need to be flushed
  */
-export function updatePom<P extends ProjectAsync>(
-    project: P,
+export function updatePom(
+    project: Project,
     name: string,
     artifactId: string,
     groupId: string,
     version: string,
     description: string,
-): Promise<P> {
+): Promise<Project> {
     return doWithFiles(project, "pom.xml", async f => {
         await f.replace(/<artifactId>[\S\s]*?<\/artifactId>/, `<artifactId>${artifactId}</artifactId>`);
         await f.replace(/<name>[\S\s]*?<\/name>/, `<name>${name}</name>`);

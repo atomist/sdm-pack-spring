@@ -32,3 +32,11 @@ export interface VersionedArtifact extends IdentifiedArtifact {
     version: string;
 
 }
+
+export function coordinates(va: VersionedArtifact): string {
+    let coords = `${va.group}:${va.artifact}`;
+    if (va.version) {
+        coords += `:${va.version}`;
+    }
+    return coords;
+}
