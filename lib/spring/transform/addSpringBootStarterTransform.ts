@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-import {
-    doWithAllMatches,
-    logger,
-} from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
-import * as _ from "lodash";
-import { findDeclaredDependencies } from "../../maven/parse/fromPom";
-import { XmldocFileParser } from "../../xml/XmldocFileParser";
+import { addDependencyTransform } from "../../maven/transform/addDependencyTransform";
 
 /**
  * Return a code transform that will add the given Spring Boot starter to a project.
@@ -32,31 +26,5 @@ import { XmldocFileParser } from "../../xml/XmldocFileParser";
  */
 export function addSpringBootStarterTransform(artifact: string,
                                               group: string = "org.springframework.boot"): CodeTransform {
-    return async p => {
-        if (await p.hasFile("pom.xml")) {
-            const deps = await findDeclaredDependencies(p);
-            if (deps.dependencies.length === 0) {
-                throw new Error("No dependencies in POM: Cannot add starter");
-            }
-            if (deps.dependencies.some(dep => dep.artifact === artifact && dep.group === group)) {
-                logger.info("Starter [%s] already present. Nothing to do", artifact);
-            } else {
-                logger.info("Adding starter [%s]", artifact);
-                // Add after last dependency
-                const lastDep = _.last(deps.dependencies);
-                await doWithAllMatches(p, new XmldocFileParser(), "pom.xml",
-                `//project/dependencies/dependency[/artifactId[@innerValue='${lastDep.artifact}']]`,
-                m => {
-                    m.append("\n" + dependencyStanza(artifact, group));
-                });
-            }
-        }
-    };
-}
-
-function dependencyStanza(artifact: string, group: string) {
-    return `<dependency>
-    <groupId>${group}</groupId>
-    <artifactId>${artifact}</artifactId>
-</dependency>`;
+    return addDependencyTransform({ artifact, group, version: undefined });
 }

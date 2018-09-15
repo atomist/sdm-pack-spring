@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
+import { doWithAllMatches, logger } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import * as _ from "lodash";
-import { DependencyFinder } from "../parse/grammar/DependencyFinder";
+import { indent } from "../../util/formatUtils";
+import { XmldocFileParser } from "../../xml/XmldocFileParser";
+import { findDeclaredDependencies } from "../parse/fromPom";
 import { VersionedArtifact } from "../VersionedArtifact";
 
 /**
@@ -27,36 +30,31 @@ import { VersionedArtifact } from "../VersionedArtifact";
  * @return {SimpleProjectEditor}
  */
 export function addDependencyTransform(va: VersionedArtifact): CodeTransform {
-    return async project => {
-        const pom = await project.getFile("pom.xml");
-        if (pom) {
-            const df = new DependencyFinder();
-            const content = await pom.getContent();
-            df.consume(content);
-            if (_.findIndex<VersionedArtifact>(df.dependencies, d => d.group === va.group && d.artifact === va.artifact) < 0) {
-                const depVersion = (va.version) ? `\n    <version>${va.version}</version>` : "";
-                const toInsert = indent(`
-<dependency>
-    <groupId>${va.group}</groupId>
-    <artifactId>${va.artifact}</artifactId>${depVersion}
-</dependency>
-\n`, "   ", 2);
-                const newContent = content.slice(0, df.offset) + toInsert + content.slice(df.offset);
-                await pom.setContent(newContent);
+    return async p => {
+        if (await p.hasFile("pom.xml")) {
+            const deps = await findDeclaredDependencies(p);
+            if (deps.dependencies.length === 0) {
+                throw new Error("No dependencies in POM: Cannot add starter");
+            }
+            if (deps.dependencies.some(dep => dep.artifact === va.artifact && dep.group === va.group)) {
+                logger.info("Dependency [%s] already present. Nothing to do", va.artifact);
+            } else {
+                logger.info("Adding dependency [%s]", va.artifact);
+                // Add after last dependency
+                const lastDep = _.last(deps.dependencies);
+                await doWithAllMatches(p, new XmldocFileParser(), "pom.xml",
+                    `//project/dependencies/dependency[/artifactId[@innerValue='${lastDep.artifact}']]`,
+                    m => {
+                        m.append("\n" + indent(dependencyStanza(va)));
+                    });
             }
         }
-        return project;
     };
 }
 
-function indent(what: string, indentToUse: string, n: number): string {
-    return what.split("\n")
-        .map(line => {
-            let pad = "";
-            for (let i = 0; i < n; i++) {
-                pad += indentToUse;
-            }
-            return pad + line;
-        })
-        .join("\n");
+function dependencyStanza(va: VersionedArtifact) {
+    return `<dependency>
+    <groupId>${va.group}</groupId>
+    <artifactId>${va.artifact}</artifactId>${!!va.version ? `\n<version>${va.version}</version>` : ""}
+</dependency>`;
 }
