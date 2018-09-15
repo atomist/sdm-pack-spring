@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { doWithMatches } from "@atomist/automation-client";
+import { doWithAllMatches } from "@atomist/automation-client";
 import { CodeInspection } from "@atomist/sdm";
-import { parentStanzaOfGrammar } from "../../maven/parse/grammar/mavenGrammars";
-import { SpringBootStarter } from "../springConstants";
 
 import * as _ from "lodash";
+import { extractVersionedArtifact } from "../../maven/parse/fromPom";
+import { XmldocFileParser, XmldocTreeNode } from "../../xml/XmldocFileParser";
 
 /**
  * SpringBoot version
@@ -52,11 +52,15 @@ export interface SpringBootVersions {
  */
 export const SpringBootVersionInspection: CodeInspection<SpringBootVersions> = async p => {
     const versions: SpringBootVersion[] = [];
-    await doWithMatches(p, "**/pom.xml",
-        parentStanzaOfGrammar(SpringBootStarter), m => {
-            const found = versions.find(v => v.version === m.version.value);
+    await doWithAllMatches(p,
+        new XmldocFileParser(),
+        "**/pom.xml",
+        "//parent",
+        m => {
+            const va = extractVersionedArtifact(m as any as XmldocTreeNode);
+            const found = versions.find(v => v.version === va.version);
             if (!found) {
-                versions.push({ version: m.version.value, count: 1 });
+                versions.push({ version: va.version, count: 1 });
             } else {
                 found.count = found.count + 1;
             }

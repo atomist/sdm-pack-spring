@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-import {
-    doWithMatches,
-    logger,
-} from "@atomist/automation-client";
+import { doWithAllMatches } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
-import { parentStanzaOfGrammar } from "../../maven/parse/grammar/mavenGrammars";
-import { SpringBootStarter } from "../springConstants";
+import { XmldocFileParser } from "../../xml/XmldocFileParser";
 
 /**
  * Set the Spring Boot version according to the parameters.
@@ -28,12 +24,10 @@ import { SpringBootStarter } from "../springConstants";
  * so works on monorepos.
  */
 export const SetSpringBootVersionTransform: CodeTransform<{ desiredBootVersion: string }> =
-    async (p, ctx, params) =>
-        doWithMatches(p, "**/pom.xml",
-            parentStanzaOfGrammar(SpringBootStarter), m => {
-                if (m.version.value !== params.desiredBootVersion) {
-                    logger.info("Updating Spring Boot version from [%s] to [%s]",
-                        m.version.value, params.desiredBootVersion);
-                    m.version.value = params.desiredBootVersion;
-                }
+    async (p, ctx) =>
+        doWithAllMatches(p, new XmldocFileParser(),
+            "**/pom.xml",
+            "//parent/version",
+            n => {
+                n.$value = ctx.parameters.desiredBootVersion;
             });
