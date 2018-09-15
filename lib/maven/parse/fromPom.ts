@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { gatherFromMatches, Project } from "@atomist/automation-client";
+import {
+    gatherFromMatches,
+    Project,
+} from "@atomist/automation-client";
 import { FunctionRegistry } from "@atomist/tree-path";
 import {
     XmldocFileParser,
