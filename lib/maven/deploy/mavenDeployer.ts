@@ -136,7 +136,8 @@ class MavenSourceDeployer implements Deployer<ManagedDeploymentTargetInfo> {
             contextRoot: `/${branchId.owner}/${branchId.repo}/${branchId.branch}`,
         };
 
-        const childProcess = spawn(determineMavenCommand(project),
+        const mvn = determineMavenCommand(project);
+        const childProcess = spawn(mvn,
             [
                 "spring-boot:run",
             ].concat(this.opts.commandLineArgumentsFor(startupInfo)),
@@ -145,7 +146,7 @@ class MavenSourceDeployer implements Deployer<ManagedDeploymentTargetInfo> {
             });
         if (!childProcess.pid) {
             throw new Error("Fatal error deploying using Maven--is `mvn` on your automation node path?\n" +
-                "Attempted to execute `mvn: spring-boot:run`");
+                `Attempted to execute '${mvn} spring-boot:run' in ${project.baseDir}`);
         }
         const deployment = {
             childProcess,

@@ -175,7 +175,8 @@ class MavenDeployer {
             }
         }
 
-        const childProcess = spawn(determineMavenCommand(project),
+        const mvn = determineMavenCommand(project);
+        const childProcess = spawn(mvn,
             [
                 "spring-boot:run",
             ].concat(this.options.commandLineArgumentsFor(port, contextRoot)),
@@ -184,7 +185,7 @@ class MavenDeployer {
             });
         if (!childProcess.pid) {
             throw new Error("Fatal error deploying using Maven--is `mvn` on your automation node path?\n" +
-                "Attempted to execute `mvn: spring-boot:run`");
+                `Attempted to execute '${mvn} spring-boot:run' in ${project.baseDir}`);
         }
         const deployment = {
             childProcess,

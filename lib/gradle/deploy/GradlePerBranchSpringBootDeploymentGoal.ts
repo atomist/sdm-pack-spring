@@ -175,7 +175,8 @@ class GradleDeployer {
             }
         }
 
-        const childProcess = spawn(determineGradleCommand(project),
+        const gradle = determineGradleCommand(project);
+        const childProcess = spawn(gradle,
             [
                 "bootRun",
             ].concat(this.options.commandLineArgumentsFor(port, contextRoot)),
@@ -183,8 +184,8 @@ class GradleDeployer {
                 cwd: project.baseDir,
             });
         if (!childProcess.pid) {
-            throw new Error("Fatal error deploying using Maven--is `gradle` on your automation node path?\n" +
-                "Attempted to execute `gradle bootRun`");
+            throw new Error("Fatal error deploying using Gradle--is `gradle` on your automation node path?\n" +
+                `Attempted to execute '${gradle} bootRun' in ${project.baseDir}`);
         }
         const deployment = {
             childProcess,
