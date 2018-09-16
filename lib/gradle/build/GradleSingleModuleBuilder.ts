@@ -15,7 +15,6 @@
  */
 
 import {
-    asSpawnCommand,
     ProjectOperationCredentials,
     RemoteRepoRef,
     spawnAndWatch,
@@ -62,21 +61,17 @@ export class GradleSingleModuleBuilder extends LocalBuilder implements LogInterp
                                addressChannels: AddressChannels): Promise<LocalBuildInProgress> {
         return this.sdm.configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
             const propertiesOutput = new StringCapturingProgressLog();
+            const command = determineGradleCommand(p);
             await spawnAndWatch(
-                asSpawnCommand(`${determineGradleCommand(p)} properties`),
-                {
-                    cwd: p.baseDir,
-                },
+                { command, args: ["properties"] },
+                { cwd: p.baseDir },
                 propertiesOutput);
             const appName = nameGrammar.firstMatch(propertiesOutput.log).$matched;
             const version = versionGrammar.firstMatch(propertiesOutput.log).$matched;
 
-            const cmd = `${determineGradleCommand(p)} --console=plain clean build`;
             const buildResult = spawnAndWatch(
-                asSpawnCommand(cmd),
-                {
-                    cwd: p.baseDir,
-                },
+                { command, args: ["--console=plain", "clean", "build"] },
+                { cwd: p.baseDir },
                 log, {
                     errorFinder: (code, signal, l) => l.log.includes("[ERROR]"),
                 });

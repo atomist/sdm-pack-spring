@@ -40,7 +40,7 @@ import {
     ManagedDeploymentTargetInfo,
     SpawnedDeployment,
 } from "@atomist/sdm-core";
-import { spawn } from "child_process";
+import * as spawn from "cross-spawn";
 import { determineMavenCommand } from "../MavenCommand";
 
 /**
