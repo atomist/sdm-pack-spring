@@ -20,41 +20,35 @@ import { JavaProjectStructure } from "../../lib/java/JavaProjectStructure";
 
 describe("JavaProjectStructure", () => {
 
-    it("infer not a Java project", done => {
+    it("infer not a Java project", async () => {
         const p = InMemoryProject.of();
-        JavaProjectStructure.infer(p).then(structure => {
-            assert(!structure);
-            done();
-        }).catch(done);
+        const structure = await JavaProjectStructure.infer(p);
+        assert(!structure);
     });
 
-    it("should not be fooled by foo.java.txt", done => {
+    it("should not be fooled by foo.java.txt", async () => {
         const p = InMemoryProject.of(
             {
                 path: "src/main/com/smashing/pumpkins/Gish.java.txt",
                 content: javaSource,
             },
         );
-        JavaProjectStructure.infer(p).then(structure => {
-            assert(!structure);
-            done();
-        }).catch(done);
+        const structure = await JavaProjectStructure.infer(p);
+        assert(!structure);
     });
 
-    it("infer application package when uniquely present", done => {
+    it("infer application package when uniquely present", async () => {
         const p = InMemoryProject.of(
             {
                 path: "src/main/java/com/smashing/pumpkins/Gish.java",
                 content: javaSource,
             },
         );
-        JavaProjectStructure.infer(p).then(structure => {
-            assert(structure.applicationPackage === "com.smashing.pumpkins");
-            done();
-        }).catch(done);
+        const structure = await JavaProjectStructure.infer(p);
+        assert.strictEqual(structure.applicationPackage, "com.smashing.pumpkins");
     });
 
-    it("infer application package when uniquely present, avoiding comments", done => {
+    it("infer application package when uniquely present, avoiding comments", async () => {
         const p = InMemoryProject.of(
             {
                 path: "src/main/java/com/smashing/pumpkins/Gish.java",
@@ -67,39 +61,33 @@ describe("JavaProjectStructure", () => {
 package com.smashing.pumpkins;`,
             },
         );
-        JavaProjectStructure.infer(p).then(structure => {
-            assert(structure.applicationPackage === "com.smashing.pumpkins");
-            done();
-        }).catch(done);
+        const structure = await JavaProjectStructure.infer(p);
+        assert.strictEqual(structure.applicationPackage, "com.smashing.pumpkins");
     });
 
-    it("infer application package (Kotlin) when uniquely present", done => {
+    it("infer application package (Kotlin) when uniquely present", async () => {
         const p = InMemoryProject.of(
             {
                 path: "src/main/kotlin/com/smashing/pumpkins/Gish.kt",
                 content: kotlinSource,
             },
         );
-        JavaProjectStructure.infer(p).then(structure => {
-            assert(structure.applicationPackage === "com.smashing.pumpkins");
-            done();
-        }).catch(done);
+        const structure = await JavaProjectStructure.infer(p);
+        assert.strictEqual(structure.applicationPackage, "com.smashing.pumpkins");
     });
 
-    it("infer application package (Kotlin shortcut style) when uniquely present", done => {
+    it("infer application package (Kotlin shortcut style) when uniquely present", async () => {
         const p = InMemoryProject.of(
             {
                 path: "src/main/kotlin/Gish.kt",
                 content: kotlinSource,
             },
         );
-        JavaProjectStructure.infer(p).then(structure => {
-            assert(structure.applicationPackage === "com.smashing.pumpkins");
-            done();
-        }).catch(done);
+        const structure = await JavaProjectStructure.infer(p);
+        assert.strictEqual(structure.applicationPackage, "com.smashing.pumpkins");
     });
 
-    it("not infer application package when confusing parallels present", done => {
+    it("not infer application package when confusing parallels present", async () => {
         const p = InMemoryProject.of(
             {
                 path: "src/main/java/com/smashing/pumpkins/Gish.java",
@@ -110,13 +98,11 @@ package com.smashing.pumpkins;`,
                 content: "package org.thing; public class Thing {}",
             },
         );
-        JavaProjectStructure.infer(p).then(structure => {
-            assert(!structure);
-            done();
-        }).catch(done);
+        const structure = await JavaProjectStructure.infer(p);
+        assert(!structure);
     });
 
-    it("infers shortest application package when valid parallels present", done => {
+    it("infers shortest application package when valid parallels present", async () => {
         const p = InMemoryProject.of(
             {
                 path: "src/main/java/com/bands/smashing/pumpkins/Gish.java",
@@ -127,14 +113,12 @@ package com.smashing.pumpkins;`,
                 content: "package com.bands.nirvana; public class Thing {}",
             },
         );
-        JavaProjectStructure.infer(p).then(structure => {
-            assert(!!structure);
-            assert(structure.applicationPackage === "com.bands", structure.applicationPackage);
-            done();
-        }).catch(done);
+        const structure = await JavaProjectStructure.infer(p);
+        assert(!!structure);
+        assert.strictEqual(structure.applicationPackage, "com.bands", structure.applicationPackage);
     });
 
-    it("infers shortest application package (Kotlin) when valid parallels present", done => {
+    it("infers shortest application package (Kotlin) when valid parallels present", async () => {
         const p = InMemoryProject.of(
             {
                 path: "src/main/kotlin/com/bands/smashing/pumpkins/Gish.kt",
@@ -145,11 +129,9 @@ package com.smashing.pumpkins;`,
                 content: "package com.bands.nirvana; public class Thing {}",
             },
         );
-        JavaProjectStructure.infer(p).then(structure => {
-            assert(!!structure);
-            assert(structure.applicationPackage === "com.bands", structure.applicationPackage);
-            done();
-        }).catch(done);
+        const structure = await JavaProjectStructure.infer(p);
+        assert(!!structure);
+        assert.strictEqual(structure.applicationPackage, "com.bands", structure.applicationPackage);
     });
 
 });

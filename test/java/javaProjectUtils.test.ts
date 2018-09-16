@@ -26,41 +26,32 @@ import {
 
 describe("javaProjectUtils", () => {
 
-    it("should not refactor on no match", done => {
+    it("should not refactor on no match", async () => {
         const t = new InMemoryProject();
         t.addFileSync("src/main/java/Foo.java", "public class Foo {}");
-        movePackage(t, "com.foo", "com.bar")
-            .then(_ => {
-                const found = t.findFileSync("src/main/java/Foo.java");
-                assert(found.getContentSync() === "public class Foo {}");
-                done();
-            }).catch(done);
+        await movePackage(t, "com.foo", "com.bar")
+        const found = t.findFileSync("src/main/java/Foo.java");
+        assert.strictEqual(found.getContentSync(), "public class Foo {}");
     });
 
-    it("should refactor on simple match", done => {
+    it("should refactor on simple match", async () => {
         const t = new InMemoryProject();
         t.addFileSync("src/main/java/com/foo/Foo.java", "package com.foo;\npublic class Foo {}");
-        movePackage(t, "com.foo", "com.bar")
-            .then(_ => {
-                const found = t.findFileSync("src/main/java/com/bar/Foo.java");
-                assert(found.getContentSync() === "package com.bar;\npublic class Foo {}");
-                done();
-            }).catch(done);
+        await movePackage(t, "com.foo", "com.bar")
+        const found = t.findFileSync("src/main/java/com/bar/Foo.java");
+        assert.strictEqual(found.getContentSync(), "package com.bar;\npublic class Foo {}");
     });
 
-    it("should refactor on deeper match", done => {
+    it("should refactor on deeper match", async () => {
         const t = new InMemoryProject();
         t.addFileSync("src/main/java/com/foo/bar/Foo.java", "package com.foo.bar;\npublic class Foo {}");
-        movePackage(t, "com.foo.bar", "com.something.else")
-            .then(_ => {
-                const found = t.findFileSync("src/main/java/com/something/else/Foo.java");
-                assert(found);
-                assert(found.getContentSync() === "package com.something.else;\npublic class Foo {}");
-                done();
-            }).catch(done);
+        await movePackage(t, "com.foo.bar", "com.something.else")
+        const found = t.findFileSync("src/main/java/com/something/else/Foo.java");
+        assert(!!found);
+        assert.strictEqual(found.getContentSync(), "package com.something.else;\npublic class Foo {}");
     });
 
-    it("should refactor using common path prefix", done => {
+    it("should refactor using common path prefix", async () => {
         const p = InMemoryProject.of(
             {
                 path: "src/main/java/com/bands/smashing/pumpkins/Gish.java",
@@ -71,41 +62,31 @@ describe("javaProjectUtils", () => {
                 content: "package com.bands.nirvana; public class Thing {}",
             },
         );
-        movePackage(p, "com.bands", "com.nineties")
-            .then(_ => {
-                assert(!p.findFileSync("src/main/java/com/bands/smashing/pumpkins/Gish.java"));
-                const nirvana = p.findFileSync("src/main/java/com/nineties/nirvana/Thing.java");
-                assert(nirvana);
-                assert(nirvana.getContentSync() === "package com.nineties.nirvana; public class Thing {}");
-                const pumpkins = p.findFileSync("src/main/java/com/nineties/smashing/pumpkins/Gish.java");
-                assert(pumpkins);
-                assert(pumpkins.getContentSync() === "package com.nineties.smashing.pumpkins; public class Gish {}");
-
-                done();
-            }).catch(done);
+        await movePackage(p, "com.bands", "com.nineties")
+        assert(!p.findFileSync("src/main/java/com/bands/smashing/pumpkins/Gish.java"));
+        const nirvana = p.findFileSync("src/main/java/com/nineties/nirvana/Thing.java");
+        assert(nirvana);
+        assert(nirvana.getContentSync() === "package com.nineties.nirvana; public class Thing {}");
+        const pumpkins = p.findFileSync("src/main/java/com/nineties/smashing/pumpkins/Gish.java");
+        assert(pumpkins);
+        assert.strictEqual(pumpkins.getContentSync(), "package com.nineties.smashing.pumpkins; public class Gish {}");
     });
 
-    it("should not work on Kotlin by default", done => {
+    it("should not work on Kotlin by default", async () => {
         const t = new InMemoryProject();
         t.addFileSync("src/main/kotlin/com/foo/bar/Foo.kt", "package com.foo.bar\npublic class Foo {}");
-        movePackage(t, "com.foo.bar", "com.something.else")
-            .then(_ => {
-                const found = t.findFileSync("src/main/java/com/something/else/Foo.kt");
-                assert(!found);
-                done();
-            }).catch(done);
+        await movePackage(t, "com.foo.bar", "com.something.else")
+        const found = t.findFileSync("src/main/java/com/something/else/Foo.kt");
+        assert(!found);
     });
 
-    it("should work on Kotlin with correct glob pattern", done => {
+    it("should work on Kotlin with correct glob pattern", async () => {
         const t = new InMemoryProject();
         t.addFileSync("src/main/kotlin/com/foo/bar/Foo.kt", "package com.foo.bar\npublic class Foo {}");
-        movePackage(t, "com.foo.bar", "com.something.else", "**/*.kt")
-            .then(_ => {
-                const found = t.findFileSync("src/main/kotlin/com/something/else/Foo.kt");
-                assert(found);
-                assert(found.getContentSync() === "package com.something.else\npublic class Foo {}");
-                done();
-            }).catch(done);
+        await movePackage(t, "com.foo.bar", "com.something.else", "**/*.kt")
+        const found = t.findFileSync("src/main/kotlin/com/something/else/Foo.kt");
+        assert(found);
+        assert.strictEqual(found.getContentSync(), "package com.something.else\npublic class Foo {}");
     });
 
     describe("renameClass", () => {
@@ -113,7 +94,7 @@ describe("javaProjectUtils", () => {
         it("shouldn't do anything on empty project", async () => {
             const p = new InMemoryProject();
             await renameClass(p, "Foo", "Bar");
-            assert.equal(await p.totalFileCount(), 0);
+            assert.strictEqual(await p.totalFileCount(), 0);
         });
 
         it("rename Java in default package", async () => {
@@ -121,7 +102,7 @@ describe("javaProjectUtils", () => {
             await renameClass(p, "Thing", "OtherThing");
             const renamed = await p.findFile("src/main/java/OtherThing.java");
             assert(!!renamed);
-            assert.equal(renamed.getContentSync(), "public class OtherThing {}");
+            assert.strictEqual(renamed.getContentSync(), "public class OtherThing {}");
         });
 
         it("rename Kotlin in default package", async () => {
@@ -129,7 +110,7 @@ describe("javaProjectUtils", () => {
             await renameClass(p, "Thing", "OtherThing");
             const renamed = await p.findFile("src/main/kotlin/OtherThing.kt");
             assert(!!renamed);
-            assert.equal(renamed.getContentSync(), "public class OtherThing {}");
+            assert.strictEqual(renamed.getContentSync(), "public class OtherThing {}");
         });
     });
 
