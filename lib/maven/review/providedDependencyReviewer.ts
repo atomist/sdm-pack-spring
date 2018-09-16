@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { DefaultReviewComment, Project, ReviewComment } from "@atomist/automation-client";
+import {
+    DefaultReviewComment,
+    Project,
+    ReviewComment,
+} from "@atomist/automation-client";
 import { ReviewerRegistration } from "@atomist/sdm";
 import { findDeclaredDependencies } from "../parse/fromPom";
 import { IsMaven } from "../pushTests";

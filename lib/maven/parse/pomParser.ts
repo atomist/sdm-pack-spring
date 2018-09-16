@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-import { gatherFromMatches, Project } from "@atomist/automation-client";
-import { XmldocFileParser, XmldocTreeNode } from "../../xml/XmldocFileParser";
+import {
+    gatherFromMatches,
+    Project,
+} from "@atomist/automation-client";
+import {
+    XmldocFileParser,
+    XmldocTreeNode,
+} from "../../xml/XmldocFileParser";
 import { VersionedArtifact } from "../VersionedArtifact";
 import { extractVersionedArtifact } from "./fromPom";
 
