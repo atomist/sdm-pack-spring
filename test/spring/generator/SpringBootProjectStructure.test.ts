@@ -32,57 +32,47 @@ describe("SpringBootProjectStructure: Java inference", () => {
 
     describe("java support", () => {
 
-        it("infer not a spring project", done => {
+        it("infer not a spring project", async () => {
             const p = InMemoryProject.of();
-            SpringBootProjectStructure.inferFromJavaSource(p).then(structure => {
-                assert(!structure);
-                done();
-            }).catch(done);
+            const structure = await SpringBootProjectStructure.inferFromJavaSource(p);
+            assert(!structure);
         });
 
-        it("should not be fooled by foo.kotlin.txt", done => {
+        it("should not be fooled by foo.kotlin.txt", async () => {
             const p = InMemoryProject.of(
                 {
                     path: "src/main/kotlin/com/smashing/pumpkins/Gish.kt.txt",
                     content: javaSource,
                 },
             );
-            SpringBootProjectStructure.inferFromJavaSource(p).then(structure => {
-                assert(!structure);
-                done();
-            }).catch(done);
+            const structure = await SpringBootProjectStructure.inferFromJavaSource(p);
+            assert(!structure);
         });
 
-        it("infer application package and class when present", done => {
-            SpringBootProjectStructure.inferFromJavaSource(GishProject).then(structure => {
-                assert(structure.applicationPackage === "com.smashing.pumpkins");
-                assert(structure.applicationClass === "GishApplication",
-                    `Expected name not to be ${structure.appClassFile.name}`);
-                assert(structure.appClassFile.path === GishJavaPath);
-                done();
-            }).catch(done);
+        it("infer application package and class when present", async () => {
+            const structure = await SpringBootProjectStructure.inferFromJavaSource(GishProject);
+            assert(structure.applicationPackage === "com.smashing.pumpkins");
+            assert(structure.applicationClass === "GishApplication",
+                `Expected name not to be ${structure.appClassFile.name}`);
+            assert(structure.appClassFile.path === GishJavaPath);
         });
 
-        it("infer application package and class when present, ignoring extraneous comment", done => {
-            SpringBootProjectStructure.inferFromJavaSource(GishProjectWithComment).then(structure => {
-                assert(structure.applicationPackage === "com.smashing.pumpkins");
-                assert(structure.appClassFile.path === GishJavaPath);
-                done();
-            }).catch(done);
+        it("infer application package and class when present, ignoring extraneous comment", async () => {
+            const structure = await SpringBootProjectStructure.inferFromJavaSource(GishProjectWithComment);
+            assert(structure.applicationPackage === "com.smashing.pumpkins");
+            assert(structure.appClassFile.path === GishJavaPath);
         });
 
-        it("infer application package in root package", done => {
-            SpringBootProjectStructure.inferFromJavaSource(
+        it("infer application package in root package", async () => {
+            const structure = await SpringBootProjectStructure.inferFromJavaSource(
                 InMemoryProject.of(
-                    {path: "pom.xml", content: "<xml>"},
-                    {path: "src/main/java/App.java", content: "@SpringBootApplication public class App {}"},
+                    { path: "pom.xml", content: "<xml>" },
+                    { path: "src/main/java/App.java", content: "@SpringBootApplication public class App {}" },
                 ),
-            ).then(structure => {
-                assert(!!structure);
-                assert(structure.applicationPackage === "");
-                assert(structure.appClassFile.path === "src/main/java/App.java");
-                done();
-            }).catch(done);
+            );
+            assert(!!structure);
+            assert(structure.applicationPackage === "");
+            assert(structure.appClassFile.path === "src/main/java/App.java");
         });
     });
 
@@ -92,34 +82,30 @@ describe("SpringBootProjectStructure: Java inference", () => {
             const ast = await KotlinFileParser.toAst(KotlinGishProject.findFileSync(GishKotlinPath));
             // console.log(ast);
             const results = evaluateExpression(ast, SpringBootAppClassInKotlin);
-            assert(results.length === 1);
+            assert.strictEqual(results.length, 1);
         });
 
         it("parses Kotlin in project", async () => {
             const matches = await findFileMatches(KotlinGishProject, KotlinFileParser, KotlinSourceFiles, SpringBootAppClassInKotlin);
-            assert.equal(matches.length, 1);
+            assert.strictEqual(matches.length, 1);
         });
 
-        it("infer application package and class when present", done => {
-            SpringBootProjectStructure.inferFromKotlinSource(KotlinGishProject).then(structure => {
-                assert(!!structure);
-                assert.equal(structure.applicationPackage, "com.smashing.pumpkins");
-                assert.equal(structure.applicationClass, "GishApplication",
-                    `Expected name not to be ${structure.appClassFile.name}`);
-                assert.equal(structure.appClassFile.path, GishKotlinPath);
-                done();
-            }).catch(done);
+        it("infer application package and class when present", async () => {
+            const structure = await SpringBootProjectStructure.inferFromKotlinSource(KotlinGishProject);
+            assert(!!structure);
+            assert.equal(structure.applicationPackage, "com.smashing.pumpkins");
+            assert.equal(structure.applicationClass, "GishApplication",
+                `Expected name not to be ${structure.appClassFile.name}`);
+            assert.equal(structure.appClassFile.path, GishKotlinPath);
         });
 
-        it("finds Kotlin after Java", done => {
-            SpringBootProjectStructure.inferFromJavaOrKotlinSource(KotlinGishProject).then(structure => {
-                assert(!!structure);
-                assert.equal(structure.applicationPackage, "com.smashing.pumpkins");
-                assert.equal(structure.applicationClass, "GishApplication",
-                    `Expected name not to be ${structure.appClassFile.name}`);
-                assert.equal(structure.appClassFile.path, GishKotlinPath);
-                done();
-            }).catch(done);
+        it("finds Kotlin after Java", async () => {
+            const structure = await SpringBootProjectStructure.inferFromJavaOrKotlinSource(KotlinGishProject);
+            assert(!!structure);
+            assert.equal(structure.applicationPackage, "com.smashing.pumpkins");
+            assert.equal(structure.applicationClass, "GishApplication",
+                `Expected name not to be ${structure.appClassFile.name}`);
+            assert.equal(structure.appClassFile.path, GishKotlinPath);
         });
     });
 
@@ -167,7 +153,7 @@ const SimplePom = `<?xml version="1.0" encoding="UTF-8"?>
 
 export const GishJavaPath = "src/main/java/com/smashing/pumpkins/Gish.java";
 export const GishProject: Project = InMemoryProject.from(
-    {owner: "smashing-pumpkins", repo: "gish", url: ""},
+    { owner: "smashing-pumpkins", repo: "gish", url: "" },
     {
         path: GishJavaPath,
         content: javaSource,
@@ -178,7 +164,7 @@ export const GishProject: Project = InMemoryProject.from(
 );
 
 export const GishProjectWithComment: Project = InMemoryProject.from(
-    {owner: "smashing-pumpkins", repo: "gish", url: ""},
+    { owner: "smashing-pumpkins", repo: "gish", url: "" },
     {
         path: GishJavaPath,
         content: javaSource.replace("@SpringBootApplication", "@SpringBootApplication // ha ha trying to fool you"),
@@ -191,7 +177,7 @@ export const GishProjectWithComment: Project = InMemoryProject.from(
 export const GishKotlinPath = "src/main/kotlin/com/smashing/pumpkins/Gish.kt";
 
 export const KotlinGishProject: Project = InMemoryProject.from(
-    {owner: "smashing-pumpkins", repo: "gish", url: ""},
+    { owner: "smashing-pumpkins", repo: "gish", url: "" },
     {
         path: GishKotlinPath,
         content: kotlinSource,
