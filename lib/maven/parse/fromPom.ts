@@ -60,6 +60,8 @@ export function extractVersionedArtifact(n: XmldocTreeNode): VersionedArtifact {
     const groupId = n.$children.find(c => c.$value.startsWith("<groupId>"));
     const artifactId = n.$children.find(c => c.$value.startsWith("<artifactId>"));
     const version = n.$children.find(c => c.$value.startsWith("<version>"));
+    const scope = n.$children.find(c => c.$value.startsWith("<scope>"));
+
     if (!(!!groupId && !!artifactId)) {
         throw new Error(`groupId and artifactId are required in [${n.$value}]`);
     }
@@ -67,5 +69,6 @@ export function extractVersionedArtifact(n: XmldocTreeNode): VersionedArtifact {
         group: groupId.innerValue,
         artifact: artifactId.innerValue,
         version: !!version ? version.innerValue : undefined,
+        scope: !!scope ? scope.innerValue : undefined,
     };
 }

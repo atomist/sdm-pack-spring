@@ -31,6 +31,8 @@ export interface VersionedArtifact extends IdentifiedArtifact {
 
     version: string;
 
+    scope?: string;
+
 }
 
 export function coordinates(va: VersionedArtifact): string {

@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
-import {
-    DefaultReviewComment,
-    File,
-    Project,
-    ReviewComment,
-} from "@atomist/automation-client";
+import { DefaultReviewComment, Project, ReviewComment } from "@atomist/automation-client";
 import { ReviewerRegistration } from "@atomist/sdm";
-import * as _ from "lodash";
+import { findDeclaredDependencies } from "../parse/fromPom";
 import { IsMaven } from "../pushTests";
-import { xmlParseString } from "../xmlParseString";
 
 export const ProvidedDependencyCategory = "Use of `provided` dependencies in Maven POM";
 
@@ -42,15 +36,9 @@ export const ProvidedDependencyReviewer: ReviewerRegistration = {
 };
 
 async function findProvidedProperties(p: Project): Promise<ReviewComment[]> {
-    const pom = await p.getFile("pom.xml");
-    if (!pom) {
-        return [];
-    }
-    const parsed = await parsePom(pom);
-    const dependencies = _.get<Array<{ dependency: Array<{ scope: string[] }> }>>(parsed, "project.dependencies", []);
-    return dependencies
-        .map(d => d.dependency[0])
-        .filter(dep => !!dep.scope && dep.scope.length === 1 && dep.scope[0] === "provided")
+    const dependencies = await findDeclaredDependencies(p);
+    return dependencies.dependencies
+        .filter(dep => !!dep.scope && dep.scope === "provided")
         .map(dep => new DefaultReviewComment("error",
             ProvidedDependencyCategory,
             `Provided dependency: ${JSON.stringify(dep)}`,
@@ -59,9 +47,4 @@ async function findProvidedProperties(p: Project): Promise<ReviewComment[]> {
                 lineFrom1: 1,
                 offset: -1,
             }));
-}
-
-async function parsePom(pom: File): Promise<any> {
-    const xml = await pom.getContent();
-    return xmlParseString(xml);
 }

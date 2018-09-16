@@ -14,34 +14,19 @@
  * limitations under the License.
  */
 
-import { ProjectIdentifier } from "@atomist/sdm-core";
+import { gatherFromMatches, Project } from "@atomist/automation-client";
+import { XmldocFileParser, XmldocTreeNode } from "../../xml/XmldocFileParser";
 import { VersionedArtifact } from "../VersionedArtifact";
-import { xmlParseString } from "../xmlParseString";
+import { extractVersionedArtifact } from "./fromPom";
 
-export const MavenProjectIdentifier: ProjectIdentifier = async p => {
-    const pom = await p.getFile("pom.xml");
-    if (!pom) {
+export const MavenProjectIdentifier: (p: Project) => Promise<VersionedArtifact> = async p => {
+    const ids = await gatherFromMatches(p,
+        new XmldocFileParser(),
+        "pom.xml",
+        "//project",
+        m => extractVersionedArtifact(m as any as XmldocTreeNode));
+    if (ids.length !== 1) {
         return undefined;
     }
-    const content = await pom.getContent();
-    const ident = await identification(content);
-    return { name: ident.artifact, version: ident.version };
+    return ids[0];
 };
-
-/**
- * Return version info from the POM using xml2j XML parser
- * @param {string} pom
- * @return {Promise<VersionedArtifact>}
- */
-export async function identification(pom: string): Promise<VersionedArtifact> {
-    const parsed = await xmlParseString(pom);
-    if (!!parsed && !!parsed.project) {
-        return {
-            group: parsed.project.groupId[0],
-            artifact: parsed.project.artifactId[0],
-            version: parsed.project.version[0],
-        };
-    } else {
-        return Promise.reject("Pom is invalid");
-    }
-}
