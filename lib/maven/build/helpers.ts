@@ -15,8 +15,8 @@
  */
 
 import {
-    spawnAndWatch,
     asSpawnCommand,
+    spawnAndWatch,
     SpawnCommand,
 } from "@atomist/automation-client";
 import {
