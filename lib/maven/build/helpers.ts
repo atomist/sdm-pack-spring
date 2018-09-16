@@ -16,6 +16,8 @@
 
 import {
     spawnAndWatch,
+    asSpawnCommand,
+    SpawnCommand,
 } from "@atomist/automation-client";
 import {
     ExecuteGoalResult,
@@ -91,3 +93,7 @@ export function mavenPackagePreparation(args: Array<{ name: string, value: strin
         return mavenPackage(p, goalInvocation.progressLog, args);
     };
 }
+
+export const MavenIncrementPatchCommand: SpawnCommand = asSpawnCommand("./mvnw build-helper:parse-version versions:set -DnewVersion=" +
+    "\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}" +
+    "-\${parsedVersion.qualifier} versions:commit");

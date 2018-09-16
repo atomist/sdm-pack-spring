@@ -29,6 +29,7 @@ describe("addDependencyTransformTest", () => {
         const dae = {
             group: "bigco",
             artifact: "software",
+            name: "software",
             version: "2.0.0",
         };
         // const pom = PomWithReplaceMe.replace("replaceMe", "");
@@ -41,6 +42,7 @@ describe("addDependencyTransformTest", () => {
         const dae = {
             group: "bigco",
             artifact: "software",
+            name: "software",
             version: "2.0.0",
         };
         const pom = PomWithReplaceMe.replace(ReplaceMe, "");
@@ -58,6 +60,7 @@ describe("addDependencyTransformTest", () => {
         const dae = {
             group: "org.springframework.boot",
             artifact: "spring-boot-starter-web",
+            name: "spring-boot-starter-web",
             version: "1.5.9.RELEASE", // TODO do we need this
         };
         const pom = PomWithReplaceMe.replace(ReplaceMe, "");

@@ -68,6 +68,7 @@ export function extractVersionedArtifact(n: XmldocTreeNode): VersionedArtifact {
     return {
         group: groupId.innerValue,
         artifact: artifactId.innerValue,
+        name: artifactId.innerValue,
         version: !!version ? version.innerValue : undefined,
         scope: !!scope ? scope.innerValue : undefined,
     };

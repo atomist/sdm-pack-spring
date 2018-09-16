@@ -25,6 +25,7 @@ export function toVersionedArtifact(raw: any): VersionedArtifact {
     return {
         group: raw.groupId[0],
         artifact: raw.artifactId[0],
+        name: raw.artifactId[0],
         version: raw.version[0],
         description: !!raw.description ? raw.description[0] : undefined,
     };
