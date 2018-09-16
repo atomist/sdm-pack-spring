@@ -96,7 +96,7 @@ export async function mavenIncrementPatchVersionCommand(p: GitProject, progressL
         "build-helper:parse-version",
         "versions:set",
         "\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}-\${parsedVersion.qualifier}",
-        "versions:commit"
+        "versions:commit",
     ];
     return spawnAndWatch(
         { command, args },
