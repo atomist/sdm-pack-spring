@@ -50,7 +50,7 @@ describe("SpringBootProjectStructure: Java inference", () => {
         });
 
         it("infer application package and class when present", async () => {
-            const structure = await SpringBootProjectStructure.inferFromJavaSource(GishProject);
+            const structure = await SpringBootProjectStructure.inferFromJavaSource(GishProject());
             assert(structure.applicationPackage === "com.smashing.pumpkins");
             assert(structure.applicationClass === "GishApplication",
                 `Expected name not to be ${structure.appClassFile.name}`);
@@ -58,7 +58,7 @@ describe("SpringBootProjectStructure: Java inference", () => {
         });
 
         it("infer application package and class when present, ignoring extraneous comment", async () => {
-            const structure = await SpringBootProjectStructure.inferFromJavaSource(GishProjectWithComment);
+            const structure = await SpringBootProjectStructure.inferFromJavaSource(GishProjectWithComment());
             assert(structure.applicationPackage === "com.smashing.pumpkins");
             assert(structure.appClassFile.path === GishJavaPath);
         });
@@ -79,19 +79,19 @@ describe("SpringBootProjectStructure: Java inference", () => {
     describe("kotlin support", () => {
 
         it("parses Kotlin in file", async () => {
-            const ast = await KotlinFileParser.toAst(KotlinGishProject.findFileSync(GishKotlinPath));
+            const ast = await KotlinFileParser.toAst(KotlinGishProject().findFileSync(GishKotlinPath));
             // console.log(ast);
             const results = evaluateExpression(ast, SpringBootAppClassInKotlin);
             assert.strictEqual(results.length, 1);
         });
 
         it("parses Kotlin in project", async () => {
-            const matches = await findFileMatches(KotlinGishProject, KotlinFileParser, KotlinSourceFiles, SpringBootAppClassInKotlin);
+            const matches = await findFileMatches(KotlinGishProject(), KotlinFileParser, KotlinSourceFiles, SpringBootAppClassInKotlin);
             assert.strictEqual(matches.length, 1);
         });
 
         it("infer application package and class when present", async () => {
-            const structure = await SpringBootProjectStructure.inferFromKotlinSource(KotlinGishProject);
+            const structure = await SpringBootProjectStructure.inferFromKotlinSource(KotlinGishProject());
             assert(!!structure);
             assert.equal(structure.applicationPackage, "com.smashing.pumpkins");
             assert.equal(structure.applicationClass, "GishApplication",
@@ -100,7 +100,7 @@ describe("SpringBootProjectStructure: Java inference", () => {
         });
 
         it("finds Kotlin after Java", async () => {
-            const structure = await SpringBootProjectStructure.inferFromJavaOrKotlinSource(KotlinGishProject);
+            const structure = await SpringBootProjectStructure.inferFromJavaOrKotlinSource(KotlinGishProject());
             assert(!!structure);
             assert.equal(structure.applicationPackage, "com.smashing.pumpkins");
             assert.equal(structure.applicationClass, "GishApplication",
@@ -152,7 +152,7 @@ const SimplePom = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 export const GishJavaPath = "src/main/java/com/smashing/pumpkins/Gish.java";
-export const GishProject: Project = InMemoryProject.from(
+export const GishProject: () => Project = () => InMemoryProject.from(
     { owner: "smashing-pumpkins", repo: "gish", url: "" },
     {
         path: GishJavaPath,
@@ -163,7 +163,7 @@ export const GishProject: Project = InMemoryProject.from(
     },
 );
 
-export const GishProjectWithComment: Project = InMemoryProject.from(
+export const GishProjectWithComment: () => Project = () => InMemoryProject.from(
     { owner: "smashing-pumpkins", repo: "gish", url: "" },
     {
         path: GishJavaPath,
@@ -176,7 +176,7 @@ export const GishProjectWithComment: Project = InMemoryProject.from(
 
 export const GishKotlinPath = "src/main/kotlin/com/smashing/pumpkins/Gish.kt";
 
-export const KotlinGishProject: Project = InMemoryProject.from(
+export const KotlinGishProject: () => Project = () => InMemoryProject.from(
     { owner: "smashing-pumpkins", repo: "gish", url: "" },
     {
         path: GishKotlinPath,

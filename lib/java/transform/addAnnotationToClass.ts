@@ -18,7 +18,7 @@ import { JavaFileParser } from "@atomist/antlr";
 import { doWithAllMatches } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import { classNameFromFqn } from "../javaProjectUtils";
-import { javaClassDeclarationWithName } from "../path-expressions/commonPathExpressions";
+import { javaClassDeclarationWithName } from "../path-expressions/javaPathExpressions";
 import { addImport } from "./addImport";
 
 /**

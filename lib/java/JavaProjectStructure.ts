@@ -28,12 +28,7 @@ import {
     JavaSourceFiles,
     KotlinSourceFiles,
 } from "./javaProjectUtils";
-
-/**
- * Path expression using the Java grammar for a Java package declaration
- * @type {string}
- */
-export const JavaPackage = "//packageDeclaration//qualifiedName";
+import { JavaPackageName } from "./path-expressions/javaPathExpressions";
 
 /**
  * Path expression using the Kotlin grammar for a Java package declaration
@@ -55,7 +50,7 @@ export class JavaProjectStructure {
      */
     public static async infer(p: ProjectAsync): Promise<JavaProjectStructure> {
         // Treat Java and Kotlin as one
-        const packages = (await findMatches(p, JavaFileParser, JavaSourceFiles, JavaPackage))
+        const packages = (await findMatches(p, JavaFileParser, JavaSourceFiles, JavaPackageName))
             .concat(await findMatches(p, KotlinFileParser, KotlinSourceFiles, KotlinPackage));
         const uniquePackages = _.uniq(packages.map(pack => pack.$value));
         if (uniquePackages.length === 0) {

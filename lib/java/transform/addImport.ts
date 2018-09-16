@@ -26,7 +26,8 @@ import {
     countTill,
     insertAt,
 } from "../../util/formatUtils";
-import { JavaImportNames } from "../path-expressions/commonPathExpressions";
+import { JavaImportNames } from "../path-expressions/javaPathExpressions";
+import { packageInfo } from "./packageInfo";
 
 export interface Import {
 
@@ -67,25 +68,38 @@ export function addImport(opts: {
             logger.warn("Cannot add import %s to %s: path not found", opts.fqn, opts.sourceFilePath);
             return;
         }
-        const newImportLine = `import ${opts.fqn};\n`;
+        let newImportLine = `import ${opts.fqn};\n`;
 
         const imports = await existingImports(p, opts.sourceFilePath);
-        if (imports.length === 0) {
-            // No existing imports.
-            // TODO must find where to put imports in this case
-            await f.setContent(newImportLine + await f.getContent());
+        if (imports.some(i => i.fqn === opts.fqn)) {
+            logger.warn("Doing nothing: import %s already present %s", opts.fqn, opts.sourceFilePath);
             return;
         }
-        if (!imports.some(i => i.fqn === opts.fqn)) {
+
+        // Where to insert
+        let position: number;
+        if (imports.length === 0) {
+            // No existing imports.
+            // Must find where to put imports in this case.
+            // First look for package
+            const pi = await packageInfo(p, opts.sourceFilePath);
+            if (!!pi) {
+                position = pi.insertAfter;
+                newImportLine = "\n\n" + newImportLine;
+            } else {
+                position = 0;
+            }
+        } else {
             const lastImport = _.last(imports);
             const content = await f.getContent();
-            let position = lastImport.offset + 1 + countTill(content.substr(lastImport.offset), ";");
+            position = lastImport.offset + 1 + countTill(content.substr(lastImport.offset), ";");
             if (content.charAt(position) === "\n") {
                 ++position;
             }
-            await insertAt(f,
-                position,
-                newImportLine);
         }
+
+        await insertAt(f,
+            position,
+            newImportLine);
     };
 }

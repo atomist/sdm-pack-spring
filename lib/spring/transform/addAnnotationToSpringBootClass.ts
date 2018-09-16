@@ -28,7 +28,8 @@ export function addAnnotationToSpringBootClass(annotationFqn: string): CodeTrans
     return async (p, ci) => {
         const sbs = await SpringBootProjectStructure.inferFromJavaOrKotlinSource(p);
         if (!sbs) {
-            logger.warn("Not a Spring Boot project: %s: Cannot add annotation to Spring Boot class", p.id.url);
+            logger.warn("Not a Spring Boot project: %j: Cannot add annotation to Spring Boot class", p.id);
+            return;
         }
         return addAnnotationToClass({
             sourceFilePath: sbs.appClassFile.path,

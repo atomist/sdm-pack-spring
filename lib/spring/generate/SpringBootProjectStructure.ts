@@ -31,13 +31,13 @@ import {
     PathExpression,
 } from "@atomist/tree-path";
 import {
-    JavaPackage,
     KotlinPackage,
 } from "../../java/JavaProjectStructure";
 import {
     JavaSourceFiles,
     KotlinSourceFiles,
 } from "../../java/javaProjectUtils";
+import { JavaPackageName } from "../../java/path-expressions/javaPathExpressions";
 
 /**
  * Path expression for a class name annotated with Spring Boot.
@@ -96,7 +96,7 @@ export class SpringBootProjectStructure {
 
         // It's in the default package if no match found
         const packageName: { name: string } = {
-            name: evaluateScalarValue(fh.fileNode, JavaPackage) ||
+            name: evaluateScalarValue(fh.fileNode, JavaPackageName) ||
             evaluateScalarValue(fh.fileNode, KotlinPackage) ||
             "",
         };

@@ -59,6 +59,18 @@ describe("addImport", () => {
         assert.strictEqual(content, "import com.foo.Baz\n;\nimport com.foo.Bar;\n\npublic class Thing {}");
     });
 
+    it("should add import when no imports present, respecting package", async () => {
+        const path = "src/main/java/foo/Thing.java";
+        const p = InMemoryProject.of(
+            new InMemoryProjectFile(path, "package foo;\n\npublic class Thing {}"),
+        );
+        await addImport({ sourceFilePath: path, fqn: "com.foo.Bar" })(p, undefined);
+        const f = p.findFileSync(path);
+        const content = f.getContentSync();
+        // TODO we can format afterwards
+        assert.strictEqual(content, "package foo;\n\nimport com.foo.Bar;\n\n\npublic class Thing {}");
+    });
+
     it.skip("should add import when no imports present, respecting comment", async () => {
         const path = "src/main/java/Thing.java";
         const p = InMemoryProject.of(
