@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import {
-    asSpawnCommand,
-    spawnAndWatch,
-    SpawnCommand,
-} from "@atomist/automation-client";
+import { spawnAndWatch } from "@atomist/automation-client";
 import {
     ExecuteGoalResult,
     GitProject,
@@ -94,6 +90,16 @@ export function mavenPackagePreparation(args: Array<{ name: string, value: strin
     };
 }
 
-export const MavenIncrementPatchCommand: SpawnCommand = asSpawnCommand("./mvnw build-helper:parse-version versions:set -DnewVersion=" +
-    "\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}" +
-    "-\${parsedVersion.qualifier} versions:commit");
+export async function mavenIncrementPatchVersionCommand(p: GitProject, progressLog: ProgressLog): Promise<ExecuteGoalResult> {
+    const command = determineMavenCommand(p);
+    const args = [
+        "build-helper:parse-version",
+        "versions:set",
+        "\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}-\${parsedVersion.qualifier}",
+        "versions:commit"
+    ];
+    return spawnAndWatch(
+        { command, args },
+        { cwd: p.baseDir },
+        progressLog);
+}
