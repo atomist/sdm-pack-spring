@@ -29,7 +29,7 @@ describe("javaProjectUtils", () => {
     it("should not refactor on no match", async () => {
         const t = new InMemoryProject();
         t.addFileSync("src/main/java/Foo.java", "public class Foo {}");
-        await movePackage(t, "com.foo", "com.bar")
+        await movePackage(t, "com.foo", "com.bar");
         const found = t.findFileSync("src/main/java/Foo.java");
         assert.strictEqual(found.getContentSync(), "public class Foo {}");
     });
@@ -37,7 +37,7 @@ describe("javaProjectUtils", () => {
     it("should refactor on simple match", async () => {
         const t = new InMemoryProject();
         t.addFileSync("src/main/java/com/foo/Foo.java", "package com.foo;\npublic class Foo {}");
-        await movePackage(t, "com.foo", "com.bar")
+        await movePackage(t, "com.foo", "com.bar");
         const found = t.findFileSync("src/main/java/com/bar/Foo.java");
         assert.strictEqual(found.getContentSync(), "package com.bar;\npublic class Foo {}");
     });
@@ -45,7 +45,7 @@ describe("javaProjectUtils", () => {
     it("should refactor on deeper match", async () => {
         const t = new InMemoryProject();
         t.addFileSync("src/main/java/com/foo/bar/Foo.java", "package com.foo.bar;\npublic class Foo {}");
-        await movePackage(t, "com.foo.bar", "com.something.else")
+        await movePackage(t, "com.foo.bar", "com.something.else");
         const found = t.findFileSync("src/main/java/com/something/else/Foo.java");
         assert(!!found);
         assert.strictEqual(found.getContentSync(), "package com.something.else;\npublic class Foo {}");
@@ -62,7 +62,7 @@ describe("javaProjectUtils", () => {
                 content: "package com.bands.nirvana; public class Thing {}",
             },
         );
-        await movePackage(p, "com.bands", "com.nineties")
+        await movePackage(p, "com.bands", "com.nineties");
         assert(!p.findFileSync("src/main/java/com/bands/smashing/pumpkins/Gish.java"));
         const nirvana = p.findFileSync("src/main/java/com/nineties/nirvana/Thing.java");
         assert(nirvana);
@@ -75,7 +75,7 @@ describe("javaProjectUtils", () => {
     it("should not work on Kotlin by default", async () => {
         const t = new InMemoryProject();
         t.addFileSync("src/main/kotlin/com/foo/bar/Foo.kt", "package com.foo.bar\npublic class Foo {}");
-        await movePackage(t, "com.foo.bar", "com.something.else")
+        await movePackage(t, "com.foo.bar", "com.something.else");
         const found = t.findFileSync("src/main/java/com/something/else/Foo.kt");
         assert(!found);
     });
@@ -83,7 +83,7 @@ describe("javaProjectUtils", () => {
     it("should work on Kotlin with correct glob pattern", async () => {
         const t = new InMemoryProject();
         t.addFileSync("src/main/kotlin/com/foo/bar/Foo.kt", "package com.foo.bar\npublic class Foo {}");
-        await movePackage(t, "com.foo.bar", "com.something.else", "**/*.kt")
+        await movePackage(t, "com.foo.bar", "com.something.else", "**/*.kt");
         const found = t.findFileSync("src/main/kotlin/com/something/else/Foo.kt");
         assert(found);
         assert.strictEqual(found.getContentSync(), "package com.something.else\npublic class Foo {}");
