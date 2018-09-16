@@ -15,7 +15,11 @@
  */
 
 import { Fingerprint } from "@atomist/automation-client";
-import { computeShaOf, FingerprinterRegistration, PushImpactListenerInvocation } from "@atomist/sdm";
+import {
+    computeShaOf,
+    FingerprinterRegistration,
+    PushImpactListenerInvocation,
+} from "@atomist/sdm";
 import { findDependenciesFromEffectivePom } from "../inspection/findDependencies";
 import { VersionedArtifact } from "../VersionedArtifact";
 

@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-import { execIn, gatherFromMatches, isLocalProject, LocalProject, Project } from "@atomist/automation-client";
-import { CodeInspection, ProjectFile } from "@atomist/sdm";
+import {
+    execIn,
+    gatherFromMatches,
+    isLocalProject,
+    LocalProject,
+    Project,
+} from "@atomist/automation-client";
+import {
+    CodeInspection,
+    ProjectFile,
+} from "@atomist/sdm";
 import * as _ from "lodash";
-import { XmldocFileParser, XmldocTreeNode } from "../../xml/XmldocFileParser";
+import {
+    XmldocFileParser,
+    XmldocTreeNode,
+} from "../../xml/XmldocFileParser";
 import { extractVersionedArtifact } from "../parse/fromPom";
 import {
     coordinates,
