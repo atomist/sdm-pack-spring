@@ -15,9 +15,7 @@
  */
 
 import {
-    asSpawnCommand,
     spawnAndWatch,
-    SpawnCommand,
 } from "@atomist/automation-client";
 import {
     ExecuteGoalResult,
@@ -30,6 +28,7 @@ import {
 } from "@atomist/sdm";
 import { ProjectVersioner } from "@atomist/sdm-core";
 import * as df from "dateformat";
+import { determineMavenCommand } from "../MavenCommand";
 import { MavenProjectIdentifier } from "../parse/pomParser";
 import { mavenPackage } from "./MavenBuilder";
 
@@ -48,7 +47,7 @@ async function newVersion(sdmGoal: SdmGoalEvent, p: Project): Promise<string> {
  */
 export const MavenProjectVersioner: ProjectVersioner = async (sdmGoal, p, log) => {
     const version = await newVersion(sdmGoal, p);
-    await changeMavenVersion(version, p.baseDir, log);
+    await changeMavenVersion(version, p, log);
     return version;
 };
 
@@ -60,22 +59,17 @@ export const MavenProjectVersioner: ProjectVersioner = async (sdmGoal, p, log) =
  */
 export const MavenVersionPreparation: PrepareForGoalExecution = async (p: GitProject, goalInvocation: GoalInvocation) => {
     const version = await newVersion(goalInvocation.sdmGoal, p);
-    return changeMavenVersion(version, p.baseDir, goalInvocation.progressLog);
+    return changeMavenVersion(version, p, goalInvocation.progressLog);
 };
 
-async function changeMavenVersion(version: string, baseDir: string, progressLog: ProgressLog): Promise<ExecuteGoalResult> {
-    const cmd = `./mvnw build-helper:parse-version versions:set -DnewVersion="${version}" versions:commit`;
+async function changeMavenVersion(version: string, p: GitProject, progressLog: ProgressLog): Promise<ExecuteGoalResult> {
+    const command = determineMavenCommand(p);
+    const args = ["build-helper:parse-version", "versions:set", `-DnewVersion=${version}`, "versions:commit"];
     return spawnAndWatch(
-        asSpawnCommand(cmd),
-        {
-            cwd: baseDir,
-        },
+        { command, args },
+        { cwd: p.baseDir },
         progressLog);
 }
-
-export const MavenIncrementPatchCommand: SpawnCommand = asSpawnCommand("./mvnw build-helper:parse-version versions:set -DnewVersion=" +
-    "\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}" +
-    "-\${parsedVersion.qualifier} versions:commit");
 
 /**
  * PrepareForGoalExecution for running Maven package

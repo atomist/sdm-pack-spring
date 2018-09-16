@@ -36,7 +36,7 @@ import {
     SpawnedDeployment,
     StartupInfo,
 } from "@atomist/sdm-core";
-import { spawn } from "child_process";
+import * as spawn from "cross-spawn";
 
 // TODO: should local deployment be its own pack? we could pull it out of sdm then
 

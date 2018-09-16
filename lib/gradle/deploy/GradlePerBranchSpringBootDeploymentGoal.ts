@@ -34,8 +34,8 @@ import {
 import { SpawnedDeployment } from "@atomist/sdm-core";
 import {
     ChildProcess,
-    spawn,
 } from "child_process";
+import * as spawn from "cross-spawn";
 import * as os from "os";
 import * as portfinder from "portfinder";
 import { SpringBootSuccessPatterns } from "../../spring/springLoggingPatterns";
@@ -101,7 +101,7 @@ export interface GradleDeployerOptions {
 
 }
 
-const deploymentEndpoints: { [key: string]: {sha: string, endpoint: string} } = {};
+const deploymentEndpoints: { [key: string]: { sha: string, endpoint: string } } = {};
 /**
  * Use Maven per-branch deploy
  * @param projectLoader use to load projects
@@ -233,9 +233,9 @@ async function reportFailureToUser(gi: GoalInvocation, log: string) {
     if (!!interpretation) {
         await gi.addressChannels(`✘ Gradle deployment failure for ${gi.id.url}/${gi.sdmGoal.branch}`);
         if (!!interpretation.relevantPart) {
-            await(gi.addressChannels(`\`\`\`\n${interpretation.relevantPart}\n\`\`\``));
+            await (gi.addressChannels(`\`\`\`\n${interpretation.relevantPart}\n\`\`\``));
         } else {
-            await(gi.addressChannels("See SDM log for full Maven output"));
+            await (gi.addressChannels("See SDM log for full Maven output"));
         }
     }
 }
