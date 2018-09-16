@@ -34,6 +34,7 @@ import {
     LocalBuilder,
     LocalBuildInProgress,
 } from "@atomist/sdm-core";
+import { determineMavenCommand } from "../MavenCommand";
 import { MavenProjectIdentifier } from "../parse/pomParser";
 import { VersionedArtifact } from "../VersionedArtifact";
 import { MavenLogInterpreter } from "./mavenLogInterpreter";
@@ -55,7 +56,7 @@ export class MavenBuilder extends LocalBuilder implements LogInterpretation {
     constructor(sdm: SoftwareDeliveryMachine,
                 private readonly args: Array<{ name: string, value?: string }> = [],
                 private readonly deploymentUnitFileLocator: (p: LocalProject, mpi: VersionedArtifact) => string =
-                    (p, mpi) => `${p.baseDir}/target/${mpi.artifact}-${mpi.version}.jar`) {
+            (p, mpi) => `${p.baseDir}/target/${mpi.artifact}-${mpi.version}.jar`) {
         super("MavenBuilder", sdm);
     }
 
@@ -99,21 +100,14 @@ class UpdatingBuild implements LocalBuildInProgress {
 export async function mavenPackage(p: GitProject,
                                    progressLog: ProgressLog,
                                    args: Array<{ name: string, value?: string }> = []): Promise<ChildProcessResult> {
-    const useMavenWrapper = hasMavenWrapper(p);
-    // TODO fix the following ./mvnw isn't going to work on windows, or is it???
-    const command = useMavenWrapper ? "./mvnw" : "mvn";
+    const command = determineMavenCommand(p);
     return spawnAndWatch({
-            command,
-            args: ["package", ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
-        }
-        ,
+        command,
+        args: ["package", ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
+    },
         {
             cwd: p.baseDir,
         },
         progressLog,
     );
-}
-
-export async function hasMavenWrapper(p: GitProject): Promise<boolean> {
-    return (await p.getFile(".mvn/wrapper/maven-wrapper.properties")) !== undefined;
 }
