@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 /**
  * Successs patterns when Spring Boot starts on Tomcat
  * @type {RegExp}
