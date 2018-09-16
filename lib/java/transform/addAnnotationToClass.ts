@@ -18,11 +18,8 @@ import { JavaFileParser } from "@atomist/antlr";
 import { doWithAllMatches } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import { classNameFromFqn } from "../javaProjectUtils";
+import { javaClassDeclarationWithName } from "../path-expressions/commonPathExpressions";
 import { addImport } from "./addImport";
-
-export function classDeclarationWithName(name: string) {
-    return `//typeDeclaration[//classDeclaration[//Identifier[@value='${name}']]]`;
-}
 
 /**
  * Add the given annotation to the given class.
@@ -39,7 +36,7 @@ export function addAnnotationToClassRaw(opts: {
         return doWithAllMatches(p,
             JavaFileParser,
             opts.sourceFilePath,
-            classDeclarationWithName(opts.className), m => {
+            javaClassDeclarationWithName(opts.className), m => {
                 m.$value = `@${opts.annotationName}\n${m.$value}`;
             });
     };

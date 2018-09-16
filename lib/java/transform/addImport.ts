@@ -26,6 +26,7 @@ import {
     countTill,
     insertAt,
 } from "../../util/formatUtils";
+import { JavaImportNames } from "../path-expressions/commonPathExpressions";
 
 export interface Import {
 
@@ -44,7 +45,7 @@ export interface Import {
  * @return {Promise<Import[]>}
  */
 export async function existingImports(p: Project, path: string): Promise<Import[]> {
-    return gatherFromMatches(p, JavaFileParser, path, "//importDeclaration/qualifiedName", m => {
+    return gatherFromMatches(p, JavaFileParser, path, JavaImportNames, m => {
         return {
             fqn: m.$value,
             offset: m.$offset,
