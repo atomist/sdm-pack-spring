@@ -20,6 +20,7 @@ import {
     Project,
     ProjectAsync,
 } from "@atomist/automation-client";
+import * as _ from "lodash";
 import { JavaProjectStructure } from "./JavaProjectStructure";
 
 export const AllJavaFiles = "**/*.java";
@@ -64,6 +65,10 @@ export async function movePackage<P extends ProjectAsync>(project: P,
  */
 export function packageToPath(pkg: string): string {
     return pkg.replace(/\./g, "/");
+}
+
+export function classNameFromFqn(fqn: string): string {
+    return _.last(fqn.split("."));
 }
 
 /**
