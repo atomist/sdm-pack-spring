@@ -31,9 +31,6 @@ export interface VersionedArtifact extends IdentifiedArtifact {
 
     version: string;
 
-    // Name for backwards compatibility
-    name: string;
-
     scope?: string;
 
 }

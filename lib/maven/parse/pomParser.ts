@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-import {
-    gatherFromMatches,
-    Project,
-} from "@atomist/automation-client";
-import {
-    XmldocFileParser,
-    XmldocTreeNode,
-} from "../../xml/XmldocFileParser";
+import { gatherFromMatches, Project } from "@atomist/automation-client";
+import { ProjectIdentification } from "@atomist/sdm-core/lib/internal/delivery/build/local/projectIdentifier";
+import { XmldocFileParser, XmldocTreeNode } from "../../xml/XmldocFileParser";
 import { VersionedArtifact } from "../VersionedArtifact";
 import { extractVersionedArtifact } from "./fromPom";
 
-export const MavenProjectIdentifier: (p: Project) => Promise<VersionedArtifact> = async p => {
+/**
+ * Return the identification of a project: name and version
+ * @param {Project} p
+ * @return {Promise<any>}
+ * @constructor
+ */
+export const MavenProjectIdentifier: (p: Project) => Promise<VersionedArtifact & ProjectIdentification> = async p => {
     const ids = await gatherFromMatches(p,
         new XmldocFileParser(),
         "pom.xml",

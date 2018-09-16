@@ -26,5 +26,5 @@ import { addDependencyTransform } from "../../maven/transform/addDependencyTrans
  */
 export function addSpringBootStarterTransform(artifact: string,
                                               group: string = "org.springframework.boot"): CodeTransform {
-    return addDependencyTransform({ artifact, group, version: undefined, name: undefined });
+    return addDependencyTransform({ artifact, group, version: undefined });
 }
