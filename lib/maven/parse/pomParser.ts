@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
-import { gatherFromMatches, Project } from "@atomist/automation-client";
+import {
+    gatherFromMatches,
+    Project,
+} from "@atomist/automation-client";
 import { ProjectIdentification } from "@atomist/sdm-core/lib/internal/delivery/build/local/projectIdentifier";
-import { XmldocFileParser, XmldocTreeNode } from "../../xml/XmldocFileParser";
+import {
+    XmldocFileParser,
+    XmldocTreeNode,
+} from "../../xml/XmldocFileParser";
 import { VersionedArtifact } from "../VersionedArtifact";
 import { extractVersionedArtifact } from "./fromPom";
 
