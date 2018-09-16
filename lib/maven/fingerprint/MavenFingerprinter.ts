@@ -15,12 +15,9 @@
  */
 
 import { Fingerprint } from "@atomist/automation-client";
-import {
-    FingerprinterRegistration,
-    PushImpactListenerInvocation,
-} from "@atomist/sdm";
-import { dependenciesFingerprintsFromParsedPom } from "./dependenciesFingerprintsFromParsedPom";
-import { extractEffectivePom } from "./effectivePomExtractor";
+import { computeShaOf, FingerprinterRegistration, PushImpactListenerInvocation } from "@atomist/sdm";
+import { findDependenciesFromEffectivePom } from "../inspection/findDependencies";
+import { VersionedArtifact } from "../VersionedArtifact";
 
 /**
  * Public entry point for all Maven fingerprints. Use mvn help:effective-pom
@@ -33,16 +30,21 @@ export class MavenFingerprinter implements FingerprinterRegistration {
     public readonly name = "MavenFingerprinter";
 
     public async action(cri: PushImpactListenerInvocation): Promise<Fingerprint[]> {
-        try {
-            await cri.project.findFile("pom.xml");
-            const epom = await extractEffectivePom(cri.project);
-            return Promise.all([
-                dependenciesFingerprintsFromParsedPom,
-                // TODO add other Maven POM fingerprints
-            ].map(fp => fp(epom)));
-        } catch {
-            // If we can't find a pom, just exit
-            return [];
-        }
+        const dependencies = await findDependenciesFromEffectivePom(cri.project);
+        return Promise.all([
+            dependenciesFingerprintsFromParsedPom(dependencies),
+            // TODO add other Maven POM fingerprints
+        ]);
     }
+}
+
+function dependenciesFingerprintsFromParsedPom(dependencies: VersionedArtifact[]): Fingerprint {
+    const json = JSON.stringify(dependencies);
+    return {
+        name: "dependencies",
+        abbreviation: "deps",
+        version: "0.1",
+        sha: computeShaOf(json),
+        data: json,
+    };
 }

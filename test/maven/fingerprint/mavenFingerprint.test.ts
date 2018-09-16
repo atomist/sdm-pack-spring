@@ -21,6 +21,7 @@ import {
 import { PushImpactListenerInvocation } from "@atomist/sdm";
 import * as assert from "power-assert";
 import { MavenFingerprinter } from "../../../lib/maven/fingerprint/MavenFingerprinter";
+import { VersionedArtifact } from "../../../lib/maven/VersionedArtifact";
 
 describe("MavenFingerprinter", () => {
 
@@ -32,9 +33,10 @@ describe("MavenFingerprinter", () => {
         const Seed = await GitCommandGitProject.cloned({ token: null },
             new GitHubRepoRef("atomist-seeds", "spring-rest-seed"));
         const fp = await new MavenFingerprinter().action({ project: Seed } as PushImpactListenerInvocation);
-        const f1 = JSON.parse(fp[0].data);
+        const f1 = JSON.parse(fp[0].data) as VersionedArtifact[];
         assert(f1.length > 0);
-        f1.forEach((f: any) => assert(["org.springframework.boot", "com.atomist"].includes(f.group)));
+        assert(f1.some(f => f.group === "org.springframework.boot"));
+        assert(f1.some(f => f.group === "com.atomist"));
     }).timeout(40000);
 
 });
