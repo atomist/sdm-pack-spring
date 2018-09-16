@@ -27,7 +27,7 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "dependencies": {
-    "@atomist/antlr": "1.0.0-master.20180916160920",
+    "@atomist/antlr": "1.0.0",
     "@atomist/microgrammar": "1.0.0-M.4",
     "@atomist/tree-path": "1.0.0-M.4",
     "@typed/curry": "^1.0.1",
