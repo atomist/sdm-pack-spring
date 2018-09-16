@@ -16,7 +16,10 @@
 
 import { InMemoryProject } from "@atomist/automation-client";
 import { InMemoryProjectFile } from "@atomist/sdm";
-import { addAnnotationToClass, addAnnotationToClassRaw } from "../../../lib/java/transform/addAnnotationToClass";
+import {
+    addAnnotationToClass,
+    addAnnotationToClassRaw,
+} from "../../../lib/java/transform/addAnnotationToClass";
 
 import * as assert from "assert";
 

@@ -15,10 +15,17 @@
  */
 
 import { JavaFileParser } from "@atomist/antlr";
-import { gatherFromMatches, logger, Project } from "@atomist/automation-client";
+import {
+    gatherFromMatches,
+    logger,
+    Project,
+} from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import * as _ from "lodash";
-import { countTill, insertAt } from "../../util/formatUtils";
+import {
+    countTill,
+    insertAt,
+} from "../../util/formatUtils";
 
 export interface Import {
 
