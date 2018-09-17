@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-import {
-    DefaultReviewComment,
-    File,
-    logger,
-    Project,
-    ReviewComment,
-    saveFromFilesAsync,
-} from "@atomist/automation-client";
+import { DefaultReviewComment, File, logger, Project, ReviewComment } from "@atomist/automation-client";
+import { gatherFromFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
 import { ReviewerRegistration } from "@atomist/sdm";
 import * as _ from "lodash";
-import * as props from "properties-reader";
+import { parseProperties } from "../../properties/propertiesParser";
 import { HasSpringPom } from "../pushTests";
 
 const PropertyKeysToCheck = [
@@ -51,32 +45,28 @@ export const HardCodedPropertyReviewer: ReviewerRegistration = {
 };
 
 async function badPropertiesStrings(p: Project): Promise<ReviewComment[]> {
-    const arrArr = saveFromFilesAsync(p, "src/main/resources/*.properties",
-        badPropertiesIn);
+    const arrArr = gatherFromFiles(p, "src/main/resources/*.properties",
+        f => badPropertiesIn(p, f));
     return _.flatten(await arrArr);
 }
 
-async function badPropertiesIn(f: File): Promise<ReviewComment[]> {
-    const content = await f.getContent();
-    const read = props(undefined);
-    read.read(content);
+async function badPropertiesIn(p: Project, f: File): Promise<ReviewComment[]> {
     const comments: ReviewComment[] = [];
-    const obj = read.getAllProperties();
-    for (const toLookAt of PropertyKeysToCheck) {
-        const val = obj[toLookAt];
-        if (!!val) {
-            if (hardcoded(val)) {
-                logger.info("Value of %s: '%s' is hard coded", toLookAt, val);
+    const parsed = await parseProperties(p, f.path);
+    for (const prop of parsed.properties) {
+        if (PropertyKeysToCheck.includes(prop.key) && !!prop.value) {
+            if (hardcoded(prop.value)) {
+                logger.info("Value of %s: '%s' is hard coded", prop.key, prop.value);
                 comments.push(new DefaultReviewComment("info",
                     HardcodePropertyCategory,
-                    `Hardcoded property ${toLookAt} should be sourced from environment`,
+                    `Hardcoded property ${prop.key} should be sourced from environment`,
                     {
                         path: f.path,
                         lineFrom1: 1,
                         offset: -1,
                     }));
             } else {
-                logger.info("Value of %s: '%s' is not hard coded", toLookAt, val);
+                logger.info("Value of %s: '%s' is not hard coded", prop.key, prop.value);
             }
         }
     }
@@ -84,7 +74,6 @@ async function badPropertiesIn(f: File): Promise<ReviewComment[]> {
     return comments;
 }
 
-function hardcoded(value: props.Value) {
-    const s = value.toString();
-    return !s.includes("${");
+function hardcoded(value: string) {
+    return !value.includes("${");
 }

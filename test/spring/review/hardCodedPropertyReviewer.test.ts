@@ -39,7 +39,7 @@ describe("HardCodePropertyReviewer", () => {
         const id = new GitHubRepoRef("a", "b");
         const p = InMemoryProject.from(id, new InMemoryFile("src/main/resources/application.properties", "thing=1"));
         const r = await HardCodedPropertyReviewer.inspection(p, undefined);
-        assert.equal(r.comments.length, 0);
+        assert.equal(r.comments.length, 0, JSON.stringify(r.comments));
     });
 
     it("flag bad port property", async () => {
