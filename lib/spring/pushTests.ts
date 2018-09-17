@@ -19,6 +19,7 @@ import {
     PredicatePushTest,
 } from "@atomist/sdm";
 import { SpringBootProjectStructure } from "./generate/SpringBootProjectStructure";
+import { SpringBootVersionInspection } from "./inspect/springBootVersionInspection";
 
 /**
  * Does this project have a Spring Boot application class?
@@ -57,5 +58,17 @@ export const HasSpringPom: PredicatePushTest = predicatePushTest(
             return false;
         }
         return (await pom.getContent()).includes("springframework");
+    },
+);
+
+/**
+ * Does this project's POM use Spring Framework 5
+ * @type {PredicatePushTest}
+ */
+export const IsSpringBoot2Project: PredicatePushTest = predicatePushTest(
+    "IsSpringBoot2Project",
+    async p => {
+        const versions = await SpringBootVersionInspection(p, null);
+        return versions.versions.filter(v => v.version.startsWith("2.")).length > 0;
     },
 );

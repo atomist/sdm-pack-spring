@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-import { InMemoryProject } from "@atomist/automation-client";
+import {
+    InMemoryProject,
+} from "@atomist/automation-client";
 
 import { PushListenerInvocation } from "@atomist/sdm";
 import * as assert from "power-assert";
-import { HasSpringBootApplicationClass } from "../../lib/spring/pushTests";
+import {
+    HasSpringBootApplicationClass,
+    IsSpringBoot2Project,
+} from "../../lib/spring/pushTests";
 import { springBootPom } from "./generator/TestPoms";
 
 describe("springPushTests", () => {
@@ -47,4 +52,17 @@ describe("springPushTests", () => {
         });
     });
 
+    describe("IsSpringBoot2", () => {
+        it("should be able to detect Spring Boot 2 dependency", async () => {
+            const project = InMemoryProject.of({path: "pom.xml", content: springBootPom("2.0.0.RELEASE")});
+            const r = await IsSpringBoot2Project.mapping({ project } as any as PushListenerInvocation);
+            assert(r);
+        });
+
+        it("should be able to detect Spring Boot 1 dependency", async () => {
+            const project = InMemoryProject.of({path: "pom.xml", content: springBootPom("1.5.8.RELEASE")});
+            const r = await IsSpringBoot2Project.mapping({ project } as any as PushListenerInvocation);
+            assert(!r);
+        });
+    });
 });
