@@ -17,6 +17,7 @@
 import {
     CodeTransform,
     CodeTransformRegistration,
+    copyFileFromUrl,
 } from "@atomist/sdm";
 import { bringInFile } from "../../../java/transform/bringInFile";
 import { addSpringBootStarterTransform } from "../addSpringBootStarterTransform";
@@ -28,9 +29,9 @@ const AddWebSecurityConfigClass = bringInFile(`${baseUrl}/src/main/java/hello/We
 const AddWebMvcConfigClass = bringInFile(`${baseUrl}/src/main/java/hello/MvcConfig.java`);
 
 const AddWebAppSample: CodeTransform = async (p, inv) => {
-    await bringInFile(`${baseUrl}/src/main/resources/templates/home.html`, `src/main/resources/templates`)(p, inv);
-    await bringInFile(`${baseUrl}/src/main/resources/templates/hello.html`, `src/main/resources/templates`)(p, inv);
-    await bringInFile(`${baseUrl}/src/main/resources/templates/login.html`, `src/main/resources/templates`)(p, inv);
+    await copyFileFromUrl(`${baseUrl}/src/main/resources/templates/home.html`, `src/main/resources/templates/home.html`)(p, inv);
+    await copyFileFromUrl(`${baseUrl}/src/main/resources/templates/hello.html`, `src/main/resources/templates/hello.html`)(p, inv);
+    await copyFileFromUrl(`${baseUrl}/src/main/resources/templates/login.html`, `src/main/resources/templates/login.html`)(p, inv);
     return Promise.resolve(p);
 };
 
