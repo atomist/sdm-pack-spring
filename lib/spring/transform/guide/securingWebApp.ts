@@ -23,7 +23,7 @@ import { addSpringBootStarterTransform } from "../addSpringBootStarterTransform"
 
 const AddSpringSecurityStarter = addSpringBootStarterTransform("spring-boot-starter-security");
 
-const baseUrl = "https://raw.githubusercontent.com/spring-guides/gs-securing-web/blob/master/complete";
+const baseUrl = "https://raw.githubusercontent.com/spring-guides/gs-securing-web/master/complete";
 const AddWebSecurityConfigClass = bringInFile(`${baseUrl}/src/main/java/hello/WebSecurityConfig.java`);
 const AddWebMvcConfigClass = bringInFile(`${baseUrl}/src/main/java/hello/MvcConfig.java`);
 
