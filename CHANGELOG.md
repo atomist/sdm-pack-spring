@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.4a...HEAD)
 
+### Added
+
+-   Add push test to check whether a project is using Spring Boot 2. [#59](https://github.com/atomist/sdm-pack-spring/issues/59)
+
 ## [1.0.0-M.4a](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.4...1.0.0-M.4a) - 2018-09-16
 
 ## [1.0.0-M.4](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.3...1.0.0-M.4) - 2018-09-16
