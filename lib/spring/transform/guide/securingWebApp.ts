@@ -31,9 +31,9 @@ const AddWebMvcConfigClass = bringInFile("https://github.com/spring-guides/gs-se
 
 // noinspection TsLint
 const AddWebAppSample: CodeTransform = (p, inv) => {
-    bringInFile("https://github.com/spring-guides/gs-securing-web/blob/master/complete/src/main/resources/templates/home.html", "src/main/resourced/templates")(p, inv);
-    bringInFile("https://github.com/spring-guides/gs-securing-web/blob/master/complete/src/main/resources/templates/hello.html", "src/main/resourced/templates")(p, inv);
-    bringInFile("https://github.com/spring-guides/gs-securing-web/blob/master/complete/src/main/resources/templates/login.html", "src/main/resourced/templates")(p, inv);
+    bringInFile("https://github.com/spring-guides/gs-securing-web/blob/master/complete/src/main/resources/templates/home.html", "src/main/resources/templates")(p, inv);
+    bringInFile("https://github.com/spring-guides/gs-securing-web/blob/master/complete/src/main/resources/templates/hello.html", "src/main/resources/templates")(p, inv);
+    bringInFile("https://github.com/spring-guides/gs-securing-web/blob/master/complete/src/main/resources/templates/login.html", "src/main/resources/templates")(p, inv);
     return Promise.resolve(p);
 };
 
