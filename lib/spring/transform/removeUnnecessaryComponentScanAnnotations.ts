@@ -16,15 +16,19 @@
 
 import { JavaFileParser } from "@atomist/antlr";
 import {
-    findMatches,
+    findMatches, ProjectReview,
     zapAllMatches,
 } from "@atomist/automation-client";
-import { ProjectReviewer } from "@atomist/automation-client/lib/operations/review/projectReviewer";
 import { ZapTrailingWhitespace } from "@atomist/automation-client/lib/tree/ast/FileHits";
 import { DefaultReviewComment } from "@atomist/automation-client/operations/review/ReviewResult";
-import { CodeTransform } from "@atomist/sdm";
+import { CodeInspection, CodeTransform } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
 
+/**
+ * An @ComponentScan annotation isn't necessary on a @SpringBootApplication class.
+ * Remove it.
+ * @type {string}
+ */
 const UnnecessaryComponentScanAnnotations = `//typeDeclaration[/classDeclaration]
                             [//annotation[@value='@SpringBootApplication']]
                             //annotation[@value='@ComponentScan']`;
@@ -35,7 +39,7 @@ export const removeUnnecessaryComponentScanEditor: CodeTransform = p => {
         ZapTrailingWhitespace);
 };
 
-export const unnecessaryComponentScanReviewer: ProjectReviewer<any> = p => {
+export const unnecessaryComponentScanReviewer: CodeInspection<ProjectReview> = p => {
     return findMatches(p, JavaFileParser, JavaSourceFiles,
         UnnecessaryComponentScanAnnotations)
         .then(matches => {
