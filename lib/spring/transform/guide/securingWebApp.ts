@@ -20,7 +20,6 @@ import {
     CodeTransformRegistration,
 } from "@atomist/sdm";
 import { bringInFile } from "../../../java/transform/bringInFile";
-import { IsSpringBoot2Project } from "../../pushTests";
 import { addSpringBootStarterTransform } from "../addSpringBootStarterTransform";
 
 const AddSpringSecurityStarter = addSpringBootStarterTransform("spring-boot-starter-security");
