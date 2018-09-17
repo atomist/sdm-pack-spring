@@ -19,8 +19,13 @@ import {
     doWithAllMatches,
     findMatches,
 } from "@atomist/automation-client";
-import { CodeTransform } from "@atomist/sdm";
+import {
+    allSatisfied,
+    AutofixRegistration,
+    CodeTransform,
+} from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
+import { IsSpringBoot2Project } from "../pushTests";
 
 const Constructors = `//classBodyDeclaration[//constructorDeclaration]`;
 
@@ -35,4 +40,14 @@ export const removeAutowiredOnSoleConstructor: CodeTransform = async p => {
         await doWithAllMatches(p, JavaFileParser, JavaSourceFiles, Constructors, constructor =>
             constructor.$value = constructor.$value.replace(/@Autowired[\s]+/, ""));
     }
+};
+
+export const FixAutowiredOnSoleConstructor: AutofixRegistration = {
+    name: "FixAutowiredOnSoleConstructor",
+    pushTest: allSatisfied(IsSpringBoot2Project),
+    transform: removeAutowiredOnSoleConstructor,
+    options: {
+        considerOnlyChangedFiles: false,
+        ignoreFailure: false,
+    },
 };
