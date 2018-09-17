@@ -43,7 +43,6 @@ export const ApplySecuredWebAppGuide: CodeTransformRegistration = {
     name: "ApplySecuredWebAppGuide",
     intent: "apply secured web app guide",
     description: "Apply the Spring Boot guide to secure web apps",
-    projectTest: p => IsSpringBoot2Project.predicate(p),
     transform: [
         AddSpringSecurityStarter,
         AddWebSecurityConfigClass,
