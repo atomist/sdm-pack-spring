@@ -16,12 +16,16 @@
 
 import { JavaFileParser } from "@atomist/antlr";
 import {
-    findMatches, ProjectReview,
+    findMatches,
+    ProjectReview,
     zapAllMatches,
 } from "@atomist/automation-client";
 import { ZapTrailingWhitespace } from "@atomist/automation-client/lib/tree/ast/FileHits";
 import { DefaultReviewComment } from "@atomist/automation-client/operations/review/ReviewResult";
-import { CodeInspection, CodeTransform } from "@atomist/sdm";
+import {
+    CodeInspection,
+    CodeTransform,
+} from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
 
 /**
