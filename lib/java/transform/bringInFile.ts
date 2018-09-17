@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-import { InMemoryProject, logger } from "@atomist/automation-client";
-import { CodeTransform, InMemoryProjectFile } from "@atomist/sdm";
+import {
+    InMemoryProject,
+    logger,
+} from "@atomist/automation-client";
+import {
+    CodeTransform,
+    InMemoryProjectFile,
+} from "@atomist/sdm";
 import axios from "axios";
 import * as _ from "lodash";
 import { packageToPath } from "../javaProjectUtils";
