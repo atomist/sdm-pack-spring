@@ -19,7 +19,10 @@ import {
     gatherFromMatches,
     Project,
 } from "@atomist/automation-client";
-import { BoundedElement, toBoundedElement } from "../../util/BoundedElement";
+import {
+    BoundedElement,
+    toBoundedElement,
+} from "../../util/BoundedElement";
 import { JavaPackage } from "./javaPathExpressions";
 
 export interface PackageInfo extends BoundedElement {

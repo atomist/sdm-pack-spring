@@ -15,8 +15,14 @@
  */
 
 import { JavaFileParser } from "@atomist/antlr";
-import { gatherFromMatches, Project } from "@atomist/automation-client";
-import { BoundedElement, toBoundedElement } from "../../util/BoundedElement";
+import {
+    gatherFromMatches,
+    Project,
+} from "@atomist/automation-client";
+import {
+    BoundedElement,
+    toBoundedElement,
+} from "../../util/BoundedElement";
 import { annotationsOnJavaClass } from "./javaPathExpressions";
 
 export type Annotation = BoundedElement;
