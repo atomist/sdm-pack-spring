@@ -26,11 +26,9 @@ import { addSpringBootStarterTransform } from "../addSpringBootStarterTransform"
 const AddSpringSecurityStarter = addSpringBootStarterTransform("spring-boot-starter-security");
 
 const baseUrl = "https://github.com/spring-guides/gs-securing-web/blob/master/complete";
-// noinspection TsLint
 const AddWebSecurityConfigClass = bringInFile(`${baseUrl}/src/main/java/hello/WebSecurityConfig.java`);
 const AddWebMvcConfigClass = bringInFile(`${baseUrl}/src/main/java/hello/MvcConfig.java`);
 
-// noinspection TsLint
 const AddWebAppSample: CodeTransform = async (p, inv) => {
     await bringInFile(`${baseUrl}/src/main/resources/templates/home.html`, `src/main/resources/templates`)(p, inv);
     await bringInFile(`${baseUrl}/src/main/resources/templates/hello.html`, `src/main/resources/templates`)(p, inv);
