@@ -15,7 +15,6 @@
  */
 
 import {
-    BranchCommit,
     CodeTransform,
     CodeTransformRegistration,
 } from "@atomist/sdm";
@@ -50,9 +49,4 @@ export const ApplySecuredWebAppGuide: CodeTransformRegistration = {
         AddWebMvcConfigClass,
         AddWebAppSample,
     ],
-    transformPresentation: (ci, p) => {
-        return {
-            branch: "spring-security-guide",
-        } as BranchCommit;
-    },
 };
