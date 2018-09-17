@@ -19,7 +19,10 @@ import { InMemoryProjectFile } from "@atomist/sdm";
 
 import * as assert from "assert";
 import { addAnnotationToSpringBootClass } from "../../../lib/spring/transform/addAnnotationToSpringBootClass";
-import { GishJavaPath, GishProject } from "../generator/SpringBootProjectStructure.test";
+import {
+    GishJavaPath,
+    GishProject,
+} from "../generator/SpringBootProjectStructure.test";
 
 describe("addAnnotationToSpringBootClass", () => {
 

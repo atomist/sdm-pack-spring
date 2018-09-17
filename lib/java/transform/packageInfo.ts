@@ -15,7 +15,10 @@
  */
 
 import { JavaFileParser } from "@atomist/antlr";
-import { gatherFromMatches, Project } from "@atomist/automation-client";
+import {
+    gatherFromMatches,
+    Project,
+} from "@atomist/automation-client";
 import { BoundedElement } from "../../util/BoundedElement";
 import { JavaPackage } from "../path-expressions/javaPathExpressions";
 
