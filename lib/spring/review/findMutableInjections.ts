@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import { findMatches, ProjectReview, ReviewComment, Severity, SourceLocation } from "@atomist/automation-client";
-import { Project } from "@atomist/automation-client";
-import { JavaSourceFiles } from "../../java/javaProjectUtils";
 import { JavaFileParser } from "@atomist/antlr";
+import { findMatches, Project, ProjectReview, ReviewComment, Severity, SourceLocation } from "@atomist/automation-client";
+import { JavaSourceFiles } from "../../java/javaProjectUtils";
 
 export class MutableInjection implements ReviewComment {
 
