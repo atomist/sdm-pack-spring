@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 /**
  * Entire package declaration, of form 'package com.foo.bar;'
  * @type {string}

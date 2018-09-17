@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 /**
  * Part of a file we can work around
  */
