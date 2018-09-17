@@ -27,12 +27,12 @@ import { mavenDeployer } from "../../maven/deploy/mavenDeployer";
 import { SpringBootSuccessPatterns } from "../springLoggingPatterns";
 
 export function localExecutableJarDeployer(): Deployer<ManagedDeploymentTargetInfo> {
-  return executableJarDeployer({
-      baseUrl: "http://localhost",
-      lowerPort: 8082,
-      commandLineArgumentsFor: springBootExecutableJarArgs,
-      successPatterns: SpringBootSuccessPatterns,
-  });
+    return executableJarDeployer({
+        baseUrl: "http://127.0.0.1",
+        lowerPort: 8082,
+        commandLineArgumentsFor: springBootExecutableJarArgs,
+        successPatterns: SpringBootSuccessPatterns,
+    });
 }
 
 export function springBootExecutableJarArgs(si: StartupInfo): string[] {
@@ -45,7 +45,7 @@ export function springBootExecutableJarArgs(si: StartupInfo): string[] {
 
 export function mavenSourceDeployer(projectLoader: ProjectLoader): Deployer<ManagedDeploymentTargetInfo> {
     return mavenDeployer(projectLoader, {
-        baseUrl: "http://localhost",
+        baseUrl: "http://127.0.0.1",
         lowerPort: 9090,
         commandLineArgumentsFor: springBootMavenArgs,
         successPatterns: SpringBootSuccessPatterns,

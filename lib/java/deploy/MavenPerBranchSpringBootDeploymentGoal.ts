@@ -113,7 +113,7 @@ export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoad
         lowerPort: 9090,
         successPatterns: SpringBootSuccessPatterns,
         commandLineArgumentsFor: springBootMavenArgs,
-        baseUrl: `http://${os.hostname()}`,
+        baseUrl: "http://127.0.0.1",
         maxConcurrentDeployments: 5,
         ...opts,
     };
