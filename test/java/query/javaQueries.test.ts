@@ -42,6 +42,30 @@ describe("javaQueries", () => {
             assert.strictEqual(annotations.length, 0);
         });
 
+        it("should find no annotations when class has none, despite having members", async () => {
+            const sourceFilePath = "src/main/java/Foo";
+            const p = InMemoryProject.of(
+                new InMemoryProjectFile(sourceFilePath,
+                    "public class Foo { private int i; public void foo() {} }"));
+            const annotations = await existingAnnotations(p, {
+                sourceFilePath,
+                className: "Foo",
+            });
+            assert.strictEqual(annotations.length, 0);
+        });
+
+        it("should find no annotations when class has none, despite having additional modifiers", async () => {
+            const sourceFilePath = "src/main/java/Foo";
+            const p = InMemoryProject.of(
+                new InMemoryProjectFile(sourceFilePath,
+                    "public final class Foo { private int i; public void foo() {} }"));
+            const annotations = await existingAnnotations(p, {
+                sourceFilePath,
+                className: "Foo",
+            });
+            assert.strictEqual(annotations.length, 0);
+        });
+
         it("should find one annotation", async () => {
             const sourceFilePath = "src/main/java/Foo";
             const p = InMemoryProject.of(new InMemoryProjectFile(sourceFilePath, "@Bar public class Foo {}"));

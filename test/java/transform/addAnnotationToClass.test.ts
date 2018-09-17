@@ -43,6 +43,17 @@ describe("addAnnotationToClass", () => {
             assert.strictEqual(content, "@com.foo.Bar\npublic class Thing {}");
         });
 
+        it("should add annotation if not present to more complex class", async () => {
+            const path = "src/main/java/Thing.java";
+            const p = InMemoryProject.of(
+                new InMemoryProjectFile(path, ClassWithMembers),
+            );
+            await addAnnotationToClassRaw({ sourceFilePath: path, className: "Thing", annotationName: "com.foo.Bar" })(p, undefined);
+            const f = p.findFileSync(path);
+            const content = f.getContentSync();
+            assert.strictEqual(content, "@com.foo.Bar\n" + ClassWithMembers);
+        });
+
         it("should do nothing if annotation is already present", async () => {
             const initialContent = "@com.foo.Bar\npublic class Thing {}";
             const path = "src/main/java/Thing.java";
@@ -92,3 +103,13 @@ describe("addAnnotationToClass", () => {
     });
 
 });
+
+/* tslint:disable */
+
+const ClassWithMembers = `public class Thing {
+
+    private int i = 0;
+    
+    public void foo() {
+    }
+}`;
