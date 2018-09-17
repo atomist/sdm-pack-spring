@@ -76,3 +76,6 @@ export * from "./lib/maven/build/helpers";
 export * from "./lib/maven/MavenProgressReporter";
 export * from "./lib/maven/inspection/findDependenciesCommand";
 export * from "./lib/maven/inspection/findDependencies";
+export {
+    ApplySecuredWebAppGuide,
+} from "./lib/spring/transform/guide/securingWebApp";
