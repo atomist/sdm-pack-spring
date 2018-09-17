@@ -17,7 +17,10 @@
 import { InMemoryProject } from "@atomist/sdm";
 
 import * as assert from "power-assert";
-import { findMutableInjections, MutableInjection } from "../../../lib/spring/review/findMutableInjections";
+import {
+    findMutableInjections,
+    MutableInjection,
+} from "../../../lib/spring/review/findMutableInjections";
 
 describe("find mutable injections", () => {
 

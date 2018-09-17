@@ -17,7 +17,10 @@
 import { InMemoryProject } from "@atomist/sdm";
 
 import * as assert from "power-assert";
-import { findNonSpecificMvcAnnotations, NonSpecificMvcAnnotation } from "../../../lib/spring/review/findNonSpecificMvcAnnotations";
+import {
+    findNonSpecificMvcAnnotations,
+    NonSpecificMvcAnnotation,
+} from "../../../lib/spring/review/findNonSpecificMvcAnnotations";
 
 describe("find non specific MVC annotations", () => {
 

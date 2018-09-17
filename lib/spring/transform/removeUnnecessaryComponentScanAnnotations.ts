@@ -15,7 +15,10 @@
  */
 
 import { JavaFileParser } from "@atomist/antlr";
-import { findMatches, zapAllMatches } from "@atomist/automation-client";
+import {
+    findMatches,
+    zapAllMatches,
+} from "@atomist/automation-client";
 import { ProjectReviewer } from "@atomist/automation-client/lib/operations/review/projectReviewer";
 import { ZapTrailingWhitespace } from "@atomist/automation-client/lib/tree/ast/FileHits";
 import { DefaultReviewComment } from "@atomist/automation-client/operations/review/ReviewResult";

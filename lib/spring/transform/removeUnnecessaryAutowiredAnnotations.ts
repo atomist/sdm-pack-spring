@@ -15,7 +15,10 @@
  */
 
 import { JavaFileParser } from "@atomist/antlr";
-import { doWithAllMatches, findMatches } from "@atomist/automation-client";
+import {
+    doWithAllMatches,
+    findMatches,
+} from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
 
