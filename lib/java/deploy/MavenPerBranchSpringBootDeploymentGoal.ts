@@ -39,7 +39,7 @@ import * as spawn from "cross-spawn";
 import * as os from "os";
 import * as portfinder from "portfinder";
 import { MavenLogInterpreter } from "../../maven/build/mavenLogInterpreter";
-import { determineMavenCommand } from "../../maven/MavenCommand";
+import { determineMavenCommand } from "../../maven/mavenCommand";
 import { SpringBootSuccessPatterns } from "../../spring/springLoggingPatterns";
 
 export const ListBranchDeploys: CommandHandlerRegistration = {
