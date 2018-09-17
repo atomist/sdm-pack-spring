@@ -15,7 +15,10 @@
  */
 
 import { Project } from "@atomist/automation-client";
-import { Microgrammar, Updatable } from "@atomist/microgrammar";
+import {
+    Microgrammar,
+    Updatable,
+} from "@atomist/microgrammar";
 import { CodeTransform } from "@atomist/sdm";
 
 /**
