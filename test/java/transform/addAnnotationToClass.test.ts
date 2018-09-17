@@ -32,7 +32,7 @@ describe("addAnnotationToClass", () => {
             await addAnnotationToClassRaw({ sourceFilePath: "not/there", className: "Foo", annotationName: "com.foo.Bar" })(p, undefined);
         });
 
-        it("should add annotation", async () => {
+        it("should add annotation if not present", async () => {
             const path = "src/main/java/Thing.java";
             const p = InMemoryProject.of(
                 new InMemoryProjectFile(path, "public class Thing {}"),
@@ -41,6 +41,18 @@ describe("addAnnotationToClass", () => {
             const f = p.findFileSync(path);
             const content = f.getContentSync();
             assert.strictEqual(content, "@com.foo.Bar\npublic class Thing {}");
+        });
+
+        it("should do nothing if annotation is already present", async () => {
+            const initialContent = "@com.foo.Bar\npublic class Thing {}";
+            const path = "src/main/java/Thing.java";
+            const p = InMemoryProject.of(
+                new InMemoryProjectFile(path, initialContent),
+            );
+            await addAnnotationToClassRaw({ sourceFilePath: path, className: "Thing", annotationName: "com.foo.Bar" })(p, undefined);
+            const f = p.findFileSync(path);
+            const content = f.getContentSync();
+            assert.strictEqual(content, initialContent);
         });
 
     });
@@ -61,6 +73,18 @@ describe("addAnnotationToClass", () => {
             const f = p.findFileSync(path);
             const content = f.getContentSync();
             assert.strictEqual(content, "import com.foo.Bar;\n@Bar\npublic class Thing {}");
+        });
+
+        it("should do nothing if already present", async () => {
+            const initialContent = "import com.foo.Bar;\n@Bar\npublic class Thing {}";
+            const path = "src/main/java/Thing.java";
+            const p = InMemoryProject.of(
+                new InMemoryProjectFile(path, initialContent),
+            );
+            await addAnnotationToClass({ sourceFilePath: path, className: "Thing", annotationFqn: "com.foo.Bar" })(p, undefined);
+            const f = p.findFileSync(path);
+            const content = f.getContentSync();
+            assert.strictEqual(content, initialContent);
         });
 
         it ("should handle class in default package");

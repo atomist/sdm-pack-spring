@@ -26,8 +26,8 @@ import {
     countTill,
     insertAt,
 } from "../../util/formatUtils";
-import { JavaImportNames } from "../path-expressions/javaPathExpressions";
-import { packageInfo } from "./packageInfo";
+import { JavaImportNames } from "../query/javaPathExpressions";
+import { packageInfo } from "../query/packageInfo";
 
 export interface Import {
 

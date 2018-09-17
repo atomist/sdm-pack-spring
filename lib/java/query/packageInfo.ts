@@ -19,8 +19,8 @@ import {
     gatherFromMatches,
     Project,
 } from "@atomist/automation-client";
-import { BoundedElement } from "../../util/BoundedElement";
-import { JavaPackage } from "../path-expressions/javaPathExpressions";
+import { BoundedElement, toBoundedElement } from "../../util/BoundedElement";
+import { JavaPackage } from "./javaPathExpressions";
 
 export interface PackageInfo extends BoundedElement {
 
@@ -37,8 +37,7 @@ export async function packageInfo(p: Project, path: string): Promise<PackageInfo
     const packages = await gatherFromMatches(p, JavaFileParser, path, JavaPackage, m => {
         return {
             fqn: m.$children.find(c => c.$name === "qualifiedName").$value,
-            offset: m.$offset,
-            insertAfter: m.$offset + m.$value.length,
+            ...toBoundedElement(m),
         };
     });
     return packages.length === 1 ? packages[0] : undefined;

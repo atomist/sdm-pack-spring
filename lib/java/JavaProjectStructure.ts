@@ -28,7 +28,7 @@ import {
     JavaSourceFiles,
     KotlinSourceFiles,
 } from "./javaProjectUtils";
-import { JavaPackageName } from "./path-expressions/javaPathExpressions";
+import { JavaPackageName } from "./query/javaPathExpressions";
 
 /**
  * Path expression using the Kotlin grammar for a Java package declaration

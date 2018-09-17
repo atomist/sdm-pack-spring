@@ -28,6 +28,15 @@ export const JavaPackageName = "//packageDeclaration//qualifiedName";
 
 export const JavaImportNames = "//importDeclaration/qualifiedName";
 
-export function javaClassDeclarationWithName(name: string) {
+/**
+ * Return path expression to full annotation node, without breaking down further
+ * @param {string} name
+ * @return {string}
+ */
+export function annotationsOnJavaClass(name: string): string {
+    return `//typeDeclaration[/classDeclaration//Identifier[@value='${name}']]//annotation`;
+}
+
+export function javaClassDeclarationWithName(name: string): string {
     return `//typeDeclaration[//classDeclaration[//Identifier[@value='${name}']]]`;
 }

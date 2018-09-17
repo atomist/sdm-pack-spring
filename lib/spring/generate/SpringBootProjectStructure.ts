@@ -37,7 +37,7 @@ import {
     JavaSourceFiles,
     KotlinSourceFiles,
 } from "../../java/javaProjectUtils";
-import { JavaPackageName } from "../../java/path-expressions/javaPathExpressions";
+import { JavaPackageName } from "../../java/query/javaPathExpressions";
 
 /**
  * Path expression for a class name annotated with Spring Boot.

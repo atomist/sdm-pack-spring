@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
+import { MatchResult } from "@atomist/automation-client";
+
 /**
  * Part of a file we can work around
  */
 export interface BoundedElement {
+
+    /**
+     * Value of whole element
+     */
+    value: string;
+
     /**
      * Offset within the file
      */
@@ -28,4 +36,12 @@ export interface BoundedElement {
      */
     insertAfter: number;
 
+}
+
+export function toBoundedElement(m: MatchResult): BoundedElement {
+    return {
+        value: m.$value,
+        offset: m.$offset,
+        insertAfter: m.$offset + m.$value.length,
+    };
 }

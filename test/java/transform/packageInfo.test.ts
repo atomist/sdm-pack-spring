@@ -17,7 +17,7 @@
 import { InMemoryProject } from "@atomist/automation-client";
 import { InMemoryProjectFile } from "@atomist/sdm";
 import * as assert from "assert";
-import { packageInfo } from "../../../lib/java/transform/packageInfo";
+import { packageInfo } from "../../../lib/java/query/packageInfo";
 
 describe("packageInfo", () => {
 
