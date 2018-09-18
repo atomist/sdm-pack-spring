@@ -21,18 +21,24 @@ import {
 } from "@atomist/sdm";
 import { bringInFile } from "../../../java/transform/bringInFile";
 import { addSpringBootStarterTransform } from "../addSpringBootStarterTransform";
+import { SpringBootProjectStructure } from "../../generate/SpringBootProjectStructure";
 
 const AddSpringSecurityStarter = addSpringBootStarterTransform("spring-boot-starter-security");
 
 const baseUrl = "https://raw.githubusercontent.com/spring-guides/gs-securing-web/master/complete";
-const AddWebSecurityConfigClass = bringInFile(`${baseUrl}/src/main/java/hello/WebSecurityConfig.java`);
-const AddWebMvcConfigClass = bringInFile(`${baseUrl}/src/main/java/hello/MvcConfig.java`);
+const AddWebSecurityConfigClass: CodeTransform = async (p, inv) => {
+    const structure = await SpringBootProjectStructure.inferFromJavaOrKotlinSource(p);
+    await bringInFile(`${baseUrl}/src/main/java/hello/WebSecurityConfig.java`, "src/main/java", structure.applicationPackage);
+};
+const AddWebMvcConfigClass: CodeTransform = async (p, inv) => {
+    const structure = await SpringBootProjectStructure.inferFromJavaOrKotlinSource(p);
+    await bringInFile(`${baseUrl}/src/main/java/hello/MvcConfig.java`, "src/main/java", structure.applicationPackage);
+};
 
 const AddWebAppSample: CodeTransform = async (p, inv) => {
     await copyFileFromUrl(`${baseUrl}/src/main/resources/templates/home.html`, `src/main/resources/templates/home.html`)(p, inv);
     await copyFileFromUrl(`${baseUrl}/src/main/resources/templates/hello.html`, `src/main/resources/templates/hello.html`)(p, inv);
     await copyFileFromUrl(`${baseUrl}/src/main/resources/templates/login.html`, `src/main/resources/templates/login.html`)(p, inv);
-    return Promise.resolve(p);
 };
 
 const AddThymeleafStarter: CodeTransform = addSpringBootStarterTransform("spring-boot-starter-thymeleaf");

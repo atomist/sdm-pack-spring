@@ -24,7 +24,10 @@ import {
 } from "@atomist/sdm";
 import axios from "axios";
 import * as _ from "lodash";
-import { packageToPath } from "../javaProjectUtils";
+import {
+    movePackage,
+    packageToPath
+} from "../javaProjectUtils";
 import { packageInfo } from "../query/packageInfo";
 
 /**
@@ -37,7 +40,8 @@ import { packageInfo } from "../query/packageInfo";
  * @param sourceRoot source root to place the file under
  */
 export function bringInFile(url: string,
-                            sourceRoot: string = "src/main/java"): CodeTransform {
+                            sourceRoot: string = "src/main/java",
+                            targetPackage?: string): CodeTransform {
     return async p => {
         const response = await axios.get(url);
         const content: string = response.data;
@@ -52,5 +56,8 @@ export function bringInFile(url: string,
         const path = sourceRoot + "/" + packageToPath(pack.fqn) + "/" + className;
         logger.info("Package is %s: Writing file from %s to %s, class name is %s", pack.fqn, url, path, className);
         await p.addFile(path, content);
+        if (!!targetPackage) {
+            await movePackage(p, pack.fqn, targetPackage, path);
+        }
     };
 }
