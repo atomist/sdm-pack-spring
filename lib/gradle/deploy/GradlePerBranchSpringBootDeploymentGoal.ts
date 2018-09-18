@@ -113,7 +113,7 @@ export function executeGradlePerBranchSpringBootDeploy(projectLoader: ProjectLoa
         lowerPort: 9090,
         successPatterns: SpringBootSuccessPatterns,
         commandLineArgumentsFor: springBootGradleArgs,
-        baseUrl: `http://${os.hostname()}`,
+        baseUrl: "http://127.0.0.1",
         maxConcurrentDeployments: 5,
         ...opts,
     };

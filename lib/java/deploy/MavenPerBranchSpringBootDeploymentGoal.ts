@@ -39,7 +39,7 @@ import * as spawn from "cross-spawn";
 import * as os from "os";
 import * as portfinder from "portfinder";
 import { MavenLogInterpreter } from "../../maven/build/mavenLogInterpreter";
-import { determineMavenCommand } from "../../maven/MavenCommand";
+import { determineMavenCommand } from "../../maven/mavenCommand";
 import { SpringBootSuccessPatterns } from "../../spring/springLoggingPatterns";
 
 export const ListBranchDeploys: CommandHandlerRegistration = {
@@ -113,7 +113,7 @@ export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoad
         lowerPort: 9090,
         successPatterns: SpringBootSuccessPatterns,
         commandLineArgumentsFor: springBootMavenArgs,
-        baseUrl: `http://${os.hostname()}`,
+        baseUrl: "http://127.0.0.1",
         maxConcurrentDeployments: 5,
         ...opts,
     };

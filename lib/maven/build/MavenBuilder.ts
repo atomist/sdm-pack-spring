@@ -34,7 +34,7 @@ import {
     LocalBuilder,
     LocalBuildInProgress,
 } from "@atomist/sdm-core";
-import { determineMavenCommand } from "../MavenCommand";
+import { determineMavenCommand } from "../mavenCommand";
 import { MavenProjectIdentifier } from "../parse/pomParser";
 import { VersionedArtifact } from "../VersionedArtifact";
 import { MavenLogInterpreter } from "./mavenLogInterpreter";

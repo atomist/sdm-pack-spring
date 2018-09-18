@@ -30,27 +30,23 @@ describe("addSpringBootStarterTransform", () => {
     it("transforms Spring Boot project", async () => {
         const starterName = "thing-x";
         const p = InMemoryProject.of({ path: "pom.xml", content: FromInitializr });
-        return addSpringBootStarterTransform(starterName)(p, undefined)
-            .then(async () => {
-                const content = p.findFileSync("pom.xml").getContentSync();
-                assert(content.includes(starterName));
-                const deps = await findDeclaredDependencies(p);
-                assert(deps.dependencies.some(d => d.artifact === starterName),
-                    "Found\n" + content);
-            });
+        await addSpringBootStarterTransform(starterName)(p, undefined);
+        const content = p.findFileSync("pom.xml").getContentSync();
+        assert(content.includes(starterName));
+        const deps = await findDeclaredDependencies(p);
+        assert(deps.dependencies.some(d => d.artifact === starterName),
+            "Found\n" + content);
     });
 
     it("transforms Spring Boot project with another POM", async () => {
         const starterName = "thing-x";
         const p = InMemoryProject.of({ path: "pom.xml", content: springBootPom() });
-        return addSpringBootStarterTransform(starterName)(p, undefined)
-            .then(async () => {
-                const content = p.findFileSync("pom.xml").getContentSync();
-                assert(content.includes(starterName));
-                const deps = await findDeclaredDependencies(p);
-                assert(deps.dependencies.some(d => d.artifact === starterName),
-                    "Found\n" + content);
-            });
+        await addSpringBootStarterTransform(starterName)(p, undefined);
+        const content = p.findFileSync("pom.xml").getContentSync();
+        assert(content.includes(starterName));
+        const deps = await findDeclaredDependencies(p);
+        assert(deps.dependencies.some(d => d.artifact === starterName),
+            "Found\n" + content);
     });
 
     it("transforms Spring Boot project with dependency management block before dependencies", async () => {
@@ -59,13 +55,11 @@ describe("addSpringBootStarterTransform", () => {
             path: "pom.xml",
             content: FromInitializr.replace(placeHolder(1), DependencyManagementBlock),
         });
-        return addSpringBootStarterTransform(starterName)(p, undefined)
-            .then(async () => {
-                const content = p.findFileSync("pom.xml").getContentSync();
-                assert(content.includes(starterName), content);
-                const deps = await findDeclaredDependencies(p);
-                assert(deps.dependencies.some(d => d.artifact === starterName));
-            });
+        await addSpringBootStarterTransform(starterName)(p, undefined);
+        const content = p.findFileSync("pom.xml").getContentSync();
+        assert(content.includes(starterName), content);
+        const deps = await findDeclaredDependencies(p);
+        assert(deps.dependencies.some(d => d.artifact === starterName));
     });
 
     it("transforms Spring Boot project with dependency management block after dependencies", async () => {
@@ -74,14 +68,12 @@ describe("addSpringBootStarterTransform", () => {
             path: "pom.xml",
             content: FromInitializr.replace(placeHolder(2), DependencyManagementBlock),
         });
-        return addSpringBootStarterTransform(starterName)(p, undefined)
-            .then(async () => {
-                const content = p.findFileSync("pom.xml").getContentSync();
-                assert(content.includes(starterName), "Found\n" + content);
-                const deps = await findDeclaredDependencies(p);
-                assert(deps.dependencies.some(d => d.artifact === starterName),
-                    "Found\n" + content);
-            });
+        await addSpringBootStarterTransform(starterName)(p, undefined);
+        const content = p.findFileSync("pom.xml").getContentSync();
+        assert(content.includes(starterName), "Found\n" + content);
+        const deps = await findDeclaredDependencies(p);
+        assert(deps.dependencies.some(d => d.artifact === starterName),
+            "Found\n" + content);
     });
 
 });

@@ -16,7 +16,7 @@
 
 import { JavaFileParser } from "@atomist/antlr";
 import {
-    findMatches,
+    gatherFromMatches,
     Project,
     ProjectReview,
     ReviewComment,
@@ -27,8 +27,8 @@ import { JavaSourceFiles } from "../../java/javaProjectUtils";
 
 export class NonSpecificMvcAnnotation implements ReviewComment {
 
-    public severity: Severity = "info";
-    public category = "Old style MVC annotation";
+    public readonly severity: Severity = "info";
+    public readonly category = "Old style MVC annotation";
 
     constructor(public raw: string, public sourceLocation: SourceLocation) {
     }
@@ -40,19 +40,18 @@ export class NonSpecificMvcAnnotation implements ReviewComment {
 
 const RequestMappingAnnotation = `//annotation[//annotationName[@value='RequestMapping']]`;
 
-const globPattern: string = JavaSourceFiles;
-
 /**
  * Find all non specific, old style @RequestMapping annotations
  * @param {Project} p project to search
+ * @param globPattern glob pattern. Defaults to Maven convention Java source files
  * location of source tree.
  */
-export function findNonSpecificMvcAnnotations(p: Project): Promise<ProjectReview> {
-    return findMatches(p, JavaFileParser, globPattern, RequestMappingAnnotation)
-        .then(fileHits => ({
-            repoId: p.id,
-            comments: fileHits.map(m => new NonSpecificMvcAnnotation(
+export async function findNonSpecificMvcAnnotations(p: Project, globPattern: string = JavaSourceFiles): Promise<ProjectReview> {
+    return {
+        repoId: p.id,
+        comments: await gatherFromMatches(p, JavaFileParser, globPattern, RequestMappingAnnotation,
+            m => new NonSpecificMvcAnnotation(
                 m.$value,
                 m.sourceLocation)),
-        }));
+    };
 }

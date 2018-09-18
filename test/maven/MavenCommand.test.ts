@@ -15,20 +15,101 @@
  */
 
 import { InMemoryProject } from "@atomist/automation-client";
+import * as os from "os";
+import * as path from "path";
 import * as assert from "power-assert";
-import { determineMavenCommand } from "../../lib/maven/MavenCommand";
+import { determineMavenCommand } from "../../lib/maven/mavenCommand";
 
-describe("MavenCommandTests", () => {
+describe("mavenCommand", () => {
 
-    it("should use maven if no wrapper is present", async () => {
-        const project = InMemoryProject.of();
-        const command = determineMavenCommand(project);
-        assert(command === "mvn");
+    describe("posix", () => {
+
+        // tslint:disable:no-invalid-this
+        before(function() {
+            this.originalOsPlatform = Object.getOwnPropertyDescriptor(os, "platform");
+            Object.defineProperty(os, "platform", {
+                value: () => "linux",
+            });
+        });
+        after(function() {
+            Object.defineProperty(os, "platform", this.originalOsPlatform);
+        });
+        // tslint:enable:no-invalid-this
+
+        it("should use mvn if no wrapper is present", async () => {
+            const project = InMemoryProject.of();
+            const command = determineMavenCommand(project);
+            assert(command === "mvn");
+        });
+
+        it("should use maven wrapper if it is present", async () => {
+            const project = InMemoryProject.of({ path: "mvnw", content: "" });
+            const command = determineMavenCommand(project);
+            assert(command === "./mvnw");
+        });
+
+        it("should use maven wrapper even if JAVA_HOME is not defined", async () => {
+            const javaHome = process.env.JAVA_HOME;
+            if (process.env.JAVA_HOME) {
+                delete process.env.JAVA_HOME;
+            }
+            const project = InMemoryProject.of({ path: "mvnw", content: "" });
+            const command = determineMavenCommand(project);
+            assert(command === "./mvnw");
+            if (javaHome) {
+                process.env.JAVA_HOME = javaHome;
+            }
+        });
+
     });
 
-    it("should use maven wrapper if POSIX wrapper is present", async () => {
-        const project = InMemoryProject.of({path: "mvnw", content: ""});
-        const command = determineMavenCommand(project);
-        assert(command === "./mvnw");
+    describe("win32", () => {
+
+        // tslint:disable:no-invalid-this
+        before(function() {
+            this.originalOsPlatform = Object.getOwnPropertyDescriptor(os, "platform");
+            Object.defineProperty(os, "platform", {
+                value: () => "win32",
+            });
+        });
+        after(function() {
+            Object.defineProperty(os, "platform", this.originalOsPlatform);
+        });
+        // tslint:enable:no-invalid-this
+
+        it("should return mvn when there is no wrapper", async () => {
+            const project = InMemoryProject.of();
+            const command = determineMavenCommand(project);
+            assert(command === "mvn");
+        });
+
+        it("should use maven wrapper if it is present and JAVA_HOME set", async () => {
+            let deleteJavaHome: boolean = false;
+            if (!process.env.JAVA_HOME) {
+                process.env.JAVA_HOME = path.join("some", "path", "to", "jdk");
+                deleteJavaHome = true;
+            }
+            const project = InMemoryProject.of({ path: "mvnw.cmd", content: "" });
+            const command = determineMavenCommand(project);
+            assert(command === "mvnw");
+            if (deleteJavaHome) {
+                delete process.env.JAVA_HOME;
+            }
+        });
+
+        it("should not use maven wrapper if JAVA_HOME is not defined", async () => {
+            const javaHome = process.env.JAVA_HOME;
+            if (process.env.JAVA_HOME) {
+                delete process.env.JAVA_HOME;
+            }
+            const project = InMemoryProject.of({ path: "mvnw.cmd", content: "" });
+            const command = determineMavenCommand(project);
+            assert(command === "mvn");
+            if (javaHome) {
+                process.env.JAVA_HOME = javaHome;
+            }
+        });
+
     });
+
 });

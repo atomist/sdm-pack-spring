@@ -63,6 +63,7 @@ export { TransformSeedToCustomProject } from "./lib/spring/generate/transformSee
 export {
     HasSpringBootApplicationClass,
     HasSpringBootPom,
+    IsSpringBoot2Project,
 } from "./lib/spring/pushTests";
 export {
     HardCodedPropertyReviewer,
@@ -79,3 +80,7 @@ export * from "./lib/maven/inspection/findDependencies";
 export {
     ApplySecuredWebAppGuide,
 } from "./lib/spring/transform/guide/securingWebApp";
+export {
+    removeAutowiredOnSoleConstructor,
+    FixAutowiredOnSoleConstructor,
+} from "./lib/spring/transform/removeUnnecessaryAutowiredAnnotations";

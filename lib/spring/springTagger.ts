@@ -15,10 +15,9 @@
  */
 
 import {
-    DefaultTaggerTags,
-    logger,
+    fileExists,
+    Project,
     Tagger,
-    toPromise,
 } from "@atomist/automation-client";
 
 import { AllJavaFiles } from "../java/javaProjectUtils";
@@ -29,28 +28,28 @@ import { SpringBootStarter } from "./springConstants";
  * @param p project to scan
  * @return {Promise<DefaultTaggerTags>}
  */
-export const springBootTagger: Tagger = p => {
-    return p.findFile("pom.xml")
-        .then(f => f.getContent())
-        .then(content => {
-            const tags: string[] = [];
-            if (content.includes(SpringBootStarter)) {
-                tags.push("spring-boot");
-                tags.push("spring");
-            } else if (content.includes("org.springframework")) {
-                tags.push("spring");
-            }
-            // TODO need to simplify this
-            return toPromise(p.streamFiles(AllJavaFiles))
-                .then(javaFiles => {
-                    if (javaFiles.length > 0) {
-                        tags.push("java");
-                    }
-                    return new DefaultTaggerTags(p.id, tags);
-                });
-        })
-        .catch(err => {
-            logger.warn("Tag error: " + err);
-            return new DefaultTaggerTags(p.id, []);
-        });
+export const springBootTagger: Tagger = async p => {
+    const tags = await tagsFromPom(p);
+    if (await fileExists(p, AllJavaFiles, f => true)) {
+        tags.push("java");
+    }
+    if (await fileExists(p, "**/*.kt", f => true)) {
+        tags.push("kotlin");
+    }
+    return { repoId: p.id, tags };
 };
+
+async function tagsFromPom(p: Project): Promise<string[]> {
+    const tags: string[] = [];
+    const pom = await p.getFile("pom.xml");
+    if (!!pom) {
+        const content = await pom.getContent();
+        if (content.includes(SpringBootStarter)) {
+            tags.push("spring-boot");
+            tags.push("spring");
+        } else if (content.includes("org.springframework")) {
+            tags.push("spring");
+        }
+    }
+    return tags;
+}

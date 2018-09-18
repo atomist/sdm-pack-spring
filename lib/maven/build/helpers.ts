@@ -26,7 +26,7 @@ import {
 } from "@atomist/sdm";
 import { ProjectVersioner } from "@atomist/sdm-core";
 import * as df from "dateformat";
-import { determineMavenCommand } from "../MavenCommand";
+import { determineMavenCommand } from "../mavenCommand";
 import { MavenProjectIdentifier } from "../parse/pomParser";
 import { mavenPackage } from "./MavenBuilder";
 

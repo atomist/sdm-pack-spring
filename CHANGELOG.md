@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 -   Add push test to check whether a project is using Spring Boot 2. [#59](https://github.com/atomist/sdm-pack-spring/issues/59)
+-   Implement `removeAutowiredOnSoleConstructor` as an autofix. [#57](https://github.com/atomist/sdm-pack-spring/issues/57)
 
 ## [1.0.0-M.4a](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.4...1.0.0-M.4a) - 2018-09-16
 

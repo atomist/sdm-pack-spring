@@ -41,7 +41,7 @@ import {
     SpawnedDeployment,
 } from "@atomist/sdm-core";
 import * as spawn from "cross-spawn";
-import { determineMavenCommand } from "../MavenCommand";
+import { determineMavenCommand } from "../mavenCommand";
 
 /**
  * Managed deployments
