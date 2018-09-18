@@ -43,24 +43,21 @@ export const removeUnnecessaryComponentScanEditor: CodeTransform = p => {
         ZapTrailingWhitespace);
 };
 
-export const unnecessaryComponentScanReviewer: CodeInspection<ProjectReview> = p => {
-    return findMatches(p, JavaFileParser, JavaSourceFiles,
-        UnnecessaryComponentScanAnnotations)
-        .then(matches => {
-            return {
-                repoId: p.id,
-                comments: matches.map(m => {
-                    return new DefaultReviewComment("info", "unnecessary annotations",
-                        "`@ComponentScan` annotations are not necessary on `@SpringBootApplication` classes as they are inherited",
-                        m.sourceLocation,
-                        {
-                            command: "RemoveUnnecessaryComponentScanAnnotations",
-                            params: {
-                                "target.owner": p.id.owner,
-                                "target.repo": p.id.repo,
-                            },
-                        });
-                }),
-            };
-        });
+export const unnecessaryComponentScanReviewer: CodeInspection<ProjectReview> = async p => {
+    const matches = await findMatches(p, JavaFileParser, JavaSourceFiles, UnnecessaryComponentScanAnnotations);
+    return {
+        repoId: p.id,
+        comments: matches.map(m => {
+            return new DefaultReviewComment("info", "unnecessary annotations",
+                "`@ComponentScan` annotations are not necessary on `@SpringBootApplication` classes as they are inherited",
+                m.sourceLocation,
+                {
+                    command: "RemoveUnnecessaryComponentScanAnnotations",
+                    params: {
+                        "target.owner": p.id.owner,
+                        "target.repo": p.id.repo,
+                    },
+                });
+        }),
+    };
 };

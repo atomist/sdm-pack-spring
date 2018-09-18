@@ -50,16 +50,15 @@ const InjectedFields = `//classBodyDeclaration[//annotation[@value='@Autowired']
                          //classBodyDeclaration[//annotation[@value='@Inject']]
                             //methodDeclaration//Identifier[1]`;
 
-const globPattern: string = JavaSourceFiles;
-
 /**
  * Find all fields or setters annotated with @Autowired or @Inject in the codebase.
  * This is an undesirable usage pattern in application code, although
  * acceptable in tests.
  * @param {Project} p project to search
+ * @param globPattern glob pattern. Defaults to Maven convention Java source files
  * location of source tree.
  */
-export async function findMutableInjections(p: Project): Promise<ProjectReview> {
+export async function findMutableInjections(p: Project, globPattern: string = JavaSourceFiles): Promise<ProjectReview> {
     const fileHits = await findMatches(p, JavaFileParser, globPattern, InjectedFields);
     const comments = fileHits.map(m => new MutableInjection(
         m.$value,

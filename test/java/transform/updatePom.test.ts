@@ -21,55 +21,49 @@ import { updatePom } from "../../../lib/maven/generate/updatePom";
 
 describe("updatePom", () => {
 
-    it("should not error on no POM", done => {
+    it("should not error on no POM", async () => {
         const p = new InMemoryProject();
         p.addFileSync("src/main/java/Foo.java", "public class Foo {}");
-        updatePom(p, p.name, "art", "group", "version", "desc").then(_ =>
-            p.flush()
-                .then(() => {
-                    const found = p.findFileSync("src/main/java/Foo.java");
-                    assert(found.getContentSync() === "public class Foo {}");
-                })).then(done, done);
+        await updatePom(p, p.name, "art", "group", "version", "desc");
+        await p.flush();
+        const found = p.findFileSync("src/main/java/Foo.java");
+        assert(found.getContentSync() === "public class Foo {}");
     });
 
-    it("should edit simple POM", done => {
+    it("should edit simple POM", async () => {
         const p = InMemoryProject.from(
             { owner: "wicked", repo: "defying-gravity", url: "" },
             { path: "pom.xml", content: SimplePom },
         );
         p.addFileSync("src/main/java/Foo.java", "public class Foo {}");
-        updatePom(p, p.name, "art", "group", "version", "desc")
-            .then(_ => {
-                const found = p.findFileSync("pom.xml");
-                const newPom = found.getContentSync();
-                assert(newPom.includes("<artifactId>art</artifactId>"));
-                assert(newPom.includes(`<name>defying-gravity</name>`));
-                assert(newPom.includes("<groupId>group</groupId>"));
-                assert(newPom.includes("<version>version</version>"));
-                assert(newPom.includes("<description>desc</description>"));
-                assert(!newPom.includes("<artifactId>flux-flix-service</artifactId>"));
-                assert(!newPom.includes("<name>flux-flix-service</name>"));
-                assert(!newPom.includes("<groupId>com.example</groupId>"));
-                assert(!newPom.includes("<version>0.0.1-SNAPSHOT</version>"));
-                assert(!newPom.includes("<description>Demo project for Spring Boot</description>"));
-            }).then(done, done);
+        await updatePom(p, p.name, "art", "group", "version", "desc");
+        const found = p.findFileSync("pom.xml");
+        const newPom = found.getContentSync();
+        assert(newPom.includes("<artifactId>art</artifactId>"));
+        assert(newPom.includes(`<name>defying-gravity</name>`));
+        assert(newPom.includes("<groupId>group</groupId>"));
+        assert(newPom.includes("<version>version</version>"));
+        assert(newPom.includes("<description>desc</description>"));
+        assert(!newPom.includes("<artifactId>flux-flix-service</artifactId>"));
+        assert(!newPom.includes("<name>flux-flix-service</name>"));
+        assert(!newPom.includes("<groupId>com.example</groupId>"));
+        assert(!newPom.includes("<version>0.0.1-SNAPSHOT</version>"));
+        assert(!newPom.includes("<description>Demo project for Spring Boot</description>"));
     });
 
     // TODO this should succeed
-    it.skip("should edit POM with second artifact and out of order", done => {
+    it.skip("should edit POM with second artifact and out of order", async () => {
         const p = InMemoryProject.from(
             { owner: "wicked", repo: "defying-gravity", url: "" },
             { path: "pom.xml", content: PomWithDualArtifact },
         );
         p.addFileSync("src/main/java/Foo.java", "public class Foo {}");
-        updatePom(p, p.name, "art", "group", "version", "desc")
-            .then(_ => {
-                const found = p.findFileSync("pom.xml");
-                const newPom = found.getContentSync();
-                assert(newPom.includes("<artifactId>art</artifactId>"));
-                // Shouldn't have changed this one
-                assert(newPom.includes("<artifactId>maven-assembly-plugin</artifactId>"));
-            }).then(done, done);
+        await updatePom(p, p.name, "art", "group", "version", "desc");
+        const found = p.findFileSync("pom.xml");
+        const newPom = found.getContentSync();
+        assert(newPom.includes("<artifactId>art</artifactId>"));
+        // Shouldn't have changed this one
+        assert(newPom.includes("<artifactId>maven-assembly-plugin</artifactId>"));
     });
 
 });
