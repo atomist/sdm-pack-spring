@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
+import { JavaFileParser } from "@atomist/antlr";
 import {
+    doWithAllMatches,
+    doWithFiles,
     InMemoryProject,
     logger,
 } from "@atomist/automation-client";
@@ -25,9 +28,9 @@ import {
 import axios from "axios";
 import * as _ from "lodash";
 import {
-    movePackage,
     packageToPath,
 } from "../javaProjectUtils";
+import { JavaPackage } from "../query/javaPathExpressions";
 import { packageInfo } from "../query/packageInfo";
 
 /**
@@ -57,7 +60,12 @@ export function bringInFile(url: string,
         logger.info("Package is %s: Writing file from %s to %s, class name is %s", pack.fqn, url, path, className);
         await p.addFile(path, content);
         if (!!targetPackage) {
-            await movePackage(p, pack.fqn, targetPackage, path);
+            doWithAllMatches(p, JavaFileParser, path, JavaPackage, m => {
+                m.$children.find(c => c.$name === "qualifiedName").$value = targetPackage;
+            });
+            doWithFiles(p, tempPath, async f => {
+                await f.setPath(f.path.replace(packageToPath(pack.fqn), packageToPath(targetPackage)));
+            });
         }
     };
 }
