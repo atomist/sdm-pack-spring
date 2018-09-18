@@ -36,9 +36,9 @@ const AddWebMvcConfigClass: CodeTransform = async (p, inv) => {
 };
 
 const AddWebAppSample: CodeTransform = async (p, inv) => {
-    copyFileFromUrl(`${baseUrl}/src/main/resources/templates/home.html`, `src/main/resources/templates/home.html`)(p, inv);
-    copyFileFromUrl(`${baseUrl}/src/main/resources/templates/hello.html`, `src/main/resources/templates/hello.html`)(p, inv);
-    copyFileFromUrl(`${baseUrl}/src/main/resources/templates/login.html`, `src/main/resources/templates/login.html`)(p, inv);
+    await copyFileFromUrl(`${baseUrl}/src/main/resources/templates/home.html`, `src/main/resources/templates/home.html`)(p, inv);
+    await copyFileFromUrl(`${baseUrl}/src/main/resources/templates/hello.html`, `src/main/resources/templates/hello.html`)(p, inv);
+    await copyFileFromUrl(`${baseUrl}/src/main/resources/templates/login.html`, `src/main/resources/templates/login.html`)(p, inv);
 };
 
 const AddThymeleafStarter: CodeTransform = addSpringBootStarterTransform("spring-boot-starter-thymeleaf");
