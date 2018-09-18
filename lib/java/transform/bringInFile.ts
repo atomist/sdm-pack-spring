@@ -26,7 +26,7 @@ import axios from "axios";
 import * as _ from "lodash";
 import {
     movePackage,
-    packageToPath
+    packageToPath,
 } from "../javaProjectUtils";
 import { packageInfo } from "../query/packageInfo";
 
