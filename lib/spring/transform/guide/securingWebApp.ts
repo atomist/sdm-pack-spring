@@ -20,8 +20,8 @@ import {
     copyFileFromUrl,
 } from "@atomist/sdm";
 import { bringInFile } from "../../../java/transform/bringInFile";
-import { addSpringBootStarterTransform } from "../addSpringBootStarterTransform";
 import { SpringBootProjectStructure } from "../../generate/SpringBootProjectStructure";
+import { addSpringBootStarterTransform } from "../addSpringBootStarterTransform";
 
 const AddSpringSecurityStarter = addSpringBootStarterTransform("spring-boot-starter-security");
 
