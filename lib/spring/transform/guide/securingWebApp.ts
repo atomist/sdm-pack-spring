@@ -28,17 +28,20 @@ const AddSpringSecurityStarter = addSpringBootStarterTransform("spring-boot-star
 const baseUrl = "https://raw.githubusercontent.com/spring-guides/gs-securing-web/master/complete";
 const AddWebSecurityConfigClass: CodeTransform = async (p, inv) => {
     const structure = await SpringBootProjectStructure.inferFromJavaOrKotlinSource(p);
-    bringInFile(`${baseUrl}/src/main/java/hello/WebSecurityConfig.java`, "src/main/java", structure.applicationPackage);
+    await bringInFile(`${baseUrl}/src/main/java/hello/WebSecurityConfig.java`, "src/main/java", structure.applicationPackage);
+    return Promise.resolve(p);
 };
 const AddWebMvcConfigClass: CodeTransform = async (p, inv) => {
     const structure = await SpringBootProjectStructure.inferFromJavaOrKotlinSource(p);
-    bringInFile(`${baseUrl}/src/main/java/hello/MvcConfig.java`, "src/main/java", structure.applicationPackage);
+    await bringInFile(`${baseUrl}/src/main/java/hello/MvcConfig.java`, "src/main/java", structure.applicationPackage);
+    return Promise.resolve(p);
 };
 
 const AddWebAppSample: CodeTransform = async (p, inv) => {
     await copyFileFromUrl(`${baseUrl}/src/main/resources/templates/home.html`, `src/main/resources/templates/home.html`)(p, inv);
     await copyFileFromUrl(`${baseUrl}/src/main/resources/templates/hello.html`, `src/main/resources/templates/hello.html`)(p, inv);
     await copyFileFromUrl(`${baseUrl}/src/main/resources/templates/login.html`, `src/main/resources/templates/login.html`)(p, inv);
+    return Promise.resolve(p);
 };
 
 const AddThymeleafStarter: CodeTransform = addSpringBootStarterTransform("spring-boot-starter-thymeleaf");
