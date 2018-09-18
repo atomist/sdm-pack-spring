@@ -60,10 +60,10 @@ export function bringInFile(url: string,
         logger.info("Package is %s: Writing file from %s to %s, class name is %s", pack.fqn, url, path, className);
         await p.addFile(path, content);
         if (!!targetPackage) {
-            doWithAllMatches(p, JavaFileParser, path, JavaPackage, m => {
+            await doWithAllMatches(p, JavaFileParser, path, JavaPackage, m => {
                 m.$children.find(c => c.$name === "qualifiedName").$value = targetPackage;
             });
-            doWithFiles(p, tempPath, async f => {
+            await doWithFiles(p, tempPath, async f => {
                 await f.setPath(f.path.replace(packageToPath(pack.fqn), packageToPath(targetPackage)));
             });
         }
