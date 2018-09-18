@@ -15,6 +15,7 @@
  */
 
 import {
+    doWithFiles,
     InMemoryProject,
     logger,
 } from "@atomist/automation-client";
@@ -24,7 +25,9 @@ import {
 } from "@atomist/sdm";
 import axios from "axios";
 import * as _ from "lodash";
-import { packageToPath } from "../javaProjectUtils";
+import {
+    packageToPath,
+} from "../javaProjectUtils";
 import { packageInfo } from "../query/packageInfo";
 
 /**
@@ -35,9 +38,11 @@ import { packageInfo } from "../query/packageInfo";
  * refactor in a separate transform if you want to do this.
  * @param {string} url url of the content. Must be publicly accessible
  * @param sourceRoot source root to place the file under
+ * @param targetPackage (optional) the package under which the file should be brought in
  */
 export function bringInFile(url: string,
-                            sourceRoot: string = "src/main/java"): CodeTransform {
+                            sourceRoot: string = "src/main/java",
+                            targetPackage?: string): CodeTransform {
     return async p => {
         const response = await axios.get(url);
         const content: string = response.data;
@@ -52,5 +57,11 @@ export function bringInFile(url: string,
         const path = sourceRoot + "/" + packageToPath(pack.fqn) + "/" + className;
         logger.info("Package is %s: Writing file from %s to %s, class name is %s", pack.fqn, url, path, className);
         await p.addFile(path, content);
+        if (!!targetPackage) {
+            await doWithFiles(p, path, async f => {
+                await f.replaceAll(`package ${pack.fqn}`, `package ${targetPackage}`);
+                await f.setPath(f.path.replace(packageToPath(pack.fqn), packageToPath(targetPackage)));
+            });
+        }
     };
 }
