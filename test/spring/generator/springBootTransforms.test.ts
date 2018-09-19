@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-import {
-    GitHubRepoRef,
-    InMemoryProject,
-    SimpleRepoId,
-} from "@atomist/automation-client";
+import { GitHubRepoRef, InMemoryProject, SimpleRepoId, } from "@atomist/automation-client";
 import { ParametersInvocation } from "@atomist/sdm";
 import * as assert from "power-assert";
-import {
-    ReplaceReadmeTitle,
-    SetAtomistTeamInApplicationYml,
-} from "../../../lib/spring/generate/springBootTransforms";
+import { ReplaceReadmeTitle, SetAtomistTeamInApplicationYml, } from "../../../lib/spring/generate/springBootTransforms";
 import { SpringProjectCreationParameters } from "../../../lib/spring/generate/SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "../../../lib/spring/generate/transformSeedToCustomProject";
 import { springBootPom } from "./TestPoms";
@@ -55,7 +48,7 @@ describe("springBootTransforms", () => {
 
     it("should get correct README content", async () => {
         const p = InMemoryProject.from(new SimpleRepoId("owner", "repo"),
-            {path: "README.md", content: Readme1});
+            { path: "README.md", content: Readme1 });
         const version = "0.1.0";
         const parameters: SpringProjectCreationParameters = {
             groupId: "atomist",
@@ -71,7 +64,7 @@ describe("springBootTransforms", () => {
             version,
         };
         parameters.enteredServiceClassName = "foo";
-        await ReplaceReadmeTitle(p, {parameters} as any);
+        await ReplaceReadmeTitle(p, { parameters } as any);
         const readmeContent = p.findFileSync("README.md").getContentSync();
         assert(readmeContent.includes("# targetRepoName"), "Should include repo name");
         assert(readmeContent.includes("seed project \`foo:sourceRepoName"),
@@ -80,8 +73,8 @@ describe("springBootTransforms", () => {
 
     it("should use new name in pom.name", async () => {
         const p = InMemoryProject.from(new SimpleRepoId("owner", "repoName"),
-            {path: "README.md", content: Readme1},
-            {path: "pom.xml", content: springBootPom()});
+            { path: "README.md", content: Readme1 },
+            { path: "pom.xml", content: springBootPom() });
         const version = "0.1.7";
         const params: SpringProjectCreationParameters = {
             groupId: "atomist",
@@ -97,7 +90,7 @@ describe("springBootTransforms", () => {
             } as any,
             version,
         };
-        const context = { context: null, addressChannels: null, credentials: null} as ParametersInvocation<SpringProjectCreationParameters>;
+        const context = { context: null, addressChannels: null, credentials: null } as ParametersInvocation<SpringProjectCreationParameters>;
         await TransformSeedToCustomProject(p, context, params);
         const pom = p.findFileSync("pom.xml").getContentSync();
         assert(pom.includes(`<name>repoName</name>`), "Name should be repo name");
@@ -107,10 +100,34 @@ describe("springBootTransforms", () => {
 
     it("should put in Atomist team id", async () => {
         const p = InMemoryProject.from(new SimpleRepoId("owner", "repoName"),
-            {path: "src/main/resources/application.yml", content: yml1});
-        await SetAtomistTeamInApplicationYml(p, {context: { workspaceId: "T1000"}} as any);
+            { path: "src/main/resources/application.yml", content: yml1 });
+        await SetAtomistTeamInApplicationYml(p, { context: { workspaceId: "T1000" } } as any);
         const yml = p.findFileSync("src/main/resources/application.yml").getContentSync();
         assert(yml.includes("/teams/T1000"), "Should include Atomist team");
+    });
+
+    it("should refactor Java", async () => {
+        const p = InMemoryProject.of(
+            { path: "pom.xml", content: "<xml>" },
+            { path: "src/main/java/com/foo/App.java", content: "package com.foo;\n@SpringBootApplication public class App {}" },
+        );
+        const params: SpringProjectCreationParameters = {
+            groupId: "atomist",
+            addAtomistWebhook: false,
+            rootPackage: "com.test",
+            source: null,
+            enteredServiceClassName: "foo",
+            target: {
+                description: "x",
+                visibility: "public",
+                repoRef: new GitHubRepoRef("x", "repoName"),
+                webhookUrl: "x",
+            } as any,
+            version: "1.0",
+        };
+        const context = { context: null, addressChannels: null, credentials: null } as ParametersInvocation<SpringProjectCreationParameters>;
+        await TransformSeedToCustomProject(p, context, params);
+        assert(p.hasFile("src/main/java/com/test/FooService.java"));
     });
 
 });
