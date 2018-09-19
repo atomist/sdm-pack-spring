@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import {
-    doWithFiles,
-    logger,
-    Project,
-    ProjectAsync,
-} from "@atomist/automation-client";
+import { doWithFiles, logger, Project } from "@atomist/automation-client";
 import * as _ from "lodash";
 import { JavaProjectStructure } from "./JavaProjectStructure";
 
@@ -45,9 +40,9 @@ export const KotlinSourceFiles = "src/main/kotlin/**/*.kt";
  * @param newPackage   name of package to move to
  * @param globPattern  glob to select files. Defaults to all Java files in the project
  */
-export async function movePackage<P extends ProjectAsync>(project: P,
-                                                          oldPackage: string, newPackage: string,
-                                                          globPattern: string = AllJavaAndKotlinFiles): Promise<P> {
+export async function movePackage(project: Project,
+                                  oldPackage: string, newPackage: string,
+                                  globPattern: string = AllJavaAndKotlinFiles): Promise<Project> {
     const pathToReplace = packageToPath(oldPackage);
     const newPath = packageToPath(newPackage);
     logger.debug("Replacing path '%s' with '%s', package '%s' with '%s'",
@@ -81,9 +76,9 @@ export function classNameFromFqn(fqn: string): string {
  * @param oldClass   name of class to move from
  * @param newClass   name of class to move to
  */
-export function renameClass<P extends ProjectAsync>(project: P,
-                                                    oldClass: string,
-                                                    newClass: string): Promise<P> {
+export function renameClass(project: Project,
+                            oldClass: string,
+                            newClass: string): Promise<Project> {
     logger.debug("Replacing old class stem '%s' with '%s'", oldClass, newClass);
     return doWithFiles(project, AllJavaAndKotlinFiles, async f => {
         if (f.name.includes(oldClass)) {
