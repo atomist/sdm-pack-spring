@@ -34,6 +34,8 @@ import {
  * Transform a seed to a custom Spring Boot project.
  * Transform suited for use in a Spring Boot generator.
  */
+// TODO ugrade using new chainTransforms function from sdm
+// enables getting rid of currying
 export const TransformSeedToCustomProject: CodeTransform<SpringProjectCreationParameters> = async (p, ctx, params) => {
     return chainEditors(
         curry(cleanReadMe)(params.target.description),

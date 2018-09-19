@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { GitHubRepoRef, InMemoryProject, SimpleRepoId, } from "@atomist/automation-client";
+import { GitHubRepoRef, InMemoryProject, SimpleRepoId } from "@atomist/automation-client";
 import { ParametersInvocation } from "@atomist/sdm";
 import * as assert from "power-assert";
-import { ReplaceReadmeTitle, SetAtomistTeamInApplicationYml, } from "../../../lib/spring/generate/springBootTransforms";
+import { ReplaceReadmeTitle, SetAtomistTeamInApplicationYml } from "../../../lib/spring/generate/springBootTransforms";
 import { SpringProjectCreationParameters } from "../../../lib/spring/generate/SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "../../../lib/spring/generate/transformSeedToCustomProject";
 import { springBootPom } from "./TestPoms";
@@ -109,7 +109,7 @@ describe("springBootTransforms", () => {
     it("should refactor Java", async () => {
         const p = InMemoryProject.of(
             { path: "pom.xml", content: "<xml>" },
-            { path: "src/main/java/com/foo/App.java", content: "package com.foo;\n@SpringBootApplication public class App {}" },
+            { path: "src/main/java/com/foo/AppApplication.java", content: "package com.foo;\n@SpringBootApplication public class App {}" },
         );
         const params: SpringProjectCreationParameters = {
             groupId: "atomist",
@@ -127,7 +127,9 @@ describe("springBootTransforms", () => {
         };
         const context = { context: null, addressChannels: null, credentials: null } as ParametersInvocation<SpringProjectCreationParameters>;
         await TransformSeedToCustomProject(p, context, params);
-        assert(p.hasFile("src/main/java/com/test/FooService.java"));
+        const f = p.findFileSync("src/main/java/com/test/FooApplication.java");
+        assert(!!f);
+        assert(f.getContentSync().includes("package com.test;"));
     });
 
 });
