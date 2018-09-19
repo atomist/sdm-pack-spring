@@ -24,9 +24,9 @@ import { parseProperties } from "../../properties/propertiesParser";
 import { IsSpringBoot2Project } from "../pushTests";
 import { addSpringBootStarterTransform } from "./addSpringBootStarterTransform";
 
-const AddSpringBootActuatorStarter = addSpringBootStarterTransform("spring-boot-starter-actuator");
+export const AddSpringBootActuatorStarter = addSpringBootStarterTransform("spring-boot-starter-actuator");
 
-function configureEnabledEndpoints(enabledEndpoints: string[]): CodeTransform {
+export function addActuatorWebConfiguration(enabledEndpoints: string[] = ["health", "info"]): CodeTransform {
     return async p => {
         const properties = await parseProperties(p, "src/main/resources/application.properties");
         await properties.addProperty({
@@ -36,14 +36,14 @@ function configureEnabledEndpoints(enabledEndpoints: string[]): CodeTransform {
     };
 }
 
-export function AddSpringBootActuator(enabledEndpoints: string[] = ["health", "info"]): CodeTransformRegistration {
+export function addSpringBootActuator(enabledEndpoints: string[] = ["health", "info"]): CodeTransformRegistration {
     return {
         name: "add-spring-boot-actuator",
         intent: ["add spring boot actuator", "add actuator"],
         description: "Add Spring Boot actuator to the project",
         transform: [
             AddSpringBootActuatorStarter,
-            configureEnabledEndpoints(enabledEndpoints),
+            addActuatorWebConfiguration(enabledEndpoints),
         ],
         transformPresentation: () => new PullRequest(
             "add-spring-boot-actuator",
@@ -52,12 +52,12 @@ export function AddSpringBootActuator(enabledEndpoints: string[] = ["health", "i
     };
 }
 
-export function SpringBootActuatorAutofix(enabledEndpoints: string[] = ["health", "info"]): AutofixRegistration {
+export function springBootActuatorAutofix(enabledEndpoints: string[] = ["health", "info"]): AutofixRegistration {
     return {
         name: "spring-boot-actuator",
         transform: [
             AddSpringBootActuatorStarter,
-            configureEnabledEndpoints(enabledEndpoints),
+            addActuatorWebConfiguration(enabledEndpoints),
         ],
         pushTest: IsSpringBoot2Project,
     };
