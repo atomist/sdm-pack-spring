@@ -18,6 +18,7 @@ import {
     CodeTransform,
     CodeTransformRegistration,
     copyFileFromUrl,
+    PullRequest,
 } from "@atomist/sdm";
 import { bringInFile } from "../../../java/transform/bringInFile";
 import { SpringBootProjectStructure } from "../../generate/SpringBootProjectStructure";
@@ -47,7 +48,7 @@ const AddThymeleafStarter: CodeTransform = addSpringBootStarterTransform("spring
 const AddSpringWebStarter: CodeTransform = addSpringBootStarterTransform("spring-boot-starter-web");
 
 export const ApplySecuredWebAppGuide: CodeTransformRegistration = {
-    name: "ApplySecuredWebAppGuide",
+    name: "apply-secured-webapp-guide",
     intent: "apply secured web app guide",
     description: "Apply the Spring Boot guide to secure web apps",
     transform: [
@@ -58,4 +59,8 @@ export const ApplySecuredWebAppGuide: CodeTransformRegistration = {
         AddWebMvcConfigClass,
         AddWebAppSample,
     ],
+    transformPresentation: () => new PullRequest(
+        "apply-web-security-guide",
+        "Apply web security guide",
+    ),
 };

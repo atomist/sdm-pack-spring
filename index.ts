@@ -84,3 +84,7 @@ export {
     removeAutowiredOnSoleConstructor,
     FixAutowiredOnSoleConstructor,
 } from "./lib/spring/transform/removeUnnecessaryAutowiredAnnotations";
+export {
+    addSpringBootActuator,
+    springBootActuatorAutofix,
+} from "./lib/spring/transform/addSpringBootActuator";
