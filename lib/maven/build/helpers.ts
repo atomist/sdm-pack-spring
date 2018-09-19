@@ -61,7 +61,7 @@ export const MavenVersionPreparation: PrepareForGoalExecution = async (p: GitPro
 };
 
 async function changeMavenVersion(version: string, p: GitProject, progressLog: ProgressLog): Promise<ExecuteGoalResult> {
-    const command = determineMavenCommand(p);
+    const command = await determineMavenCommand(p);
     const args = ["build-helper:parse-version", "versions:set", `-DnewVersion=${version}`, "versions:commit"];
     return spawnAndWatch(
         { command, args },
@@ -91,7 +91,7 @@ export function mavenPackagePreparation(args: Array<{ name: string, value: strin
 }
 
 export async function mavenIncrementPatchVersionCommand(p: GitProject, progressLog: ProgressLog): Promise<ExecuteGoalResult> {
-    const command = determineMavenCommand(p);
+    const command = await determineMavenCommand(p);
     const args = [
         "build-helper:parse-version",
         "versions:set",

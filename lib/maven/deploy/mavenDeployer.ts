@@ -136,7 +136,7 @@ class MavenSourceDeployer implements Deployer<ManagedDeploymentTargetInfo> {
             contextRoot: `/${branchId.owner}/${branchId.repo}/${branchId.branch}`,
         };
 
-        const mvn = determineMavenCommand(project);
+        const mvn = await determineMavenCommand(project);
         const childProcess = spawn(mvn,
             [
                 "spring-boot:run",

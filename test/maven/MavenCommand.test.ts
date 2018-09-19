@@ -38,13 +38,13 @@ describe("mavenCommand", () => {
 
         it("should use mvn if no wrapper is present", async () => {
             const project = InMemoryProject.of();
-            const command = determineMavenCommand(project);
+            const command = await determineMavenCommand(project);
             assert(command === "mvn");
         });
 
         it("should use maven wrapper if it is present", async () => {
             const project = InMemoryProject.of({ path: "mvnw", content: "" });
-            const command = determineMavenCommand(project);
+            const command = await determineMavenCommand(project);
             assert(command === "./mvnw");
         });
 
@@ -54,7 +54,7 @@ describe("mavenCommand", () => {
                 delete process.env.JAVA_HOME;
             }
             const project = InMemoryProject.of({ path: "mvnw", content: "" });
-            const command = determineMavenCommand(project);
+            const command = await determineMavenCommand(project);
             assert(command === "./mvnw");
             if (javaHome) {
                 process.env.JAVA_HOME = javaHome;
@@ -79,7 +79,7 @@ describe("mavenCommand", () => {
 
         it("should return mvn when there is no wrapper", async () => {
             const project = InMemoryProject.of();
-            const command = determineMavenCommand(project);
+            const command = await determineMavenCommand(project);
             assert(command === "mvn");
         });
 
@@ -90,7 +90,7 @@ describe("mavenCommand", () => {
                 deleteJavaHome = true;
             }
             const project = InMemoryProject.of({ path: "mvnw.cmd", content: "" });
-            const command = determineMavenCommand(project);
+            const command = await determineMavenCommand(project);
             assert(command === "mvnw");
             if (deleteJavaHome) {
                 delete process.env.JAVA_HOME;
@@ -103,7 +103,7 @@ describe("mavenCommand", () => {
                 delete process.env.JAVA_HOME;
             }
             const project = InMemoryProject.of({ path: "mvnw.cmd", content: "" });
-            const command = determineMavenCommand(project);
+            const command = await determineMavenCommand(project);
             assert(command === "mvn");
             if (javaHome) {
                 process.env.JAVA_HOME = javaHome;

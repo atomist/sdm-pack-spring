@@ -100,7 +100,7 @@ class UpdatingBuild implements LocalBuildInProgress {
 export async function mavenPackage(p: GitProject,
                                    progressLog: ProgressLog,
                                    args: Array<{ name: string, value?: string }> = []): Promise<ChildProcessResult> {
-    const command = determineMavenCommand(p);
+    const command = await determineMavenCommand(p);
     return spawnAndWatch({
         command,
         args: ["package", ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],

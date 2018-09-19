@@ -175,7 +175,7 @@ class MavenDeployer {
             }
         }
 
-        const mvn = determineMavenCommand(project);
+        const mvn = await determineMavenCommand(project);
         const childProcess = spawn(mvn,
             [
                 "spring-boot:run",
