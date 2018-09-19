@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { doWithFiles, logger, Project } from "@atomist/automation-client";
+import {
+    doWithFiles,
+    logger,
+    Project,
+} from "@atomist/automation-client";
 import * as _ from "lodash";
 import { JavaProjectStructure } from "./JavaProjectStructure";
 
