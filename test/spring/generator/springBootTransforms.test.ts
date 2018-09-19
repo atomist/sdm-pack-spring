@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-import { GitHubRepoRef, InMemoryProject, SimpleRepoId } from "@atomist/automation-client";
+import {
+    GitHubRepoRef,
+    InMemoryProject,
+    SimpleRepoId,
+} from "@atomist/automation-client";
 import { ParametersInvocation } from "@atomist/sdm";
 import * as assert from "power-assert";
-import { ReplaceReadmeTitle, SetAtomistTeamInApplicationYml } from "../../../lib/spring/generate/springBootTransforms";
+import {
+    ReplaceReadmeTitle,
+    SetAtomistTeamInApplicationYml,
+} from "../../../lib/spring/generate/springBootTransforms";
 import { SpringProjectCreationParameters } from "../../../lib/spring/generate/SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "../../../lib/spring/generate/transformSeedToCustomProject";
 import { springBootPom } from "./TestPoms";

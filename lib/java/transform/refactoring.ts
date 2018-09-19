@@ -15,7 +15,11 @@
  */
 
 import { CodeTransform } from "@atomist/sdm";
-import { AllJavaAndKotlinFiles, movePackage, renameClass } from "../javaProjectUtils";
+import {
+    AllJavaAndKotlinFiles,
+    movePackage,
+    renameClass,
+} from "../javaProjectUtils";
 
 /**
  * Move files from one package to another. Defaults to
