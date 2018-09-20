@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-import {
-    HandlerContext,
-    LocalProject,
-    logger,
-    poisonAndWait,
-    Success,
-} from "@atomist/automation-client";
+import { HandlerContext, LocalProject, logger, poisonAndWait, Success } from "@atomist/automation-client";
 import {
     BuildGoal,
     CommandHandlerRegistration,
@@ -29,12 +23,9 @@ import {
     GoalInvocation,
     GoalWithPrecondition,
     IndependentOfEnvironment,
-    ProjectLoader,
 } from "@atomist/sdm";
 import { SpawnedDeployment } from "@atomist/sdm-core";
-import {
-    ChildProcess,
-} from "child_process";
+import { ChildProcess } from "child_process";
 import * as spawn from "cross-spawn";
 import * as os from "os";
 import * as portfinder from "portfinder";
@@ -108,11 +99,9 @@ const deploymentEndpoints: { [key: string]: { sha: string, endpoint: string } } 
 
 /**
  * Use Maven per-branch deploy
- * @param projectLoader use to load projects
  * @param opts options
  */
-export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoader,
-                                                      opts: Partial<MavenDeployerOptions>): ExecuteGoal {
+export function executeMavenPerBranchSpringBootDeploy(opts: Partial<MavenDeployerOptions>): ExecuteGoal {
     const optsToUse: MavenDeployerOptions = {
         lowerPort: 9090,
         successPatterns: SpringBootSuccessPatterns,
@@ -126,7 +115,7 @@ export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoad
     return async goalInvocation => {
         const { credentials, id } = goalInvocation;
         try {
-            const deployment = await projectLoader.doWithProject({ credentials, id, readOnly: true },
+            const deployment = await goalInvocation.configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true },
                 project => deployer.deployProject(goalInvocation, project));
             const deploymentKey = `${id.owner}/${id.repo}/${goalInvocation.sdmGoal.branch}`;
             deploymentEndpoints[deploymentKey] = { sha: goalInvocation.sdmGoal.sha, endpoint: deployment.endpoint };

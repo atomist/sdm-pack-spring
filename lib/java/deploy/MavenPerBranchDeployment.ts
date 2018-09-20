@@ -18,7 +18,6 @@ import {
     Fulfillment,
     GoalWithFulfillment,
     IndependentOfEnvironment,
-    SoftwareDeliveryMachine,
 } from "@atomist/sdm";
 import {
     executeMavenPerBranchSpringBootDeploy,
@@ -27,25 +26,25 @@ import {
 
 /**
  * Maven per branch deployer goal. Intended only for local use
- * on a development machine.
+ * on a development machine. Use only one per SDM.
  * One deployment will be managed for each branch pushed.
  */
 export class MavenPerBranchDeployment extends GoalWithFulfillment {
 
     /**
      * Specify Maven per branch local deployment
-     * @param {SoftwareDeliveryMachine} sdm
      * @param {Partial<MavenDeployerOptions>} opts
      */
-    constructor(sdm: SoftwareDeliveryMachine, opts: Partial<MavenDeployerOptions> = {}) {
+    constructor(opts: Partial<MavenDeployerOptions> = {}) {
         super({
             uniqueName: `MavenPerBranchDeployment`,
             environment: IndependentOfEnvironment,
+            displayName: "Local Maven deployment",
         });
 
         const fulfillment: Fulfillment = {
             name: `MavenPerBranchDeployment`,
-            goalExecutor: executeMavenPerBranchSpringBootDeploy(sdm.configuration.sdm.projectLoader, opts),
+            goalExecutor: executeMavenPerBranchSpringBootDeploy(opts),
         };
         super.with(fulfillment);
     }

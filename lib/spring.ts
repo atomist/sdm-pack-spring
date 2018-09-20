@@ -72,7 +72,7 @@ export function configureMavenPerBranchSpringBootDeploy(sdm: SoftwareDeliveryMac
     sdm.addGoalContributions(whenPushSatisfies(HasSpringBootPom, HasSpringBootApplicationClass, IsMaven)
         .setGoals(MavenPerBranchSpringBootDeploymentGoal));
     sdm.addGoalImplementation("Maven deployment", MavenPerBranchSpringBootDeploymentGoal,
-        executeMavenPerBranchSpringBootDeploy(sdm.configuration.sdm.projectLoader, options));
+        executeMavenPerBranchSpringBootDeploy(options));
 }
 
 export function configureGradlePerBranchSpringBootDeploy(sdm: SoftwareDeliveryMachine,
