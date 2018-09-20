@@ -30,10 +30,10 @@ import { SpringBootStarter } from "./springConstants";
  */
 export const springBootTagger: Tagger = async p => {
     const tags = await tagsFromPom(p);
-    if (await fileExists(p, AllJavaFiles, f => true)) {
+    if (await fileExists(p, AllJavaFiles)) {
         tags.push("java");
     }
-    if (await fileExists(p, "**/*.kt", f => true)) {
+    if (await fileExists(p, "**/*.kt")) {
         tags.push("kotlin");
     }
     return { repoId: p.id, tags };
