@@ -31,7 +31,7 @@ describe("MavenFingerprinter", () => {
 
     it("should find some dependencies", async () => {
         const Seed = await GitCommandGitProject.cloned({ token: null },
-            new GitHubRepoRef("atomist-seeds", "spring-rest-seed"));
+            new GitHubRepoRef("atomist-seeds", "spring-rest"));
         const fp = await new MavenFingerprinter().action({ project: Seed } as PushImpactListenerInvocation);
         const f1 = JSON.parse(fp[0].data) as VersionedArtifact[];
         assert(f1.length > 0);

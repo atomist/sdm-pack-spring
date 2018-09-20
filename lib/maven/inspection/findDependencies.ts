@@ -96,8 +96,8 @@ function toVersionArtifact(gav: string[]): VersionedArtifact {
     return {
         group: gav[0],
         artifact: gav[1],
-        version: gav[2],
-        scope: gav[3],
+        version: gav[3],
+        scope: gav[4],
     };
 }
 
