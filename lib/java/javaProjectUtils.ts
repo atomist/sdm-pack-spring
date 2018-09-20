@@ -21,7 +21,7 @@ import {
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import * as _ from "lodash";
-import { SpringProjectCreationParameters } from "../..";
+import { SpringProjectCreationParameters } from "../spring/generate/SpringProjectCreationParameters";
 import { JavaProjectStructure } from "./JavaProjectStructure";
 
 export const AllJavaFiles = "**/*.java";
