@@ -15,33 +15,69 @@
  */
 
 import {
-    GitCommandGitProject,
-    GitHubRepoRef,
+    LocalProject,
+    NodeFsLocalProject,
+    RepoId,
 } from "@atomist/automation-client";
-
 import * as assert from "assert";
+import * as tmp from "tmp";
 import { FindDependency } from "../../../lib/maven/inspection/findDependencyCommand";
 
 describe("FindDependency", () => {
-
     it("when not found", async () => {
-        const project = await GitCommandGitProject.cloned({ token: null },
-            new GitHubRepoRef("atomist-seeds", "spring-rest-seed"));
-        const va = await FindDependency(project, {
-            parameters: { group: "foo", await: "bar"},
+        const p = tempProject();
+        p.addFileSync("pom.xml", testPom());
+        const va = await FindDependency(p, {
+            parameters: { group: "org.springframework.boot", artifact: "spring-boot-starter-security"},
         } as any);
         assert.strictEqual(va, undefined);
-        // f1.forEach((f: any) => assert.equal(f.group, "org.springframework.boot"));
     }).timeout(40000);
 
     it("when found", async () => {
-        const project = await GitCommandGitProject.cloned({ token: null },
-            new GitHubRepoRef("atomist-seeds", "spring-rest-seed"));
-        const va = await FindDependency(project, {
+        const p = tempProject();
+        p.addFileSync("pom.xml", testPom());
+        const va = await FindDependency(p, {
             parameters: { group: "org.springframework.boot", artifact: "spring-boot-starter-web"},
         } as any);
         assert(!!va, "Artifact should be defined");
-        // f1.forEach((f: any) => assert.equal(f.group, "org.springframework.boot"));
     }).timeout(40000);
 
 });
+
+function tempProject(id?: RepoId): LocalProject {
+    const dir = tmp.dirSync();
+    return new NodeFsLocalProject(id || "temp", dir.name);
+}
+
+function testPom() {
+    return `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.atomist.springteam</groupId>
+	<artifactId>spring-rest-seed</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>spring-rest-seed</name>
+	<description>Seed for creating Spring REST services</description>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.0.RELEASE</version>
+		<relativePath/>
+	</parent>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+		<timestamp>\${maven.build.timestamp}</timestamp>
+		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+	</dependencies>
+</project>
+`;
+}
