@@ -76,6 +76,9 @@ export const MavenPerBranchSpringBootDeploymentGoal = new GoalWithPrecondition({
     failedDescription: "Local branch deployment failure",
 }, BuildGoal);
 
+/**
+ * Allow customization of Maven deployment
+ */
 export interface MavenDeployerOptions {
 
     lowerPort: number;
@@ -102,6 +105,7 @@ export interface MavenDeployerOptions {
 }
 
 const deploymentEndpoints: { [key: string]: { sha: string, endpoint: string } } = {};
+
 /**
  * Use Maven per-branch deploy
  * @param projectLoader use to load projects
@@ -134,7 +138,7 @@ export function executeMavenPerBranchSpringBootDeploy(projectLoader: ProjectLoad
 }
 
 /**
- * Holds state
+ * Holds state relating to existing deployments
  */
 class MavenDeployer {
 

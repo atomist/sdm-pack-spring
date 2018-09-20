@@ -64,6 +64,9 @@ export const SpringSupport: ExtensionPack = {
     },
 };
 
+/**
+ * @deprecated use MavenPerBranchDeploy
+ */
 export function configureMavenPerBranchSpringBootDeploy(sdm: SoftwareDeliveryMachine,
                                                         options: Partial<MavenDeployerOptions> = {}) {
     sdm.addGoalContributions(whenPushSatisfies(HasSpringBootPom, HasSpringBootApplicationClass, IsMaven)
