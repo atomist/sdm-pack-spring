@@ -33,7 +33,6 @@ export const SpringSecurityVersionInspection: CodeInspection<string[]> = async p
     const dependencies = await findDependenciesFromEffectivePom(p);
     const versions = dependencies
         .filter(value => value.group === "org.springframework.security")
-        .map(value => value.version)
-        ;
+        .map(value => value.version);
     return _.sortedUniq(versions);
 };
