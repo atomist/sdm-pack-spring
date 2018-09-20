@@ -18,7 +18,10 @@ import {
     InMemoryProject,
 } from "@atomist/automation-client";
 
-import { InMemoryProjectFile, PushListenerInvocation } from "@atomist/sdm";
+import {
+    InMemoryProjectFile,
+    PushListenerInvocation,
+} from "@atomist/sdm";
 import * as assert from "power-assert";
 import { hasDeclaredDependency } from "../../../lib/maven/pushtest/pushTests";
 import {
