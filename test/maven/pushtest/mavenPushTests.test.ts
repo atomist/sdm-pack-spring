@@ -17,7 +17,11 @@
 import { InMemoryProject } from "@atomist/automation-client";
 import { InMemoryProjectFile } from "@atomist/sdm";
 import * as assert from "assert";
-import { hasDeclaredDependency, hasDependency, IsMaven } from "../../../lib/maven/pushtest/pushTests";
+import {
+    hasDeclaredDependency,
+    hasDependency,
+    IsMaven,
+} from "../../../lib/maven/pushtest/pushTests";
 import { springBootPom } from "../../spring/generator/TestPoms";
 import { tempProject } from "../../spring/transform/setSpringBootVersionTransform.test";
 

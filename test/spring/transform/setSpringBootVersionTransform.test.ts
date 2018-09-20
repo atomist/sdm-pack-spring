@@ -17,7 +17,8 @@
 import {
     InMemoryProject,
     LocalProject,
-    NodeFsLocalProject, RepoId,
+    NodeFsLocalProject,
+    RepoId,
 } from "@atomist/automation-client";
 import * as assert from "power-assert";
 import * as tmp from "tmp";

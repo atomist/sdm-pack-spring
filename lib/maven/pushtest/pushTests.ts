@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-import { predicatePushTest, PredicatePushTest } from "@atomist/sdm";
+import {
+    predicatePushTest,
+    PredicatePushTest,
+} from "@atomist/sdm";
 import { findDependenciesFromEffectivePom } from "../inspection/findDependencies";
 import { findDeclaredDependencies } from "../parse/fromPom";
-import { coordinates, dependencyFound, DependencySpecifier } from "../VersionedArtifact";
+import {
+    coordinates,
+    dependencyFound,
+    DependencySpecifier,
+} from "../VersionedArtifact";
 
 /**
  * Is this a Maven project
