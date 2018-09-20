@@ -21,6 +21,7 @@ import {
 import { hasDeclaredDependency } from "../../maven/pushtest/pushTests";
 import { SpringBootProjectStructure } from "../generate/SpringBootProjectStructure";
 import { SpringBootVersionInspection } from "../inspect/springBootVersionInspection";
+import { SpringSecurityVersionInspection } from "../inspect/springSecurityInspection";
 
 /**
  * Does this project have a Spring Boot application class?
@@ -85,5 +86,17 @@ export const IsSpringBoot2Project: PredicatePushTest = predicatePushTest(
     async p => {
         const versions = await SpringBootVersionInspection(p, null);
         return versions.versions.filter(v => v.version.startsWith("2.")).length > 0;
+    },
+);
+
+/**
+ * Does this project's POM use Spring Security 5
+ * @type {PredicatePushTest}
+ */
+export const IsSecure: PredicatePushTest = predicatePushTest(
+    "IsSecureSpringBootApplication",
+    async p => {
+        const versions = await SpringSecurityVersionInspection(p, null);
+        return versions.length > 0;
     },
 );
