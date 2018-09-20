@@ -37,19 +37,19 @@ import {
     GradleDeployerOptions,
     GradlePerBranchSpringBootDeploymentGoal,
 } from "./gradle/deploy/GradlePerBranchSpringBootDeploymentGoal";
-import { IsGradle } from "./gradle/gradlePushTests";
+import { IsGradle } from "./gradle/pushtest/gradlePushTests";
 import {
     executeMavenPerBranchSpringBootDeploy,
     MavenDeployerOptions,
     MavenPerBranchSpringBootDeploymentGoal,
 } from "./java/deploy/MavenPerBranchSpringBootDeploymentGoal";
 import { ListLocalDeploys } from "./maven/deploy/listLocalDeploys";
-import { IsMaven } from "./maven/pushTests";
+import { IsMaven } from "./maven/pushtest/pushTests";
 import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
 import {
     HasSpringBootApplicationClass,
     HasSpringBootPom,
-} from "./spring/pushTests";
+} from "./spring/pushtest/pushTests";
 import { springBootTagger } from "./spring/springTagger";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
 

@@ -25,7 +25,7 @@ import {
     CodeTransform,
 } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
-import { IsSpringBoot2Project } from "../pushTests";
+import { IsSpringBoot2Project } from "../pushtest/pushTests";
 
 const Constructors = `//classBodyDeclaration[//constructorDeclaration]`;
 

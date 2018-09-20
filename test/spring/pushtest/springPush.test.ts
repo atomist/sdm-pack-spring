@@ -23,8 +23,8 @@ import * as assert from "power-assert";
 import {
     HasSpringBootApplicationClass,
     IsSpringBoot2Project,
-} from "../../lib/spring/pushTests";
-import { springBootPom } from "./generator/TestPoms";
+} from "../../../lib/spring/pushtest/pushTests";
+import { springBootPom } from "../generator/TestPoms";
 
 describe("springPushTests", () => {
 

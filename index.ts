@@ -28,7 +28,7 @@ export {
 export {
     IsJava,
     MaterialChangeToJavaRepo,
-} from "./lib/java/pushTests";
+} from "./lib/java/pushtest/pushTests";
 export {
     ImportFileIoCategory,
     FileIoImportReviewer,
@@ -44,7 +44,7 @@ export { ListLocalDeploys } from "./lib/maven/deploy/listLocalDeploys";
 export { mavenDeployer } from "./lib/maven/deploy/mavenDeployer";
 export { MavenFingerprinter } from "./lib/maven/fingerprint/MavenFingerprinter";
 export { MavenProjectIdentifier } from "./lib/maven/parse/pomParser";
-export { IsMaven } from "./lib/maven/pushTests";
+export { IsMaven } from "./lib/maven/pushtest/pushTests";
 export { ProvidedDependencyReviewer } from "./lib/maven/review/providedDependencyReviewer";
 export { addDependencyTransform } from "./lib/maven/transform/addDependencyTransform";
 export { VersionedArtifact } from "./lib/maven/VersionedArtifact";
@@ -64,7 +64,7 @@ export {
     HasSpringBootApplicationClass,
     HasSpringBootPom,
     IsSpringBoot2Project,
-} from "./lib/spring/pushTests";
+} from "./lib/spring/pushtest/pushTests";
 export {
     HardCodedPropertyReviewer,
     HardcodePropertyCategory,

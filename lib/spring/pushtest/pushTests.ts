@@ -18,8 +18,8 @@ import {
     predicatePushTest,
     PredicatePushTest,
 } from "@atomist/sdm";
-import { SpringBootProjectStructure } from "./generate/SpringBootProjectStructure";
-import { SpringBootVersionInspection } from "./inspect/springBootVersionInspection";
+import { SpringBootProjectStructure } from "../generate/SpringBootProjectStructure";
+import { SpringBootVersionInspection } from "../inspect/springBootVersionInspection";
 
 /**
  * Does this project have a Spring Boot application class?

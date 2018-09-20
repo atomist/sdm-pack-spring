@@ -25,7 +25,7 @@ import { gatherFromFiles } from "@atomist/automation-client/lib/project/util/pro
 import { ReviewerRegistration } from "@atomist/sdm";
 import * as _ from "lodash";
 import { parseProperties } from "../../properties/propertiesParser";
-import { HasSpringPom } from "../pushTests";
+import { HasSpringPom } from "../pushtest/pushTests";
 
 const PropertyKeysToCheck = [
     "server.port",

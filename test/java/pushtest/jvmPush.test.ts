@@ -18,8 +18,8 @@ import { InMemoryProject } from "@atomist/automation-client";
 
 import { PushListenerInvocation } from "@atomist/sdm";
 import * as assert from "power-assert";
-import { IsJava } from "../../lib/java/pushTests";
-import { IsMaven } from "../../lib/maven/pushTests";
+import { IsJava } from "../../../lib/java/pushtest/pushTests";
+import { IsMaven } from "../../../lib/maven/pushtest/pushTests";
 
 describe("jvmPushTests", () => {
 

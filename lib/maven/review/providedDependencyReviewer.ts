@@ -21,7 +21,7 @@ import {
 } from "@atomist/automation-client";
 import { ReviewerRegistration } from "@atomist/sdm";
 import { findDeclaredDependencies } from "../parse/fromPom";
-import { IsMaven } from "../pushTests";
+import { IsMaven } from "../pushtest/pushTests";
 
 export const ProvidedDependencyCategory = "Use of `provided` dependencies in Maven POM";
 

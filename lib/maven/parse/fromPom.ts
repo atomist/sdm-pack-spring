@@ -27,7 +27,7 @@ import { Dependencies } from "../inspection/findDependencies";
 import { VersionedArtifact } from "../VersionedArtifact";
 
 /**
- * Dependencies under dependencies section
+ * Return dependencies under dependencies section
  */
 export async function findDeclaredDependencies(p: Project, glob: string = "pom.xml"): Promise<Dependencies> {
     return findDeclaredDependenciesWith(p,
@@ -35,6 +35,16 @@ export async function findDeclaredDependencies(p: Project, glob: string = "pom.x
         glob, {});
 }
 
+/**
+ * Find declared dependencies using the given path expression.
+ * Control over the path expression allows us to look under dependencyManagement,
+ * or directly in dependencies section under project
+ * @param {Project} p
+ * @param {string} pathExpression
+ * @param {string} glob
+ * @param {FunctionRegistry} functionRegistry
+ * @return {Promise<Dependencies>}
+ */
 async function findDeclaredDependenciesWith(p: Project,
                                             pathExpression: string,
                                             glob: string = "pom.xml",

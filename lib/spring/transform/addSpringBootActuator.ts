@@ -21,7 +21,7 @@ import {
     PullRequest,
 } from "@atomist/sdm";
 import { parseProperties } from "../../properties/propertiesParser";
-import { IsSpringBoot2Project } from "../pushTests";
+import { IsSpringBoot2Project } from "../pushtest/pushTests";
 import { addSpringBootStarterTransform } from "./addSpringBootStarterTransform";
 
 export const AddSpringBootActuatorStarter = addSpringBootStarterTransform("spring-boot-starter-actuator");
