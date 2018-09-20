@@ -18,6 +18,7 @@ import {
     predicatePushTest,
     PredicatePushTest,
 } from "@atomist/sdm";
+import { hasDeclaredDependency } from "../../maven/pushtest/pushTests";
 import { SpringBootProjectStructure } from "../generate/SpringBootProjectStructure";
 import { SpringBootVersionInspection } from "../inspect/springBootVersionInspection";
 
@@ -60,6 +61,20 @@ export const HasSpringPom: PredicatePushTest = predicatePushTest(
         return (await pom.getContent()).includes("springframework");
     },
 );
+
+/**
+ * Does this project directly declare the given Spring Boot starter
+ * @param {string} artifact
+ * @param {string} group
+ * @return {PredicatePushTest}
+ */
+export function hasStarter(artifact: string,
+                           group: string = "org.springframework.boot"): PredicatePushTest {
+    return predicatePushTest(
+        `has-starter=${group}-${group}`,
+        hasDeclaredDependency({ artifact, group }).predicate,
+    );
+}
 
 /**
  * Does this project's POM use Spring Framework 5

@@ -18,10 +18,11 @@ import {
     InMemoryProject,
 } from "@atomist/automation-client";
 
-import { PushListenerInvocation } from "@atomist/sdm";
+import { InMemoryProjectFile, PushListenerInvocation } from "@atomist/sdm";
 import * as assert from "power-assert";
+import { hasDeclaredDependency } from "../../../lib/maven/pushtest/pushTests";
 import {
-    HasSpringBootApplicationClass,
+    HasSpringBootApplicationClass, hasStarter,
     IsSpringBoot2Project,
 } from "../../../lib/spring/pushtest/pushTests";
 import { springBootPom } from "../generator/TestPoms";
@@ -54,15 +55,40 @@ describe("springPushTests", () => {
 
     describe("IsSpringBoot2", () => {
         it("should be able to detect Spring Boot 2 dependency", async () => {
-            const project = InMemoryProject.of({path: "pom.xml", content: springBootPom("2.0.0.RELEASE")});
+            const project = InMemoryProject.of({ path: "pom.xml", content: springBootPom("2.0.0.RELEASE") });
             const r = await IsSpringBoot2Project.mapping({ project } as any as PushListenerInvocation);
             assert(r);
         });
 
         it("should be able to detect Spring Boot 1 dependency", async () => {
-            const project = InMemoryProject.of({path: "pom.xml", content: springBootPom("1.5.8.RELEASE")});
+            const project = InMemoryProject.of({ path: "pom.xml", content: springBootPom("1.5.8.RELEASE") });
             const r = await IsSpringBoot2Project.mapping({ project } as any as PushListenerInvocation);
             assert(!r);
         });
     });
+
+    describe("hasStarter", () => {
+
+        it("should be false for empty project", async () => {
+            const p = InMemoryProject.of();
+            assert(!(await hasStarter("foo-starter").predicate(p)));
+        });
+
+        it("should be true with any dependency with pom", async () => {
+            const p = InMemoryProject.of(new InMemoryProjectFile("pom.xml", springBootPom()));
+            assert(await hasDeclaredDependency({}).predicate(p));
+        });
+
+        it("should be true with starter we have", async () => {
+            const p = InMemoryProject.of(new InMemoryProjectFile("pom.xml", springBootPom()));
+            assert(await hasDeclaredDependency({ artifact: "spring-boot-starter-web"}).predicate(p));
+        });
+
+        it("should be false with bogus starter", async () => {
+            const p = InMemoryProject.of(new InMemoryProjectFile("pom.xml", springBootPom()));
+            assert(!await hasDeclaredDependency({ artifact: "not.there"}).predicate(p));
+        });
+
+    });
+
 });
