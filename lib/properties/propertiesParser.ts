@@ -52,6 +52,7 @@ export interface PropertiesFile {
 export interface Property {
     key: string;
     value: string;
+    comment?: string;
 }
 
 /**
@@ -97,12 +98,14 @@ class PropertiesFileImpl implements PropertiesFile {
             existing.value = prop.value;
             return this.flush();
         }
+        const comment = !!prop.comment ? `# ${prop.comment}\n` : "";
+        const formattedProperty = `\n\n${comment}${prop.key}=${prop.value}\n`;
         const f = await this.project.getFile(this.path);
         if (!!f) {
             const oldContent = await f.getContent();
-            await f.setContent(oldContent + `\n\n${prop.key}=${prop.value}\n`);
+            await f.setContent(oldContent + formattedProperty);
         } else {
-            await this.project.addFile(this.path, `\n${prop.key}=${prop.value}\n`);
+            await this.project.addFile(this.path, formattedProperty);
         }
     }
 

@@ -39,7 +39,7 @@ describe("propertyHandling", () => {
             assert.strictEqual(props.properties.length, 0);
             await props.addProperty({ key: "foo", value: "bar" });
             assert.strictEqual(p.findFileSync(path).getContentSync(),
-                "\nfoo=bar\n");
+                "\n\nfoo=bar\n");
         });
 
         it("finds single property", async () => {
@@ -85,6 +85,14 @@ describe("propertyHandling", () => {
                 TwoWithComments + `\n\nx=y\n`);
         });
 
+        it("adds property to existing properties, with comment", async () => {
+            const p = InMemoryProject.of(new InMemoryProjectFile("thing.properties", TwoWithComments));
+            const props = await parseProperties(p, "thing.properties");
+            await props.addProperty({ key: "x", value: "y", comment: "This is a good property" });
+            assert.strictEqual(p.findFileSync("thing.properties").getContentSync(),
+                TwoWithComments + `\n\n# This is a good property\nx=y\n`);
+        });
+
         it("does not add property to existing properties when it's already there", async () => {
             const p = InMemoryProject.of(new InMemoryProjectFile("thing.properties", TwoWithComments));
             const props = await parseProperties(p, "thing.properties");
@@ -117,7 +125,7 @@ describe("propertyHandling", () => {
             const p = InMemoryProject.of();
             await addProperty({ key: "foo", value: "bar" }, path)(p, undefined);
             assert.strictEqual(p.findFileSync(path).getContentSync(),
-                "\nfoo=bar\n");
+                "\n\nfoo=bar\n");
         });
 
         it("adds property to existing properties", async () => {

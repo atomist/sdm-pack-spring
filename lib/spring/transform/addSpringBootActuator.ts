@@ -32,6 +32,7 @@ export function addActuatorWebConfiguration(enabledEndpoints: string[] = ["healt
         await properties.addProperty({
             key: "management.endpoints.web.exposure.include",
             value: enabledEndpoints.join(","),
+            comment: "Configure Spring Boot Actuator",
         });
     };
 }
