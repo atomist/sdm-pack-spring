@@ -58,7 +58,7 @@ export async function findDependenciesFromEffectivePom(p: Project): Promise<Vers
     const f = await extractEffectivePom(p);
     return gatherFromMatches(p, new XmldocFileParser(),
         f.path,
-        "//dependencies/dependency",
+        "/dependencies/dependency",
         m => {
             return extractVersionedArtifact(m as any as XmldocTreeNode);
         });
