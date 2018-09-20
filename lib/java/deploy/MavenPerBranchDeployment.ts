@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-import { Fulfillment, GoalWithFulfillment, IndependentOfEnvironment, SoftwareDeliveryMachine } from "@atomist/sdm";
-import { executeMavenPerBranchSpringBootDeploy, MavenDeployerOptions } from "./MavenPerBranchSpringBootDeploymentGoal";
+import {
+    Fulfillment,
+    GoalWithFulfillment,
+    IndependentOfEnvironment,
+    SoftwareDeliveryMachine,
+} from "@atomist/sdm";
+import {
+    executeMavenPerBranchSpringBootDeploy,
+    MavenDeployerOptions,
+} from "./MavenPerBranchSpringBootDeploymentGoal";
 
 /**
  * Maven per branch deployer goal. Intended only for local use
