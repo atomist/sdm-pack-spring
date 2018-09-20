@@ -51,7 +51,7 @@ export const SpringProjectCreationParameterDefinitions: ParametersObject = {
     },
 };
 
-export function serviceClassName(params: SpringProjectCreationParameters) {
+export function computeServiceClassName(params: SpringProjectCreationParameters) {
     return !!params.enteredServiceClassName ?
         toInitialCap(params.enteredServiceClassName) :
         toInitialCap(camelize(artifactId(params)));

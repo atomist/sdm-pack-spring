@@ -22,7 +22,7 @@ import { CodeTransform } from "@atomist/sdm";
 import { SpringProjectCreationParameters } from "../../..";
 import { renameClass } from "../../java/javaProjectUtils";
 import { SpringBootProjectStructure } from "./SpringBootProjectStructure";
-import { serviceClassName } from "./SpringProjectCreationParameters";
+import { computeServiceClassName } from "./SpringProjectCreationParameters";
 
 /**
  * Infer the Spring Boot structure and rename the class.
@@ -40,4 +40,4 @@ export async function inferSpringStructureAndRename(serviceClassName: string, p:
     }
 }
 export const inferSpringStructureAndRenameTransform: CodeTransform<SpringProjectCreationParameters> =
-    (p, c, params) => inferSpringStructureAndRename(serviceClassName(params), p);
+    (p, c, params) => inferSpringStructureAndRename(computeServiceClassName(params), p);

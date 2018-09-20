@@ -1,4 +1,3 @@
-import { SpringProjectCreationParameters } from "./../../spring/generate/SpringProjectCreationParameters";
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -20,7 +19,8 @@ import {
     Project,
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
-import { artifactId } from "../../java/generate/JavaProjectCreationParameters";
+import { computeArtifactId } from "../../java/generate/JavaProjectCreationParameters";
+import { SpringProjectCreationParameters } from "./../../spring/generate/SpringProjectCreationParameters";
 
 /**
  * Record change to POM. Project will subsequently need flushing
@@ -52,6 +52,6 @@ export function updatePom(
 
 export const updatePomTransform: CodeTransform<SpringProjectCreationParameters> = async (project, c, params) => updatePom(project,
     params.target.repoRef.repo,
-    artifactId(params),
+    computeArtifactId(params),
     params.groupId, params.version,
     params.description || params.target.repoRef.repo);

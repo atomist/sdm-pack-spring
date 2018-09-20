@@ -78,6 +78,6 @@ export const JavaProjectCreationParameterDefinitions: ParametersObject = {
  * @param {JavaProjectCreationParameters} params
  * @return {string}
  */
-export function artifactId(params: JavaProjectCreationParameters): string {
+export function computeArtifactId(params: JavaProjectCreationParameters): string {
     return params.enteredArtifactId || params.target.repoRef.repo;
 }
