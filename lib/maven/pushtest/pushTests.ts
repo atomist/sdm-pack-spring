@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {
-    predicatePushTest,
-    PredicatePushTest,
-} from "@atomist/sdm";
+import { predicatePushTest, PredicatePushTest } from "@atomist/sdm";
+import { findDependenciesFromEffectivePom } from "../inspection/findDependencies";
+import { findDeclaredDependencies } from "../parse/fromPom";
+import { coordinates, dependencyFound, DependencySpecifier } from "../VersionedArtifact";
 
 /**
  * Is this a Maven project
@@ -25,4 +25,39 @@ import {
  */
 export const IsMaven: PredicatePushTest = predicatePushTest(
     "Is Maven",
-    async p => !!(await p.getFile("pom.xml")));
+    p => p.hasFile("pom.xml"));
+
+/**
+ * Does the project declare the given dependency?
+ * @return {PredicatePushTest}
+ */
+export function hasDeclaredDependency(on: DependencySpecifier): PredicatePushTest {
+    return predicatePushTest(
+        `hasDeclaredDep-${coordinates(on)}`,
+        async p => {
+            const deps = (await findDeclaredDependencies(p)).dependencies;
+            return dependencyFound(on, deps);
+        },
+    );
+}
+
+/**
+ * Does the project depend on the given artifact, even indirectly?
+ * @return {PredicatePushTest}
+ */
+export function hasDependency(on: DependencySpecifier): PredicatePushTest {
+    return predicatePushTest(
+        `hasDeclaredDep-${coordinates(on)}`,
+        async p => {
+            // Attempt an optimization: Look for it in the fast stuff first
+            const directDeps = (await findDeclaredDependencies(p)).dependencies;
+            const direct = dependencyFound(on, directDeps);
+            if (direct) {
+                return true;
+            }
+            // If we're still going, check transient dependencies
+            const deps = await findDependenciesFromEffectivePom(p);
+            return dependencyFound(on, deps);
+        },
+    );
+}

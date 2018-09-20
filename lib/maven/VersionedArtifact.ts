@@ -14,31 +14,60 @@
  * limitations under the License.
  */
 
-export interface IdentifiedArtifact {
+/**
+ * Specify consistent naming for dependencies
+ */
+export interface DependencySpecifier {
+
+    group?: string;
+
+    artifact?: string;
+
+    version?: string;
+}
+
+export interface VersionedArtifact extends DependencySpecifier {
 
     group: string;
 
     artifact: string;
+
+    version: string;
+
+    scope?: string;
 
     description?: string;
 
 }
 
 /**
- * Represents a Maven GAV
+ * Return a unique artifact string
+ * @param va
  */
-export interface VersionedArtifact extends IdentifiedArtifact {
-
-    version: string;
-
-    scope?: string;
-
-}
-
-export function coordinates(va: VersionedArtifact): string {
+export function coordinates(va: DependencySpecifier): string {
     let coords = `${va.group}:${va.artifact}`;
     if (va.version) {
         coords += `:${va.version}`;
     }
     return coords;
+}
+
+/**
+ * Is there a match for the given dependency specifier in these dependencies?
+ * @param {DependencySpecifier} searchTerm
+ * @param {VersionedArtifact[]} dependencies
+ * @return {boolean}
+ */
+export function dependencyFound(searchTerm: DependencySpecifier, dependencies: VersionedArtifact[]): boolean {
+    let deps = dependencies;
+    if (!!searchTerm.group) {
+        deps = deps.filter(d => d.group === searchTerm.group);
+    }
+    if (!!searchTerm.artifact) {
+        deps = deps.filter(d => d.artifact === searchTerm.artifact);
+    }
+    if (!!searchTerm.version) {
+        deps = deps.filter(d => d.version === searchTerm.version);
+    }
+    return deps.length > 0;
 }

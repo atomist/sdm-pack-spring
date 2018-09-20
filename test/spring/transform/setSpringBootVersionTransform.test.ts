@@ -17,7 +17,7 @@
 import {
     InMemoryProject,
     LocalProject,
-    NodeFsLocalProject,
+    NodeFsLocalProject, RepoId,
 } from "@atomist/automation-client";
 import * as assert from "power-assert";
 import * as tmp from "tmp";
@@ -48,7 +48,7 @@ describe("setSpringBootVersionTransform", () => {
 
 });
 
-function tempProject(): LocalProject {
+export function tempProject(id?: RepoId): LocalProject {
     const dir = tmp.dirSync();
-    return new NodeFsLocalProject("temp", dir.name);
+    return new NodeFsLocalProject(id || "temp", dir.name);
 }

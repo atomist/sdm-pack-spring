@@ -49,6 +49,9 @@ export interface Dependencies {
  * @return {Promise<VersionedArtifact[]>}
  */
 export async function findDependenciesFromEffectivePom(p: Project): Promise<VersionedArtifact[]> {
+    if (!await p.hasFile("pom.xml")) {
+        return [];
+    }
     if (!isLocalProject(p)) {
         throw new Error(`Fingerprinting only works on local projects: had ${p.id.url}`);
     }
