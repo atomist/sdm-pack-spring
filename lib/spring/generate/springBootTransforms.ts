@@ -26,10 +26,10 @@ import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
  * Update the readme
  */
 export const ReplaceReadmeTitle: CodeTransform<SpringProjectCreationParameters> = async (p, ci) => {
-        return doWithFiles(p, "README.md", async readMe => {
-            await readMe.replace(/^#[\s\S]*?## /, titleBlock(ci.parameters));
-        });
-    };
+    return doWithFiles(p, "README.md", async readMe => {
+        await readMe.replace(/^#[\s\S]*?## /, titleBlock(ci.parameters));
+    });
+};
 
 /**
  * Replace the ${ATOMIST_TEAM} placeholder in the seed with the id

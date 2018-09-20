@@ -14,51 +14,37 @@
  * limitations under the License.
  */
 
-import { chainEditors } from "@atomist/automation-client";
 import {
+    chainTransforms,
     CodeTransform,
     doWithFiles,
-    Project,
 } from "@atomist/sdm";
-import { curry } from "@typed/curry";
-import { artifactId } from "../../java/generate/JavaProjectCreationParameters";
-import { inferStructureAndMovePackage } from "../../java/javaProjectUtils";
-import { updatePom } from "../../maven/generate/updatePom";
-import { inferSpringStructureAndRename } from "./springBootUtils";
+import { inferStructureAndMovePackageTransform } from "../../java/javaProjectUtils";
+import { updatePomTransform } from "../../maven/generate/updatePom";
+import { inferSpringStructureAndRenameTransform } from "./springBootUtils";
 import {
-    serviceClassName,
     SpringProjectCreationParameters,
 } from "./SpringProjectCreationParameters";
 
 /**
- * Transform a seed to a custom Spring Boot project.
- * Transform suited for use in a Spring Boot generator.
- */
-// TODO ugrade using new chainTransforms function from sdm
-// enables getting rid of currying
-export const TransformSeedToCustomProject: CodeTransform<SpringProjectCreationParameters> = async (p, ctx, params) => {
-    return chainEditors(
-        curry(cleanReadMe)(params.target.description),
-        async project => updatePom(project,
-            params.target.repoRef.repo,
-            artifactId(params),
-            params.groupId, params.version,
-            params.description || params.target.repoRef.repo),
-        curry(inferStructureAndMovePackage)(params.rootPackage),
-        curry(inferSpringStructureAndRename)(serviceClassName(params)),
-    )(p, ctx.context, params);
-};
-
-/**
- * Remove content from README specific to this project.
+ * Get a transform that removes content from a README specific to this project.
  * @param project      project whose README should be cleaned
  * @param description  brief description of newly created project
  */
-export function cleanReadMe(description: string, project: Project): Promise<Project> {
-    return doWithFiles(project, "README.md", readMe => {
+const cleanReadMe: CodeTransform<SpringProjectCreationParameters> =
+    async (project, c, params) => doWithFiles(project, "README.md", readMe => {
         return readMe.replace(/^#[\\s\\S]*?## Development/, `# ${project.name}
-This project contains ${description}.
+This project contains ${params.target.description}.
 
 ## Development`);
     });
-}
+
+/**
+ * Transform a seed to a custom Spring Boot project.
+ */
+export const TransformSeedToCustomProject: CodeTransform<SpringProjectCreationParameters> = chainTransforms(
+    cleanReadMe,
+    updatePomTransform,
+    inferStructureAndMovePackageTransform,
+    inferSpringStructureAndRenameTransform,
+);

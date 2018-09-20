@@ -1,3 +1,4 @@
+import { SpringProjectCreationParameters } from "./../../spring/generate/SpringProjectCreationParameters";
 /*
  * Copyright © 2018 Atomist, Inc.
  *
@@ -18,6 +19,8 @@ import {
     doWithFiles,
     Project,
 } from "@atomist/automation-client";
+import { CodeTransform } from "@atomist/sdm";
+import { artifactId } from "../../java/generate/JavaProjectCreationParameters";
 
 /**
  * Record change to POM. Project will subsequently need flushing
@@ -46,3 +49,9 @@ export function updatePom(
         await f.replace(/<description>[\S\s]*?<\/description>/, `<description>${description}</description>`);
     });
 }
+
+export const updatePomTransform: CodeTransform<SpringProjectCreationParameters> = async (project, c, params) => updatePom(project,
+    params.target.repoRef.repo,
+    artifactId(params),
+    params.groupId, params.version,
+    params.description || params.target.repoRef.repo);

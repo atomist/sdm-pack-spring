@@ -30,7 +30,6 @@
     "@atomist/antlr": "1.0.0",
     "@atomist/microgrammar": "1.0.0-M.4",
     "@atomist/tree-path": "1.0.0-M.4",
-    "@typed/curry": "^1.0.1",
     "@types/cross-spawn": "^6.0.0",
     "@types/dateformat": "^1.0.1",
     "@types/decompress": "^4.2.3",

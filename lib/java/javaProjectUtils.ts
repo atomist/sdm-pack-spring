@@ -19,7 +19,9 @@ import {
     logger,
     Project,
 } from "@atomist/automation-client";
+import { CodeTransform } from "@atomist/sdm";
 import * as _ from "lodash";
+import { SpringProjectCreationParameters } from "../..";
 import { JavaProjectStructure } from "./JavaProjectStructure";
 
 export const AllJavaFiles = "**/*.java";
@@ -98,9 +100,12 @@ export function renameClass(project: Project,
  * @param {Project} p
  * @return {Promise<Project>}
  */
-export async function inferStructureAndMovePackage(rootPackage: string, p: Project): Promise<Project> {
+async function inferStructureAndMovePackage(rootPackage: string, p: Project): Promise<Project> {
     const structure = await JavaProjectStructure.infer(p);
     return !!structure ?
         movePackage(p, structure.applicationPackage, rootPackage) :
         p;
 }
+
+export const inferStructureAndMovePackageTransform: CodeTransform<SpringProjectCreationParameters> =
+    (p, c, params) => inferStructureAndMovePackage(params.rootPackage, p);
