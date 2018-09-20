@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { HandlerContext, LocalProject, logger, poisonAndWait, Success } from "@atomist/automation-client";
+import {
+    HandlerContext,
+    LocalProject,
+    logger,
+    poisonAndWait,
+    Success,
+} from "@atomist/automation-client";
 import {
     BuildGoal,
     CommandHandlerRegistration,
