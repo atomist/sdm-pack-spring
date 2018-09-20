@@ -16,7 +16,7 @@
 
 import { ParametersObject } from "@atomist/sdm";
 import {
-    artifactId,
+    computeArtifactId,
     JavaProjectCreationParameterDefinitions,
     JavaProjectCreationParameters,
 } from "../../java/generate/JavaProjectCreationParameters";
@@ -54,7 +54,7 @@ export const SpringProjectCreationParameterDefinitions: ParametersObject = {
 export function computeServiceClassName(params: SpringProjectCreationParameters) {
     return !!params.enteredServiceClassName ?
         toInitialCap(params.enteredServiceClassName) :
-        toInitialCap(camelize(artifactId(params)));
+        toInitialCap(camelize(computeArtifactId(params)));
 }
 
 function toInitialCap(s: string) {
