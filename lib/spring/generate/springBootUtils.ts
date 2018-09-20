@@ -19,10 +19,12 @@ import {
     Project,
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
-import { SpringProjectCreationParameters } from "../../..";
 import { renameClass } from "../../java/javaProjectUtils";
 import { SpringBootProjectStructure } from "./SpringBootProjectStructure";
-import { computeServiceClassName } from "./SpringProjectCreationParameters";
+import {
+    computeServiceClassName,
+    SpringProjectCreationParameters,
+} from "./SpringProjectCreationParameters";
 
 /**
  * Infer the Spring Boot structure and rename the class.

@@ -22,7 +22,7 @@ import {
     CodeTransformRegistration,
     TransformModeSuggestion,
 } from "@atomist/sdm";
-import { makeBuildAware } from "@atomist/sdm/lib/pack/build-aware-transform";
+import { pack } from "@atomist/sdm-core";
 import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 
 @Parameters()
@@ -58,7 +58,7 @@ export class UpgradeSpringBootParameters implements TransformModeSuggestion {
  * handler to respond to the build with either a PR and Issue
  * @type {HandleCommand<EditOneOrAllParameters>}
  */
-export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpringBootParameters> = makeBuildAware({
+export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpringBootParameters> = pack.buildAware.makeBuildAware({
     transform: SetSpringBootVersionTransform,
     paramsMaker: UpgradeSpringBootParameters,
     name: "boot-upgrade",
