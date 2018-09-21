@@ -19,15 +19,24 @@ import { CodeTransform } from "@atomist/sdm";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 
 /**
+ * Set the Spring Boot version to the desired version.
+ * Will act on all pom files found in the project, not just in the root,
+ * so works on monorepos.
+ */
+export function setSpringBootVersionTransform(desiredBootVersion: string): CodeTransform {
+    return async p =>
+        doWithAllMatches(p, new XmldocFileParser(),
+            "**/pom.xml",
+            "//parent[/artifactId[@innerValue='spring-boot-starter-parent']]/version",
+            n => {
+                n.$value = desiredBootVersion;
+            });
+}
+
+/**
  * Set the Spring Boot version according to the parameters.
  * Will act on all pom files found in the project, not just in the root,
  * so works on monorepos.
  */
 export const SetSpringBootVersionTransform: CodeTransform<{ desiredBootVersion: string }> =
-    async (p, ctx) =>
-        doWithAllMatches(p, new XmldocFileParser(),
-            "**/pom.xml",
-            "//parent[/artifactId[@innerValue='spring-boot-starter-parent']]/version",
-            n => {
-                n.$value = ctx.parameters.desiredBootVersion;
-            });
+    async (p, ci, params) => setSpringBootVersionTransform(ci.parameters.desiredBootVersion)(p, ci, params);

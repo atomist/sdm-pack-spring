@@ -29,7 +29,8 @@ describe("setSpringBootVersionTransform", () => {
 
     it("doesn't edit empty project", async () => {
         const p = new InMemoryProject();
-        await SetSpringBootVersionTransform(p, null, { desiredBootVersion: "1.3.1" });
+        const parameters = { desiredBootVersion: "1.3.1" };
+        await SetSpringBootVersionTransform(p, { parameters } as any, parameters);
     });
 
     it("actually edits Spring Boot project in memory", async () => {
