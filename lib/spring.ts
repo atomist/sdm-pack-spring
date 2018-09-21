@@ -60,12 +60,12 @@ export const SpringSupport: ExtensionPack = {
             .addCodeTransformCommand(TryToUpgradeSpringBootVersion)
             .addFirstPushListener(
                 tagRepo(springBootTagger),
-            );
+        );
     },
 };
 
 /**
- * @deprecated use MavenPerBranchDeploy
+ * @deprecated add `new MavenPerBranchDeployment()` to your goal contributors instead
  */
 export function configureMavenPerBranchSpringBootDeploy(sdm: SoftwareDeliveryMachine,
                                                         options: Partial<MavenDeployerOptions> = {}) {
