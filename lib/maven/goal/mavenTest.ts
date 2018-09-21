@@ -17,6 +17,7 @@
 import { gatherFromMatches } from "@atomist/automation-client";
 import { DefaultExcludes } from "@atomist/automation-client/lib/project/fileGlobs";
 import {
+    GoalDefinition,
     GoalInvocation,
     GoalWithFulfillment,
     Implementation,
@@ -29,16 +30,18 @@ import {
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 import { determineMavenCommand } from "../mavenCommand";
 
+/**
+ * Goal to execute Maven tests. Shows failures or errors if there are any.
+ * @type {GoalWithFulfillment}
+ */
 export const MavenTest: GoalWithFulfillment = new GoalWithFulfillment({
     name: "maven-test",
     uniqueName: "maven-test",
     environment: IndependentOfEnvironment,
     workingDescription: "Testing",
-    successDescription: "Tests succeeded",
     completedDescription: "Tests succeeded",
     failedDescription: "Tests failed",
-    failureDescription: "Tests failed",
-}).with({
+} as GoalDefinition).with({
     name: "maven-test",
     goalExecutor: executeMavenTest,
 } as Implementation);

@@ -90,5 +90,5 @@ export {
 } from "./lib/spring/transform/addSpringBootActuator";
 
 export { MavenPerBranchDeployment } from "./lib/java/deploy/MavenPerBranchDeployment";
-
 export { setSpringBootVersionTransform } from "./lib/spring/transform/setSpringBootVersionTransform";
+export { MavenTest } from "./lib/maven/goal/mavenTest";
