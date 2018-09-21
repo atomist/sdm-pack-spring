@@ -37,7 +37,6 @@ import { determineMavenCommand } from "../mavenCommand";
 export class MavenTest extends GoalWithFulfillment {
     constructor() {
         super({
-            name: "maven-test",
             uniqueName: "maven-test",
             environment: IndependentOfEnvironment,
             workingDescription: "Testing",
