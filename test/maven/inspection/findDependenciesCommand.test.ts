@@ -30,6 +30,6 @@ describe("FindDependenciesCommand", () => {
         const deps = await FindDependenciesCommand.inspection(project, undefined);
         assert(deps.dependencies.length > 0);
         // f1.forEach((f: any) => assert.equal(f.group, "org.springframework.boot"));
-    }).timeout(40000);
+    }).timeout(90000);
 
 });
