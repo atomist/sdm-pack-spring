@@ -31,7 +31,7 @@ describe("FindDependency", () => {
             parameters: { group: "org.springframework.boot", artifact: "spring-boot-starter-security"},
         } as any);
         assert.strictEqual(va, undefined);
-    }).timeout(40000);
+    }).timeout(80000);
 
     it("when found", async () => {
         const p = tempProject();
@@ -40,7 +40,7 @@ describe("FindDependency", () => {
             parameters: { group: "org.springframework.boot", artifact: "spring-boot-starter-web"},
         } as any);
         assert(!!va, "Artifact should be defined");
-    }).timeout(40000);
+    }).timeout(80000);
 
 });
 
