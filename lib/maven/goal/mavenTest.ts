@@ -29,7 +29,7 @@ import {
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 import { determineMavenCommand } from "../mavenCommand";
 
-export const MavenTestGoal: GoalWithFulfillment = new GoalWithFulfillment({
+export const MavenTest: GoalWithFulfillment = new GoalWithFulfillment({
     name: "maven-test",
     uniqueName: "maven-test",
     environment: IndependentOfEnvironment,
