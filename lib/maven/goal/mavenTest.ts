@@ -34,17 +34,22 @@ import { determineMavenCommand } from "../mavenCommand";
  * Goal to execute Maven tests. Shows failures or errors if there are any.
  * @type {GoalWithFulfillment}
  */
-export const MavenTest: GoalWithFulfillment = new GoalWithFulfillment({
-    name: "maven-test",
-    uniqueName: "maven-test",
-    environment: IndependentOfEnvironment,
-    workingDescription: "Testing",
-    completedDescription: "Tests succeeded",
-    failedDescription: "Tests failed",
-} as GoalDefinition).with({
-    name: "maven-test",
-    goalExecutor: executeMavenTest,
-} as Implementation);
+export class MavenTest extends GoalWithFulfillment {
+    constructor() {
+        super({
+            name: "maven-test",
+            uniqueName: "maven-test",
+            environment: IndependentOfEnvironment,
+            workingDescription: "Testing",
+            completedDescription: "Tests succeeded",
+            failedDescription: "Tests failed",
+        } as GoalDefinition);
+        this.with({
+            name: "maven-test",
+            goalExecutor: executeMavenTest,
+        } as Implementation);
+    }
+}
 
 function executeMavenTest(goalInvocation: GoalInvocation) {
     const {credentials, id} = goalInvocation;
