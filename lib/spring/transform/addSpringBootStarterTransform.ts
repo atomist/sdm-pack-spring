@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { CodeTransform } from "@atomist/sdm";
+import { CodeTransform, CodeTransformRegistration, PullRequest } from "@atomist/sdm";
 import { addDependencyTransform } from "../../maven/transform/addDependencyTransform";
+
+const DefaultGroup = "org.springframework.boot";
 
 /**
  * Return a code transform that will add the given Spring Boot starter to a project.
@@ -25,6 +27,25 @@ import { addDependencyTransform } from "../../maven/transform/addDependencyTrans
  * @return {CodeTransform}
  */
 export function addSpringBootStarterTransform(artifact: string,
-                                              group: string = "org.springframework.boot"): CodeTransform {
+                                              group: string = DefaultGroup): CodeTransform {
     return addDependencyTransform({ artifact, group, version: undefined });
 }
+
+/**
+ * Command to add a Spring Boot starter to the project
+ */
+export const AddSpringBootStarter: CodeTransformRegistration<{ artifact: string, group?: string }> = {
+    name: "add-spring-boot-starter",
+    intent: ["add spring boot starter", "add starter"],
+    description: "Add a Spring Boot starter to the project",
+    transform: [
+        async (p, ci) =>
+            addSpringBootStarterTransform(
+                ci.parameters.artifact,
+                ci.parameters.group)(p, ci),
+    ],
+    transformPresentation: ci => new PullRequest(
+        `add-spring-boot-starter-${ci.parameters.artifact}`,
+        `Add spring boot starter ${ci.parameters.artifact}`,
+    ),
+};

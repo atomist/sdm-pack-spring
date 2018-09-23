@@ -24,14 +24,8 @@ import {
     SoftwareDeliveryMachine,
     whenPushSatisfies,
 } from "@atomist/sdm";
-import {
-    ManagedDeploymentTargeter,
-    tagRepo,
-} from "@atomist/sdm-core";
-import {
-    LocalEndpointGoal,
-    LocalUndeploymentGoal,
-} from "@atomist/sdm/lib/pack/well-known-goals/commonGoals";
+import { ManagedDeploymentTargeter, tagRepo } from "@atomist/sdm-core";
+import { LocalEndpointGoal, LocalUndeploymentGoal } from "@atomist/sdm/lib/pack/well-known-goals/commonGoals";
 import {
     executeGradlePerBranchSpringBootDeploy,
     GradleDeployerOptions,
@@ -46,17 +40,16 @@ import {
 import { ListLocalDeploys } from "./maven/deploy/listLocalDeploys";
 import { IsMaven } from "./maven/pushtest/pushTests";
 import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
-import {
-    HasSpringBootApplicationClass,
-    HasSpringBootPom,
-} from "./spring/pushtest/pushTests";
+import { HasSpringBootApplicationClass, HasSpringBootPom } from "./spring/pushtest/pushTests";
 import { springBootTagger } from "./spring/springTagger";
+import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
 
 export const SpringSupport: ExtensionPack = {
     ...metadata(),
     configure: sdm => {
         sdm
+            .addCodeTransformCommand(AddSpringBootStarter)
             .addCodeTransformCommand(TryToUpgradeSpringBootVersion)
             .addFirstPushListener(
                 tagRepo(springBootTagger),
