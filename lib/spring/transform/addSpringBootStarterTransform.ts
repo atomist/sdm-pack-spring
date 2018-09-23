@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { CodeTransform, CodeTransformRegistration, PullRequest } from "@atomist/sdm";
+import {
+    CodeTransform,
+    CodeTransformRegistration,
+    PullRequest,
+} from "@atomist/sdm";
 import { addDependencyTransform } from "../../maven/transform/addDependencyTransform";
 
 const DefaultGroup = "org.springframework.boot";
