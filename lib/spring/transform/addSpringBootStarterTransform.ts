@@ -42,6 +42,10 @@ export const AddSpringBootStarter: CodeTransformRegistration<{ artifact: string,
     name: "add-spring-boot-starter",
     intent: ["add spring boot starter", "add starter"],
     description: "Add a Spring Boot starter to the project",
+    parameters: {
+        artifact: { description: "Starter artifact" },
+        group: { description: `Startup group. Defaults to ${DefaultGroup}`, required: false },
+    },
     transform: [
         async (p, ci) =>
             addSpringBootStarterTransform(

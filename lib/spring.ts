@@ -45,6 +45,7 @@ import {
 } from "./java/deploy/MavenPerBranchSpringBootDeploymentGoal";
 import { ListLocalDeploys } from "./maven/deploy/listLocalDeploys";
 import { IsMaven } from "./maven/pushtest/pushTests";
+import { AddMavenDependency } from "./maven/transform/addDependencyTransform";
 import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
 import {
     HasSpringBootApplicationClass,
@@ -58,6 +59,7 @@ export const SpringSupport: ExtensionPack = {
     ...metadata(),
     configure: sdm => {
         sdm
+            .addCodeTransformCommand(AddMavenDependency)
             .addCodeTransformCommand(AddSpringBootStarter)
             .addCodeTransformCommand(TryToUpgradeSpringBootVersion)
             .addFirstPushListener(

@@ -18,7 +18,7 @@ import {
     doWithAllMatches,
     logger,
 } from "@atomist/automation-client";
-import { CodeTransform } from "@atomist/sdm";
+import { CodeTransform, CodeTransformRegistration, PullRequest } from "@atomist/sdm";
 import * as _ from "lodash";
 import { indent } from "../../util/formatUtils";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
@@ -54,6 +54,29 @@ export function addDependencyTransform(va: VersionedArtifact): CodeTransform {
         }
     };
 }
+
+/**
+ * Command to add a Maven dependency to the project
+ */
+export const AddMavenDependency: CodeTransformRegistration<{ artifact: string, group: string, version: string }> = {
+    name: "add-maven-dependency",
+    intent: ["add dependency", "add Maven dependency"],
+    description: "Add a Maven dependency to the project",
+    parameters: {
+        artifact: { description: "Artifact to add" },
+        group: { description: "Group of the dependency" },
+        version: { description: "Dependency version" },
+    },
+    transform: [
+        async (p, ci) =>
+            addDependencyTransform(
+                { ...ci.parameters })(p, ci),
+    ],
+    transformPresentation: ci => new PullRequest(
+        `add-dependency-${ci.parameters.artifact}`,
+        `Add dependency ${ci.parameters.artifact}`,
+    ),
+};
 
 function dependencyStanza(va: VersionedArtifact) {
     return `<dependency>

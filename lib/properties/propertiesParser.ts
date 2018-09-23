@@ -22,7 +22,7 @@ import {
 import { CodeTransform } from "@atomist/sdm";
 
 /**
- * File of updated properties. Change keys or values and call flush() to write out any changes.
+ * File of updatable properties. Change keys or values and call flush() to write out any changes.
  */
 export interface PropertiesFile {
 
