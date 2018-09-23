@@ -18,7 +18,11 @@ import {
     doWithAllMatches,
     logger,
 } from "@atomist/automation-client";
-import { CodeTransform, CodeTransformRegistration, PullRequest } from "@atomist/sdm";
+import {
+    CodeTransform,
+    CodeTransformRegistration,
+    PullRequest,
+} from "@atomist/sdm";
 import * as _ from "lodash";
 import { indent } from "../../util/formatUtils";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
