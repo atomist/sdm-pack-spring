@@ -21,7 +21,8 @@ import {
 } from "@atomist/automation-client";
 
 import { AllJavaFiles } from "../java/javaProjectUtils";
-import { SpringBootStarter } from "./springConstants";
+
+const SpringBootStarter = "spring-boot-starter-parent";
 
 /**
  * Function to add Spring-related GitHub topics if needed
