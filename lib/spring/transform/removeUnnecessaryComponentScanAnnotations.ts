@@ -25,7 +25,8 @@ import { ZapTrailingWhitespace } from "@atomist/automation-client/lib/tree/ast/F
 import {
     AutofixRegistration,
     CodeInspection,
-    CodeTransform, ReviewerRegistration,
+    CodeTransform,
+    ReviewerRegistration,
 } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
 

@@ -15,7 +15,14 @@
  */
 
 import { JavaFileParser } from "@atomist/antlr";
-import { gatherFromMatches, Project, ProjectReview, ReviewComment, Severity, SourceLocation } from "@atomist/automation-client";
+import {
+    gatherFromMatches,
+    Project,
+    ProjectReview,
+    ReviewComment,
+    Severity,
+    SourceLocation,
+} from "@atomist/automation-client";
 import { ReviewerRegistration } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
 
