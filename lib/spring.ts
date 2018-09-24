@@ -24,14 +24,8 @@ import {
     SoftwareDeliveryMachine,
     whenPushSatisfies,
 } from "@atomist/sdm";
-import {
-    ManagedDeploymentTargeter,
-    tagRepo,
-} from "@atomist/sdm-core";
-import {
-    LocalEndpointGoal,
-    LocalUndeploymentGoal,
-} from "@atomist/sdm/lib/pack/well-known-goals/commonGoals";
+import { ManagedDeploymentTargeter, tagRepo } from "@atomist/sdm-core";
+import { LocalEndpointGoal, LocalUndeploymentGoal } from "@atomist/sdm/lib/pack/well-known-goals/commonGoals";
 import {
     executeGradlePerBranchSpringBootDeploy,
     GradleDeployerOptions,
@@ -47,20 +41,26 @@ import { ListLocalDeploys } from "./maven/deploy/listLocalDeploys";
 import { IsMaven } from "./maven/pushtest/pushTests";
 import { AddMavenDependency } from "./maven/transform/addDependencyTransform";
 import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
-import {
-    HasSpringBootApplicationClass,
-    HasSpringBootPom,
-} from "./spring/pushtest/pushTests";
+import { HasSpringBootApplicationClass, HasSpringBootPom } from "./spring/pushtest/pushTests";
 import { springBootTagger } from "./spring/springTagger";
+import { addSpringBootActuator } from "./spring/transform/addSpringBootActuator";
 import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
+import { ApplySecuredWebAppGuide } from "./spring/transform/guide/securingWebApp";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
 
+/**
+ * Extension pack offering Spring Boot support.
+ * Adds Spring Boot related commands and automatic repo tagging
+ * on the first push we see.
+ */
 export const SpringSupport: ExtensionPack = {
     ...metadata(),
     configure: sdm => {
         sdm
             .addCodeTransformCommand(AddMavenDependency)
             .addCodeTransformCommand(AddSpringBootStarter)
+            .addCodeTransformCommand(addSpringBootActuator())
+            .addCodeTransformCommand(ApplySecuredWebAppGuide)
             .addCodeTransformCommand(TryToUpgradeSpringBootVersion)
             .addFirstPushListener(
                 tagRepo(springBootTagger),
