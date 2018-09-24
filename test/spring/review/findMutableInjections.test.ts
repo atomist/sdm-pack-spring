@@ -20,7 +20,7 @@ import * as assert from "power-assert";
 import {
     findMutableInjections,
     MutableInjection,
-} from "../../../lib/spring/review/findMutableInjections";
+} from "../../../lib/spring/review/mutableInjectionsReviewer";
 
 describe("find mutable injections", () => {
 

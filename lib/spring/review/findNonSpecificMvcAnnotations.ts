@@ -23,6 +23,7 @@ import {
     Severity,
     SourceLocation,
 } from "@atomist/automation-client";
+import { ReviewerRegistration } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
 
 export class NonSpecificMvcAnnotation implements ReviewComment {
@@ -55,3 +56,8 @@ export async function findNonSpecificMvcAnnotations(p: Project, globPattern: str
                 m.sourceLocation)),
     };
 }
+
+export const NonSpecificMvcAnnotationsReviewer: ReviewerRegistration = {
+    name: "non-specific-mvc-annotations-reviewer",
+    inspection: async p => findNonSpecificMvcAnnotations(p),
+};

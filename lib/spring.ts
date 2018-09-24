@@ -16,6 +16,8 @@
 
 import {
     AnyPush,
+    AutoCodeInspection,
+    Autofix,
     executeDeploy,
     executeUndeploy,
     ExtensionPack,
@@ -38,54 +40,104 @@ import {
     GradlePerBranchSpringBootDeploymentGoal,
 } from "./gradle/deploy/GradlePerBranchSpringBootDeploymentGoal";
 import { IsGradle } from "./gradle/pushtest/gradlePushTests";
-import {
-    executeMavenPerBranchSpringBootDeploy,
-    MavenDeployerOptions,
-    MavenPerBranchSpringBootDeploymentGoal,
-} from "./java/deploy/MavenPerBranchSpringBootDeploymentGoal";
+import { FileIoImportReviewer } from "./java/review/fileIoImportReviewer";
+import { ImportDotStarReviewer } from "./java/review/importDotStarReviewer";
 import { ListLocalDeploys } from "./maven/deploy/listLocalDeploys";
 import { IsMaven } from "./maven/pushtest/pushTests";
+import { ProvidedDependencyReviewer } from "./maven/review/providedDependencyReviewer";
 import { AddMavenDependency } from "./maven/transform/addDependencyTransform";
 import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
-import {
-    HasSpringBootApplicationClass,
-    HasSpringBootPom,
-} from "./spring/pushtest/pushTests";
+import { HasSpringBootApplicationClass } from "./spring/pushtest/pushTests";
+import { NonSpecificMvcAnnotationsReviewer } from "./spring/review/findNonSpecificMvcAnnotations";
+import { HardCodedPropertyReviewer } from "./spring/review/hardcodedPropertyReviewer";
+import { MutableInjectionsReviewer } from "./spring/review/mutableInjectionsReviewer";
 import { springBootTagger } from "./spring/springTagger";
 import { addSpringBootActuator } from "./spring/transform/addSpringBootActuator";
 import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
 import { ApplySecuredWebAppGuide } from "./spring/transform/guide/securingWebApp";
+import { FixAutowiredOnSoleConstructor } from "./spring/transform/removeUnnecessaryAutowiredAnnotations";
+import {
+    UnnecessaryComponentScanAutofix,
+    UnnecessaryComponentScanReviewer,
+} from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
+
+/**
+ * Categories of functionality to enable
+ */
+export interface Categories {
+
+    cloudNative?: boolean;
+
+    springStyle?: boolean;
+}
+
+/**
+ * Options determining what Spring functionality is activated.
+ */
+export interface SpringSupportOptions {
+
+    /**
+     * Inspect goal to add inspections to.
+     * Review functionality won't work otherwise.
+     */
+    inspectGoal?: AutoCodeInspection;
+
+    /**
+     * Autofix goal to add autofixes to.
+     * Autofix functionality won't work otherwise.
+     */
+    autofixGoal?: Autofix;
+
+    review: Categories;
+
+    autofix: Categories;
+
+}
 
 /**
  * Extension pack offering Spring Boot support.
  * Adds Spring Boot related commands and automatic repo tagging
- * on the first push we see.
+ * on the first push we see. Use options to determine whether
+ * reviews and autofixes run.
  */
-export const SpringSupport: ExtensionPack = {
-    ...metadata(),
-    configure: sdm => {
-        sdm
-            .addCodeTransformCommand(AddMavenDependency)
-            .addCodeTransformCommand(AddSpringBootStarter)
-            .addCodeTransformCommand(addSpringBootActuator())
-            .addCodeTransformCommand(ApplySecuredWebAppGuide)
-            .addCodeTransformCommand(TryToUpgradeSpringBootVersion)
-            .addFirstPushListener(
-                tagRepo(springBootTagger),
-        );
-    },
-};
-
-/**
- * @deprecated add `new MavenPerBranchDeployment()` to your goal contributors instead
- */
-export function configureMavenPerBranchSpringBootDeploy(sdm: SoftwareDeliveryMachine,
-                                                        options: Partial<MavenDeployerOptions> = {}) {
-    sdm.addGoalContributions(whenPushSatisfies(HasSpringBootPom, HasSpringBootApplicationClass, IsMaven)
-        .setGoals(MavenPerBranchSpringBootDeploymentGoal));
-    sdm.addGoalImplementation("Maven deployment", MavenPerBranchSpringBootDeploymentGoal,
-        executeMavenPerBranchSpringBootDeploy(options));
+export function springSupport(options: SpringSupportOptions): ExtensionPack {
+    return {
+        ...metadata(),
+        configure: sdm => {
+            sdm
+                .addCodeTransformCommand(AddMavenDependency)
+                .addCodeTransformCommand(AddSpringBootStarter)
+                .addCodeTransformCommand(addSpringBootActuator())
+                .addCodeTransformCommand(ApplySecuredWebAppGuide)
+                .addCodeTransformCommand(TryToUpgradeSpringBootVersion)
+                .addFirstPushListener(
+                    tagRepo(springBootTagger),
+                );
+            if (!!options.inspectGoal) {
+                if (options.review.cloudNative) {
+                    options.inspectGoal
+                        .with(FileIoImportReviewer)
+                        .with(ImportDotStarReviewer)
+                        .with(HardCodedPropertyReviewer)
+                        .with(ProvidedDependencyReviewer);
+                }
+                if (options.review.springStyle) {
+                    options.inspectGoal
+                        .with(UnnecessaryComponentScanReviewer)
+                        .with(MutableInjectionsReviewer)
+                        .with(NonSpecificMvcAnnotationsReviewer);
+                }
+            }
+            if (!!options.autofixGoal) {
+                if (options.autofix.springStyle) {
+                    options.autofixGoal
+                        .with(UnnecessaryComponentScanAutofix)
+                        .with(FixAutowiredOnSoleConstructor);
+                }
+            }
+        },
+    };
 }
 
 export function configureGradlePerBranchSpringBootDeploy(sdm: SoftwareDeliveryMachine,

@@ -17,15 +17,15 @@
 import { InMemoryProject } from "@atomist/sdm";
 import * as assert from "power-assert";
 import { removeAutowiredOnSoleConstructor } from "../../../lib/spring/transform/removeUnnecessaryAutowiredAnnotations";
-import { removeUnnecessaryComponentScanEditor } from "../../../lib/spring/transform/removeUnnecessaryComponentScanAnnotations";
+import { removeUnnecessaryComponentScanTransform } from "../../../lib/spring/transform/removeUnnecessaryComponentScanAnnotations";
 
 describe("remove unnecessary annotations", () => {
 
-    describe("removeUnnecessaryComponentScanEditor", () => {
+    describe("removeUnnecessaryComponentScanTransform", () => {
 
         it("doesn't fail on empty project", async () => {
             const p = new InMemoryProject();
-            await removeUnnecessaryComponentScanEditor(p, null);
+            await removeUnnecessaryComponentScanTransform(p, null);
         });
 
         it("removes unnecessary annotation", async () => {
@@ -33,7 +33,7 @@ describe("remove unnecessary annotations", () => {
             const content = "public @SpringBootApplication @ComponentScan class MyApp {}";
             const p = InMemoryProject.of(
                 { path, content });
-            await removeUnnecessaryComponentScanEditor(p, null);
+            await removeUnnecessaryComponentScanTransform(p, null);
             const f = p.findFileSync(path);
             assert(f.getContentSync() === content.replace("@ComponentScan ", ""));
         });
@@ -47,7 +47,7 @@ describe("remove unnecessary annotations", () => {
             const content = "public @ComponentScan class MyApp {}";
             const p = InMemoryProject.of(
                 { path, content });
-            await removeUnnecessaryComponentScanEditor(p, null);
+            await removeUnnecessaryComponentScanTransform(p, null);
             const f = p.findFileSync(path);
             assert(f.getContentSync() === content);
         });

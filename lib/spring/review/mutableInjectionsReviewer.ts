@@ -23,6 +23,7 @@ import {
     Severity,
     SourceLocation,
 } from "@atomist/automation-client";
+import { ReviewerRegistration } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
 
 export class MutableInjection implements ReviewComment {
@@ -69,3 +70,8 @@ export async function findMutableInjections(p: Project, globPattern: string = Ja
         comments,
     };
 }
+
+export const MutableInjectionsReviewer: ReviewerRegistration = {
+    name: "mutable-injections-reviewer",
+    inspection: async p => findMutableInjections(p),
+};
