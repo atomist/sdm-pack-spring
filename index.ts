@@ -17,8 +17,7 @@
 export {
     configureLocalSpringBootDeploy,
     configureGradlePerBranchSpringBootDeploy,
-    configureMavenPerBranchSpringBootDeploy,
-    SpringSupport,
+    springSupport,
 } from "./lib/spring";
 export { executableJarDeployer } from "./lib/java/deploy/executableJarDeployer";
 export {

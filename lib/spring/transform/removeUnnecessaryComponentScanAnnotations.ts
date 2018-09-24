@@ -23,8 +23,9 @@ import {
 } from "@atomist/automation-client";
 import { ZapTrailingWhitespace } from "@atomist/automation-client/lib/tree/ast/FileHits";
 import {
+    AutofixRegistration,
     CodeInspection,
-    CodeTransform,
+    CodeTransform, ReviewerRegistration,
 } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
 
@@ -37,7 +38,7 @@ const UnnecessaryComponentScanAnnotations = `//typeDeclaration[/classDeclaration
                             [//annotation[@value='@SpringBootApplication']]
                             //annotation[@value='@ComponentScan']`;
 
-export const removeUnnecessaryComponentScanEditor: CodeTransform = p => {
+export const removeUnnecessaryComponentScanTransform: CodeTransform = p => {
     return zapAllMatches(p, JavaFileParser, JavaSourceFiles,
         UnnecessaryComponentScanAnnotations,
         ZapTrailingWhitespace);
@@ -60,4 +61,14 @@ export const unnecessaryComponentScanReviewer: CodeInspection<ProjectReview> = a
                 });
         }),
     };
+};
+
+export const UnnecessaryComponentScanReviewer: ReviewerRegistration = {
+    name: "unnecessary-component-scan-reviewer",
+    inspection: unnecessaryComponentScanReviewer,
+};
+
+export const UnnecessaryComponentScanAutofix: AutofixRegistration = {
+    name: "unnecessary-component-scan-autofix",
+    transform: removeUnnecessaryComponentScanTransform,
 };
