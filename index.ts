@@ -102,6 +102,7 @@ export {
     ListGradleBranchDeploys,
 } from "./lib/gradle/deploy/GradlePerBranchSpringBootDeploymentGoal";
 
-export * from "./lib/riff/riff";
+export * from "./lib/riff/riffGeneration";
+export * from "./lib/riff/riffPushTests";
 
 export * from "./lib/riff/RiffDeployment";

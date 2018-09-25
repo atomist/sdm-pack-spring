@@ -34,7 +34,7 @@ import {
 import {
     CategorySortingBodyFormatter,
     singleIssueManagingReviewListener,
-} from "@atomist/sdm-pack-issue/lib/review/issueManagingReviewListeners";
+} from "@atomist/sdm-pack-issue";
 import {
     LocalEndpointGoal,
     LocalUndeploymentGoal,
