@@ -54,6 +54,6 @@ export class RiffDeployment extends GoalWithFulfillment {
 
 function executeRiffDeploy(opts: Partial<RiffDeploymentOptions>): ExecuteGoal {
     return async gi => {
-        return gi.addressChannels("Do Riff deployment with fields on GoalInvocation");
+        await gi.addressChannels("Do Riff deployment with fields on GoalInvocation");
     };
 }
