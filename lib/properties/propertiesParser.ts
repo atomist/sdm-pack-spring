@@ -26,7 +26,16 @@ import { CodeTransform } from "@atomist/sdm";
  */
 export interface PropertiesFile {
 
+    /**
+     * Path to the file in the project
+     */
     path: string;
+
+    /**
+     * Return the properties as an indexed properties object.
+     * Objects will be mutable.
+     */
+    obj: { [key: string]: string };
 
     /**
      * Updatable properties
@@ -72,6 +81,10 @@ export async function parseProperties(p: Project, path: string): Promise<Propert
     }
 }
 
+export async function propertiesObject(p: Project, path: string): Promise<{ [key: string]: string}> {
+    return (await parseProperties(p, path)).obj;
+}
+
 /**
  * Code transform to add the property to the given file,
  * creating it if it doesn't exist. Updates any existing property.
@@ -90,6 +103,22 @@ class PropertiesFileImpl implements PropertiesFile {
 
     get properties() {
         return !!this.updatable ? this.updatable.matches : [];
+    }
+
+    get obj() {
+        const props = this.properties;
+        const x: { [key: string]: string } = {};
+        for (const prop of props) {
+            Object.defineProperty(x, prop.key, {
+                get() {
+                    return prop.value;
+                },
+                set(to) {
+                    throw new Error("Set not supported");
+                },
+            });
+        }
+        return x;
     }
 
     public async addProperty(prop: Property) {

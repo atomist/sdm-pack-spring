@@ -19,7 +19,7 @@ import { InMemoryProjectFile } from "@atomist/sdm";
 import * as assert from "assert";
 import {
     addProperty,
-    parseProperties,
+    parseProperties, propertiesObject,
 } from "../../lib/properties/propertiesParser";
 
 describe("propertyHandling", () => {
@@ -48,6 +48,18 @@ describe("propertyHandling", () => {
             assert.strictEqual(props.properties.length, 1);
             assert.strictEqual(props.properties[0].key, "foo");
             assert.strictEqual(props.properties[0].value, "bar");
+        });
+
+        it("finds single property through obj", async () => {
+            const p = InMemoryProject.of(new InMemoryProjectFile("thing.properties", "foo=bar"));
+            const propsObj = (await parseProperties(p, "thing.properties")).obj;
+            assert.strictEqual(propsObj.foo, "bar");
+        });
+
+        it("finds single property through propertiesObject call", async () => {
+            const p = InMemoryProject.of(new InMemoryProjectFile("thing.properties", "foo=bar"));
+            const propsObj = await propertiesObject(p, "thing.properties");
+            assert.strictEqual(propsObj.foo, "bar");
         });
 
         it("finds single property, ignoring blank lines and comment", async () => {
