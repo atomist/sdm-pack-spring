@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { ExecuteGoal, Fulfillment, GoalWithFulfillment, IndependentOfEnvironment } from "@atomist/sdm";
+import {
+    ExecuteGoal,
+    Fulfillment,
+    GoalWithFulfillment,
+    IndependentOfEnvironment,
+} from "@atomist/sdm";
 
 // tslint:disable-next-line:no-empty-interface
 export interface RiffDeploymentOptions {

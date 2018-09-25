@@ -19,7 +19,8 @@ import { InMemoryProjectFile } from "@atomist/sdm";
 import * as assert from "assert";
 import {
     addProperty,
-    parseProperties, propertiesObject,
+    parseProperties,
+    propertiesObject,
 } from "../../lib/properties/propertiesParser";
 
 describe("propertyHandling", () => {
