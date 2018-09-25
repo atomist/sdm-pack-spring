@@ -17,7 +17,10 @@
 import { InMemoryProject } from "@atomist/automation-client";
 import { InMemoryProjectFile } from "@atomist/sdm";
 import * as assert from "assert";
-import { RiffProjectCreationParameters, RiffProjectCreationTransform } from "../../lib/riff/riffGeneration";
+import {
+    RiffProjectCreationParameters,
+    RiffProjectCreationTransform,
+} from "../../lib/riff/riffGeneration";
 
 describe("riff transform", () => {
 

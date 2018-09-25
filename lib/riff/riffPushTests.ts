@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { predicatePushTest, PushTest } from "@atomist/sdm";
+import {
+    predicatePushTest,
+    PushTest,
+} from "@atomist/sdm";
 
 /**
  * Is this a Riff project?

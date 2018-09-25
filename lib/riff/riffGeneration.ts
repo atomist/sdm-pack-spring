@@ -15,8 +15,16 @@
  */
 
 import { logger } from "@atomist/automation-client";
-import { CodeTransform, ParametersObject } from "@atomist/sdm";
-import { classNameFromFqn, movePackage, packageNameFromFqn, renameClass } from "../java/javaProjectUtils";
+import {
+    CodeTransform,
+    ParametersObject,
+} from "@atomist/sdm";
+import {
+    classNameFromFqn,
+    movePackage,
+    packageNameFromFqn,
+    renameClass,
+} from "../java/javaProjectUtils";
 import { parseProperties } from "../properties/propertiesParser";
 
 export interface RiffProjectCreationParameters {
