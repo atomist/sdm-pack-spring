@@ -43,7 +43,8 @@ export interface PropertiesFile {
     properties: Property[];
 
     /**
-     * Add a property to the end of the file
+     * Add a property to the end of the file, or changes it if
+     * it already exists
      * @param {Property} prop
      */
     addProperty(prop: Property): Promise<void>;

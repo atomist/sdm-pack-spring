@@ -72,6 +72,10 @@ export function classNameFromFqn(fqn: string): string {
     return _.last(fqn.split("."));
 }
 
+export function packageNameFromFqn(fqn: string): string {
+    return _.dropRight(fqn.split(".")).join(".");
+}
+
 /**
  * Rename all instances of a Java or Kotlin class.  This method is somewhat
  * surgical when replacing appearances in Java code but brutal when

@@ -29,7 +29,6 @@ import {
 /**
  * Get a transform that removes content from a README specific to this project.
  * @param project      project whose README should be cleaned
- * @param description  brief description of newly created project
  */
 const cleanReadMe: CodeTransform<SpringProjectCreationParameters> =
     async (project, c, params) => doWithFiles(project, "README.md", readMe => {
