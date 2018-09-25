@@ -15,7 +15,7 @@
  */
 
 import { InMemoryProject } from "@atomist/automation-client";
-import { InMemoryProjectFile } from "@atomist/sdm";
+import { AddressNoChannels, InMemoryProjectFile } from "@atomist/sdm";
 import * as assert from "assert";
 import {
     RiffProjectCreationParameters,
@@ -27,16 +27,16 @@ describe("riff transform", () => {
     it("should not fail on empty project", async () => {
         const p = InMemoryProject.of();
         const parameters: RiffProjectCreationParameters = { fqn: "foo.Bar" };
-        await RiffProjectCreationTransform(p, { parameters } as any);
+        await RiffProjectCreationTransform(p, { parameters, addressChannels: AddressNoChannels } as any);
     });
 
     it("should rename class and file, changing package", async () => {
         const p = InMemoryProject.of(
-            new InMemoryProjectFile("riff.toml", "handler=func.Upper"),
+            new InMemoryProjectFile("riff.toml", "handler=\"func.Upper\""),
             new InMemoryProjectFile("src/main/java/func/Upper.java", "package func; public class Upper {}"),
         );
         const parameters: RiffProjectCreationParameters = { fqn: "foo.Bar" };
-        await RiffProjectCreationTransform(p, { parameters } as any);
+        await RiffProjectCreationTransform(p, { parameters, addressChannels: AddressNoChannels } as any);
         const old = p.findFileSync("src/main/java/func/Upper.java");
         assert.strictEqual(old, undefined);
         const now = p.findFileSync("src/main/java/foo/Bar.java");
@@ -50,13 +50,13 @@ describe("riff transform", () => {
 
     it("should update property", async () => {
         const p = InMemoryProject.of(
-            new InMemoryProjectFile("riff.toml", "handler=func.Upper"),
+            new InMemoryProjectFile("riff.toml", "handler=\"func.Upper\""),
             new InMemoryProjectFile("src/main/java/func/Upper.java", "package func; public class Upper {}"),
         );
         const parameters: RiffProjectCreationParameters = { fqn: "foo.Bar" };
-        await RiffProjectCreationTransform(p, { parameters } as any);
+        await RiffProjectCreationTransform(p, { parameters, addressChannels: AddressNoChannels } as any);
         const toml = p.findFileSync("riff.toml");
-        assert.strictEqual(toml.getContentSync(), "handler=foo.Bar");
+        assert.strictEqual(toml.getContentSync(), "handler=\"foo.Bar\"");
     });
 
 });

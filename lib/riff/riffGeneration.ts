@@ -25,7 +25,8 @@ import {
     packageNameFromFqn,
     renameClass,
 } from "../java/javaProjectUtils";
-import { parseProperties } from "../properties/propertiesParser";
+
+import * as toml from "toml";
 
 export interface RiffProjectCreationParameters {
     fqn: string;
@@ -37,20 +38,28 @@ export interface RiffProjectCreationParameters {
  * @return {Promise<void>}
  */
 export const RiffProjectCreationTransform: CodeTransform<RiffProjectCreationParameters> = async (p, ci) => {
-    const props = await parseProperties(p, "riff.toml");
-    const handler = props.obj.handler;
-    if (!handler) {
-        logger.warn("No handler property set");
+    const riffToml = await p.getFile("riff.toml");
+    if (!riffToml) {
+        logger.warn("No riff.toml found");
         return;
     }
-    const oldPackage = packageNameFromFqn(handler);
+    const tomlContent = await riffToml.getContent();
+    const parsed = toml.parse(tomlContent);
+    if (!parsed.handler) {
+        logger.warn("No handler found in riff.toml");
+        return;
+    }
+
+    const oldPackage = packageNameFromFqn(parsed.handler);
     const newPackage = packageNameFromFqn(ci.parameters.fqn);
-    const oldClass = classNameFromFqn(handler);
+    const oldClass = classNameFromFqn(parsed.handler);
     const newClass = classNameFromFqn(ci.parameters.fqn);
+
+    await ci.addressChannels(`Renaming handler class \`${parsed.handler}\` to \`${ci.parameters.fqn}\``);
 
     await renameClass(p, oldClass, newClass);
     await movePackage(p, oldPackage, newPackage);
-    await props.addProperty({ key: "handler", value: ci.parameters.fqn });
+    await riffToml.setContent(tomlContent.replace(parsed.handler, ci.parameters.fqn));
 };
 
 export const RiffProjectCreationParameterDefinitions: ParametersObject = {
