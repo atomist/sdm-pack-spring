@@ -45,12 +45,14 @@ export const removeUnnecessaryComponentScanTransform: CodeTransform = p => {
         ZapTrailingWhitespace);
 };
 
+export const UnnecessaryComponentScanCategory = "unnecessary annotations";
+
 export const unnecessaryComponentScanReviewer: CodeInspection<ProjectReview> = async p => {
     const matches = await findMatches(p, JavaFileParser, JavaSourceFiles, UnnecessaryComponentScanAnnotations);
     return {
         repoId: p.id,
         comments: matches.map(m => {
-            return new DefaultReviewComment("info", "unnecessary annotations",
+            return new DefaultReviewComment("info", UnnecessaryComponentScanCategory,
                 "`@ComponentScan` annotations are not necessary on `@SpringBootApplication` classes as they are inherited",
                 m.sourceLocation,
                 {

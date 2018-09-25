@@ -18,6 +18,10 @@ export {
     configureLocalSpringBootDeploy,
     configureGradlePerBranchSpringBootDeploy,
     springSupport,
+    SpringSupportOptions,
+    Categories,
+    CloudNativeIssueRaisingReviewListener,
+    SpringStyleIssueRaisingReviewListener,
 } from "./lib/spring";
 export { executableJarDeployer } from "./lib/java/deploy/executableJarDeployer";
 export {
@@ -65,7 +69,7 @@ export {
     IsSpringBoot2Project,
 } from "./lib/spring/pushtest/pushTests";
 export {
-    HardCodedPropertyReviewer,
+    HardcodedPropertyReviewer,
     HardcodePropertyCategory,
 } from "./lib/spring/review/hardcodedPropertyReviewer";
 export {

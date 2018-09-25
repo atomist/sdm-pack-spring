@@ -26,10 +26,12 @@ import {
 import { ReviewerRegistration } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
 
+export const MutableInjectionCategory = "Mutable injection";
+
 export class MutableInjection implements ReviewComment {
 
     public severity: Severity = "warn";
-    public category = "Mutable injection";
+    public category = MutableInjectionCategory;
 
     constructor(public name: string, public type: "field" | "setter",
                 public sourceLocation: SourceLocation) {

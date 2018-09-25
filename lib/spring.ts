@@ -23,6 +23,7 @@ import {
     ExtensionPack,
     LocalDeploymentGoal,
     metadata,
+    ReviewListenerRegistration,
     SoftwareDeliveryMachine,
     whenPushSatisfies,
 } from "@atomist/sdm";
@@ -30,6 +31,10 @@ import {
     ManagedDeploymentTargeter,
     tagRepo,
 } from "@atomist/sdm-core";
+import {
+    CategorySortingBodyFormatter,
+    singleIssueManagingReviewListener,
+} from "@atomist/sdm-pack-issue/lib/review/issueManagingReviewListeners";
 import {
     LocalEndpointGoal,
     LocalUndeploymentGoal,
@@ -40,17 +45,35 @@ import {
     GradlePerBranchSpringBootDeploymentGoal,
 } from "./gradle/deploy/GradlePerBranchSpringBootDeploymentGoal";
 import { IsGradle } from "./gradle/pushtest/gradlePushTests";
-import { FileIoImportReviewer } from "./java/review/fileIoImportReviewer";
-import { ImportDotStarReviewer } from "./java/review/importDotStarReviewer";
+import {
+    FileIoImportReviewer,
+    ImportFileIoCategory,
+} from "./java/review/fileIoImportReviewer";
+import {
+    ImportDotStarCategory,
+    ImportDotStarReviewer,
+} from "./java/review/importDotStarReviewer";
 import { ListLocalDeploys } from "./maven/deploy/listLocalDeploys";
 import { IsMaven } from "./maven/pushtest/pushTests";
-import { ProvidedDependencyReviewer } from "./maven/review/providedDependencyReviewer";
+import {
+    ProvidedDependencyCategory,
+    ProvidedDependencyReviewer,
+} from "./maven/review/providedDependencyReviewer";
 import { AddMavenDependency } from "./maven/transform/addDependencyTransform";
 import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
 import { HasSpringBootApplicationClass } from "./spring/pushtest/pushTests";
-import { NonSpecificMvcAnnotationsReviewer } from "./spring/review/findNonSpecificMvcAnnotations";
-import { HardCodedPropertyReviewer } from "./spring/review/hardcodedPropertyReviewer";
-import { MutableInjectionsReviewer } from "./spring/review/mutableInjectionsReviewer";
+import {
+    NonSpecificMvcAnnotationsReviewer,
+    OldStyleAnnotationCatergory,
+} from "./spring/review/findNonSpecificMvcAnnotations";
+import {
+    HardcodedPropertyReviewer,
+    HardcodePropertyCategory,
+} from "./spring/review/hardcodedPropertyReviewer";
+import {
+    MutableInjectionCategory,
+    MutableInjectionsReviewer,
+} from "./spring/review/mutableInjectionsReviewer";
 import { springBootTagger } from "./spring/springTagger";
 import { addSpringBootActuator } from "./spring/transform/addSpringBootActuator";
 import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
@@ -58,6 +81,7 @@ import { ApplySecuredWebAppGuide } from "./spring/transform/guide/securingWebApp
 import { FixAutowiredOnSoleConstructor } from "./spring/transform/removeUnnecessaryAutowiredAnnotations";
 import {
     UnnecessaryComponentScanAutofix,
+    UnnecessaryComponentScanCategory,
     UnnecessaryComponentScanReviewer,
 } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
@@ -93,6 +117,10 @@ export interface SpringSupportOptions {
 
     autofix: Categories;
 
+    /**
+     * Review listeners that let you publish review results.
+     */
+    reviewListeners?: ReviewListenerRegistration | ReviewListenerRegistration[];
 }
 
 /**
@@ -119,7 +147,7 @@ export function springSupport(options: SpringSupportOptions): ExtensionPack {
                     options.inspectGoal
                         .with(FileIoImportReviewer)
                         .with(ImportDotStarReviewer)
-                        .with(HardCodedPropertyReviewer)
+                        .with(HardcodedPropertyReviewer)
                         .with(ProvidedDependencyReviewer);
                 }
                 if (options.review.springStyle) {
@@ -127,6 +155,11 @@ export function springSupport(options: SpringSupportOptions): ExtensionPack {
                         .with(UnnecessaryComponentScanReviewer)
                         .with(MutableInjectionsReviewer)
                         .with(NonSpecificMvcAnnotationsReviewer);
+                }
+                if (options.reviewListeners) {
+                    const listeners = Array.isArray(options.reviewListeners) ?
+                        options.reviewListeners : [options.reviewListeners];
+                    listeners.forEach(l => options.inspectGoal.withListener(l));
                 }
             }
             if (!!options.autofixGoal) {
@@ -181,3 +214,38 @@ export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
     );
     sdm.addCommand(ListLocalDeploys);
 }
+
+const CloudNativeReviewCommentCategories = [
+    ImportFileIoCategory,
+    ImportDotStarCategory,
+    HardcodePropertyCategory,
+    ProvidedDependencyCategory,
+];
+
+/**
+ * Review Listener to raise an issue for Cloud Native review comments.
+ */
+export const CloudNativeIssueRaisingReviewListener: ReviewListenerRegistration = {
+    name: "CloudNativeReviewListener",
+    listener: singleIssueManagingReviewListener(
+        r => CloudNativeReviewCommentCategories.includes(r.category),
+        "Cloud Native review issues",
+        CategorySortingBodyFormatter),
+};
+
+const SpringStyleReviewCommentCategories = [
+    UnnecessaryComponentScanCategory,
+    MutableInjectionCategory,
+    OldStyleAnnotationCatergory,
+];
+
+/**
+ * Review Listener to raise an issue for Spring style review comments.
+ */
+export const SpringStyleIssueRaisingReviewListener: ReviewListenerRegistration = {
+    name: "SpringStyleReviewListener",
+    listener: singleIssueManagingReviewListener(
+        r => SpringStyleReviewCommentCategories.includes(r.category),
+        "Spring style review issues",
+        CategorySortingBodyFormatter),
+};

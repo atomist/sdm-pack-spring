@@ -39,7 +39,7 @@ export const HardcodePropertyCategory = "Hardcoded properties";
 /**
  * Reviewer that finds hard-coded properties
  */
-export const HardCodedPropertyReviewer: ReviewerRegistration = {
+export const HardcodedPropertyReviewer: ReviewerRegistration = {
     name: HardcodePropertyCategory,
     pushTest: HasSpringPom,
     inspection: async project => {
