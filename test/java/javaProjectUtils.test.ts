@@ -113,7 +113,7 @@ describe("javaProjectUtils", () => {
             assert.strictEqual(renamed.getContentSync(), "public class OtherThing { int aThing; }");
         });
 
-        it.skip("rename Java class and internal reference", async () => {
+        it("rename Java class and internal reference", async () => {
             const p = InMemoryProject.of(new InMemoryFile("src/main/java/Thing.java", "public class Thing { static t: Thing = null; }"));
             await renameClass(p, "Thing", "OtherThing");
             const renamed = await p.findFile("src/main/java/OtherThing.java");
