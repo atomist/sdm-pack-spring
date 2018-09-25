@@ -15,7 +15,10 @@
  */
 
 import { InMemoryProject } from "@atomist/automation-client";
-import { AddressNoChannels, InMemoryProjectFile } from "@atomist/sdm";
+import {
+    AddressNoChannels,
+    InMemoryProjectFile,
+} from "@atomist/sdm";
 import * as assert from "assert";
 import {
     RiffProjectCreationParameters,
