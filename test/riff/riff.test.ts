@@ -15,9 +15,15 @@
  */
 
 import { InMemoryProject } from "@atomist/automation-client";
-import { CodeTransform, InMemoryProjectFile } from "@atomist/sdm";
+import {
+    CodeTransform,
+    InMemoryProjectFile,
+} from "@atomist/sdm";
 import * as assert from "assert";
-import { RiffGenerator, RiffProjectCreationParameters } from "../../lib/riff/riff";
+import {
+    RiffGenerator,
+    RiffProjectCreationParameters,
+} from "../../lib/riff/riff";
 
 const renamePropertyAndClass = RiffGenerator.transform as CodeTransform<RiffProjectCreationParameters>;
 
