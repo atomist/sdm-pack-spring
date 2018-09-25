@@ -59,7 +59,7 @@ export const RiffProjectCreationTransform: CodeTransform<RiffProjectCreationPara
 
     await renameClass(p, oldClass, newClass);
     await movePackage(p, oldPackage, newPackage);
-    await riffToml.setContent(tomlContent.replace(parsed.handler, ci.parameters.fqn));
+    await riffToml.replaceAll(parsed.handler, ci.parameters.fqn);
 };
 
 export const RiffProjectCreationParameterDefinitions: ParametersObject = {

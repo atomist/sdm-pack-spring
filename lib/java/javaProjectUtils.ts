@@ -79,7 +79,7 @@ export function packageNameFromFqn(fqn: string): string {
 /**
  * Rename all instances of a Java or Kotlin class.  This method is somewhat
  * surgical when replacing appearances in Java code but brutal when
- * replacing appearances elsewhere, i.e., it uses `Project.recordReplace()`.
+ * replacing appearances elsewhere.
  * Does not change filename, which is necessary in Java.
  *
  * @param project    project whose Java classes should be renamed
@@ -93,7 +93,8 @@ export function renameClass(project: Project,
     return doWithFiles(project, AllJavaAndKotlinFiles, async f => {
         if (f.name.includes(oldClass)) {
             await f.rename(f.name.replace(oldClass, newClass));
-            await f.replaceAll(oldClass, newClass);
+            const oldClassRe = new RegExp(oldClass);
+            await f.replace(oldClassRe, newClass);
         }
     });
 }
