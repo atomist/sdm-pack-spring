@@ -22,14 +22,18 @@ import {
     Success,
 } from "@atomist/automation-client";
 import {
-    BuildGoal,
     CommandHandlerRegistration,
+    DefaultGoalNameGenerator,
     DelimitedWriteProgressLogDecorator,
     ExecuteGoal,
+    FulfillableGoalDetails,
+    FulfillableGoalWithRegistrations,
+    getGoalDefinitionFrom,
     GoalInvocation,
     GoalWithPrecondition,
+    Implementation,
+    ImplementationRegistration,
     IndependentOfEnvironment,
-    ProjectLoader,
 } from "@atomist/sdm";
 import { SpawnedDeployment } from "@atomist/sdm-core";
 import {
@@ -42,7 +46,7 @@ import { SpringBootSuccessPatterns } from "../../spring/springLoggingPatterns";
 import { GradleLogInterpreter } from "../build/gradleLogInterpreter";
 import { determineGradleCommand } from "../gradleCommand";
 
-export const ListBranchDeploys: CommandHandlerRegistration = {
+export const ListGradleBranchDeploys: CommandHandlerRegistration = {
     name: "listLocalDeploys",
     intent: "list branch deploys",
     description: "List local deployments of repository across all branches",
@@ -74,7 +78,7 @@ export const GradlePerBranchSpringBootDeploymentGoal = new GoalWithPrecondition(
     displayName: "deploy branch locally",
     completedDescription: "Deployed branch locally",
     failedDescription: "Local branch deployment failure",
-}, BuildGoal);
+});
 
 export interface GradleDeployerOptions {
 
@@ -107,8 +111,7 @@ const deploymentEndpoints: { [key: string]: { sha: string, endpoint: string } } 
  * @param projectLoader use to load projects
  * @param opts options
  */
-export function executeGradlePerBranchSpringBootDeploy(projectLoader: ProjectLoader,
-                                                       opts: Partial<GradleDeployerOptions>): ExecuteGoal {
+export function executeGradlePerBranchSpringBootDeploy(opts: Partial<GradleDeployerOptions>): ExecuteGoal {
     const optsToUse: GradleDeployerOptions = {
         lowerPort: 9090,
         successPatterns: SpringBootSuccessPatterns,
@@ -122,7 +125,7 @@ export function executeGradlePerBranchSpringBootDeploy(projectLoader: ProjectLoa
     return async goalInvocation => {
         const { credentials, id } = goalInvocation;
         try {
-            const deployment = await projectLoader.doWithProject({ credentials, id, readOnly: true },
+            const deployment = await goalInvocation.configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true },
                 project => deployer.deployProject(goalInvocation, project));
             const deploymentKey = `${id.owner}/${id.repo}/${goalInvocation.sdmGoal.branch}`;
             deploymentEndpoints[deploymentKey] = { sha: goalInvocation.sdmGoal.sha, endpoint: deployment.endpoint };
@@ -241,9 +244,71 @@ async function reportFailureToUser(gi: GoalInvocation, log: string) {
     }
 }
 
-function springBootGradleArgs(port: number, contextRoot: string): string[] {
+/**
+ * Generate the command line arguments for running your application using Gradle
+ * @param {number} port The port on which the application will be running
+ * @param {string} contextRoot The context root to be used for deploying your application
+ * @returns {string[]} The command line arguments
+ */
+export function springBootGradleArgs(port: number, contextRoot: string): string[] {
     return [
         "-Pargs=--server.port=" + port + ",--server.contextPath=" + contextRoot +
         ",--server.servlet.contextPath=" + contextRoot,
     ];
+}
+
+/**
+ * Configuration parameters for Gradle per-branch deployment
+ */
+export interface GradlePerBranchDeploymentRegistration extends Partial<ImplementationRegistration> {
+    lowerPort: number;
+
+    baseUrl?: string;
+
+    /**
+     * Pattern to find in output to indicate that the server has come up successfully.
+     * For example, matching something like "Started SpringRestSeedApplication in 3.931 seconds"
+     */
+    successPatterns: RegExp[];
+
+    /**
+     * Command line arguments for the startup process
+     */
+    commandLineArgumentsFor?: (port: number, contextRoot: string) => string[];
+
+    /**
+     * The maximum number of concurrent deployments we allow. This is a valuable
+     * safeguard as too many can crash the machine.
+     */
+    maxConcurrentDeployments?: number;
+}
+
+/**
+ * Goal to deploy your application using Gradle. This will perform a deployment per branch.
+ */
+export class GradlePerBranchDeployment extends FulfillableGoalWithRegistrations<GradlePerBranchDeploymentRegistration> {
+    // tslint:disable-next-line
+    constructor(protected readonly goalDetailsOrUniqueName: FulfillableGoalDetails | string = DefaultGoalNameGenerator.generateName("gradle-branch-deployment")) {
+        super({
+            ...GradlePerBranchSpringBootDeploymentGoal.definition,
+            ...getGoalDefinitionFrom(goalDetailsOrUniqueName, DefaultGoalNameGenerator.generateName("gradle-branch-deployment")),
+            displayName: "deploy",
+        });
+    }
+
+    public with(registration: GradlePerBranchDeploymentRegistration): this {
+        const deploymentOptions: GradleDeployerOptions = {
+            lowerPort: registration.lowerPort,
+            successPatterns: registration.successPatterns,
+            commandLineArgumentsFor: !!registration.commandLineArgumentsFor ? registration.commandLineArgumentsFor : springBootGradleArgs,
+            baseUrl: !!registration.baseUrl ? registration.baseUrl : "http://127.0.0.1",
+            maxConcurrentDeployments: !!registration.maxConcurrentDeployments ? registration.maxConcurrentDeployments : 5,
+        };
+        this.addFulfillment({
+            name: DefaultGoalNameGenerator.generateName("deployer"),
+            goalExecutor: executeGradlePerBranchSpringBootDeploy(deploymentOptions),
+            ...registration as ImplementationRegistration,
+        } as Implementation);
+        return this;
+    }
 }

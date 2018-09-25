@@ -140,12 +140,15 @@ export function springSupport(options: SpringSupportOptions): ExtensionPack {
     };
 }
 
+/**
+ * @deprecated Use the GradlePerBranchDeployment goal
+ */
 export function configureGradlePerBranchSpringBootDeploy(sdm: SoftwareDeliveryMachine,
                                                          options: Partial<GradleDeployerOptions> = {}) {
     sdm.addGoalContributions(whenPushSatisfies(HasSpringBootApplicationClass, IsGradle)
         .setGoals(GradlePerBranchSpringBootDeploymentGoal));
     sdm.addGoalImplementation("Gradle deployment", GradlePerBranchSpringBootDeploymentGoal,
-        executeGradlePerBranchSpringBootDeploy(sdm.configuration.sdm.projectLoader, options));
+        executeGradlePerBranchSpringBootDeploy(options));
 }
 
 export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
