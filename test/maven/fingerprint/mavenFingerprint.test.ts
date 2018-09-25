@@ -39,7 +39,7 @@ describe("MavenFingerprinter", () => {
         assert(f1.length > 0);
         assert(f1.some(f => f.group === "org.springframework.boot"));
         assert(f1.some(f => f.group === "org.springframework"));
-    }).timeout(40000);
+    }).timeout(90000);
 
 });
 
