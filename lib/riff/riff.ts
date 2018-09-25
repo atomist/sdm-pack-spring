@@ -39,7 +39,7 @@ export interface RiffProjectCreationParameters {
  * @param {Project} p
  * @return {Promise<void>}
  */
-export const renamePropertyAndClass: CodeTransform<RiffProjectCreationParameters> = async (p, ci) => {
+const renamePropertyAndClass: CodeTransform<RiffProjectCreationParameters> = async (p, ci) => {
     const props = await parseProperties(p, "riff.toml");
     const handler = props.obj.handler;
     if (!handler) {
@@ -64,9 +64,7 @@ export const RiffGenerator: GeneratorRegistration<RiffProjectCreationParameters>
         fqn: { description: "Fully qualified name of the function class" },
     },
     startingPoint: new GitHubRepoRef("trisberg", "upper"),
-    transform: [
-        renamePropertyAndClass,
-    ],
+    transform: renamePropertyAndClass,
 };
 
 /**

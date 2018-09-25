@@ -16,7 +16,6 @@
 
 export {
     configureLocalSpringBootDeploy,
-    configureGradlePerBranchSpringBootDeploy,
     springSupport,
     SpringSupportOptions,
     Categories,
@@ -102,3 +101,7 @@ export {
     springBootGradleArgs,
     ListGradleBranchDeploys,
 } from "./lib/gradle/deploy/GradlePerBranchSpringBootDeploymentGoal";
+
+export * from "./lib/riff/riff";
+
+export * from "./lib/riff/RiffDeployment";
