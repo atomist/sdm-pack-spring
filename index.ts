@@ -20,8 +20,8 @@ export {
     springSupport,
     SpringSupportOptions,
     Categories,
-    CloudNativeIssueRaisingReviewListener,
-    SpringStyleIssueRaisingReviewListener,
+    CloudNativeGitHubIssueRaisingReviewListener,
+    SpringStyleGitHubIssueRaisingReviewListener,
 } from "./lib/spring";
 export { executableJarDeployer } from "./lib/java/deploy/executableJarDeployer";
 export {

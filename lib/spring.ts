@@ -225,7 +225,7 @@ const CloudNativeReviewCommentCategories = [
 /**
  * Review Listener to raise an issue for Cloud Native review comments.
  */
-export const CloudNativeIssueRaisingReviewListener: ReviewListenerRegistration = {
+export const CloudNativeGitHubIssueRaisingReviewListener: ReviewListenerRegistration = {
     name: "CloudNativeReviewListener",
     listener: singleIssueManagingReviewListener(
         r => CloudNativeReviewCommentCategories.includes(r.category),
@@ -242,7 +242,7 @@ const SpringStyleReviewCommentCategories = [
 /**
  * Review Listener to raise an issue for Spring style review comments.
  */
-export const SpringStyleIssueRaisingReviewListener: ReviewListenerRegistration = {
+export const SpringStyleGitHubIssueRaisingReviewListener: ReviewListenerRegistration = {
     name: "SpringStyleReviewListener",
     listener: singleIssueManagingReviewListener(
         r => SpringStyleReviewCommentCategories.includes(r.category),
