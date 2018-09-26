@@ -74,7 +74,10 @@ import {
     MutableInjectionCategory,
     MutableInjectionsReviewer,
 } from "./spring/review/mutableInjectionsReviewer";
-import { OldSpringBootVersionCategory, OldSpringBootVersionReviewer } from "./spring/review/OldSpringBootVersionReviewer";
+import {
+    OldSpringBootVersionCategory,
+    OldSpringBootVersionReviewer,
+} from "./spring/review/OldSpringBootVersionReviewer";
 import { springBootTagger } from "./spring/springTagger";
 import { addSpringBootActuator } from "./spring/transform/addSpringBootActuator";
 import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
