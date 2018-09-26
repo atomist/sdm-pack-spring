@@ -130,13 +130,49 @@ describe("javaProjectUtils", () => {
             assert.strictEqual(renamed.getContentSync(), "public class OtherThing { SpringApplication.run(OtherThing.class, args); }");
         });
 
+        it("rename Initializr class", async () => {
+            const p = InMemoryProject.of(new InMemoryFile("src/main/java/SpringRestSeedApplication.java",
+                Initializr1));
+            await renameClass(p, "SpringRestSeedApplication", "CustomApplication");
+            const renamed = await p.getFile("src/main/java/CustomApplication.java");
+            assert(!!renamed, "Files were " + p.filesSync.map(f => f.path).join("\n"));
+            const content = renamed.getContentSync();
+            assert(content.includes("CustomApplication"), "Should have included CustomApplication:\n" + content);
+            assert(!content.includes("SpringRestSeedApplication"), "Should not have included SpringRestSeedApplication:\n" + content);
+        });
+
+        it("rename Initializr class stem", async () => {
+            const p = InMemoryProject.of(new InMemoryFile("src/main/java/SpringRestSeedApplication.java",
+                Initializr1));
+            await renameClass(p, "SpringRestSeed", "Custom");
+            const renamed = await p.getFile("src/main/java/CustomApplication.java");
+            assert(!!renamed, "Files were " + p.filesSync.map(f => f.path).join("\n"));
+            const content = renamed.getContentSync();
+            assert(content.includes("CustomApplication"), "Should have included CustomApplication:\n" + content);
+            assert(!content.includes("SpringRestSeedApplication"), "Should not have included SpringRestSeedApplication:\n" + content);
+        });
+
         it("rename Kotlin in default package", async () => {
             const p = InMemoryProject.of(new InMemoryFile("src/main/kotlin/Thing.kt", "public class Thing {}"));
             await renameClass(p, "Thing", "OtherThing");
-            const renamed = await p.findFile("src/main/kotlin/OtherThing.kt");
-            assert(!!renamed);
+            const renamed = await p.getFile("src/main/kotlin/OtherThing.kt");
+            assert(!!renamed, "Files were " + p.filesSync.map(f => f.path).join("\n"));
             assert.strictEqual(renamed.getContentSync(), "public class OtherThing {}");
         });
     });
 
 });
+
+/* tslint:disable */
+const Initializr1 = `package com;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SpringRestSeedApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringRestSeedApplication.class, args);
+	}
+}`;
