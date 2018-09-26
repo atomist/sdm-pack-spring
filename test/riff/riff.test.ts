@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { BaseParameter, InMemoryProject } from "@atomist/automation-client";
+import {
+    BaseParameter,
+    InMemoryProject,
+} from "@atomist/automation-client";
 import {
     AddressNoChannels,
     InMemoryProjectFile,
