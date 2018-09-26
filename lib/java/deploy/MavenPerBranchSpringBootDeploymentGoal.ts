@@ -244,7 +244,7 @@ function springBootMavenArgs(port: number, contextRoot: string): string[] {
     return [
         "-Dspring-boot.run.arguments=--server.port=" + port + ",--server.contextPath=" + contextRoot +
         ",--server.servlet.contextPath=" + contextRoot,
-        "-Drun.arguments=--Dserver.port=" + port + ",--server.contextPath=" + contextRoot +
+        "-Drun.arguments=--server.port=" + port + ",--server.contextPath=" + contextRoot +
         ",--server.servlet.contextPath=" + contextRoot,
     ];
 }
