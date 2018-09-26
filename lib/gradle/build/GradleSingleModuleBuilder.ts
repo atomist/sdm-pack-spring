@@ -29,6 +29,7 @@ import {
     LogInterpretation,
     ProgressLog,
     SoftwareDeliveryMachine,
+    SoftwareDeliveryMachineConfiguration,
     StringCapturingProgressLog,
 } from "@atomist/sdm";
 import {
@@ -58,8 +59,9 @@ export class GradleSingleModuleBuilder extends LocalBuilder implements LogInterp
                                id: RemoteRepoRef,
                                atomistTeam: string,
                                log: ProgressLog,
-                               addressChannels: AddressChannels): Promise<LocalBuildInProgress> {
-        return this.sdm.configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
+                               addressChannels: AddressChannels,
+                               configuration: SoftwareDeliveryMachineConfiguration): Promise<LocalBuildInProgress> {
+        return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
             const propertiesOutput = new StringCapturingProgressLog();
             const command = determineGradleCommand(p);
             await spawnAndWatch(

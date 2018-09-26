@@ -29,6 +29,7 @@ import {
     LogInterpretation,
     ProgressLog,
     SoftwareDeliveryMachine,
+    SoftwareDeliveryMachineConfiguration,
 } from "@atomist/sdm";
 import {
     LocalBuilder,
@@ -64,8 +65,9 @@ export class MavenBuilder extends LocalBuilder implements LogInterpretation {
                                id: RemoteRepoRef,
                                atomistTeam: string,
                                log: ProgressLog,
-                               addressChannels: AddressChannels): Promise<LocalBuildInProgress> {
-        return this.sdm.configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
+                               addressChannels: AddressChannels,
+                               configuration: SoftwareDeliveryMachineConfiguration): Promise<LocalBuildInProgress> {
+        return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
             // Find the artifact info from Maven
             const va = await MavenProjectIdentifier(p);
             const appId = { ...va, name: va.artifact, id };
