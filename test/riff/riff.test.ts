@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import { InMemoryProject } from "@atomist/automation-client";
+import { BaseParameter, InMemoryProject } from "@atomist/automation-client";
 import {
     AddressNoChannels,
     InMemoryProjectFile,
 } from "@atomist/sdm";
 import * as assert from "assert";
 import {
+    RiffProjectCreationParameterDefinitions,
     RiffProjectCreationParameters,
     RiffProjectCreationTransform,
 } from "../../lib/riff/riffGeneration";
@@ -60,6 +61,22 @@ describe("riff transform", () => {
         await RiffProjectCreationTransform(p, { parameters, addressChannels: AddressNoChannels } as any);
         const toml = p.findFileSync("riff.toml");
         assert.strictEqual(toml.getContentSync(), "handler=\"foo.Bar\"");
+    });
+
+    it("should reject bad packages", () => {
+        const bad = ["", "64442", "6a", "-888", "a"];
+        for (const badness of bad) {
+            assert(!(RiffProjectCreationParameterDefinitions.fqn as BaseParameter).pattern.test(badness),
+                `Should have rejected '${badness}'`);
+        }
+    });
+
+    it("should accept good packages", () => {
+        const good = ["a.b", "c.d", "e.f.com"];
+        for (const goodness of good) {
+            assert((RiffProjectCreationParameterDefinitions.fqn as BaseParameter).pattern.test(goodness),
+                `Should have accepted '${goodness}'`);
+        }
     });
 
 });

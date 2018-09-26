@@ -63,5 +63,8 @@ export const RiffProjectCreationTransform: CodeTransform<RiffProjectCreationPara
 };
 
 export const RiffProjectCreationParameterDefinitions: ParametersObject = {
-    fqn: { description: "Fully qualified name of the function class" },
+    fqn: {
+        pattern: /[a-zA-Z][a-zA-Z0-9]*\.[a-zA-Z0-9.]+/,
+        description: "Fully qualified name of the function class"
+    },
 };
