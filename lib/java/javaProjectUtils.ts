@@ -81,7 +81,6 @@ export function packageNameFromFqn(fqn: string): string {
  * surgical when replacing appearances in Java code but brutal when
  * replacing appearances elsewhere.
  * Does not change filename, which is necessary in Java.
- *
  * @param project    project whose Java classes should be renamed
  * @param oldClass   name of class to move from
  * @param newClass   name of class to move to
@@ -93,8 +92,8 @@ export function renameClass(project: Project,
     return doWithFiles(project, AllJavaAndKotlinFiles, async f => {
         if (f.name.includes(oldClass)) {
             await f.rename(f.name.replace(oldClass, newClass));
-            const oldClassRe = new RegExp(" " + oldClass, "gm");
-            await f.replace(oldClassRe, " " + newClass);
+            const oldClassRe = new RegExp("([\( \t])" + oldClass + "([\. \t])", "gm");
+            await f.replace(oldClassRe, `$1${newClass}$2`);
         }
     });
 }
