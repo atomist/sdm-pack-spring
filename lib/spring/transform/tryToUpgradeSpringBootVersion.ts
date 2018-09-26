@@ -21,6 +21,11 @@ import {
 import { pack } from "@atomist/sdm-core";
 import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 
+/**
+ * Spring Boot version we want
+ */
+export const DesiredSpringBootVersion = "2.0.5.RELEASE";
+
 export interface UpgradeSpringBootParameters {
 
     /**
@@ -43,7 +48,7 @@ export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpr
             pattern: /^.+$/,
             validInput: "Semantic version",
             required: false,
-            defaultValue: "2.0.5.RELEASE",
+            defaultValue: DesiredSpringBootVersion,
         },
     },
     name: "boot-upgrade",

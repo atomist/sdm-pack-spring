@@ -64,7 +64,7 @@ import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
 import { HasSpringBootApplicationClass } from "./spring/pushtest/pushTests";
 import {
     NonSpecificMvcAnnotationsReviewer,
-    OldStyleAnnotationCatergory,
+    OldStyleAnnotationCategory,
 } from "./spring/review/findNonSpecificMvcAnnotations";
 import {
     HardcodedPropertyReviewer,
@@ -74,6 +74,7 @@ import {
     MutableInjectionCategory,
     MutableInjectionsReviewer,
 } from "./spring/review/mutableInjectionsReviewer";
+import { OldSpringBootVersionCategory, OldSpringBootVersionReviewer } from "./spring/review/OldSpringBootVersionReviewer";
 import { springBootTagger } from "./spring/springTagger";
 import { addSpringBootActuator } from "./spring/transform/addSpringBootActuator";
 import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
@@ -152,6 +153,7 @@ export function springSupport(options: SpringSupportOptions): ExtensionPack {
                 }
                 if (options.review.springStyle) {
                     options.inspectGoal
+                        .with(OldSpringBootVersionReviewer)
                         .with(UnnecessaryComponentScanReviewer)
                         .with(MutableInjectionsReviewer)
                         .with(NonSpecificMvcAnnotationsReviewer);
@@ -239,7 +241,8 @@ export const CloudNativeGitHubIssueRaisingReviewListener: ReviewListenerRegistra
 const SpringStyleReviewCommentCategories = [
     UnnecessaryComponentScanCategory,
     MutableInjectionCategory,
-    OldStyleAnnotationCatergory,
+    OldStyleAnnotationCategory,
+    OldSpringBootVersionCategory,
 ];
 
 /**
