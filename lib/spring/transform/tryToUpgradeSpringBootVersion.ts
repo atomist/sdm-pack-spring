@@ -14,43 +14,16 @@
  * limitations under the License.
  */
 
-import {
-    Parameter,
-    Parameters,
-} from "@atomist/automation-client";
-import {
-    CodeTransformRegistration,
-    TransformModeSuggestion,
-} from "@atomist/sdm";
+import { CodeTransformRegistration, PullRequest } from "@atomist/sdm";
 import { pack } from "@atomist/sdm-core";
 import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 
-@Parameters()
-export class UpgradeSpringBootParameters implements TransformModeSuggestion {
+export interface UpgradeSpringBootParameters {
 
-    @Parameter({
-        displayName: "Desired Spring Boot version",
-        description: "The desired Spring Boot version across these repos",
-        pattern: /^.+$/,
-        validInput: "Semantic version",
-        required: false,
-    })
-    // TODO this should be in a  object goals
-    public desiredBootVersion: string = "2.0.1.RELEASE";
-
-    private readonly guid = "" + new Date().getTime();
-
-    get desiredBranchName() {
-        return `boot-upgrade-${this.desiredBootVersion}-${this.guid}`;
-    }
-
-    get desiredPullRequestTitle() {
-        return `Upgrade Spring Boot version to ${this.desiredBootVersion}`;
-    }
-
-    get desiredCommitMessage() {
-        return this.desiredPullRequestTitle;
-    }
+    /**
+     * Version to upgrade to
+     */
+    desiredBootVersion: string;
 }
 
 /**
@@ -60,8 +33,25 @@ export class UpgradeSpringBootParameters implements TransformModeSuggestion {
  */
 export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpringBootParameters> = pack.buildAware.makeBuildAware({
     transform: SetSpringBootVersionTransform,
-    paramsMaker: UpgradeSpringBootParameters,
+    parameters: {
+        desiredBootVersion: {
+            displayName: "Desired Spring Boot version",
+            description: "The desired Spring Boot version across these repos",
+            pattern: /^.+$/,
+            validInput: "Semantic version",
+            required: false,
+            defaultValue: "2.0.5.RELEASE",
+        },
+    },
     name: "boot-upgrade",
     description: `Upgrade Spring Boot version`,
     intent: "try to upgrade Spring Boot",
+    transformPresentation: ci => new PullRequest(
+        `boot-upgrade-${ci.parameters.desiredBootVersion}-${guid()}`,
+        `Upgrade Spring Boot version to ${ci.parameters.desiredBootVersion}`,
+    ),
 });
+
+function guid() {
+    return "" + new Date().getTime();
+}
