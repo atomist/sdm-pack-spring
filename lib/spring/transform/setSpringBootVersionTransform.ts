@@ -29,7 +29,7 @@ export function setSpringBootVersionTransform(desiredBootVersion: string): CodeT
             "**/pom.xml",
             "//parent[/artifactId[@innerValue='spring-boot-starter-parent']]/version",
             n => {
-                n.$value = desiredBootVersion;
+                n.$value = `<version>${desiredBootVersion}</version>`;
             });
 }
 
