@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { CodeTransformRegistration, PullRequest } from "@atomist/sdm";
+import {
+    CodeTransformRegistration,
+    PullRequest,
+} from "@atomist/sdm";
 import { pack } from "@atomist/sdm-core";
 import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 
