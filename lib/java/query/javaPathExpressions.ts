@@ -26,7 +26,7 @@ export const JavaPackage = "//packageDeclaration";
  */
 export const JavaPackageName = "//packageDeclaration//qualifiedName";
 
-export const JavaImportNames = "//importDeclaration/qualifiedName";
+export const JavaImports = "//importDeclaration";
 
 /**
  * Return path expression to full annotation node, without breaking down further

@@ -15,18 +15,12 @@
  */
 
 import { JavaFileParser } from "@atomist/antlr";
-import {
-    gatherFromMatches,
-    logger,
-    Project,
-} from "@atomist/automation-client";
+import { doWithAllMatches, gatherFromMatches, logger, Project } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import * as _ from "lodash";
-import {
-    countTill,
-    insertAt,
-} from "../../util/formatUtils";
-import { JavaImportNames } from "../query/javaPathExpressions";
+import { countTill, insertAt } from "../../util/formatUtils";
+import { classNameFromFqn } from "../javaProjectUtils";
+import { JavaImports } from "../query/javaPathExpressions";
 import { packageInfo } from "../query/packageInfo";
 
 export interface Import {
@@ -34,7 +28,7 @@ export interface Import {
     fqn: string;
 
     /**
-     * Offset within the file
+     * Offset within the file of the whole import declaration
      */
     offset: number;
 }
@@ -46,9 +40,10 @@ export interface Import {
  * @return {Promise<Import[]>}
  */
 export async function existingImports(p: Project, path: string): Promise<Import[]> {
-    return gatherFromMatches(p, JavaFileParser, path, JavaImportNames, m => {
+    return gatherFromMatches(p, JavaFileParser, path, JavaImports, m => {
+        const fqnChild = m.$children.find(c => c.$name === "qualifiedName");
         return {
-            fqn: m.$value,
+            fqn: fqnChild.$value,
             offset: m.$offset,
         };
     });
@@ -101,5 +96,27 @@ export function addImport(opts: {
         await insertAt(f,
             position,
             newImportLine);
+    };
+}
+
+export function removeUnusedImports(opts: {
+    sourceFilePath: string,
+}): CodeTransform {
+    return async p => {
+        const file = await p.getFile(opts.sourceFilePath);
+        if (!!file) {
+            const source = await file.getContent();
+            return doWithAllMatches(p, JavaFileParser, opts.sourceFilePath, JavaImports, m => {
+                const fqnChild = m.$children.find(c => c.$name === "qualifiedName");
+                const simpleName = classNameFromFqn(fqnChild.$value);
+                // Look in the remainder of the file
+                // TODO what about comments?
+                const found = source.substring(m.$offset + m.$value.length).includes(simpleName);
+                if (!found) {
+                    m.zap({});
+                }
+            });
+        }
+        return p;
     };
 }

@@ -20,7 +20,7 @@ import { CodeTransform } from "@atomist/sdm";
 import { classNameFromFqn } from "../javaProjectUtils";
 import { javaClassDeclarationWithName } from "../query/javaPathExpressions";
 import { existingAnnotations } from "../query/javaQueries";
-import { addImport } from "./addImport";
+import { addImport } from "./imports";
 
 /**
  * Add the given annotation to the given class.
