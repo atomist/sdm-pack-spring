@@ -42,7 +42,7 @@ import {
 import * as spawn from "cross-spawn";
 import * as os from "os";
 import * as portfinder from "portfinder";
-import { SpringBootSuccessPatterns } from "../../spring/springLoggingPatterns";
+import { SpringBootSuccessPatterns } from "../../spring/deploy/springLoggingPatterns";
 import { GradleLogInterpreter } from "../build/gradleLogInterpreter";
 import { determineGradleCommand } from "../gradleCommand";
 

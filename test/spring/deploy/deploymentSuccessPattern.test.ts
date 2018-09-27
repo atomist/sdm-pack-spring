@@ -15,7 +15,7 @@
  */
 
 import * as assert from "power-assert";
-import { SpringBootSuccessPatterns } from "../../../lib/spring/springLoggingPatterns";
+import { SpringBootSuccessPatterns } from "../../../lib/spring/deploy/springLoggingPatterns";
 
 describe("SpringBootSuccessPattern", () => {
 

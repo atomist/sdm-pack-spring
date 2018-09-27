@@ -37,7 +37,7 @@ import * as os from "os";
 import * as portfinder from "portfinder";
 import { MavenLogInterpreter } from "../../maven/build/mavenLogInterpreter";
 import { determineMavenCommand } from "../../maven/mavenCommand";
-import { SpringBootSuccessPatterns } from "../../spring/springLoggingPatterns";
+import { SpringBootSuccessPatterns } from "../../spring/deploy/springLoggingPatterns";
 
 export const ListBranchDeploys: CommandHandlerRegistration = {
     name: "listLocalDeploys",

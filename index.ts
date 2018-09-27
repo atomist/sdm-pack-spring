@@ -54,7 +54,7 @@ export {
     localExecutableJarDeployer,
     mavenSourceDeployer,
 } from "./lib/spring/deploy/localSpringBootDeployers";
-export { SpringBootSuccessPatterns } from "./lib/spring/springLoggingPatterns";
+export { SpringBootSuccessPatterns } from "./lib/spring/deploy/springLoggingPatterns";
 export * from "./lib/spring/generate/springBootTransforms";
 export { addSpringInitializrGenerator } from "./lib/spring/generate/springInitializrGenerator";
 export {

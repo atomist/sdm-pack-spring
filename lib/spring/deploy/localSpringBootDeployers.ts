@@ -24,7 +24,7 @@ import {
 } from "@atomist/sdm-core";
 import { executableJarDeployer } from "../../java/deploy/executableJarDeployer";
 import { mavenDeployer } from "../../maven/deploy/mavenDeployer";
-import { SpringBootSuccessPatterns } from "../springLoggingPatterns";
+import { SpringBootSuccessPatterns } from "./springLoggingPatterns";
 
 export function localExecutableJarDeployer(): Deployer<ManagedDeploymentTargetInfo> {
     return executableJarDeployer({
