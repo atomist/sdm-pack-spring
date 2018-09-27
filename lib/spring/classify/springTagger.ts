@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { fileExists, Tagger } from "@atomist/automation-client";
+import {
+    fileExists,
+    Tagger,
+} from "@atomist/automation-client";
 
 import { AllJavaFiles } from "../../java/javaProjectUtils";
 import { SpringBootProjectStructure } from "../generate/SpringBootProjectStructure";
