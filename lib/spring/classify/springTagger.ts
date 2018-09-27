@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-import {
-    fileExists,
-    Project,
-    Tagger,
-} from "@atomist/automation-client";
+import { fileExists, Tagger } from "@atomist/automation-client";
 
 import { AllJavaFiles } from "../../java/javaProjectUtils";
-
-const SpringBootStarter = "spring-boot-starter-parent";
+import { SpringBootProjectStructure } from "../generate/SpringBootProjectStructure";
 
 /**
  * Function to add Spring-related GitHub topics if needed
@@ -30,27 +25,17 @@ const SpringBootStarter = "spring-boot-starter-parent";
  * @return {Promise<DefaultTaggerTags>}
  */
 export const springBootTagger: Tagger = async p => {
-    const tags = await tagsFromPom(p);
+    const tags: string[] = [];
     if (await fileExists(p, AllJavaFiles)) {
         tags.push("java");
     }
     if (await fileExists(p, "**/*.kt")) {
         tags.push("kotlin");
     }
+    const springBootStructure = await SpringBootProjectStructure.inferFromJavaOrKotlinSource(p);
+    if (!!springBootStructure) {
+        tags.push("spring-boot");
+        tags.push("spring");
+    }
     return { repoId: p.id, tags };
 };
-
-async function tagsFromPom(p: Project): Promise<string[]> {
-    const tags: string[] = [];
-    const pom = await p.getFile("pom.xml");
-    if (!!pom) {
-        const content = await pom.getContent();
-        if (content.includes(SpringBootStarter)) {
-            tags.push("spring-boot");
-            tags.push("spring");
-        } else if (content.includes("org.springframework")) {
-            tags.push("spring");
-        }
-    }
-    return tags;
-}

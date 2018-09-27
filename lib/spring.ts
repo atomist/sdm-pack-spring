@@ -89,6 +89,8 @@ import {
     UnnecessaryComponentScanReviewer,
 } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
+import { unifiedTagger } from "@atomist/automation-client/lib/operations/tagger/Tagger";
+import { mavenTagger } from "./maven/classify/mavenTagger";
 
 /**
  * Categories of functionality to enable
@@ -144,7 +146,10 @@ export function springSupport(options: SpringSupportOptions): ExtensionPack {
                 .addCodeTransformCommand(ApplySecuredWebAppGuide)
                 .addCodeTransformCommand(TryToUpgradeSpringBootVersion)
                 .addFirstPushListener(
-                    tagRepo(springBootTagger),
+                    tagRepo(unifiedTagger(
+                        springBootTagger,
+                        mavenTagger,
+                        )),
                 );
             if (!!options.inspectGoal) {
                 if (options.review.cloudNative) {
