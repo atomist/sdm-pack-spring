@@ -20,7 +20,7 @@ import {
     Tagger,
 } from "@atomist/automation-client";
 
-import { AllJavaFiles } from "../java/javaProjectUtils";
+import { AllJavaFiles } from "../../java/javaProjectUtils";
 
 const SpringBootStarter = "spring-boot-starter-parent";
 

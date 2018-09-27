@@ -17,7 +17,7 @@
 import { InMemoryProject } from "@atomist/automation-client";
 import { InMemoryProjectFile } from "@atomist/sdm";
 import * as assert from "assert";
-import { springBootTagger } from "../../lib/spring/springTagger";
+import { springBootTagger } from "../../lib/spring/classify/springTagger";
 import { springBootPom } from "./generator/TestPoms";
 
 describe("springTagger", () => {

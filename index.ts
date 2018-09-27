@@ -73,7 +73,7 @@ export {
 } from "./lib/spring/review/hardcodedPropertyReviewer";
 export {
     springBootTagger,
-} from "./lib/spring/springTagger";
+} from "./lib/spring/classify/springTagger";
 export * from "./lib/java/javaPatterns";
 export * from "./lib/maven/build/helpers";
 export * from "./lib/maven/MavenProgressReporter";
