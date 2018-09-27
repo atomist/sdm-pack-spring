@@ -1,17 +1,16 @@
 import { Tagger } from "@atomist/automation-client";
 
-const SpringBootStarter = "spring-boot-starter-parent";
-
+/**
+ * Emit tags based on contents of a Maven POM, if one is found
+ * @param {Project} p
+ */
 export const mavenTagger: Tagger = async p => {
     const tags: string[] = [];
     const pom = await p.getFile("pom.xml");
     if (!!pom) {
         tags.push("maven");
         const content = await pom.getContent();
-        if (content.includes(SpringBootStarter)) {
-            tags.push("spring-boot");
-            tags.push("spring");
-        } else if (content.includes("org.springframework")) {
+        if (content.includes("org.springframework")) {
             tags.push("spring");
         }
     }

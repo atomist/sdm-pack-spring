@@ -19,6 +19,8 @@ import { InMemoryProjectFile } from "@atomist/sdm";
 import * as assert from "assert";
 import { springBootTagger } from "../../lib/spring/classify/springTagger";
 import { springBootPom } from "./generator/TestPoms";
+import { unifiedTagger } from "@atomist/automation-client/lib/operations/tagger/Tagger";
+import { mavenTagger } from "../../lib/maven/classify/mavenTagger";
 
 describe("springTagger", () => {
 
@@ -28,36 +30,36 @@ describe("springTagger", () => {
         assert.strictEqual(tags.tags.length, 0);
     });
 
-    it("should tag spring and spring boot project without source", async () => {
+    it("should not tag spring boot project without source", async () => {
         const p = InMemoryProject.of(new InMemoryProjectFile("pom.xml", springBootPom()));
         const tags = await springBootTagger(p, undefined, undefined);
-        assert.strictEqual(tags.tags.length, 2);
-        assert(tags.tags.includes("spring"));
-        assert(tags.tags.includes("spring-boot"));
+        assert.strictEqual(tags.tags.length, 0);
     });
 
     it("should tag spring and spring boot project with Java source", async () => {
         const p = InMemoryProject.of(
             new InMemoryProjectFile("pom.xml", springBootPom()),
-            new InMemoryProjectFile("src/main/java/Thing.java", "public class Thing {}"),
+            new InMemoryProjectFile("src/main/java/Thing.java", "@SpringBootApplication public class Thing {}"),
         );
-        const tags = await springBootTagger(p, undefined, undefined);
-        assert.strictEqual(tags.tags.length, 3);
+        const tags = await unifiedTagger(mavenTagger, springBootTagger)(p, undefined, undefined);
+        assert(tags.tags.includes("maven"));
         assert(tags.tags.includes("spring"));
         assert(tags.tags.includes("spring-boot"));
         assert(tags.tags.includes("java"));
+        assert.strictEqual(tags.tags.length, 4);
     });
 
     it("should tag spring and spring boot project with Kotlin source", async () => {
         const p = InMemoryProject.of(
             new InMemoryProjectFile("pom.xml", springBootPom()),
-            new InMemoryProjectFile("src/main/java/Thing.kt", "public class Thing {}"),
+            new InMemoryProjectFile("src/main/kotlin/Thing.kt", "@SpringBootApplication public class Thing {}"),
         );
-        const tags = await springBootTagger(p, undefined, undefined);
-        assert.strictEqual(tags.tags.length, 3);
+        const tags = await unifiedTagger(mavenTagger, springBootTagger)(p, undefined, undefined);
+        assert(tags.tags.includes("maven"));
         assert(tags.tags.includes("spring"));
         assert(tags.tags.includes("spring-boot"));
         assert(tags.tags.includes("kotlin"));
+        assert.strictEqual(tags.tags.length, 4);
     });
 
 });

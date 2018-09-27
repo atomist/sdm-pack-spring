@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { unifiedTagger } from "@atomist/automation-client/lib/operations/tagger/Tagger";
 import {
     AnyPush,
     AutoCodeInspection,
@@ -39,6 +40,7 @@ import {
     LocalEndpointGoal,
     LocalUndeploymentGoal,
 } from "@atomist/sdm/lib/pack/well-known-goals/commonGoals";
+import { gradleTagger } from "./gradle/classify/gradleTagger";
 import {
     executeGradlePerBranchSpringBootDeploy,
     GradleDeployerOptions,
@@ -53,6 +55,7 @@ import {
     ImportDotStarCategory,
     ImportDotStarReviewer,
 } from "./java/review/importDotStarReviewer";
+import { mavenTagger } from "./maven/classify/mavenTagger";
 import { ListLocalDeploys } from "./maven/deploy/listLocalDeploys";
 import { IsMaven } from "./maven/pushtest/pushTests";
 import {
@@ -89,8 +92,6 @@ import {
     UnnecessaryComponentScanReviewer,
 } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
-import { unifiedTagger } from "@atomist/automation-client/lib/operations/tagger/Tagger";
-import { mavenTagger } from "./maven/classify/mavenTagger";
 
 /**
  * Categories of functionality to enable
@@ -148,8 +149,10 @@ export function springSupport(options: SpringSupportOptions): ExtensionPack {
                 .addFirstPushListener(
                     tagRepo(unifiedTagger(
                         springBootTagger,
+                        gradleTagger,
                         mavenTagger,
-                        )),
+                        ),
+                    ),
                 );
             if (!!options.inspectGoal) {
                 if (options.review.cloudNative) {
