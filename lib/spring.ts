@@ -60,6 +60,7 @@ import {
     ProvidedDependencyReviewer,
 } from "./maven/review/providedDependencyReviewer";
 import { AddMavenDependency } from "./maven/transform/addDependencyTransform";
+import { springBootTagger } from "./spring/classify/springTagger";
 import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
 import { HasSpringBootApplicationClass } from "./spring/pushtest/pushTests";
 import {
@@ -78,7 +79,6 @@ import {
     OldSpringBootVersionCategory,
     OldSpringBootVersionReviewer,
 } from "./spring/review/OldSpringBootVersionReviewer";
-import { springBootTagger } from "./spring/classify/springTagger";
 import { addSpringBootActuator } from "./spring/transform/addSpringBootActuator";
 import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
 import { ApplySecuredWebAppGuide } from "./spring/transform/guide/securingWebApp";
