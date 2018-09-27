@@ -15,12 +15,12 @@
  */
 
 import { InMemoryProject } from "@atomist/automation-client";
+import { unifiedTagger } from "@atomist/automation-client/lib/operations/tagger/Tagger";
 import { InMemoryProjectFile } from "@atomist/sdm";
 import * as assert from "assert";
+import { mavenTagger } from "../../lib/maven/classify/mavenTagger";
 import { springBootTagger } from "../../lib/spring/classify/springTagger";
 import { springBootPom } from "./generator/TestPoms";
-import { unifiedTagger } from "@atomist/automation-client/lib/operations/tagger/Tagger";
-import { mavenTagger } from "../../lib/maven/classify/mavenTagger";
 
 describe("springTagger", () => {
 
