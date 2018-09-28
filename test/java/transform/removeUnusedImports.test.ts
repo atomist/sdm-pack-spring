@@ -59,4 +59,16 @@ describe("removeUnusedImports", () => {
         const content = f.getContentSync();
         assert.strictEqual(content, src);
     });
+
+    it("should not remove .* import", async () => {
+        const path = "src/main/java/Thing.java";
+        const src = "import com.foo.*;\n\npublic class Thing { }";
+        const p = InMemoryProject.of(
+            new InMemoryProjectFile(path, src),
+        );
+        await removeUnusedImports({ sourceFilePath: path })(p, undefined);
+        const f = p.findFileSync(path);
+        const content = f.getContentSync();
+        assert.strictEqual(content, src);
+    });
 });

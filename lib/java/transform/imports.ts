@@ -115,8 +115,13 @@ export function removeUnusedImports(opts: {
         if (!!file) {
             const source = await file.getContent();
             return doWithAllMatches(p, JavaFileParser, opts.sourceFilePath, JavaImports, m => {
+                if (m.$value.includes(".*")) {
+                    // Don't touch .* imports, we can't figure it out
+                    return;
+                }
                 const fqnChild = m.$children.find(c => c.$name === "qualifiedName");
                 const simpleName = classNameFromFqn(fqnChild.$value);
+
                 // Look in the remainder of the file
                 // TODO what about comments?
                 const found = source.substring(m.$offset + m.$value.length).includes(simpleName);
