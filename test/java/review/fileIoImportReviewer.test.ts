@@ -20,24 +20,25 @@ import {
     InMemoryProject,
 } from "@atomist/automation-client";
 import * as assert from "power-assert";
+import { CloudNative } from "../../../lib/common/review/reviewCategories";
 import {
-    FileIoImportReviewer,
-    ImportFileIo,
-} from "../../../lib/java/review/fileIoImportReviewer";
+    ImportIoFile,
+    ImportIoFileReviewer,
+} from "../../../lib/java/review/importIoFileReviewer";
 
 describe("fileIoImport", () => {
 
     it("should not find any problems in empty project", async () => {
         const id = new GitHubRepoRef("a", "b");
         const p = InMemoryProject.from(id);
-        const r = await FileIoImportReviewer.inspection(p, undefined);
+        const r = await ImportIoFileReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 0);
     });
 
     it("pass harmless Java code", async () => {
         const id = new GitHubRepoRef("a", "b");
         const p = InMemoryProject.from(id, new InMemoryFile("src/main/java/Thing.java", "public class Thing {}"));
-        const r = await FileIoImportReviewer.inspection(p, undefined);
+        const r = await ImportIoFileReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 0);
     });
 
@@ -46,10 +47,11 @@ describe("fileIoImport", () => {
         const f = new InMemoryFile("src/main/java/Thing.java",
             "import java.io.File;\npublic class Thing {}");
         const p = InMemoryProject.from(id, f);
-        const r = await FileIoImportReviewer.inspection(p, undefined);
+        const r = await ImportIoFileReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 1);
         const comment = r.comments[0];
-        assert.equal(comment.category, ImportFileIo);
+        assert.equal(comment.category, CloudNative);
+        assert.equal(comment.subcategory, ImportIoFile);
         assert.equal(comment.sourceLocation.path, f.path);
     });
 
@@ -58,10 +60,10 @@ describe("fileIoImport", () => {
         const f = new InMemoryFile("src/main/kotlin/Thing.kt",
             "import java.io.File;\npublic class Thing {}");
         const p = InMemoryProject.from(id, f);
-        const r = await FileIoImportReviewer.inspection(p, null);
+        const r = await ImportIoFileReviewer.inspection(p, null);
         assert.equal(r.comments.length, 1);
         const comment = r.comments[0];
-        assert.equal(comment.category, ImportFileIo);
+        assert.equal(comment.subcategory, ImportIoFile);
         assert.equal(comment.sourceLocation.path, f.path);
     });
 
@@ -70,10 +72,10 @@ describe("fileIoImport", () => {
         const f = new InMemoryFile("src/main/java/com/atomist/Melb1Application.java",
             Bad1);
         const p = InMemoryProject.from(id, f);
-        const r = await FileIoImportReviewer.inspection(p, null);
+        const r = await ImportIoFileReviewer.inspection(p, null);
         assert.equal(r.comments.length, 1);
         const comment = r.comments[0];
-        assert.equal(comment.category, ImportFileIo);
+        assert.equal(comment.subcategory, ImportIoFile);
         assert.equal(comment.sourceLocation.path, f.path);
     });
 

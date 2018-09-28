@@ -21,6 +21,7 @@ import {
 } from "@atomist/automation-client";
 
 import * as assert from "power-assert";
+import { CloudNative } from "../../../lib/common/review/reviewCategories";
 import {
     ProvidedDependencyCategory,
     ProvidedDependencyReviewer,
@@ -50,7 +51,8 @@ describe("ProvidedDependencyReviewer", () => {
         const r = await ProvidedDependencyReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 1);
         const comment =  r.comments[0];
-        assert.equal(comment.category, ProvidedDependencyCategory);
+        assert.equal(comment.category, CloudNative);
+        assert.equal(comment.subcategory, ProvidedDependencyCategory);
         assert.equal(comment.sourceLocation.path, f.path);
     });
 

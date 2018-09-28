@@ -20,6 +20,7 @@ import {
     InMemoryProject,
 } from "@atomist/automation-client";
 import * as assert from "power-assert";
+import { CloudNative } from "../../../lib/common/review/reviewCategories";
 import {
     ImportDotStar,
     ImportDotStarReviewer,
@@ -50,7 +51,8 @@ describe("importDotStar", () => {
         const r = await ImportDotStarReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 1);
         const comment = r.comments[0];
-        assert.equal(comment.category, ImportDotStar);
+        assert.equal(comment.category, CloudNative);
+        assert.equal(comment.subcategory, ImportDotStar);
         assert.equal(comment.sourceLocation.path, f.path);
     });
 
@@ -62,7 +64,7 @@ describe("importDotStar", () => {
         const r = await ImportDotStarReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 1);
         const comment = r.comments[0];
-        assert.equal(comment.category, ImportDotStar);
+        assert.equal(comment.subcategory, ImportDotStar);
         assert.equal(comment.sourceLocation.path, f.path);
     });
 
@@ -74,7 +76,7 @@ describe("importDotStar", () => {
         const r = await ImportDotStarReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 1);
         const comment = r.comments[0];
-        assert.equal(comment.category, ImportDotStar);
+        assert.equal(comment.subcategory, ImportDotStar);
         assert.equal(comment.sourceLocation.path, f.path);
     });
 

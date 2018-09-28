@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { patternMatchReviewer, ReviewerRegistration, } from "@atomist/sdm";
+import { patternMatchReviewer, ReviewerRegistration } from "@atomist/sdm";
+import { CloudNative } from "../../common/review/reviewCategories";
 import { JavaAndKotlinSource } from "../javaProjectUtils";
-import { CloudNative } from "../../spring/review/categories";
 
 export const ImportDotStar = "Lazy import";
 

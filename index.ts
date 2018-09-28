@@ -30,9 +30,9 @@ export {
     MaterialChangeToJavaRepo,
 } from "./lib/java/pushtest/pushTests";
 export {
-    ImportFileIo,
-    FileIoImportReviewer,
-} from "./lib/java/review/fileIoImportReviewer";
+    ImportIoFile,
+    ImportIoFileReviewer,
+} from "./lib/java/review/importIoFileReviewer";
 export {
     ImportDotStar,
     ImportDotStarReviewer,

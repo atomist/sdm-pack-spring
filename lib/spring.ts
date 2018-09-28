@@ -28,8 +28,8 @@ import {
     SoftwareDeliveryMachine,
     whenPushSatisfies,
 } from "@atomist/sdm";
-import { ManagedDeploymentTargeter, tagRepo, } from "@atomist/sdm-core";
-import { LocalEndpointGoal, LocalUndeploymentGoal, } from "@atomist/sdm/lib/pack/well-known-goals/commonGoals";
+import { ManagedDeploymentTargeter, tagRepo } from "@atomist/sdm-core";
+import { LocalEndpointGoal, LocalUndeploymentGoal } from "@atomist/sdm/lib/pack/well-known-goals/commonGoals";
 import { gradleTagger } from "./gradle/classify/gradleTagger";
 import {
     executeGradlePerBranchSpringBootDeploy,
@@ -37,25 +37,25 @@ import {
     GradlePerBranchSpringBootDeploymentGoal,
 } from "./gradle/deploy/GradlePerBranchSpringBootDeploymentGoal";
 import { IsGradle } from "./gradle/pushtest/gradlePushTests";
-import { FileIoImportReviewer, } from "./java/review/fileIoImportReviewer";
-import { ImportDotStarReviewer, } from "./java/review/importDotStarReviewer";
+import { ImportDotStarReviewer } from "./java/review/importDotStarReviewer";
+import { ImportIoFileReviewer } from "./java/review/importIoFileReviewer";
 import { mavenTagger } from "./maven/classify/mavenTagger";
 import { ListLocalDeploys } from "./maven/deploy/listLocalDeploys";
 import { IsMaven } from "./maven/pushtest/pushTests";
-import { ProvidedDependencyReviewer, } from "./maven/review/providedDependencyReviewer";
+import { ProvidedDependencyReviewer } from "./maven/review/providedDependencyReviewer";
 import { AddMavenDependency } from "./maven/transform/addDependencyTransform";
 import { springBootTagger } from "./spring/classify/springTagger";
 import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
 import { HasSpringBootApplicationClass } from "./spring/pushtest/pushTests";
 import { NonSpecificMvcAnnotationsReviewer } from "./spring/review/findNonSpecificMvcAnnotations";
-import { HardcodedPropertyReviewer, } from "./spring/review/hardcodedPropertyReviewer";
-import { MutableInjectionsReviewer, } from "./spring/review/mutableInjectionsReviewer";
-import { OldSpringBootVersionReviewer, } from "./spring/review/oldSpringBootVersionReviewer";
+import { HardcodedPropertyReviewer } from "./spring/review/hardcodedPropertyReviewer";
+import { MutableInjectionsReviewer } from "./spring/review/mutableInjectionsReviewer";
+import { OldSpringBootVersionReviewer } from "./spring/review/oldSpringBootVersionReviewer";
 import { addSpringBootActuator } from "./spring/transform/addSpringBootActuator";
 import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
 import { ApplySecuredWebAppGuide } from "./spring/transform/guide/securingWebApp";
 import { FixAutowiredOnSoleConstructor } from "./spring/transform/removeUnnecessaryAutowiredAnnotations";
-import { UnnecessaryComponentScanAutofix, UnnecessaryComponentScanReviewer, } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
+import { UnnecessaryComponentScanAutofix, UnnecessaryComponentScanReviewer } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
 
 /**
@@ -122,7 +122,7 @@ export function springSupport(options: SpringSupportOptions): ExtensionPack {
             if (!!options.inspectGoal) {
                 if (options.review.cloudNative) {
                     options.inspectGoal
-                        .with(FileIoImportReviewer)
+                        .with(ImportIoFileReviewer)
                         .with(ImportDotStarReviewer)
                         .with(HardcodedPropertyReviewer)
                         .with(ProvidedDependencyReviewer);

@@ -15,11 +15,11 @@
  */
 
 import { JavaFileParser } from "@atomist/antlr";
-import { findMatches, ProjectReview, Severity, zapAllMatches, } from "@atomist/automation-client";
+import { findMatches, ProjectReview, Severity, zapAllMatches } from "@atomist/automation-client";
 import { ZapTrailingWhitespace } from "@atomist/automation-client/lib/tree/ast/FileHits";
-import { AutofixRegistration, CodeInspection, CodeTransform, ReviewerRegistration, } from "@atomist/sdm";
+import { AutofixRegistration, CodeInspection, CodeTransform, ReviewerRegistration } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
-import * as category from "../review/categories";
+import { SpringStyle } from "../review/springReviewCategories";
 
 /**
  * An @ComponentScan annotation isn't necessary on a @SpringBootApplication class.
@@ -45,7 +45,7 @@ export const unnecessaryComponentScanReviewer: CodeInspection<ProjectReview> = a
             comments: matches.map(m => {
                 return {
                     severity: "info" as Severity,
-                    category: category.SpringStyle,
+                    category: SpringStyle,
                     subcategory: UnnecessaryComponentScanCategory,
                     detail: "`@ComponentScan` annotations are not necessary on `@SpringBootApplication` classes as they are inherited",
                     sourceLocation: m.sourceLocation,

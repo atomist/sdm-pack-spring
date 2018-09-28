@@ -21,6 +21,7 @@ import {
 } from "@atomist/automation-client";
 
 import * as assert from "power-assert";
+import { CloudNative } from "../../../lib/common/review/reviewCategories";
 import {
     HardcodedPropertyReviewer,
     HardcodePropertyCategory,
@@ -49,7 +50,8 @@ describe("HardCodePropertyReviewer", () => {
         const r = await HardcodedPropertyReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 1);
         const comment =  r.comments[0];
-        assert.equal(comment.category, HardcodePropertyCategory);
+        assert.equal(comment.category, CloudNative);
+        assert.equal(comment.subcategory, HardcodePropertyCategory);
         assert.equal(comment.sourceLocation.path, f.path);
     });
 

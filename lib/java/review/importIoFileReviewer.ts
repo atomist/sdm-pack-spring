@@ -18,26 +18,26 @@ import {
     patternMatchReviewer,
     ReviewerRegistration,
 } from "@atomist/sdm";
+import { CloudNative } from "../../common/review/reviewCategories";
 import { JavaAndKotlinSource } from "../javaProjectUtils";
-import { CloudNative } from "../../spring/review/categories";
 
-export const ImportFileIo = "Import java.io.File";
+export const ImportIoFile = "Import java.io.File";
 
 /**
  * Flag import of java.io.File. This is not normally
  * a good idea in a cloud native application.
  * @type {ReviewerRegistration}
  */
-export const FileIoImportReviewer: ReviewerRegistration = patternMatchReviewer(
-    ImportFileIo,
+export const ImportIoFileReviewer: ReviewerRegistration = patternMatchReviewer(
+    ImportIoFile,
     {
         globPattern: JavaAndKotlinSource,
         severity: "warn",
         category: CloudNative,
-        subcategory: ImportFileIo,
+        subcategory: ImportIoFile,
     },
     {
-        name: ImportFileIo,
+        name: ImportIoFile,
         antiPattern: "import java.io.File",
         comment: "Don't rely on the file system in a cloud native app.",
     },

@@ -25,7 +25,7 @@ import {
 } from "@atomist/automation-client";
 import { ReviewerRegistration } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
-import * as category from "./categories";
+import * as category from "./springReviewCategories";
 
 export class NonSpecificMvcAnnotation implements ReviewComment {
 

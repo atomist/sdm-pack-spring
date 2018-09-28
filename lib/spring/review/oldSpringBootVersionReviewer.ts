@@ -18,7 +18,7 @@ import { ReviewerRegistration } from "@atomist/sdm";
 import { SpringBootVersionInspection } from "../inspect/springBootVersionInspection";
 import { HasSpringBootPom } from "../pushtest/pushTests";
 import { DesiredSpringBootVersion } from "../transform/tryToUpgradeSpringBootVersion";
-import { SpringStyle } from "./categories";
+import { SpringStyle } from "./springReviewCategories";
 
 export const OldSpringBootVersion = "Old Spring Boot version";
 
