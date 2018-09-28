@@ -15,9 +15,19 @@
  */
 
 import { JavaFileParser } from "@atomist/antlr";
-import { findMatches, ProjectReview, Severity, zapAllMatches } from "@atomist/automation-client";
+import {
+    findMatches,
+    ProjectReview,
+    Severity,
+    zapAllMatches,
+} from "@atomist/automation-client";
 import { ZapTrailingWhitespace } from "@atomist/automation-client/lib/tree/ast/FileHits";
-import { AutofixRegistration, CodeInspection, CodeTransform, ReviewerRegistration } from "@atomist/sdm";
+import {
+    AutofixRegistration,
+    CodeInspection,
+    CodeTransform,
+    ReviewerRegistration,
+} from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
 import { SpringStyle } from "../review/springReviewCategories";
 

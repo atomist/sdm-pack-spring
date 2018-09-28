@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { File, logger, Project, ReviewComment } from "@atomist/automation-client";
+import {
+    File,
+    logger,
+    Project,
+    ReviewComment,
+} from "@atomist/automation-client";
 import { gatherFromFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
 import { ReviewerRegistration } from "@atomist/sdm";
 import * as _ from "lodash";

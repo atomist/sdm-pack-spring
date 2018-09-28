@@ -28,8 +28,14 @@ import {
     SoftwareDeliveryMachine,
     whenPushSatisfies,
 } from "@atomist/sdm";
-import { ManagedDeploymentTargeter, tagRepo } from "@atomist/sdm-core";
-import { LocalEndpointGoal, LocalUndeploymentGoal } from "@atomist/sdm/lib/pack/well-known-goals/commonGoals";
+import {
+    ManagedDeploymentTargeter,
+    tagRepo,
+} from "@atomist/sdm-core";
+import {
+    LocalEndpointGoal,
+    LocalUndeploymentGoal,
+} from "@atomist/sdm/lib/pack/well-known-goals/commonGoals";
 import { gradleTagger } from "./gradle/classify/gradleTagger";
 import {
     executeGradlePerBranchSpringBootDeploy,
@@ -55,7 +61,10 @@ import { addSpringBootActuator } from "./spring/transform/addSpringBootActuator"
 import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
 import { ApplySecuredWebAppGuide } from "./spring/transform/guide/securingWebApp";
 import { FixAutowiredOnSoleConstructor } from "./spring/transform/removeUnnecessaryAutowiredAnnotations";
-import { UnnecessaryComponentScanAutofix, UnnecessaryComponentScanReviewer } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
+import {
+    UnnecessaryComponentScanAutofix,
+    UnnecessaryComponentScanReviewer,
+} from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
 
 /**

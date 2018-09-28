@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { Project, ReviewComment, Severity } from "@atomist/automation-client";
+import {
+    Project,
+    ReviewComment,
+    Severity,
+} from "@atomist/automation-client";
 import { ReviewerRegistration } from "@atomist/sdm";
 import { CloudNative } from "../../common/review/reviewCategories";
 import { findDeclaredDependencies } from "../parse/fromPom";
