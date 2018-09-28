@@ -22,7 +22,7 @@ import {
 import * as assert from "power-assert";
 import {
     FileIoImportReviewer,
-    ImportFileIoCategory,
+    ImportFileIo,
 } from "../../../lib/java/review/fileIoImportReviewer";
 
 describe("fileIoImport", () => {
@@ -49,7 +49,7 @@ describe("fileIoImport", () => {
         const r = await FileIoImportReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 1);
         const comment = r.comments[0];
-        assert.equal(comment.category, ImportFileIoCategory);
+        assert.equal(comment.category, ImportFileIo);
         assert.equal(comment.sourceLocation.path, f.path);
     });
 
@@ -61,7 +61,7 @@ describe("fileIoImport", () => {
         const r = await FileIoImportReviewer.inspection(p, null);
         assert.equal(r.comments.length, 1);
         const comment = r.comments[0];
-        assert.equal(comment.category, ImportFileIoCategory);
+        assert.equal(comment.category, ImportFileIo);
         assert.equal(comment.sourceLocation.path, f.path);
     });
 
@@ -73,7 +73,7 @@ describe("fileIoImport", () => {
         const r = await FileIoImportReviewer.inspection(p, null);
         assert.equal(r.comments.length, 1);
         const comment = r.comments[0];
-        assert.equal(comment.category, ImportFileIoCategory);
+        assert.equal(comment.category, ImportFileIo);
         assert.equal(comment.sourceLocation.path, f.path);
     });
 

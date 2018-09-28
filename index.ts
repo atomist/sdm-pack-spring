@@ -19,8 +19,6 @@ export {
     springSupport,
     SpringSupportOptions,
     Categories,
-    CloudNativeGitHubIssueRaisingReviewListener,
-    SpringStyleGitHubIssueRaisingReviewListener,
 } from "./lib/spring";
 export { executableJarDeployer } from "./lib/java/deploy/executableJarDeployer";
 export {
@@ -32,11 +30,11 @@ export {
     MaterialChangeToJavaRepo,
 } from "./lib/java/pushtest/pushTests";
 export {
-    ImportFileIoCategory,
+    ImportFileIo,
     FileIoImportReviewer,
 } from "./lib/java/review/fileIoImportReviewer";
 export {
-    ImportDotStarCategory,
+    ImportDotStar,
     ImportDotStarReviewer,
 } from "./lib/java/review/importDotStarReviewer";
 export { ListBranchDeploys } from "./lib/java/deploy/MavenPerBranchSpringBootDeploymentGoal";

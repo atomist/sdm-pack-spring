@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-import {
-    patternMatchReviewer,
-    ReviewerRegistration,
-} from "@atomist/sdm";
+import { patternMatchReviewer, ReviewerRegistration, } from "@atomist/sdm";
 import { JavaAndKotlinSource } from "../javaProjectUtils";
+import { CloudNative } from "../../spring/review/categories";
 
-export const ImportDotStarCategory = "Lazy import";
+export const ImportDotStar = "Lazy import";
 
 /**
  * Flag lazy imports such as "import * from java.io"
  * @type {ReviewerRegistration}
  */
 export const ImportDotStarReviewer: ReviewerRegistration = patternMatchReviewer(
-    ImportDotStarCategory,
-    {globPattern: JavaAndKotlinSource, severity: "info"},
+    ImportDotStar,
     {
-        name: ImportDotStarCategory,
+        globPattern: JavaAndKotlinSource,
+        severity: "info",
+        category: CloudNative,
+        subcategory: ImportDotStar,
+    },
+    {
+        name: ImportDotStar,
         antiPattern: /import .*\.\*/,
         comment: "Don't import .*. Import types individually",
     },

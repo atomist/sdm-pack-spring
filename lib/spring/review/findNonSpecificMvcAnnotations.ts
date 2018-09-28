@@ -25,13 +25,13 @@ import {
 } from "@atomist/automation-client";
 import { ReviewerRegistration } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
-
-export const OldStyleAnnotationCategory = "Old style MVC annotation";
+import * as category from "./categories";
 
 export class NonSpecificMvcAnnotation implements ReviewComment {
 
     public readonly severity: Severity = "info";
-    public readonly category = OldStyleAnnotationCategory;
+    public readonly category = category.SpringStyle;
+    public readonly subcategory = "Old style MVC annotation";
 
     constructor(public raw: string, public sourceLocation: SourceLocation) {
     }

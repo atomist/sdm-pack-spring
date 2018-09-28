@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-import {
-    DefaultReviewComment,
-    Project,
-    ReviewComment,
-} from "@atomist/automation-client";
+import { Project, ReviewComment, Severity, } from "@atomist/automation-client";
 import { ReviewerRegistration } from "@atomist/sdm";
 import { findDeclaredDependencies } from "../parse/fromPom";
 import { IsMaven } from "../pushtest/pushTests";
+import { CloudNative } from "../../spring/review/categories";
 
 export const ProvidedDependencyCategory = "Use of `provided` dependencies in Maven POM";
 
@@ -43,12 +40,15 @@ async function findProvidedProperties(p: Project): Promise<ReviewComment[]> {
     const dependencies = await findDeclaredDependencies(p);
     return dependencies.dependencies
         .filter(dep => !!dep.scope && dep.scope === "provided")
-        .map(dep => new DefaultReviewComment("error",
-            ProvidedDependencyCategory,
-            `Provided dependency: ${JSON.stringify(dep)}`,
-            {
+        .map(dep => ({
+            severity: "error" as Severity,
+            category: CloudNative,
+            subcategory: ProvidedDependencyCategory,
+            detail: `Provided dependency: ${JSON.stringify(dep)}`,
+            sourceLocation: {
                 path: "pom.xml",
                 lineFrom1: 1,
                 offset: -1,
-            }));
+            },
+        }));
 }

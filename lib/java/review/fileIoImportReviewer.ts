@@ -19,8 +19,9 @@ import {
     ReviewerRegistration,
 } from "@atomist/sdm";
 import { JavaAndKotlinSource } from "../javaProjectUtils";
+import { CloudNative } from "../../spring/review/categories";
 
-export const ImportFileIoCategory = "Import java.io.File";
+export const ImportFileIo = "Import java.io.File";
 
 /**
  * Flag import of java.io.File. This is not normally
@@ -28,10 +29,15 @@ export const ImportFileIoCategory = "Import java.io.File";
  * @type {ReviewerRegistration}
  */
 export const FileIoImportReviewer: ReviewerRegistration = patternMatchReviewer(
-    ImportFileIoCategory,
-    {globPattern: JavaAndKotlinSource, severity: "warn"},
+    ImportFileIo,
     {
-        name: ImportFileIoCategory,
+        globPattern: JavaAndKotlinSource,
+        severity: "warn",
+        category: CloudNative,
+        subcategory: ImportFileIo,
+    },
+    {
+        name: ImportFileIo,
         antiPattern: "import java.io.File",
         comment: "Don't rely on the file system in a cloud native app.",
     },

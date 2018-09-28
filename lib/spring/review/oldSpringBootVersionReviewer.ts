@@ -18,14 +18,15 @@ import { ReviewerRegistration } from "@atomist/sdm";
 import { SpringBootVersionInspection } from "../inspect/springBootVersionInspection";
 import { HasSpringBootPom } from "../pushtest/pushTests";
 import { DesiredSpringBootVersion } from "../transform/tryToUpgradeSpringBootVersion";
+import { SpringStyle } from "./categories";
 
-export const OldSpringBootVersionCategory = "Old Spring Boot version";
+export const OldSpringBootVersion = "Old Spring Boot version";
 
 /**
  * Check for old Spring Boot versions
  */
 export const OldSpringBootVersionReviewer: ReviewerRegistration = {
-    name: OldSpringBootVersionCategory,
+    name: OldSpringBootVersion,
     pushTest: HasSpringBootPom,
     inspection: async (p, ci) => {
         const versions = await SpringBootVersionInspection(p, ci);
@@ -37,7 +38,8 @@ export const OldSpringBootVersionReviewer: ReviewerRegistration = {
             comments: !!version && version < DesiredSpringBootVersion ?
                 [
                     {
-                        category: OldSpringBootVersionCategory,
+                        category: SpringStyle,
+                        subcategory: OldSpringBootVersion,
                         severity: "info",
                         detail: `Spring Boot version ${version} is old`,
                         sourceLocation: {

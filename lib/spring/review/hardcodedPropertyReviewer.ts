@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-import {
-    DefaultReviewComment,
-    File,
-    logger,
-    Project,
-    ReviewComment,
-} from "@atomist/automation-client";
+import { File, logger, Project, ReviewComment, } from "@atomist/automation-client";
 import { gatherFromFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
 import { ReviewerRegistration } from "@atomist/sdm";
 import * as _ from "lodash";
 import { parseProperties } from "../../properties/propertiesParser";
 import { HasSpringPom } from "../pushtest/pushTests";
+import * as category from "./categories";
 
 const PropertyKeysToCheck = [
     "server.port",
@@ -63,14 +58,17 @@ async function badPropertiesIn(p: Project, f: File): Promise<ReviewComment[]> {
         if (PropertyKeysToCheck.includes(prop.key) && !!prop.value) {
             if (hardcoded(prop.value)) {
                 logger.info("Value of %s: '%s' is hard coded", prop.key, prop.value);
-                comments.push(new DefaultReviewComment("info",
-                    HardcodePropertyCategory,
-                    `Hardcoded property ${prop.key} should be sourced from environment`,
-                    {
+                comments.push({
+                    severity: "info",
+                    category: category.CloudNative,
+                    subcategory: HardcodePropertyCategory,
+                    detail: `Hardcoded property ${prop.key} should be sourced from environment`,
+                    sourceLocation: {
                         path: f.path,
                         lineFrom1: 1,
                         offset: -1,
-                    }));
+                    },
+                });
             } else {
                 logger.info("Value of %s: '%s' is not hard coded", prop.key, prop.value);
             }

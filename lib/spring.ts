@@ -28,18 +28,8 @@ import {
     SoftwareDeliveryMachine,
     whenPushSatisfies,
 } from "@atomist/sdm";
-import {
-    ManagedDeploymentTargeter,
-    tagRepo,
-} from "@atomist/sdm-core";
-import {
-    CategorySortingBodyFormatter,
-    singleIssueManagingReviewListener,
-} from "@atomist/sdm-pack-issue";
-import {
-    LocalEndpointGoal,
-    LocalUndeploymentGoal,
-} from "@atomist/sdm/lib/pack/well-known-goals/commonGoals";
+import { ManagedDeploymentTargeter, tagRepo, } from "@atomist/sdm-core";
+import { LocalEndpointGoal, LocalUndeploymentGoal, } from "@atomist/sdm/lib/pack/well-known-goals/commonGoals";
 import { gradleTagger } from "./gradle/classify/gradleTagger";
 import {
     executeGradlePerBranchSpringBootDeploy,
@@ -47,50 +37,25 @@ import {
     GradlePerBranchSpringBootDeploymentGoal,
 } from "./gradle/deploy/GradlePerBranchSpringBootDeploymentGoal";
 import { IsGradle } from "./gradle/pushtest/gradlePushTests";
-import {
-    FileIoImportReviewer,
-    ImportFileIoCategory,
-} from "./java/review/fileIoImportReviewer";
-import {
-    ImportDotStarCategory,
-    ImportDotStarReviewer,
-} from "./java/review/importDotStarReviewer";
+import { FileIoImportReviewer, } from "./java/review/fileIoImportReviewer";
+import { ImportDotStarReviewer, } from "./java/review/importDotStarReviewer";
 import { mavenTagger } from "./maven/classify/mavenTagger";
 import { ListLocalDeploys } from "./maven/deploy/listLocalDeploys";
 import { IsMaven } from "./maven/pushtest/pushTests";
-import {
-    ProvidedDependencyCategory,
-    ProvidedDependencyReviewer,
-} from "./maven/review/providedDependencyReviewer";
+import { ProvidedDependencyReviewer, } from "./maven/review/providedDependencyReviewer";
 import { AddMavenDependency } from "./maven/transform/addDependencyTransform";
 import { springBootTagger } from "./spring/classify/springTagger";
 import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
 import { HasSpringBootApplicationClass } from "./spring/pushtest/pushTests";
-import {
-    NonSpecificMvcAnnotationsReviewer,
-    OldStyleAnnotationCategory,
-} from "./spring/review/findNonSpecificMvcAnnotations";
-import {
-    HardcodedPropertyReviewer,
-    HardcodePropertyCategory,
-} from "./spring/review/hardcodedPropertyReviewer";
-import {
-    MutableInjectionCategory,
-    MutableInjectionsReviewer,
-} from "./spring/review/mutableInjectionsReviewer";
-import {
-    OldSpringBootVersionCategory,
-    OldSpringBootVersionReviewer,
-} from "./spring/review/OldSpringBootVersionReviewer";
+import { NonSpecificMvcAnnotationsReviewer } from "./spring/review/findNonSpecificMvcAnnotations";
+import { HardcodedPropertyReviewer, } from "./spring/review/hardcodedPropertyReviewer";
+import { MutableInjectionsReviewer, } from "./spring/review/mutableInjectionsReviewer";
+import { OldSpringBootVersionReviewer, } from "./spring/review/oldSpringBootVersionReviewer";
 import { addSpringBootActuator } from "./spring/transform/addSpringBootActuator";
 import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
 import { ApplySecuredWebAppGuide } from "./spring/transform/guide/securingWebApp";
 import { FixAutowiredOnSoleConstructor } from "./spring/transform/removeUnnecessaryAutowiredAnnotations";
-import {
-    UnnecessaryComponentScanAutofix,
-    UnnecessaryComponentScanCategory,
-    UnnecessaryComponentScanReviewer,
-} from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
+import { UnnecessaryComponentScanAutofix, UnnecessaryComponentScanReviewer, } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
 
 /**
@@ -230,39 +195,3 @@ export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
     );
     sdm.addCommand(ListLocalDeploys);
 }
-
-const CloudNativeReviewCommentCategories = [
-    ImportFileIoCategory,
-    ImportDotStarCategory,
-    HardcodePropertyCategory,
-    ProvidedDependencyCategory,
-];
-
-/**
- * Review Listener to raise an issue for Cloud Native review comments.
- */
-export const CloudNativeGitHubIssueRaisingReviewListener: ReviewListenerRegistration = {
-    name: "CloudNativeReviewListener",
-    listener: singleIssueManagingReviewListener(
-        r => CloudNativeReviewCommentCategories.includes(r.category),
-        "Cloud Native review issues",
-        CategorySortingBodyFormatter),
-};
-
-const SpringStyleReviewCommentCategories = [
-    UnnecessaryComponentScanCategory,
-    MutableInjectionCategory,
-    OldStyleAnnotationCategory,
-    OldSpringBootVersionCategory,
-];
-
-/**
- * Review Listener to raise an issue for Spring style review comments.
- */
-export const SpringStyleGitHubIssueRaisingReviewListener: ReviewListenerRegistration = {
-    name: "SpringStyleReviewListener",
-    listener: singleIssueManagingReviewListener(
-        r => SpringStyleReviewCommentCategories.includes(r.category),
-        "Spring style review issues",
-        CategorySortingBodyFormatter),
-};

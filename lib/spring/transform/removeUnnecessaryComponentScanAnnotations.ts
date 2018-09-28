@@ -15,20 +15,11 @@
  */
 
 import { JavaFileParser } from "@atomist/antlr";
-import {
-    DefaultReviewComment,
-    findMatches,
-    ProjectReview,
-    zapAllMatches,
-} from "@atomist/automation-client";
+import { findMatches, ProjectReview, Severity, zapAllMatches, } from "@atomist/automation-client";
 import { ZapTrailingWhitespace } from "@atomist/automation-client/lib/tree/ast/FileHits";
-import {
-    AutofixRegistration,
-    CodeInspection,
-    CodeTransform,
-    ReviewerRegistration,
-} from "@atomist/sdm";
+import { AutofixRegistration, CodeInspection, CodeTransform, ReviewerRegistration, } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
+import * as category from "../review/categories";
 
 /**
  * An @ComponentScan annotation isn't necessary on a @SpringBootApplication class.
@@ -48,23 +39,27 @@ export const removeUnnecessaryComponentScanTransform: CodeTransform = p => {
 export const UnnecessaryComponentScanCategory = "unnecessary annotations";
 
 export const unnecessaryComponentScanReviewer: CodeInspection<ProjectReview> = async p => {
-    const matches = await findMatches(p, JavaFileParser, JavaSourceFiles, UnnecessaryComponentScanAnnotations);
-    return {
-        repoId: p.id,
-        comments: matches.map(m => {
-            return new DefaultReviewComment("info", UnnecessaryComponentScanCategory,
-                "`@ComponentScan` annotations are not necessary on `@SpringBootApplication` classes as they are inherited",
-                m.sourceLocation,
-                {
-                    command: "RemoveUnnecessaryComponentScanAnnotations",
-                    params: {
-                        "target.owner": p.id.owner,
-                        "target.repo": p.id.repo,
+        const matches = await findMatches(p, JavaFileParser, JavaSourceFiles, UnnecessaryComponentScanAnnotations);
+        return {
+            repoId: p.id,
+            comments: matches.map(m => {
+                return {
+                    severity: "info" as Severity,
+                    category: category.SpringStyle,
+                    subcategory: UnnecessaryComponentScanCategory,
+                    detail: "`@ComponentScan` annotations are not necessary on `@SpringBootApplication` classes as they are inherited",
+                    sourceLocation: m.sourceLocation,
+                    fix: {
+                        command: "RemoveUnnecessaryComponentScanAnnotations",
+                        params: {
+                            "target.owner": p.id.owner,
+                            "target.repo": p.id.repo,
+                        },
                     },
-                });
-        }),
+                };
+            }),
+        };
     };
-};
 
 export const UnnecessaryComponentScanReviewer: ReviewerRegistration = {
     name: "unnecessary-component-scan-reviewer",
