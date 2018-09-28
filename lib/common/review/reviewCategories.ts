@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 /**
  * Review category for 12 factor violations
  */

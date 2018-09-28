@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 /**
  * Review category for Spring idiom violations
  */
