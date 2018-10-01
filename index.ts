@@ -37,8 +37,14 @@ export {
     ImportDotStarReviewer,
 } from "./lib/java/review/importDotStarReviewer";
 export { ListBranchDeploys } from "./lib/java/deploy/MavenPerBranchSpringBootDeploymentGoal";
-export { MavenBuilder } from "./lib/maven/build/MavenBuilder";
-export { GradleSingleModuleBuilder } from "./lib/gradle/build/GradleSingleModuleBuilder";
+export {
+    mavenBuilder,
+    mavenPackage,
+} from "./lib/maven/build/MavenBuilder";
+export {
+    GradleSingleModuleBuilder,
+    gradleSingleModuleBuilder,
+} from "./lib/gradle/build/GradleSingleModuleBuilder";
 export { ListLocalDeploys } from "./lib/maven/deploy/listLocalDeploys";
 export { mavenDeployer } from "./lib/maven/deploy/mavenDeployer";
 export { MavenFingerprinter } from "./lib/maven/fingerprint/MavenFingerprinter";

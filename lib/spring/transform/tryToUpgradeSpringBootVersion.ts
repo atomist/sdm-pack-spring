@@ -18,7 +18,7 @@ import {
     CodeTransformRegistration,
     PullRequest,
 } from "@atomist/sdm";
-import { pack } from "@atomist/sdm-core";
+import { makeBuildAware } from "@atomist/sdm-pack-build";
 import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 
 /**
@@ -39,7 +39,7 @@ export interface UpgradeSpringBootParameters {
  * handler to respond to the build with either a PR and Issue
  * @type {HandleCommand<EditOneOrAllParameters>}
  */
-export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpringBootParameters> = pack.buildAware.makeBuildAware({
+export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpringBootParameters> = makeBuildAware({
     transform: SetSpringBootVersionTransform,
     parameters: {
         desiredBootVersion: {

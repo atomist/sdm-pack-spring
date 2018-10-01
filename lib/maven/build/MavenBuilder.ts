@@ -16,31 +16,22 @@
 
 import {
     ChildProcessResult,
-    ProjectOperationCredentials,
     RemoteRepoRef,
     spawnAndWatch,
 } from "@atomist/automation-client";
 import {
-    AddressChannels,
     AppInfo,
     GitProject,
-    InterpretLog,
     LocalProject,
-    LogInterpretation,
     ProgressLog,
-    SoftwareDeliveryMachine,
-    SoftwareDeliveryMachineConfiguration,
 } from "@atomist/sdm";
 import {
-    LocalBuilder,
-    LocalBuildInProgress,
-} from "@atomist/sdm-core";
+    Builder,
+    BuildInProgress,
+} from "@atomist/sdm-pack-build";
 import { determineMavenCommand } from "../mavenCommand";
 import { MavenProjectIdentifier } from "../parse/pomParser";
 import { VersionedArtifact } from "../VersionedArtifact";
-import { MavenLogInterpreter } from "./mavenLogInterpreter";
-
-/* tslint:disable:max-classes-per-file */
 
 /**
  * Build with Maven in the local automation client.
@@ -50,46 +41,32 @@ import { MavenLogInterpreter } from "./mavenLogInterpreter";
  * vulnerability in builds of unrelated tenants getting at each others
  * artifacts.
  */
-export class MavenBuilder extends LocalBuilder implements LogInterpretation {
-
-    public logInterpreter: InterpretLog = MavenLogInterpreter;
-
-    constructor(sdm: SoftwareDeliveryMachine,
-                private readonly args: Array<{ name: string, value?: string }> = [],
-                private readonly deploymentUnitFileLocator: (p: LocalProject, mpi: VersionedArtifact) => string =
-            (p, mpi) => `${p.baseDir}/target/${mpi.artifact}-${mpi.version}.jar`) {
-        super("MavenBuilder", sdm);
-    }
-
-    protected async startBuild(credentials: ProjectOperationCredentials,
-                               id: RemoteRepoRef,
-                               atomistTeam: string,
-                               log: ProgressLog,
-                               addressChannels: AddressChannels,
-                               configuration: SoftwareDeliveryMachineConfiguration): Promise<LocalBuildInProgress> {
+export function mavenBuilder(args: Array<{ name: string, value?: string }> = [],
+                             deploymentUnitFileLocator: (p: LocalProject, mpi: VersionedArtifact) => string =
+                                 (p, mpi) => `${p.baseDir}/target/${mpi.artifact}-${mpi.version}.jar`): Builder {
+    return async goalInvocation => {
+        const { configuration, credentials, progressLog, id } = goalInvocation;
         return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
             // Find the artifact info from Maven
             const va = await MavenProjectIdentifier(p);
             const appId = { ...va, name: va.artifact, id };
-            const buildResult = await mavenPackage(p, log, this.args);
-            const rb = new UpdatingBuild(id, buildResult, atomistTeam, log.url);
+            const buildResult = await mavenPackage(p, progressLog, args);
+            const rb = new UpdatingBuild(id, buildResult);
             rb.ai = appId;
-            rb.deploymentUnitFile = this.deploymentUnitFileLocator(p, va);
+            rb.deploymentUnitFile = deploymentUnitFileLocator(p, va);
             return rb;
         });
-    }
+    };
 }
 
-class UpdatingBuild implements LocalBuildInProgress {
+class UpdatingBuild implements BuildInProgress {
 
     public ai: AppInfo;
 
     public deploymentUnitFile: string;
 
     constructor(public repoRef: RemoteRepoRef,
-                public buildResult: ChildProcessResult,
-                public team: string,
-                public url: string) {
+                public buildResult: ChildProcessResult) {
     }
 
     get appInfo(): AppInfo {
@@ -103,9 +80,9 @@ export async function mavenPackage(p: GitProject,
                                    args: Array<{ name: string, value?: string }> = []): Promise<ChildProcessResult> {
     const command = await determineMavenCommand(p);
     return spawnAndWatch({
-        command,
-        args: ["package", ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
-    },
+            command,
+            args: ["package", ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
+        },
         {
             cwd: p.baseDir,
         },

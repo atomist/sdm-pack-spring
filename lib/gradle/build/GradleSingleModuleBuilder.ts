@@ -15,7 +15,7 @@
  */
 
 import {
-    ProjectOperationCredentials,
+    ChildProcessResult,
     RemoteRepoRef,
     spawnAndWatch,
 } from "@atomist/automation-client";
@@ -24,21 +24,14 @@ import {
     Microgrammar,
 } from "@atomist/microgrammar";
 import {
-    AddressChannels,
-    InterpretLog,
-    LogInterpretation,
-    ProgressLog,
-    SoftwareDeliveryMachine,
-    SoftwareDeliveryMachineConfiguration,
+    AppInfo,
     StringCapturingProgressLog,
 } from "@atomist/sdm";
 import {
-    LocalBuilder,
-    LocalBuildInProgress,
-} from "@atomist/sdm-core";
+    Builder,
+    BuildInProgress,
+} from "@atomist/sdm-pack-build";
 import { determineGradleCommand } from "../gradleCommand";
-import { GradleLogInterpreter } from "./gradleLogInterpreter";
-import { UpdatingBuild } from "./UpdatingBuild";
 
 /**
  * Build with Gradle in the local automation client.
@@ -48,19 +41,9 @@ import { UpdatingBuild } from "./UpdatingBuild";
  * vulnerability in builds of unrelated tenants getting at each others
  * artifacts.
  */
-export class GradleSingleModuleBuilder extends LocalBuilder implements LogInterpretation {
-    public logInterpreter: InterpretLog = GradleLogInterpreter;
-
-    constructor(sdm: SoftwareDeliveryMachine) {
-        super("GradleSingleModuleBuilder", sdm);
-    }
-
-    protected async startBuild(credentials: ProjectOperationCredentials,
-                               id: RemoteRepoRef,
-                               atomistTeam: string,
-                               log: ProgressLog,
-                               addressChannels: AddressChannels,
-                               configuration: SoftwareDeliveryMachineConfiguration): Promise<LocalBuildInProgress> {
+export function gradleSingleModuleBuilder(): Builder {
+    return async goalInvocation => {
+        const { configuration, id, progressLog, credentials } = goalInvocation;
         return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
             const propertiesOutput = new StringCapturingProgressLog();
             const command = determineGradleCommand(p);
@@ -74,17 +57,19 @@ export class GradleSingleModuleBuilder extends LocalBuilder implements LogInterp
             const buildResult = spawnAndWatch(
                 { command, args: ["--console=plain", "clean", "build"] },
                 { cwd: p.baseDir },
-                log, {
+                progressLog, {
                     errorFinder: (code, signal, l) => l.log.includes("[ERROR]"),
                 });
 
-            const rb = new UpdatingBuild(id, await buildResult, atomistTeam, log.url);
+            const rb = new UpdatingBuild(id, await buildResult);
             rb.ai = { id, name: appName, version };
             rb.deploymentUnitFile = `${p.baseDir}/build/libs/${appName}.jar`;
             return rb;
         });
-    }
+    };
 }
+
+export const GradleSingleModuleBuilder = gradleSingleModuleBuilder();
 
 export interface GradleInfo {
     timeMillis?: number;
@@ -99,3 +84,18 @@ const nameGrammar = Microgrammar.fromString<{ name: string }>("name: ${name}", {
 const versionGrammar = Microgrammar.fromString<{ name: string }>("version: ${name}", {
     name: Literal,
 });
+
+class UpdatingBuild implements BuildInProgress {
+
+    public ai: AppInfo;
+
+    public deploymentUnitFile: string;
+
+    constructor(public repoRef: RemoteRepoRef,
+                public buildResult: ChildProcessResult) {
+    }
+
+    get appInfo(): AppInfo {
+        return this.ai;
+    }
+}
