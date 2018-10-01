@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.5...HEAD)
 
+### Changed
+
+-   Upgrade SDM. Remove local deploy. [#90](https://github.com/atomist/sdm-pack-spring/issues/90)
+
 ## [1.0.0-M.5](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-M.4a...1.0.0-M.5) - 2018-09-26
 
 ### Added
