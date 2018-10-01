@@ -47,7 +47,10 @@ import { addSpringBootActuator } from "./spring/transform/addSpringBootActuator"
 import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
 import { ApplySecuredWebAppGuide } from "./spring/transform/guide/securingWebApp";
 import { FixAutowiredOnSoleConstructor } from "./spring/transform/removeUnnecessaryAutowiredAnnotations";
-import { UnnecessaryComponentScanAutofix, UnnecessaryComponentScanReviewer } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
+import {
+    UnnecessaryComponentScanAutofix,
+    UnnecessaryComponentScanReviewer,
+} from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
 
 /**
