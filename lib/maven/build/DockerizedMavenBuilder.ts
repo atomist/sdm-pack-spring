@@ -43,13 +43,13 @@ import { MavenLogInterpreter } from "./mavenLogInterpreter";
 
 /**
  * Build with Maven in the local automation client.
- * This implementation requires Java and maven on the classpath.
+ * This implementation uses Docker and does not require a Java or Maven installation.
  * Note it is NOT intended for use for multiple organizations. It's OK
  * for one organization to use inside its firewall, but there is potential
  * vulnerability in builds of unrelated tenants getting at each others
  * artifacts.
  */
-export class MavenBuilder extends LocalBuilder implements LogInterpretation {
+export class DockerizedMavenBuilder extends LocalBuilder implements LogInterpretation {
 
     public logInterpreter: InterpretLog = MavenLogInterpreter;
 
