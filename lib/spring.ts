@@ -24,7 +24,7 @@ import {
     SoftwareDeliveryMachine,
     whenPushSatisfies,
 } from "@atomist/sdm";
-import { tagRepo, } from "@atomist/sdm-core";
+import { tagRepo } from "@atomist/sdm-core";
 import { gradleTagger } from "./gradle/classify/gradleTagger";
 import {
     executeGradlePerBranchSpringBootDeploy,
@@ -47,7 +47,7 @@ import { addSpringBootActuator } from "./spring/transform/addSpringBootActuator"
 import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
 import { ApplySecuredWebAppGuide } from "./spring/transform/guide/securingWebApp";
 import { FixAutowiredOnSoleConstructor } from "./spring/transform/removeUnnecessaryAutowiredAnnotations";
-import { UnnecessaryComponentScanAutofix, UnnecessaryComponentScanReviewer, } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
+import { UnnecessaryComponentScanAutofix, UnnecessaryComponentScanReviewer } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
 
 /**
@@ -153,4 +153,3 @@ export function configureGradlePerBranchSpringBootDeploy(sdm: SoftwareDeliveryMa
     sdm.addGoalImplementation("Gradle deployment", GradlePerBranchSpringBootDeploymentGoal,
         executeGradlePerBranchSpringBootDeploy(options));
 }
-
