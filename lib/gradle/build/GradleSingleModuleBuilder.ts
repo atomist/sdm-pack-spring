@@ -78,7 +78,7 @@ export class GradleSingleModuleBuilder extends LocalBuilder implements LogInterp
                     errorFinder: (code, signal, l) => l.log.includes("[ERROR]"),
                 });
 
-            const rb = new UpdatingBuild(id, buildResult, atomistTeam, log.url);
+            const rb = new UpdatingBuild(id, await buildResult, atomistTeam, log.url);
             rb.ai = { id, name: appName, version };
             rb.deploymentUnitFile = `${p.baseDir}/build/libs/${appName}.jar`;
             return rb;

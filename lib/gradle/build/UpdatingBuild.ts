@@ -28,7 +28,7 @@ export class UpdatingBuild implements LocalBuildInProgress {
     public deploymentUnitFile: string;
 
     constructor(public repoRef: RemoteRepoRef,
-                public buildResult: Promise<ChildProcessResult>,
+                public buildResult: ChildProcessResult,
                 public team: string,
                 public url: string) {
     }

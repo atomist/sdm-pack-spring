@@ -15,7 +15,6 @@
  */
 
 export {
-    configureLocalSpringBootDeploy,
     springSupport,
     SpringSupportOptions,
     Categories,

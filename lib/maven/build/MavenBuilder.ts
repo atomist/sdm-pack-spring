@@ -71,8 +71,7 @@ export class MavenBuilder extends LocalBuilder implements LogInterpretation {
             // Find the artifact info from Maven
             const va = await MavenProjectIdentifier(p);
             const appId = { ...va, name: va.artifact, id };
-
-            const buildResult = mavenPackage(p, log, this.args);
+            const buildResult = await mavenPackage(p, log, this.args);
             const rb = new UpdatingBuild(id, buildResult, atomistTeam, log.url);
             rb.ai = appId;
             rb.deploymentUnitFile = this.deploymentUnitFileLocator(p, va);
@@ -88,7 +87,7 @@ class UpdatingBuild implements LocalBuildInProgress {
     public deploymentUnitFile: string;
 
     constructor(public repoRef: RemoteRepoRef,
-                public buildResult: Promise<ChildProcessResult>,
+                public buildResult: ChildProcessResult,
                 public team: string,
                 public url: string) {
     }
