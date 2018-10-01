@@ -16,26 +16,15 @@
 
 import { unifiedTagger } from "@atomist/automation-client/lib/operations/tagger/Tagger";
 import {
-    AnyPush,
     AutoCodeInspection,
     Autofix,
-    executeDeploy,
-    executeUndeploy,
     ExtensionPack,
-    LocalDeploymentGoal,
     metadata,
     ReviewListenerRegistration,
     SoftwareDeliveryMachine,
     whenPushSatisfies,
 } from "@atomist/sdm";
-import {
-    ManagedDeploymentTargeter,
-    tagRepo,
-} from "@atomist/sdm-core";
-import {
-    LocalEndpointGoal,
-    LocalUndeploymentGoal,
-} from "@atomist/sdm/lib/pack/well-known-goals/commonGoals";
+import { tagRepo } from "@atomist/sdm-core";
 import { gradleTagger } from "./gradle/classify/gradleTagger";
 import {
     executeGradlePerBranchSpringBootDeploy,
@@ -46,12 +35,9 @@ import { IsGradle } from "./gradle/pushtest/gradlePushTests";
 import { ImportDotStarReviewer } from "./java/review/importDotStarReviewer";
 import { ImportIoFileReviewer } from "./java/review/importIoFileReviewer";
 import { mavenTagger } from "./maven/classify/mavenTagger";
-import { ListLocalDeploys } from "./maven/deploy/listLocalDeploys";
-import { IsMaven } from "./maven/pushtest/pushTests";
 import { ProvidedDependencyReviewer } from "./maven/review/providedDependencyReviewer";
 import { AddMavenDependency } from "./maven/transform/addDependencyTransform";
 import { springBootTagger } from "./spring/classify/springTagger";
-import { mavenSourceDeployer } from "./spring/deploy/localSpringBootDeployers";
 import { HasSpringBootApplicationClass } from "./spring/pushtest/pushTests";
 import { NonSpecificMvcAnnotationsReviewer } from "./spring/review/findNonSpecificMvcAnnotations";
 import { HardcodedPropertyReviewer } from "./spring/review/hardcodedPropertyReviewer";
@@ -169,38 +155,4 @@ export function configureGradlePerBranchSpringBootDeploy(sdm: SoftwareDeliveryMa
         .setGoals(GradlePerBranchSpringBootDeploymentGoal));
     sdm.addGoalImplementation("Gradle deployment", GradlePerBranchSpringBootDeploymentGoal,
         executeGradlePerBranchSpringBootDeploy(options));
-}
-
-export function configureLocalSpringBootDeploy(sdm: SoftwareDeliveryMachine) {
-    const deployToLocal = {
-        deployer: mavenSourceDeployer(sdm.configuration.sdm.projectLoader),
-        targeter: ManagedDeploymentTargeter,
-        deployGoal: LocalDeploymentGoal,
-        endpointGoal: LocalEndpointGoal,
-        undeployGoal: LocalUndeploymentGoal,
-    };
-    sdm.addGoalImplementation("Local deployer",
-        deployToLocal.deployGoal,
-        executeDeploy(
-            sdm.configuration.sdm.artifactStore,
-            sdm.configuration.sdm.repoRefResolver,
-            deployToLocal.endpointGoal, deployToLocal),
-        {
-            pushTest: IsMaven,
-            logInterpreter: deployToLocal.deployer.logInterpreter,
-        },
-    );
-    sdm.addGoalSideEffect(
-        deployToLocal.endpointGoal,
-        deployToLocal.deployGoal.definition.displayName,
-        AnyPush);
-    sdm.addGoalImplementation("Local undeployer",
-        deployToLocal.undeployGoal,
-        executeUndeploy(deployToLocal),
-        {
-            pushTest: IsMaven,
-            logInterpreter: deployToLocal.deployer.logInterpreter,
-        },
-    );
-    sdm.addCommand(ListLocalDeploys);
 }
