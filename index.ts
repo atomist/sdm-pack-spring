@@ -102,5 +102,6 @@ export {
 
 export * from "./lib/riff/riffGeneration";
 export * from "./lib/riff/riffPushTests";
-
 export * from "./lib/riff/RiffDeployment";
+export * from "./lib/maven/build/DockerizedMavenBuilder";
+export * from "./lib/spring/build/mavenHelpers";
