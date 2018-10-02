@@ -34,6 +34,8 @@ import { VersionedArtifact } from "../VersionedArtifact";
 
 /* tslint:disable:max-classes-per-file */
 
+export const DefaultMavenDockerVersion = "3.5-jdk-8-alpine";
+
 /**
  * Build with Maven in the local automation client.
  * This implementation uses Docker and does not require a Java or Maven installation.
@@ -42,9 +44,6 @@ import { VersionedArtifact } from "../VersionedArtifact";
  * vulnerability in builds of unrelated tenants getting at each others
  * artifacts.
  */
-
-export const DefaultMavenDockerVersion = "3.5-jdk-8-alpine";
-
 export function dockerizedMavenBuilder(version: string = DefaultMavenDockerVersion,
                                        args: Array<{ name: string, value?: string }> = [],
                                        deploymentUnitFileLocator: (p: LocalProject, mpi: VersionedArtifact) => string =
@@ -78,6 +77,10 @@ class UpdatingBuild implements BuildInProgress {
     }
 }
 
+/**
+ * Perform a Maven package command running Maven in a Docker container. This command
+ * does not require a Maven or JDK install, only Docker.
+ */
 export async function dockerizedMavenPackage(p: GitProject,
                                              progressLog: ProgressLog,
                                              args: Array<{ name: string, value?: string }> = [],

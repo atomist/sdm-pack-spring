@@ -24,6 +24,11 @@ import * as path from "path";
 import { VersionedArtifact } from "../../maven/VersionedArtifact";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 
+/**
+ * Locates the build artifact that has been built using the Spring Boot Maven plugin.
+ * @param p The project containing the Maven project
+ * @param mpi GAV definition of the artifact.
+ */
 export async function springBootDeploymentUnitFileLocator(p: LocalProject, mpi: VersionedArtifact): Promise<string> {
     const parser = new XmldocFileParser();
     const matches = await findFileMatches(p, parser, "**/pom.xml", `/project/build/plugins/plugin[artifactId='spring-boot-maven-plugin']`);
