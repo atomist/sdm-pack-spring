@@ -43,7 +43,9 @@ import { VersionedArtifact } from "../VersionedArtifact";
  * artifacts.
  */
 
-export function dockerizedMavenBuilder(version: string = "3.5-jdk-8-alpine",
+export const DefaultMavenDockerVersion = "3.5-jdk-8-alpine";
+
+export function dockerizedMavenBuilder(version: string = DefaultMavenDockerVersion,
                                        args: Array<{ name: string, value?: string }> = [],
                                        deploymentUnitFileLocator: (p: LocalProject, mpi: VersionedArtifact) => string =
                                         (p, mpi) => `${p.baseDir}/target/${mpi.artifact}-${mpi.version}.jar`): Builder {
@@ -79,7 +81,7 @@ class UpdatingBuild implements BuildInProgress {
 export async function dockerizedMavenPackage(p: GitProject,
                                              progressLog: ProgressLog,
                                              args: Array<{ name: string, value?: string }> = [],
-                                             version: string): Promise<ChildProcessResult> {
+                                             version: string = DefaultMavenDockerVersion): Promise<ChildProcessResult> {
     const command = `docker run -it -v "$(pwd)":/usr/src/maven -w /usr/src/maven maven:${version} mvn`;
     return spawnAndWatch({
         command,
