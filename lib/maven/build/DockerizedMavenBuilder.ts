@@ -16,28 +16,21 @@
 
 import {
     ChildProcessResult,
-    ProjectOperationCredentials,
     RemoteRepoRef,
     spawnAndWatch,
 } from "@atomist/automation-client";
 import {
-    AddressChannels,
     AppInfo,
     GitProject,
-    InterpretLog,
     LocalProject,
-    LogInterpretation,
     ProgressLog,
-    SoftwareDeliveryMachine,
-    SoftwareDeliveryMachineConfiguration,
 } from "@atomist/sdm";
 import {
-    LocalBuilder,
-    LocalBuildInProgress,
-} from "@atomist/sdm-core";
+    Builder,
+    BuildInProgress,
+} from "@atomist/sdm-pack-build";
 import { MavenProjectIdentifier } from "../parse/pomParser";
 import { VersionedArtifact } from "../VersionedArtifact";
-import { MavenLogInterpreter } from "./mavenLogInterpreter";
 
 /* tslint:disable:max-classes-per-file */
 
@@ -49,54 +42,38 @@ import { MavenLogInterpreter } from "./mavenLogInterpreter";
  * vulnerability in builds of unrelated tenants getting at each others
  * artifacts.
  */
-export class DockerizedMavenBuilder extends LocalBuilder implements LogInterpretation {
 
-    public logInterpreter: InterpretLog = MavenLogInterpreter;
-
-    constructor(sdm: SoftwareDeliveryMachine,
-                private readonly version: string = "3.5-jdk-8-alpine",
-                private readonly args: Array<{ name: string, value?: string }> = [],
-                private readonly deploymentUnitFileLocator: (p: LocalProject, mpi: VersionedArtifact) => string =
-            (p, mpi) => `${p.baseDir}/target/${mpi.artifact}-${mpi.version}.jar`) {
-        super("MavenBuilder", sdm);
-    }
-
-    protected async startBuild(credentials: ProjectOperationCredentials,
-                               id: RemoteRepoRef,
-                               atomistTeam: string,
-                               log: ProgressLog,
-                               addressChannels: AddressChannels,
-                               configuration: SoftwareDeliveryMachineConfiguration): Promise<LocalBuildInProgress> {
+export function dockerizedMavenBuilder(version: string = "3.5-jdk-8-alpine",
+                                       args: Array<{ name: string, value?: string }> = [],
+                                       deploymentUnitFileLocator: (p: LocalProject, mpi: VersionedArtifact) => string =
+                                        (p, mpi) => `${p.baseDir}/target/${mpi.artifact}-${mpi.version}.jar`): Builder {
+    return async goalInvocation => {
+        const { configuration, credentials, progressLog, id } = goalInvocation;
         return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
-            // Find the artifact info from Maven
             const va = await MavenProjectIdentifier(p);
             const appId = { ...va, name: va.artifact, id };
-
-            const buildResult = dockerizedMavenPackage(p, log, this.args, this.version);
-            const rb = new UpdatingBuild(id, buildResult, atomistTeam, log.url);
+            const buildResult = await dockerizedMavenPackage(p, progressLog, args, version);
+            const rb = new UpdatingBuild(id, buildResult);
             rb.ai = appId;
-            rb.deploymentUnitFile = this.deploymentUnitFileLocator(p, va);
+            rb.deploymentUnitFile = deploymentUnitFileLocator(p, va);
             return rb;
         });
-    }
+    };
 }
 
-class UpdatingBuild implements LocalBuildInProgress {
+class UpdatingBuild implements BuildInProgress {
 
     public ai: AppInfo;
 
     public deploymentUnitFile: string;
 
     constructor(public repoRef: RemoteRepoRef,
-                public buildResult: Promise<ChildProcessResult>,
-                public team: string,
-                public url: string) {
+                public buildResult: ChildProcessResult) {
     }
 
     get appInfo(): AppInfo {
         return this.ai;
     }
-
 }
 
 export async function dockerizedMavenPackage(p: GitProject,
