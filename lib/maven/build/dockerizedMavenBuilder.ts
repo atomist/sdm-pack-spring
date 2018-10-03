@@ -34,15 +34,14 @@ import { VersionedArtifact } from "../VersionedArtifact";
 
 /* tslint:disable:max-classes-per-file */
 
-export const DefaultMavenDockerVersion = "3.5-jdk-8-alpine";
+export const DefaultMavenDockerVersion = "slim";
 
 /**
  * Build with Maven in the local automation client.
- * This implementation uses Docker and does not require a Java or Maven installation.
- * Note it is NOT intended for use for multiple organizations. It's OK
- * for one organization to use inside its firewall, but there is potential
- * vulnerability in builds of unrelated tenants getting at each others
- * artifacts.
+ * This implementation uses Docker and does not require a Java or Maven installation. By default it uses
+ * the `slim` tag from the Maven docker build (see https://hub.docker.com/r/library/maven/tags/ for all tags)
+ * This builder is multi tenant safe, as all builds are done in complete isolation and
+ * cannot access artifacts built by other organisations in the same SDM.
  */
 export function dockerizedMavenBuilder(version: string = DefaultMavenDockerVersion,
                                        args: Array<{ name: string, value?: string }> = [],
@@ -85,10 +84,21 @@ export async function dockerizedMavenPackage(p: GitProject,
                                              progressLog: ProgressLog,
                                              args: Array<{ name: string, value?: string }> = [],
                                              version: string = DefaultMavenDockerVersion): Promise<ChildProcessResult> {
-    const command = `docker run -it -v "$(pwd)":/usr/src/maven -w /usr/src/maven maven:${version} mvn`;
+    const command = "docker";
     return spawnAndWatch({
         command,
-        args: ["package", ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
+        args: [
+            "run",
+            "-it",
+            "-v",
+            "`pwd`:/usr/src/maven",
+            "-w",
+            "/usr/src/maven",
+            `maven:${version}`,
+            "mvn",
+            "package",
+            ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`),
+        ],
     },
         {
             cwd: p.baseDir,
