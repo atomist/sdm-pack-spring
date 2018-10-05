@@ -25,6 +25,7 @@ import {
     whenPushSatisfies,
 } from "@atomist/sdm";
 import { tagRepo } from "@atomist/sdm-core";
+import { makeBuildAware } from "@atomist/sdm-pack-build";
 import { gradleTagger } from "./gradle/classify/gradleTagger";
 import {
     executeGradlePerBranchSpringBootDeploy,
@@ -51,7 +52,7 @@ import {
     UnnecessaryComponentScanAutofix,
     UnnecessaryComponentScanReviewer,
 } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
-import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
+import { UpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
 
 /**
  * Categories of functionality to enable
@@ -101,11 +102,11 @@ export function springSupport(options: SpringSupportOptions): ExtensionPack {
         ...metadata(),
         configure: sdm => {
             sdm
-                .addCodeTransformCommand(AddMavenDependency)
-                .addCodeTransformCommand(AddSpringBootStarter)
-                .addCodeTransformCommand(addSpringBootActuator())
-                .addCodeTransformCommand(ApplySecuredWebAppGuide)
-                .addCodeTransformCommand(TryToUpgradeSpringBootVersion)
+                .addCodeTransformCommand(makeBuildAware(AddMavenDependency))
+                .addCodeTransformCommand(makeBuildAware(AddSpringBootStarter))
+                .addCodeTransformCommand(makeBuildAware(addSpringBootActuator()))
+                .addCodeTransformCommand(makeBuildAware(ApplySecuredWebAppGuide))
+                .addCodeTransformCommand(makeBuildAware(UpgradeSpringBootVersion))
                 .addFirstPushListener(
                     tagRepo(unifiedTagger(
                         springBootTagger,

@@ -35,11 +35,9 @@ export interface UpgradeSpringBootParameters {
 }
 
 /**
- * Wrap Spring Boot set version editor in a dryRunEditor, causing an event
- * handler to respond to the build with either a PR and Issue
- * @type {HandleCommand<EditOneOrAllParameters>}
+ * Upgrade the Spring Boot version in the POM
  */
-export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpringBootParameters> = makeBuildAware({
+export const UpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpringBootParameters> = {
     transform: SetSpringBootVersionTransform,
     parameters: {
         desiredBootVersion: {
@@ -58,7 +56,15 @@ export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpr
         `boot-upgrade-${ci.parameters.desiredBootVersion}-${guid()}`,
         `Upgrade Spring Boot version to ${ci.parameters.desiredBootVersion}`,
     ),
-});
+};
+
+/**
+ * Wrap Spring Boot set version transform in a build aware transform, causing an event
+ * handler to respond to the build with either a PR and Issue
+ * @type {HandleCommand<EditOneOrAllParameters>}
+ * @deprecated Use 'UpgradeSpringBootVersion' directly with 'makeBuildAware' wrapper
+ */
+export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpringBootParameters> = makeBuildAware(UpgradeSpringBootVersion);
 
 function guid() {
     return "" + new Date().getTime();
