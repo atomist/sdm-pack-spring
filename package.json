@@ -29,7 +29,6 @@
   "dependencies": {
     "@atomist/antlr": "1.0.1-master.20180916163028",
     "@atomist/microgrammar": "1.0.0-master.20180916080140",
-    "@atomist/sdm-pack-issue": "1.0.0-master.20180926210736",
     "@atomist/tree-path": "1.0.0-master.20180927175133",
     "@types/cross-spawn": "^6.0.0",
     "@types/dateformat": "^1.0.1",
