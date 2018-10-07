@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { NoParameters } from "@atomist/automation-client";
 import {
     AutofixRegistration,
     CodeTransform,
@@ -24,7 +25,8 @@ import { parseProperties } from "../../properties/propertiesParser";
 import { IsSpringBoot2Project } from "../pushtest/pushTests";
 import { addSpringBootStarterTransform } from "./addSpringBootStarterTransform";
 
-export const AddSpringBootActuatorStarter = addSpringBootStarterTransform("spring-boot-starter-actuator");
+export const AddSpringBootActuatorStarter: CodeTransform<NoParameters> =
+    addSpringBootStarterTransform("spring-boot-starter-actuator");
 
 export function addActuatorWebConfiguration(enabledEndpoints: string[] = ["health", "info"]): CodeTransform {
     return async p => {
