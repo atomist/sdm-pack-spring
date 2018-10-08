@@ -25,13 +25,15 @@ import {
 } from "@atomist/automation-client";
 import { ReviewerRegistration } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
+import { SpringStyle } from "./springReviewCategories";
 
 export const MutableInjectionCategory = "Mutable injection";
 
 export class MutableInjection implements ReviewComment {
 
     public severity: Severity = "warn";
-    public category = MutableInjectionCategory;
+    public category = SpringStyle;
+    public subcategory = MutableInjectionCategory;
 
     constructor(public name: string, public type: "field" | "setter",
                 public sourceLocation: SourceLocation) {

@@ -77,6 +77,6 @@ export const UnnecessaryComponentScanReviewer: ReviewerRegistration = {
 };
 
 export const UnnecessaryComponentScanAutofix: AutofixRegistration = {
-    name: "unnecessary-component-scan-autofix",
+    name: "Unnecessary @ComponentScan",
     transform: removeUnnecessaryComponentScanTransform,
 };

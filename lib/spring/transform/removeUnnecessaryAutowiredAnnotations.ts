@@ -43,7 +43,7 @@ export const removeAutowiredOnSoleConstructor: CodeTransform = async p => {
 };
 
 export const FixAutowiredOnSoleConstructor: AutofixRegistration = {
-    name: "FixAutowiredOnSoleConstructor",
+    name: "Unnecessary @Autowired",
     pushTest: allSatisfied(IsSpringBoot2Project),
     transform: removeAutowiredOnSoleConstructor,
     options: {
