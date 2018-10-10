@@ -15,8 +15,8 @@
  */
 
 import {
-    projectUtils,
     logger,
+    projectUtils,
 } from "@atomist/automation-client";
 import {
     anyFileChangedWithExtension,

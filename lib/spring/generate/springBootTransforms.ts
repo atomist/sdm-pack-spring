@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+import { projectUtils } from "@atomist/automation-client";
 import {
     CodeTransform,
     CodeTransformOrTransforms,
 } from "@atomist/sdm";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
-import { projectUtils } from "@atomist/automation-client";
 
 /**
  * Update the readme

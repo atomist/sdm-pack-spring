@@ -15,9 +15,9 @@
  */
 
 import {
-    projectUtils,
     logger,
     Project,
+    projectUtils,
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import * as _ from "lodash";

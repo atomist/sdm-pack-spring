@@ -15,11 +15,11 @@
  */
 
 import {
-    ProjectFile,
     logger,
     Project,
-    ReviewComment,
+    ProjectFile,
     projectUtils,
+    ReviewComment,
 } from "@atomist/automation-client";
 import { ReviewerRegistration } from "@atomist/sdm";
 import * as _ from "lodash";

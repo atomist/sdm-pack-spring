@@ -15,8 +15,8 @@
  */
 
 import {
-    InMemoryProjectFile,
     InMemoryProject,
+    InMemoryProjectFile,
     Project,
 } from "@atomist/automation-client";
 import * as xml from "fast-xml-parser";

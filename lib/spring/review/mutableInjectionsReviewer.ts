@@ -16,12 +16,12 @@
 
 import { JavaFileParser } from "@atomist/antlr";
 import {
+    astUtils,
     Project,
     ProjectReview,
     ReviewComment,
     Severity,
     SourceLocation,
-    astUtils,
 } from "@atomist/automation-client";
 import { ReviewerRegistration } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";

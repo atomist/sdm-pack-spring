@@ -15,8 +15,8 @@
  */
 
 import {
-    InMemoryProjectFile,
     InMemoryProject,
+    InMemoryProjectFile,
 } from "@atomist/automation-client";
 import * as assert from "power-assert";
 import {

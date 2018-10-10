@@ -15,8 +15,8 @@
  */
 
 import {
-    projectUtils,
     Project,
+    projectUtils,
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import { computeArtifactId } from "../../java/generate/JavaProjectCreationParameters";

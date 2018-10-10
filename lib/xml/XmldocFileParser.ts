@@ -17,7 +17,7 @@
 import {
     FileParser,
     logger,
-    ProjectFile
+    ProjectFile,
 } from "@atomist/automation-client";
 import { TreeNode } from "@atomist/tree-path";
 import {

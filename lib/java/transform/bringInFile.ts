@@ -15,10 +15,10 @@
  */
 
 import {
-    projectUtils,
     InMemoryProject,
-    logger,
     InMemoryProjectFile,
+    logger,
+    projectUtils,
 } from "@atomist/automation-client";
 import {
     CodeTransform,
