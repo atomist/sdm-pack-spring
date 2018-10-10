@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Fingerprint } from "@atomist/automation-client";
+import { FingerprintData } from "@atomist/automation-client";
 import {
     computeShaOf,
     FingerprinterRegistration,
@@ -33,7 +33,7 @@ export class MavenFingerprinter implements FingerprinterRegistration {
 
     public readonly name = "MavenFingerprinter";
 
-    public async action(cri: PushImpactListenerInvocation): Promise<Fingerprint[]> {
+    public async action(cri: PushImpactListenerInvocation): Promise<FingerprintData[]> {
         const dependencies = await findDependenciesFromEffectivePom(cri.project);
         return Promise.all([
             dependenciesFingerprintsFromParsedPom(dependencies),
@@ -42,7 +42,7 @@ export class MavenFingerprinter implements FingerprinterRegistration {
     }
 }
 
-function dependenciesFingerprintsFromParsedPom(dependencies: VersionedArtifact[]): Fingerprint {
+function dependenciesFingerprintsFromParsedPom(dependencies: VersionedArtifact[]): FingerprintData {
     const json = JSON.stringify(dependencies);
     return {
         name: "dependencies",

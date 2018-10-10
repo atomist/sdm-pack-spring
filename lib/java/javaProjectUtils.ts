@@ -15,7 +15,7 @@
  */
 
 import {
-    doWithFiles,
+    projectUtils,
     logger,
     Project,
 } from "@atomist/automation-client";
@@ -53,7 +53,7 @@ export async function movePackage(project: Project,
     const newPath = packageToPath(newPackage);
     logger.debug("Replacing path '%s' with '%s', package '%s' with '%s'",
         pathToReplace, newPath, oldPackage, newPackage);
-    return doWithFiles(project, globPattern, async f => {
+    return projectUtils.doWithFiles(project, globPattern, async f => {
         await f.replaceAll(oldPackage, newPackage);
         await f.setPath(f.path.replace(pathToReplace, newPath));
     });
@@ -90,7 +90,7 @@ export function renameClass(project: Project,
                             oldClass: string,
                             newClass: string): Promise<Project> {
     logger.debug("Replacing old class stem '%s' with '%s'", oldClass, newClass);
-    return doWithFiles(project, AllJavaAndKotlinFiles, async f => {
+    return projectUtils.doWithFiles(project, AllJavaAndKotlinFiles, async f => {
         if (f.name.includes(oldClass)) {
             await f.rename(f.name.replace(oldClass, newClass));
             const oldClassRe = new RegExp("([\( \t])" + oldClass, "gm");

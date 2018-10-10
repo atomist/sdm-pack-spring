@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import { spawnAndWatch } from "@atomist/automation-client";
+import {
+    GitProject,
+    Project,
+    spawnAndWatch,
+} from "@atomist/automation-client";
 import {
     ExecuteGoalResult,
-    GitProject,
     GoalInvocation,
     PrepareForGoalExecution,
     ProgressLog,
-    Project,
     SdmGoalEvent,
 } from "@atomist/sdm";
 import { ProjectVersioner } from "@atomist/sdm-core";

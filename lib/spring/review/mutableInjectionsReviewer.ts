@@ -16,12 +16,12 @@
 
 import { JavaFileParser } from "@atomist/antlr";
 import {
-    findMatches,
     Project,
     ProjectReview,
     ReviewComment,
     Severity,
     SourceLocation,
+    astUtils,
 } from "@atomist/automation-client";
 import { ReviewerRegistration } from "@atomist/sdm";
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
@@ -64,7 +64,7 @@ const InjectedFields = `//classBodyDeclaration[//annotation[@value='@Autowired']
  * location of source tree.
  */
 export async function findMutableInjections(p: Project, globPattern: string = JavaSourceFiles): Promise<ProjectReview> {
-    const fileHits = await findMatches(p, JavaFileParser, globPattern, InjectedFields);
+    const fileHits = await astUtils.findMatches(p, JavaFileParser, globPattern, InjectedFields);
     const comments = fileHits.map(m => new MutableInjection(
         m.$value,
         m.$value.startsWith("set") ? "setter" : "field",

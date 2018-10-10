@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { InMemoryProject } from "@atomist/sdm";
+import { InMemoryProject } from "@atomist/automation-client";
 import * as assert from "power-assert";
 import { removeAutowiredOnSoleConstructor } from "../../../lib/spring/transform/removeUnnecessaryAutowiredAnnotations";
 import { removeUnnecessaryComponentScanTransform } from "../../../lib/spring/transform/removeUnnecessaryComponentScanAnnotations";

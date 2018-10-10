@@ -15,10 +15,9 @@
  */
 
 import {
-    fileExists,
+    projectUtils,
     Tagger,
 } from "@atomist/automation-client";
-
 import { AllJavaFiles } from "../../java/javaProjectUtils";
 import { SpringBootProjectStructure } from "../generate/SpringBootProjectStructure";
 
@@ -29,10 +28,10 @@ import { SpringBootProjectStructure } from "../generate/SpringBootProjectStructu
  */
 export const springBootTagger: Tagger = async p => {
     const tags: string[] = [];
-    if (await fileExists(p, AllJavaFiles)) {
+    if (await projectUtils.fileExists(p, AllJavaFiles)) {
         tags.push("java");
     }
-    if (await fileExists(p, "**/*.kt")) {
+    if (await projectUtils.fileExists(p, "**/*.kt")) {
         tags.push("kotlin");
     }
     const springBootStructure = await SpringBootProjectStructure.inferFromJavaOrKotlinSource(p);

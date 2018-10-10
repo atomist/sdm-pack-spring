@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-import { NoParameters } from "@atomist/automation-client";
+import {
+    editModes,
+    NoParameters,
+} from "@atomist/automation-client";
 import {
     AutofixRegistration,
     CodeTransform,
     CodeTransformRegistration,
-    PullRequest,
 } from "@atomist/sdm";
 import { parseProperties } from "../../properties/propertiesParser";
 import { IsSpringBoot2Project } from "../pushtest/pushTests";
@@ -48,7 +50,7 @@ export function addSpringBootActuator(enabledEndpoints: string[] = ["health", "i
             AddSpringBootActuatorStarter,
             addActuatorWebConfiguration(enabledEndpoints),
         ],
-        transformPresentation: () => new PullRequest(
+        transformPresentation: () => new editModes.PullRequest(
             "add-spring-boot-actuator",
             "Apply spring boot actuator",
         ),

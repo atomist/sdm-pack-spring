@@ -16,7 +16,7 @@
 
 import {
     GitHubRepoRef,
-    InMemoryFile,
+    InMemoryProjectFile,
     InMemoryProject,
 } from "@atomist/automation-client";
 
@@ -39,14 +39,14 @@ describe("ProvidedDependencyReviewer", () => {
 
     it("pass harmless POM", async () => {
         const id = new GitHubRepoRef("a", "b");
-        const p = InMemoryProject.from(id, new InMemoryFile("pom.xml", NonSpringPom));
+        const p = InMemoryProject.from(id, new InMemoryProjectFile("pom.xml", NonSpringPom));
         const r = await ProvidedDependencyReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 0);
     });
 
     it("flag provided pom", async () => {
         const id = new GitHubRepoRef("a", "b");
-        const f = new InMemoryFile("pom.xml", ProvidedPom);
+        const f = new InMemoryProjectFile("pom.xml", ProvidedPom);
         const p = InMemoryProject.from(id, f);
         const r = await ProvidedDependencyReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 1);

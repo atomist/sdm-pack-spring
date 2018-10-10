@@ -17,10 +17,9 @@
 import {
     FileParser,
     logger,
+    ProjectFile
 } from "@atomist/automation-client";
-import { ProjectFile } from "@atomist/sdm";
 import { TreeNode } from "@atomist/tree-path";
-
 import {
     XmlDocument,
     XmlElement,

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { InMemoryProject } from "@atomist/sdm";
-
+import { InMemoryProject } from "@atomist/automation-client";
 import * as assert from "power-assert";
 import {
     findMutableInjections,

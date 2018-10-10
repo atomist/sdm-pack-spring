@@ -16,10 +16,9 @@
 
 import { JavaFileParser } from "@atomist/antlr";
 import {
-    findMatches,
+    astUtils,
     ProjectReview,
     Severity,
-    zapAllMatches,
 } from "@atomist/automation-client";
 import { ZapTrailingWhitespace } from "@atomist/automation-client/lib/tree/ast/FileHits";
 import {
@@ -41,7 +40,7 @@ const UnnecessaryComponentScanAnnotations = `//typeDeclaration[/classDeclaration
                             //annotation[@value='@ComponentScan']`;
 
 export const removeUnnecessaryComponentScanTransform: CodeTransform = p => {
-    return zapAllMatches(p, JavaFileParser, JavaSourceFiles,
+    return astUtils.zapAllMatches(p, JavaFileParser, JavaSourceFiles,
         UnnecessaryComponentScanAnnotations,
         ZapTrailingWhitespace);
 };
@@ -49,7 +48,7 @@ export const removeUnnecessaryComponentScanTransform: CodeTransform = p => {
 export const UnnecessaryComponentScanCategory = "unnecessary annotations";
 
 export const unnecessaryComponentScanReviewer: CodeInspection<ProjectReview> = async p => {
-        const matches = await findMatches(p, JavaFileParser, JavaSourceFiles, UnnecessaryComponentScanAnnotations);
+        const matches = await astUtils.findMatches(p, JavaFileParser, JavaSourceFiles, UnnecessaryComponentScanAnnotations);
         return {
             repoId: p.id,
             comments: matches.map(m => {

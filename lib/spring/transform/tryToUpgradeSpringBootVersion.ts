@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-import {
-    CodeTransformRegistration,
-    PullRequest,
-} from "@atomist/sdm";
+import { editModes } from "@atomist/automation-client";
+import { CodeTransformRegistration } from "@atomist/sdm";
 import { makeBuildAware } from "@atomist/sdm-pack-build";
 import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 
@@ -54,7 +52,7 @@ export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpr
     name: "boot-upgrade",
     description: `Upgrade Spring Boot version`,
     intent: "try to upgrade Spring Boot",
-    transformPresentation: ci => new PullRequest(
+    transformPresentation: ci => new editModes.PullRequest(
         `boot-upgrade-${ci.parameters.desiredBootVersion}-${guid()}`,
         `Upgrade Spring Boot version to ${ci.parameters.desiredBootVersion}`,
     ),

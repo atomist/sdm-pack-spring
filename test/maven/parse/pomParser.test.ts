@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { InMemoryProject } from "@atomist/automation-client";
-import { InMemoryProjectFile } from "@atomist/sdm";
+import {
+    InMemoryProject,
+    InMemoryProjectFile,
+} from "@atomist/automation-client";
 import * as assert from "assert";
 import { MavenProjectIdentifier } from "../../../lib/maven/parse/pomParser";
 import { springBootPom } from "../../spring/generator/TestPoms";

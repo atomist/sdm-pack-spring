@@ -19,10 +19,10 @@ import {
     isLocalProject,
     LocalProject,
     Project,
+    ProjectFile,
 } from "@atomist/automation-client";
 import {
     CodeInspection,
-    ProjectFile,
 } from "@atomist/sdm";
 import * as _ from "lodash";
 import {

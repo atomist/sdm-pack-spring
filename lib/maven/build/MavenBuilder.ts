@@ -16,13 +16,13 @@
 
 import {
     ChildProcessResult,
+    GitProject,
+    LocalProject,
     RemoteRepoRef,
     spawnAndWatch,
 } from "@atomist/automation-client";
 import {
     AppInfo,
-    GitProject,
-    LocalProject,
     ProgressLog,
 } from "@atomist/sdm";
 import {

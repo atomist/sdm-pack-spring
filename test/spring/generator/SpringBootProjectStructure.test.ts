@@ -16,7 +16,7 @@
 
 import { KotlinFileParser } from "@atomist/antlr";
 import {
-    findFileMatches,
+    astUtils,
     InMemoryProject,
     Project,
 } from "@atomist/automation-client";
@@ -86,7 +86,7 @@ describe("SpringBootProjectStructure: Java inference", () => {
         });
 
         it("parses Kotlin in project", async () => {
-            const matches = await findFileMatches(KotlinGishProject(), KotlinFileParser, KotlinSourceFiles, SpringBootAppClassInKotlin);
+            const matches = await astUtils.findFileMatches(KotlinGishProject(), KotlinFileParser, KotlinSourceFiles, SpringBootAppClassInKotlin);
             assert.strictEqual(matches.length, 1);
         });
 

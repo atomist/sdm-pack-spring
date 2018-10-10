@@ -15,7 +15,7 @@
  */
 
 import {
-    fileExists,
+    projectUtils,
     logger,
 } from "@atomist/automation-client";
 import {
@@ -29,7 +29,7 @@ import {
 export const IsJava: PushTest = predicatePushTest(
     "Is Java",
     async p =>
-        fileExists(p, "**/*.java", () => true));
+        projectUtils.fileExists(p, "**/*.java", () => true));
 
 const FileToWatch = ["java", "html", "json", "yml", "xml", "sh", "kt", "properties"];
 

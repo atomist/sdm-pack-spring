@@ -15,14 +15,11 @@
  */
 
 import {
-    doWithAllMatches,
-    findMatches,
+    astUtils,
     InMemoryProject,
-} from "@atomist/automation-client";
-import {
     InMemoryProjectFile,
     ProjectFile,
-} from "@atomist/sdm";
+} from "@atomist/automation-client";
 import {
     TreeNode,
     TreeVisitor,
@@ -101,7 +98,7 @@ describe("xmldocFileParser", () => {
 
         it("should parse POM", async () => {
             const p = InMemoryProject.of(new InMemoryProjectFile("pom.xml", springBootPom()));
-            const matches = await findMatches(p, new XmldocFileParser(),
+            const matches = await astUtils.findMatches(p, new XmldocFileParser(),
                 "pom.xml",
                 "//parent/groupId");
             assert.strictEqual(matches.length, 1);
@@ -112,7 +109,7 @@ describe("xmldocFileParser", () => {
         it("should locate groupId", async () => {
             let f: ProjectFile = new InMemoryProjectFile("pom.xml", springBootPom());
             const p = InMemoryProject.of(f);
-            const matches = await findMatches(p, new XmldocFileParser(),
+            const matches = await astUtils.findMatches(p, new XmldocFileParser(),
                 "pom.xml",
                 "//parent/groupId");
             f = await p.getFile("pom.xml");
@@ -124,7 +121,7 @@ describe("xmldocFileParser", () => {
         it("should locate node with attribute", async () => {
             const f: ProjectFile = new InMemoryProjectFile("pom.xml", RootAndSingleChildElementWithAttribute);
             const p = InMemoryProject.of(f);
-            const matches = await findMatches(p, new XmldocFileParser(),
+            const matches = await astUtils.findMatches(p, new XmldocFileParser(),
                 "*.xml",
                 "//kid");
             assert.strictEqual(matches.length, 1);
@@ -134,7 +131,7 @@ describe("xmldocFileParser", () => {
         it("should locate node with attribute narrowing by attribute", async () => {
             const f: ProjectFile = new InMemoryProjectFile("pom.xml", RootAndSingleChildElementWithAttribute);
             const p = InMemoryProject.of(f);
-            const matches = await findMatches(p, new XmldocFileParser(),
+            const matches = await astUtils.findMatches(p, new XmldocFileParser(),
                 "*.xml",
                 "//kid[@myAtt='whatever']");
             assert.strictEqual(matches.length, 1);
@@ -144,7 +141,7 @@ describe("xmldocFileParser", () => {
         it("should update groupId", async () => {
             let f: ProjectFile = new InMemoryProjectFile("pom.xml", springBootPom());
             const p = InMemoryProject.of(f);
-            await doWithAllMatches(p, new XmldocFileParser(),
+            await astUtils.doWithAllMatches(p, new XmldocFileParser(),
                 "pom.xml",
                 "//parent/groupId",
                 m => {
@@ -157,7 +154,7 @@ describe("xmldocFileParser", () => {
 
         it("correctly gets dependency value from Spring Boot project", async () => {
             const p = InMemoryProject.of({ path: "pom.xml", content: springBootPom() });
-            await doWithAllMatches(p, new XmldocFileParser(), "pom.xml",
+            await astUtils.doWithAllMatches(p, new XmldocFileParser(), "pom.xml",
                 `//project/dependencies/dependency[/artifactId][2]`,
                 m => {
                     const expected = `<dependency>
@@ -179,7 +176,7 @@ describe("xmldocFileParser", () => {
         it("should select all titles", async () => {
             const f: ProjectFile = new InMemoryProjectFile("books.xml", BookSample);
             const p = InMemoryProject.of(f);
-            const matches = await findMatches(p, new XmldocFileParser(),
+            const matches = await astUtils.findMatches(p, new XmldocFileParser(),
                 "*.xml",
                 "/bookstore/book/title");
             assert.strictEqual(matches.length, 4);
@@ -193,7 +190,7 @@ describe("xmldocFileParser", () => {
         it("select first title", async () => {
             const f: ProjectFile = new InMemoryProjectFile("books.xml", BookSample);
             const p = InMemoryProject.of(f);
-            const matches = await findMatches(p, new XmldocFileParser(),
+            const matches = await astUtils.findMatches(p, new XmldocFileParser(),
                 "*.xml",
                 "/bookstore/book[1]/title");
             assert.strictEqual(matches.length, 1);
@@ -205,7 +202,7 @@ describe("xmldocFileParser", () => {
         it("select all prices", async () => {
             const f: ProjectFile = new InMemoryProjectFile("books.xml", BookSample);
             const p = InMemoryProject.of(f);
-            const matches = await findMatches(p, new XmldocFileParser(),
+            const matches = await astUtils.findMatches(p, new XmldocFileParser(),
                 "*.xml",
                 "/bookstore/book/price");
             assert.strictEqual(matches.length, 4);
@@ -220,7 +217,7 @@ describe("xmldocFileParser", () => {
         it("select all prices above 35", async () => {
             const f: ProjectFile = new InMemoryProjectFile("books.xml", BookSample);
             const p = InMemoryProject.of(f);
-            const matches = await findMatches(p, new XmldocFileParser(),
+            const matches = await astUtils.findMatches(p, new XmldocFileParser(),
                 "*.xml",
                 "/bookstore/book/price[?above35]",
                 {
@@ -235,7 +232,7 @@ describe("xmldocFileParser", () => {
             const childrensAuthors = "/bookstore/book[@category='children']/author";
             const f: ProjectFile = new InMemoryProjectFile("books.xml", BookSample);
             const p = InMemoryProject.of(f);
-            const matches = await findMatches(p, new XmldocFileParser(),
+            const matches = await astUtils.findMatches(p, new XmldocFileParser(),
                 "*.xml", childrensAuthors,
             );
             assert.strictEqual(matches.length, 1);
@@ -245,13 +242,13 @@ describe("xmldocFileParser", () => {
                 "J K. Rowling"]);
 
             // Note that this isn't perfect as we need last
-            await doWithAllMatches(p, new XmldocFileParser(),
+            await astUtils.doWithAllMatches(p, new XmldocFileParser(),
                 "*.xml",
                 childrensAuthors,
                 m => {
                     return m.append("<author>Dr Seuss</author>");
                 });
-            const matchesNow = await findMatches(p, new XmldocFileParser(),
+            const matchesNow = await astUtils.findMatches(p, new XmldocFileParser(),
                 "*.xml", childrensAuthors,
             );
             assert.strictEqual(matchesNow.length, 2);

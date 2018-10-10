@@ -16,10 +16,9 @@
 
 import {
     InMemoryProject,
-} from "@atomist/automation-client";
-
-import {
     InMemoryProjectFile,
+} from "@atomist/automation-client";
+import {
     PushListenerInvocation,
 } from "@atomist/sdm";
 import * as assert from "power-assert";

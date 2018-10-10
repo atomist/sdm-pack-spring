@@ -15,13 +15,13 @@
  */
 
 import {
-    doWithFiles,
+    projectUtils,
     InMemoryProject,
     logger,
+    InMemoryProjectFile,
 } from "@atomist/automation-client";
 import {
     CodeTransform,
-    InMemoryProjectFile,
 } from "@atomist/sdm";
 import axios from "axios";
 import * as _ from "lodash";
@@ -58,7 +58,7 @@ export function bringInFile(url: string,
         logger.info("Package is %s: Writing file from %s to %s, class name is %s", pack.fqn, url, path, className);
         await p.addFile(path, content);
         if (!!targetPackage) {
-            await doWithFiles(p, path, async f => {
+            await projectUtils.doWithFiles(p, path, async f => {
                 await f.replaceAll(`package ${pack.fqn}`, `package ${targetPackage}`);
                 await f.setPath(f.path.replace(packageToPath(pack.fqn), packageToPath(targetPackage)));
             });

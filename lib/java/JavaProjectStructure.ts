@@ -19,7 +19,7 @@ import {
     KotlinFileParser,
 } from "@atomist/antlr";
 import {
-    findMatches,
+    astUtils,
     logger,
     ProjectAsync,
 } from "@atomist/automation-client";
@@ -50,8 +50,8 @@ export class JavaProjectStructure {
      */
     public static async infer(p: ProjectAsync): Promise<JavaProjectStructure> {
         // Treat Java and Kotlin as one
-        const packages = (await findMatches(p, JavaFileParser, JavaSourceFiles, JavaPackageName))
-            .concat(await findMatches(p, KotlinFileParser, KotlinSourceFiles, KotlinPackage));
+        const packages = (await astUtils.findMatches(p, JavaFileParser, JavaSourceFiles, JavaPackageName))
+            .concat(await astUtils.findMatches(p, KotlinFileParser, KotlinSourceFiles, KotlinPackage));
         const uniquePackages = _.uniq(packages.map(pack => pack.$value));
         if (uniquePackages.length === 0) {
             return undefined;

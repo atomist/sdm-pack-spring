@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ProjectFile } from "@atomist/sdm";
+import { ProjectFile } from "@atomist/automation-client";
 
 /**
  * Indent the given content appropriately. it should have its

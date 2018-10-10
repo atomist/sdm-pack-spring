@@ -16,8 +16,7 @@
 
 import { JavaFileParser } from "@atomist/antlr";
 import {
-    doWithAllMatches,
-    gatherFromMatches,
+    astUtils,
     logger,
     Project,
 } from "@atomist/automation-client";
@@ -48,7 +47,7 @@ export interface Import {
  * @return {Promise<Import[]>}
  */
 export async function existingImports(p: Project, path: string): Promise<Import[]> {
-    return gatherFromMatches(p, JavaFileParser, path, JavaImports, m => {
+    return astUtils.gatherFromMatches(p, JavaFileParser, path, JavaImports, m => {
         const fqnChild = m.$children.find(c => c.$name === "qualifiedName");
         return {
             fqn: fqnChild.$value,
@@ -114,7 +113,7 @@ export function removeUnusedImports(opts: {
         const file = await p.getFile(opts.sourceFilePath);
         if (!!file) {
             const source = await file.getContent();
-            return doWithAllMatches(p, JavaFileParser, opts.sourceFilePath, JavaImports, m => {
+            return astUtils.doWithAllMatches(p, JavaFileParser, opts.sourceFilePath, JavaImports, m => {
                 if (m.$value.includes(".*")) {
                     // Don't touch .* imports, we can't figure it out
                     return;

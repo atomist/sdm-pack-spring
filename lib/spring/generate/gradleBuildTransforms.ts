@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-import {
-    CodeTransform,
-    doWithFiles,
-} from "@atomist/sdm";
+import { projectUtils } from "@atomist/automation-client";
+import { CodeTransform } from "@atomist/sdm";
 
 export const AddGradleBootRunArgsSupport: CodeTransform = async (p, ci) => {
-    return doWithFiles(p, "build.gradle", async buildFile => {
+    return projectUtils.doWithFiles(p, "build.gradle", async buildFile => {
         const content = await buildFile.getContent();
         const bootRunArgsSupport = `
 bootRun {

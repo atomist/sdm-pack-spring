@@ -15,7 +15,7 @@
  */
 
 import {
-    InMemoryFile,
+    InMemoryProjectFile,
     InMemoryProject,
     Project,
 } from "@atomist/automation-client";
@@ -72,7 +72,7 @@ describe("addDependencyTransformTest", () => {
 });
 
 export function projectOfPom(content: string): Project {
-    return InMemoryProject.of(new InMemoryFile("pom.xml", content));
+    return InMemoryProject.of(new InMemoryProjectFile("pom.xml", content));
 }
 
 const ReplaceMe = "<!-- -->";

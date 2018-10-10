@@ -15,12 +15,12 @@
  */
 
 import {
-    File,
+    ProjectFile,
     logger,
     Project,
     ReviewComment,
+    projectUtils,
 } from "@atomist/automation-client";
-import { gatherFromFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
 import { ReviewerRegistration } from "@atomist/sdm";
 import * as _ from "lodash";
 import { CloudNative } from "../../common/review/reviewCategories";
@@ -51,12 +51,12 @@ export const HardcodedPropertyReviewer: ReviewerRegistration = {
 };
 
 async function badPropertiesStrings(p: Project): Promise<ReviewComment[]> {
-    const arrArr = gatherFromFiles(p, "src/main/resources/*.properties",
+    const arrArr = projectUtils.gatherFromFiles(p, "src/main/resources/*.properties",
         f => badPropertiesIn(p, f));
     return _.flatten(await arrArr);
 }
 
-async function badPropertiesIn(p: Project, f: File): Promise<ReviewComment[]> {
+async function badPropertiesIn(p: Project, f: ProjectFile): Promise<ReviewComment[]> {
     const comments: ReviewComment[] = [];
     const parsed = await parseProperties(p, f.path);
     for (const prop of parsed.properties) {

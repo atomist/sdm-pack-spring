@@ -15,7 +15,7 @@
  */
 
 import {
-    gatherFromMatches,
+    astUtils,
     Project,
 } from "@atomist/automation-client";
 import { FunctionRegistry } from "@atomist/tree-path";
@@ -49,7 +49,7 @@ async function findDeclaredDependenciesWith(p: Project,
                                             pathExpression: string,
                                             glob: string = "pom.xml",
                                             functionRegistry: FunctionRegistry): Promise<Dependencies> {
-    const dependencies = await gatherFromMatches(p, new XmldocFileParser(),
+    const dependencies = await astUtils.gatherFromMatches(p, new XmldocFileParser(),
         glob,
         pathExpression,
         m => {

@@ -16,8 +16,7 @@
 
 import { JavaFileParser } from "@atomist/antlr";
 import {
-    doWithAllMatches,
-    findMatches,
+    astUtils,
 } from "@atomist/automation-client";
 import {
     allSatisfied,
@@ -35,9 +34,9 @@ const Constructors = `//classBodyDeclaration[//constructorDeclaration]`;
  * @return {Promise<void>}
  */
 export const removeAutowiredOnSoleConstructor: CodeTransform = async p => {
-    const constructors = await findMatches(p, JavaFileParser, JavaSourceFiles, Constructors);
+    const constructors = await astUtils.findMatches(p, JavaFileParser, JavaSourceFiles, Constructors);
     if (constructors.length === 1 && constructors[0].$value.includes("@Autowired")) {
-        await doWithAllMatches(p, JavaFileParser, JavaSourceFiles, Constructors, constructor =>
+        await astUtils.doWithAllMatches(p, JavaFileParser, JavaSourceFiles, Constructors, constructor =>
             constructor.$value = constructor.$value.replace(/@Autowired[\s]+/, ""));
     }
 };

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { editModes } from "@atomist/automation-client";
 import {
     CodeTransform,
     CodeTransformRegistration,
-    PullRequest,
 } from "@atomist/sdm";
 import { addDependencyTransform } from "../../maven/transform/addDependencyTransform";
 
@@ -52,7 +52,7 @@ export const AddSpringBootStarter: CodeTransformRegistration<{ artifact: string,
                 ci.parameters.artifact,
                 ci.parameters.group)(p, ci),
     ],
-    transformPresentation: ci => new PullRequest(
+    transformPresentation: ci => new editModes.PullRequest(
         `add-spring-boot-starter-${ci.parameters.artifact}`,
         `Add spring boot starter ${ci.parameters.artifact}`,
     ),

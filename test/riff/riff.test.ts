@@ -17,10 +17,10 @@
 import {
     BaseParameter,
     InMemoryProject,
+    InMemoryProjectFile,
 } from "@atomist/automation-client";
 import {
     AddressNoChannels,
-    InMemoryProjectFile,
 } from "@atomist/sdm";
 import * as assert from "assert";
 import {

@@ -15,7 +15,7 @@
  */
 
 import { JavaFileParser } from "@atomist/antlr";
-import { doWithAllMatches } from "@atomist/automation-client";
+import { astUtils } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import { classNameFromFqn } from "../javaProjectUtils";
 import { javaClassDeclarationWithName } from "../query/javaPathExpressions";
@@ -36,7 +36,7 @@ export function addAnnotationToClassRaw(opts: {
     return async p => {
         const existing = await existingAnnotations(p, opts);
         if (!existing.some(ann => ann.value.startsWith("@" + opts.annotationName))) {
-            await doWithAllMatches(p,
+            await astUtils.doWithAllMatches(p,
                 JavaFileParser,
                 opts.sourceFilePath,
                 javaClassDeclarationWithName(opts.className), m => {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { doWithAllMatches } from "@atomist/automation-client";
+import { astUtils } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 
@@ -25,7 +25,7 @@ import { XmldocFileParser } from "../../xml/XmldocFileParser";
  */
 export function setSpringBootVersionTransform(desiredBootVersion: string): CodeTransform {
     return async p =>
-        doWithAllMatches(p, new XmldocFileParser(),
+        astUtils.doWithAllMatches(p, new XmldocFileParser(),
             "**/pom.xml",
             "//parent[/artifactId[@innerValue='spring-boot-starter-parent']]/version",
             n => {

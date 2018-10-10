@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { doWithAllMatches } from "@atomist/automation-client";
+import { astUtils } from "@atomist/automation-client";
 import { CodeInspection } from "@atomist/sdm";
-
 import * as _ from "lodash";
 import { extractVersionedArtifact } from "../../maven/parse/fromPom";
 import {
@@ -55,7 +54,7 @@ export interface SpringBootVersions {
  */
 export const SpringBootVersionInspection: CodeInspection<SpringBootVersions> = async p => {
     const versions: SpringBootVersion[] = [];
-    await doWithAllMatches(p,
+    await astUtils.doWithAllMatches(p,
         new XmldocFileParser(),
         "**/pom.xml",
         "//parent[/artifactId[@innerValue='spring-boot-starter-parent']]",

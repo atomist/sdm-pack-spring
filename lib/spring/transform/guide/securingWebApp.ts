@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+import { editModes } from "@atomist/automation-client";
 import {
     CodeTransform,
     CodeTransformRegistration,
     copyFileFromUrl,
-    PullRequest,
 } from "@atomist/sdm";
 import { bringInFile } from "../../../java/transform/bringInFile";
 import { SpringBootProjectStructure } from "../../generate/SpringBootProjectStructure";
@@ -59,7 +59,7 @@ export const ApplySecuredWebAppGuide: CodeTransformRegistration = {
         AddWebMvcConfigClass,
         AddWebAppSample,
     ],
-    transformPresentation: () => new PullRequest(
+    transformPresentation: () => new editModes.PullRequest(
         "apply-web-security-guide",
         "Apply web security guide",
     ),

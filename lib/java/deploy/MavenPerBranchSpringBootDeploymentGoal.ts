@@ -22,13 +22,10 @@ import {
     Success,
 } from "@atomist/automation-client";
 import {
-    BuildGoal,
     CommandHandlerRegistration,
     DelimitedWriteProgressLogDecorator,
     ExecuteGoal,
     GoalInvocation,
-    GoalWithPrecondition,
-    IndependentOfEnvironment,
 } from "@atomist/sdm";
 import { SpawnedDeployment } from "@atomist/sdm-core";
 import { ChildProcess } from "child_process";
@@ -59,19 +56,6 @@ async function handleListDeploys(ctx: HandlerContext) {
     await ctx.messageClient.respond(message);
     return Success;
 }
-
-/**
- * Goal to deploy to Maven with one process per branch
- * @type {GenericGoal}
- */
-export const MavenPerBranchSpringBootDeploymentGoal = new GoalWithPrecondition({
-    uniqueName: "mavenDeploy",
-    orderedName: "3-deploy",
-    environment: IndependentOfEnvironment,
-    displayName: "deploy branch locally",
-    completedDescription: "Deployed branch locally",
-    failedDescription: "Local branch deployment failure",
-}, BuildGoal);
 
 /**
  * Allow customization of Maven deployment

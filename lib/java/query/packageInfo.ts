@@ -16,7 +16,7 @@
 
 import { JavaFileParser } from "@atomist/antlr";
 import {
-    gatherFromMatches,
+    astUtils,
     Project,
 } from "@atomist/automation-client";
 import {
@@ -37,7 +37,7 @@ export interface PackageInfo extends BoundedElement {
  * @return {Promise<Import[]>}
  */
 export async function packageInfo(p: Project, path: string): Promise<PackageInfo> {
-    const packages = await gatherFromMatches(p, JavaFileParser, path, JavaPackage, m => {
+    const packages = await astUtils.gatherFromMatches(p, JavaFileParser, path, JavaPackage, m => {
         return {
             fqn: m.$children.find(c => c.$name === "qualifiedName").$value,
             ...toBoundedElement(m),

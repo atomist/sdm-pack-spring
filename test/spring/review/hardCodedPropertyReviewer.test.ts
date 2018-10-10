@@ -16,7 +16,7 @@
 
 import {
     GitHubRepoRef,
-    InMemoryFile,
+    InMemoryProjectFile,
     InMemoryProject,
 } from "@atomist/automation-client";
 
@@ -38,14 +38,14 @@ describe("HardCodePropertyReviewer", () => {
 
     it("pass harmless properties file", async () => {
         const id = new GitHubRepoRef("a", "b");
-        const p = InMemoryProject.from(id, new InMemoryFile("src/main/resources/application.properties", "thing=1"));
+        const p = InMemoryProject.from(id, new InMemoryProjectFile("src/main/resources/application.properties", "thing=1"));
         const r = await HardcodedPropertyReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 0, JSON.stringify(r.comments));
     });
 
     it("flag bad port property", async () => {
         const id = new GitHubRepoRef("a", "b");
-        const f = new InMemoryFile("src/main/resources/application.properties", "server.port=8080");
+        const f = new InMemoryProjectFile("src/main/resources/application.properties", "server.port=8080");
         const p = InMemoryProject.from(id, f);
         const r = await HardcodedPropertyReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 1);
@@ -57,14 +57,14 @@ describe("HardCodePropertyReviewer", () => {
 
     it("accept good port property", async () => {
         const id = new GitHubRepoRef("a", "b");
-        const p = InMemoryProject.from(id, new InMemoryFile("src/main/resources/application.properties", "server.port=${PORT}"));
+        const p = InMemoryProject.from(id, new InMemoryProjectFile("src/main/resources/application.properties", "server.port=${PORT}"));
         const r = await HardcodedPropertyReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 0);
     });
 
     it("reject hard-coded password", async () => {
         const id = new GitHubRepoRef("a", "b");
-        const p = InMemoryProject.from(id, new InMemoryFile("src/main/resources/application.properties", "spring.datasource.password=tiger"));
+        const p = InMemoryProject.from(id, new InMemoryProjectFile("src/main/resources/application.properties", "spring.datasource.password=tiger"));
         const r = await HardcodedPropertyReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 1);
     });

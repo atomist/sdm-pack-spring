@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { gatherFromMatches } from "@atomist/automation-client";
+import {
+    astUtils,
+    LocalProject,
+    Project,
+} from "@atomist/automation-client";
 import { DefaultExcludes } from "@atomist/automation-client/lib/project/fileGlobs";
 import {
     GoalDefinition,
@@ -22,9 +26,7 @@ import {
     GoalWithFulfillment,
     Implementation,
     IndependentOfEnvironment,
-    LocalProject,
     LoggingProgressLog,
-    Project,
     spawnAndWatch,
 } from "@atomist/sdm";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
@@ -84,7 +86,7 @@ async function getJUnitTestResults(p: Project):
     Promise<{tests: number, failures: number, errors: number}> {
     const oldExcludes = DefaultExcludes;
     DefaultExcludes.splice(0, DefaultExcludes.length);  // necessary evil
-    const testFailures = await gatherFromMatches(p,
+    const testFailures = await astUtils.gatherFromMatches(p,
         new XmldocFileParser(),
         "target/surefire-reports/*.xml",
         "/testsuite",

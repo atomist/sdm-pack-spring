@@ -16,7 +16,7 @@
 
 import {
     GitHubRepoRef,
-    InMemoryFile,
+    InMemoryProjectFile,
     InMemoryProject,
 } from "@atomist/automation-client";
 import * as assert from "power-assert";
@@ -37,14 +37,14 @@ describe("fileIoImport", () => {
 
     it("pass harmless Java code", async () => {
         const id = new GitHubRepoRef("a", "b");
-        const p = InMemoryProject.from(id, new InMemoryFile("src/main/java/Thing.java", "public class Thing {}"));
+        const p = InMemoryProject.from(id, new InMemoryProjectFile("src/main/java/Thing.java", "public class Thing {}"));
         const r = await ImportIoFileReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 0);
     });
 
     it("flag file import in Java", async () => {
         const id = new GitHubRepoRef("a", "b");
-        const f = new InMemoryFile("src/main/java/Thing.java",
+        const f = new InMemoryProjectFile("src/main/java/Thing.java",
             "import java.io.File;\npublic class Thing {}");
         const p = InMemoryProject.from(id, f);
         const r = await ImportIoFileReviewer.inspection(p, undefined);
@@ -57,7 +57,7 @@ describe("fileIoImport", () => {
 
     it("flag file import in Kotlin", async () => {
         const id = new GitHubRepoRef("a", "b");
-        const f = new InMemoryFile("src/main/kotlin/Thing.kt",
+        const f = new InMemoryProjectFile("src/main/kotlin/Thing.kt",
             "import java.io.File;\npublic class Thing {}");
         const p = InMemoryProject.from(id, f);
         const r = await ImportIoFileReviewer.inspection(p, null);
@@ -69,7 +69,7 @@ describe("fileIoImport", () => {
 
     it("flag error in nested package", async () => {
         const id = new GitHubRepoRef("a", "b");
-        const f = new InMemoryFile("src/main/java/com/atomist/Melb1Application.java",
+        const f = new InMemoryProjectFile("src/main/java/com/atomist/Melb1Application.java",
             Bad1);
         const p = InMemoryProject.from(id, f);
         const r = await ImportIoFileReviewer.inspection(p, null);

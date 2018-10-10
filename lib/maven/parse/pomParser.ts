@@ -15,7 +15,7 @@
  */
 
 import {
-    gatherFromMatches,
+    astUtils,
     Project,
 } from "@atomist/automation-client";
 import { ProjectIdentification } from "@atomist/sdm-core/lib/internal/delivery/build/local/projectIdentifier";
@@ -33,7 +33,7 @@ import { extractVersionedArtifact } from "./fromPom";
  * @constructor
  */
 export const MavenProjectIdentifier: (p: Project) => Promise<VersionedArtifact & ProjectIdentification> = async p => {
-    const ids = await gatherFromMatches(p,
+    const ids = await astUtils.gatherFromMatches(p,
         new XmldocFileParser(),
         "pom.xml",
         "//project",

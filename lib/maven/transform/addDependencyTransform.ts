@@ -15,13 +15,13 @@
  */
 
 import {
-    doWithAllMatches,
+    astUtils,
+    editModes,
     logger,
 } from "@atomist/automation-client";
 import {
     CodeTransform,
     CodeTransformRegistration,
-    PullRequest,
 } from "@atomist/sdm";
 import * as _ from "lodash";
 import { indent } from "../../util/formatUtils";
@@ -49,7 +49,7 @@ export function addDependencyTransform(va: VersionedArtifact): CodeTransform {
                 logger.info("Adding dependency [%s]", va.artifact);
                 // Add after last dependency
                 const lastDep = _.last(deps.dependencies);
-                await doWithAllMatches(p, new XmldocFileParser(), "pom.xml",
+                await astUtils.doWithAllMatches(p, new XmldocFileParser(), "pom.xml",
                     `//project/dependencies/dependency[/artifactId[@innerValue='${lastDep.artifact}']]`,
                     m => {
                         m.append("\n" + indent(dependencyStanza(va), "   ", 2));
@@ -76,7 +76,7 @@ export const AddMavenDependency: CodeTransformRegistration<{ artifact: string, g
             addDependencyTransform(
                 { ...ci.parameters })(p, ci),
     ],
-    transformPresentation: ci => new PullRequest(
+    transformPresentation: ci => new editModes.PullRequest(
         `add-dependency-${ci.parameters.artifact}`,
         `Add dependency ${ci.parameters.artifact}`,
     ),

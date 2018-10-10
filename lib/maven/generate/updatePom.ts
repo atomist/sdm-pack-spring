@@ -15,7 +15,7 @@
  */
 
 import {
-    doWithFiles,
+    projectUtils,
     Project,
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
@@ -41,7 +41,7 @@ export function updatePom(
     version: string,
     description: string,
 ): Promise<Project> {
-    return doWithFiles(project, "pom.xml", async f => {
+    return projectUtils.doWithFiles(project, "pom.xml", async f => {
         await f.replace(/<artifactId>[\S\s]*?<\/artifactId>/, `<artifactId>${artifactId}</artifactId>`);
         await f.replace(/<name>[\S\s]*?<\/name>/, `<name>${name}</name>`);
         await f.replace(/<groupId>[\S\s]*?<\/groupId>/, `<groupId>${groupId}</groupId>`);

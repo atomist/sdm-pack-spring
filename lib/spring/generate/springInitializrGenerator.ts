@@ -22,13 +22,11 @@ import {
     SmartParameters,
     ValidationError,
     ValidationResult,
-} from "@atomist/automation-client";
-import {
     NodeFsLocalProject,
     Parameter,
     Project,
-    SoftwareDeliveryMachine,
-} from "@atomist/sdm";
+} from "@atomist/automation-client";
+import { SoftwareDeliveryMachine } from "@atomist/sdm";
 import axios from "axios";
 import * as decompress from "decompress";
 import * as fs from "fs";

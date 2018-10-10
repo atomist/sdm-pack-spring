@@ -21,24 +21,15 @@ import {
     ExtensionPack,
     metadata,
     ReviewListenerRegistration,
-    SoftwareDeliveryMachine,
-    whenPushSatisfies,
 } from "@atomist/sdm";
 import { tagRepo } from "@atomist/sdm-core";
 import { gradleTagger } from "./gradle/classify/gradleTagger";
-import {
-    executeGradlePerBranchSpringBootDeploy,
-    GradleDeployerOptions,
-    GradlePerBranchSpringBootDeploymentGoal,
-} from "./gradle/deploy/GradlePerBranchSpringBootDeploymentGoal";
-import { IsGradle } from "./gradle/pushtest/gradlePushTests";
 import { ImportDotStarReviewer } from "./java/review/importDotStarReviewer";
 import { ImportIoFileReviewer } from "./java/review/importIoFileReviewer";
 import { mavenTagger } from "./maven/classify/mavenTagger";
 import { ProvidedDependencyReviewer } from "./maven/review/providedDependencyReviewer";
 import { AddMavenDependency } from "./maven/transform/addDependencyTransform";
 import { springBootTagger } from "./spring/classify/springTagger";
-import { HasSpringBootApplicationClass } from "./spring/pushtest/pushTests";
 import { NonSpecificMvcAnnotationsReviewer } from "./spring/review/findNonSpecificMvcAnnotations";
 import { HardcodedPropertyReviewer } from "./spring/review/hardcodedPropertyReviewer";
 import { MutableInjectionsReviewer } from "./spring/review/mutableInjectionsReviewer";
@@ -144,15 +135,4 @@ export function springSupport(options: SpringSupportOptions): ExtensionPack {
             }
         },
     };
-}
-
-/**
- * @deprecated Use the GradlePerBranchDeployment goal
- */
-export function configureGradlePerBranchSpringBootDeploy(sdm: SoftwareDeliveryMachine,
-                                                         options: Partial<GradleDeployerOptions> = {}) {
-    sdm.addGoalContributions(whenPushSatisfies(HasSpringBootApplicationClass, IsGradle)
-        .setGoals(GradlePerBranchSpringBootDeploymentGoal));
-    sdm.addGoalImplementation("Gradle deployment", GradlePerBranchSpringBootDeploymentGoal,
-        executeGradlePerBranchSpringBootDeploy(options));
 }

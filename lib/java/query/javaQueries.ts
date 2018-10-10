@@ -16,7 +16,7 @@
 
 import { JavaFileParser } from "@atomist/antlr";
 import {
-    gatherFromMatches,
+    astUtils,
     Project,
 } from "@atomist/automation-client";
 import {
@@ -31,7 +31,7 @@ export async function existingAnnotations(p: Project, opts: {
     sourceFilePath: string,
     className: string,
 }): Promise<Annotation[]> {
-    return gatherFromMatches(p, JavaFileParser, opts.sourceFilePath,
+    return astUtils.gatherFromMatches(p, JavaFileParser, opts.sourceFilePath,
         annotationsOnJavaClass(opts.className),
         toBoundedElement);
 }

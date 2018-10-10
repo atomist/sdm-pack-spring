@@ -19,20 +19,18 @@ import {
     KotlinFileParser,
 } from "@atomist/antlr";
 import {
-    File,
+    astUtils,
     FileParser,
     FileParserRegistry,
-    findFileMatches,
     logger,
     ProjectAsync,
+    ProjectFile,
 } from "@atomist/automation-client";
 import {
     evaluateScalarValue,
     PathExpression,
 } from "@atomist/tree-path";
-import {
-    KotlinPackage,
-} from "../../java/JavaProjectStructure";
+import { KotlinPackage } from "../../java/JavaProjectStructure";
 import {
     JavaSourceFiles,
     KotlinSourceFiles,
@@ -85,7 +83,7 @@ export class SpringBootProjectStructure {
                                                             parserOrRegistry: FileParser | FileParserRegistry,
                                                             globPattern: string,
                                                             pathExpression: string | PathExpression): Promise<SpringBootProjectStructure> {
-        const fileHits = await findFileMatches(p, parserOrRegistry, globPattern, pathExpression);
+        const fileHits = await astUtils.findFileMatches(p, parserOrRegistry, globPattern, pathExpression);
         if (fileHits.length === 0) {
             return null;
         }
@@ -124,7 +122,7 @@ export class SpringBootProjectStructure {
      */
     private constructor(public readonly applicationPackage: string,
                         public readonly applicationClass: string,
-                        public readonly appClassFile: File) {
+                        public readonly appClassFile: ProjectFile) {
     }
 
 }

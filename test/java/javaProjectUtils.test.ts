@@ -15,7 +15,7 @@
  */
 
 import {
-    InMemoryFile,
+    InMemoryProjectFile,
     InMemoryProject,
 } from "@atomist/automation-client";
 import * as assert from "power-assert";
@@ -98,7 +98,7 @@ describe("javaProjectUtils", () => {
         });
 
         it("rename Java in default package", async () => {
-            const p = InMemoryProject.of(new InMemoryFile("src/main/java/Thing.java", "public class Thing {}"));
+            const p = InMemoryProject.of(new InMemoryProjectFile("src/main/java/Thing.java", "public class Thing {}"));
             await renameClass(p, "Thing", "OtherThing");
             const renamed = await p.findFile("src/main/java/OtherThing.java");
             assert(!!renamed);
@@ -106,7 +106,7 @@ describe("javaProjectUtils", () => {
         });
 
         it("rename Java class only", async () => {
-            const p = InMemoryProject.of(new InMemoryFile("src/main/java/Thing.java", "public class Thing { int aThing; }"));
+            const p = InMemoryProject.of(new InMemoryProjectFile("src/main/java/Thing.java", "public class Thing { int aThing; }"));
             await renameClass(p, "Thing", "OtherThing");
             const renamed = await p.findFile("src/main/java/OtherThing.java");
             assert(!!renamed);
@@ -114,7 +114,7 @@ describe("javaProjectUtils", () => {
         });
 
         it("rename Java class and internal reference", async () => {
-            const p = InMemoryProject.of(new InMemoryFile("src/main/java/Thing.java", "public class Thing { static t: Thing = null; }"));
+            const p = InMemoryProject.of(new InMemoryProjectFile("src/main/java/Thing.java", "public class Thing { static t: Thing = null; }"));
             await renameClass(p, "Thing", "OtherThing");
             const renamed = await p.findFile("src/main/java/OtherThing.java");
             assert(!!renamed);
@@ -122,7 +122,7 @@ describe("javaProjectUtils", () => {
         });
 
         it("rename Java class and no-space internal reference", async () => {
-            const p = InMemoryProject.of(new InMemoryFile("src/main/java/Thing.java",
+            const p = InMemoryProject.of(new InMemoryProjectFile("src/main/java/Thing.java",
                 "public class Thing { SpringApplication.run(Thing.class, args); }"));
             await renameClass(p, "Thing", "OtherThing");
             const renamed = await p.findFile("src/main/java/OtherThing.java");
@@ -131,7 +131,7 @@ describe("javaProjectUtils", () => {
         });
 
         it("rename Initializr class", async () => {
-            const p = InMemoryProject.of(new InMemoryFile("src/main/java/SpringRestSeedApplication.java",
+            const p = InMemoryProject.of(new InMemoryProjectFile("src/main/java/SpringRestSeedApplication.java",
                 Initializr1));
             await renameClass(p, "SpringRestSeedApplication", "CustomApplication");
             const renamed = await p.getFile("src/main/java/CustomApplication.java");
@@ -142,7 +142,7 @@ describe("javaProjectUtils", () => {
         });
 
         it("rename Initializr class stem", async () => {
-            const p = InMemoryProject.of(new InMemoryFile("src/main/java/SpringRestSeedApplication.java",
+            const p = InMemoryProject.of(new InMemoryProjectFile("src/main/java/SpringRestSeedApplication.java",
                 Initializr1));
             await renameClass(p, "SpringRestSeed", "Custom");
             const renamed = await p.getFile("src/main/java/CustomApplication.java");
@@ -153,7 +153,7 @@ describe("javaProjectUtils", () => {
         });
 
         it("rename Kotlin in default package", async () => {
-            const p = InMemoryProject.of(new InMemoryFile("src/main/kotlin/Thing.kt", "public class Thing {}"));
+            const p = InMemoryProject.of(new InMemoryProjectFile("src/main/kotlin/Thing.kt", "public class Thing {}"));
             await renameClass(p, "Thing", "OtherThing");
             const renamed = await p.getFile("src/main/kotlin/OtherThing.kt");
             assert(!!renamed, "Files were " + p.filesSync.map(f => f.path).join("\n"));

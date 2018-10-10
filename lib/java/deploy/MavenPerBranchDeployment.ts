@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
+import { logger } from "@atomist/automation-client";
 import {
     DefaultGoalNameGenerator,
     FulfillableGoalDetails,
     FulfillableGoalWithRegistrations,
     getGoalDefinitionFrom,
+    GoalDefinition,
     GoalInvocation,
     Implementation,
     ImplementationRegistration,
-    logger,
+    StagingEnvironment,
 } from "@atomist/sdm";
 import * as _ from "lodash";
-import {
-    executeMavenPerBranchSpringBootDeploy,
-    MavenPerBranchSpringBootDeploymentGoal,
-} from "./MavenPerBranchSpringBootDeploymentGoal";
+import { executeMavenPerBranchSpringBootDeploy } from "./MavenPerBranchSpringBootDeploymentGoal";
 
 export interface MavenPerBranchDeploymentRegistration extends Partial<ImplementationRegistration> {
     /**
@@ -58,6 +57,7 @@ export interface MavenPerBranchDeploymentRegistration extends Partial<Implementa
      */
     maxConcurrentDeployments: number;
 }
+
 /**
  * Maven per branch deployer goal. Intended only for local use
  * on a development machine. Use only one per SDM.
@@ -68,7 +68,7 @@ export class MavenPerBranchDeployment extends FulfillableGoalWithRegistrations<M
                     = DefaultGoalNameGenerator.generateName("maven-per-branch-deploy")) {
 
         super({
-            ...MavenPerBranchSpringBootDeploymentGoal.definition,
+            ...ManvePerBranchSpringBootDeploymentDefinition,
             ...getGoalDefinitionFrom(goalDetailsOrUniqueName, DefaultGoalNameGenerator.generateName("maven-per-branch-deploy")),
             displayName: "maven per branch deployment",
         });
@@ -91,3 +91,12 @@ export class MavenPerBranchDeployment extends FulfillableGoalWithRegistrations<M
     }
 
 }
+
+const ManvePerBranchSpringBootDeploymentDefinition: GoalDefinition = {
+    uniqueName: "mavenDeploy",
+    orderedName: "3-deploy",
+    environment: StagingEnvironment,
+    displayName: "deploy branch locally",
+    completedDescription: "Deployed branch locally",
+    failedDescription: "Local branch deployment failure",
+};

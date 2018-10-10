@@ -17,16 +17,16 @@
 import {
     CodeTransform,
     CodeTransformOrTransforms,
-    doWithFiles,
 } from "@atomist/sdm";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
+import { projectUtils } from "@atomist/automation-client";
 
 /**
  * Update the readme
  */
 export const ReplaceReadmeTitle: CodeTransform<SpringProjectCreationParameters> = async (p, ci) => {
-    return doWithFiles(p, "README.md", async readMe => {
+    return projectUtils.doWithFiles(p, "README.md", async readMe => {
         await readMe.replace(/^#[\s\S]*?## /, titleBlock(ci.parameters));
     });
 };
@@ -37,7 +37,7 @@ export const ReplaceReadmeTitle: CodeTransform<SpringProjectCreationParameters> 
  */
 export const SetAtomistTeamInApplicationYml: CodeTransform =
     async (p, ci) => {
-        return doWithFiles(p, "src/main/resources/application.yml", f =>
+        return projectUtils.doWithFiles(p, "src/main/resources/application.yml", f =>
             f.replace(/\${ATOMIST_TEAM}/, ci.context.workspaceId));
     };
 
