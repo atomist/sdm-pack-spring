@@ -22,14 +22,22 @@ import {
 import {
     ExecuteGoalResult,
     GoalInvocation,
+    GoalProjectListenerEvent,
+    GoalProjectListenerRegistration,
+    LogSuppressor,
     PrepareForGoalExecution,
     ProgressLog,
     SdmGoalEvent,
 } from "@atomist/sdm";
-import { ProjectVersioner } from "@atomist/sdm-core";
+import {
+    ProjectVersioner,
+    readSdmVersion,
+} from "@atomist/sdm-core";
 import * as df from "dateformat";
 import { determineMavenCommand } from "../mavenCommand";
+import { MavenProgressReporter } from "../MavenProgressReporter";
 import { MavenProjectIdentifier } from "../parse/pomParser";
+import { IsMaven } from "../pushtest/pushTests";
 import { mavenPackage } from "./MavenBuilder";
 
 async function newVersion(sdmGoal: SdmGoalEvent, p: Project): Promise<string> {
@@ -105,3 +113,48 @@ export async function mavenIncrementPatchVersionCommand(p: GitProject, progressL
         { cwd: p.baseDir },
         progressLog);
 }
+
+export async function mvnVersionProjectListener(p: GitProject,
+                                                gi: GoalInvocation,
+                                                event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
+    if (event === GoalProjectListenerEvent.before) {
+        const v = await readSdmVersion(
+            gi.sdmGoal.repo.owner,
+            gi.sdmGoal.repo.name,
+            gi.sdmGoal.repo.providerId,
+            gi.sdmGoal.sha,
+            gi.sdmGoal.branch,
+            gi.context);
+        return spawnAndWatch({
+            command: "mvn", args: ["versions:set", `-DnewVersion=${v}`, "versions:commit"],
+        }, { cwd: p.baseDir }, gi.progressLog);
+    }
+}
+
+export const MvnVersion: GoalProjectListenerRegistration = {
+    name: "mvn-version",
+    listener: mvnVersionProjectListener,
+    pushTest: IsMaven,
+};
+
+async function mvnPackageProjectListener(p: GitProject,
+                                         gi: GoalInvocation,
+                                         event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
+    if (event === GoalProjectListenerEvent.before) {
+        return spawnAndWatch({
+            command: "mvn", args: ["package", "-DskipTests=true"],
+        }, { cwd: p.baseDir }, gi.progressLog);
+    }
+}
+
+export const MvnPackage: GoalProjectListenerRegistration = {
+    name: "mvn-package",
+    listener: mvnPackageProjectListener,
+    pushTest: IsMaven,
+};
+
+export const MavenDefaultOptions = {
+    pushTest: IsMaven,
+    logInterpreter: LogSuppressor,
+    progressReporter: MavenProgressReporter,
+};
