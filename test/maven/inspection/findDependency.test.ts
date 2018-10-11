@@ -24,7 +24,8 @@ import * as tmp from "tmp";
 import { FindDependency } from "../../../lib/maven/inspection/findDependencyCommand";
 
 describe("FindDependency", () => {
-    it("when not found", async () => {
+
+    it.skip("when not found", async () => {
         const p = tempProject();
         p.addFileSync("pom.xml", testPom());
         const va = await FindDependency(p, {
@@ -33,7 +34,7 @@ describe("FindDependency", () => {
         assert.strictEqual(va, undefined);
     }).timeout(80000);
 
-    it("when found", async () => {
+    it.skip("when found", async () => {
         const p = tempProject();
         p.addFileSync("pom.xml", testPom());
         const va = await FindDependency(p, {
