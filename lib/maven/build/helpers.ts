@@ -142,8 +142,13 @@ async function mvnPackageProjectListener(p: GitProject,
                                          event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
     if (event === GoalProjectListenerEvent.before) {
         return spawnAndWatch({
-            command: "mvn", args: ["package", "-DskipTests=true"],
-        }, { cwd: p.baseDir }, gi.progressLog);
+                command: "mvn",
+                args: ["package", "-DskipTests=true", `-Dartifact.name=${r.id.repo}`],
+            },
+            {
+                cwd: p.baseDir,
+            },
+            gi.progressLog);
     }
 }
 
