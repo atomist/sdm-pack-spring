@@ -1,0 +1,43 @@
+/*
+ * Copyright © 2018 Atomist, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import {
+    findFileMatches,
+} from "@atomist/automation-client";
+import {
+    LocalProject,
+} from "@atomist/sdm";
+import * as path from "path";
+import { VersionedArtifact } from "../../maven/VersionedArtifact";
+import { XmldocFileParser } from "../../xml/XmldocFileParser";
+
+/**
+ * Locates the build artifact that has been built using the Spring Boot Maven plugin.
+ * @param p The project containing the Maven project
+ * @param mpi GAV definition of the artifact.
+ */
+export async function springBootDeploymentUnitFileLocator(p: LocalProject, mpi: VersionedArtifact): Promise<string> {
+    const parser = new XmldocFileParser();
+    const matches = await findFileMatches(p, parser, "**/pom.xml", `/project/build/plugins/plugin[artifactId='spring-boot-maven-plugin']`);
+    if (matches.length === 1) {
+        const matchedFile = matches[0].file;
+        const directory = path.dirname(matchedFile.path);
+        return path.join(directory, "target", `${mpi.artifact}-${mpi.version}.jar`);
+
+    } else {
+        return undefined;
+    }
+}
