@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-import {
-    predicatePushTest,
-    PushTest,
-} from "@atomist/sdm";
+import { PredicatePushTest, predicatePushTest } from "@atomist/sdm";
 
 /**
  * Is this a Riff project?
  * @type {PredicatePushTest}
  */
-export const IsRiff: PushTest = predicatePushTest("isRiff",
+export const IsRiff: PredicatePushTest = predicatePushTest("isRiff",
     async p => p.hasFile("riff.toml"));
