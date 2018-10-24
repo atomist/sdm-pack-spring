@@ -27,18 +27,20 @@ import * as _ from "lodash";
 import { indent } from "../../util/formatUtils";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 import {
+    findDeclaredManagedPlugins,
     findDeclaredPlugins,
 } from "../parse/fromPom";
 import {
+    ManagedPlugin,
     Plugin,
 } from "../Plugin";
 
 /**
- * Add the given dependency to projects. It's not an error
+ * Add the given polugin to projects. It's not an error
  * if the project doesn't have a POM. The transform will do nothing
  * in this case.
- * @param {VersionedArtifact} plugin
- * @return {SimpleProjectEditor}
+ * @param {Plugin} plugin
+ * @return {CodeTransform}
  */
 export function addPluginTransform(plugin: Plugin): CodeTransform {
     return async p => {
@@ -65,11 +67,42 @@ export function addPluginTransform(plugin: Plugin): CodeTransform {
 }
 
 /**
+ * Add the given plugin to project in plugin management. It's not an error
+ * if the project doesn't have a POM. The transform will do nothing
+ * in this case.
+ * @param {Plugin} plugin
+ * @return {CodeTransform}
+ */
+export function addManagedPluginTransform(plugin: ManagedPlugin): CodeTransform {
+    return async p => {
+        if (await p.hasFile("pom.xml")) {
+            const plg = await findDeclaredManagedPlugins(p);
+            if (plg.plugins.length === 0) {
+                throw new Error("No plugin management in POM: Cannot add plugin");
+            }
+            if (plg.plugins.some(pl => plugin.artifact === pl.artifact && plugin.group === pl.group)) {
+                logger.info("Plugin [%s] already present. Nothing to do", plugin.artifact);
+            } else {
+                logger.info("Adding plugin [%s]", plugin.artifact);
+                // Add after last dependency
+                const lastPlugin = _.last(plg.plugins);
+                await astUtils.doWithAllMatches(p, new XmldocFileParser(), "pom.xml",
+                    `//project/build/pluginmanagement/plugins/plugin[/artifactId[@innerValue='${lastPlugin.artifact}']]`,
+                    m => {
+                        const pluginContent = indent(managedPluginStanza(plugin), "   ", 5);
+                        m.append("\n" + pluginContent);
+                    });
+            }
+        }
+    };
+}
+
+/**
  * Command to add a Maven plugin to the project
  */
-export const AddMavenPlugin: CodeTransformRegistration<{ artifact: string, group: string, version: string }> = {
+export const AddMavenPlugin: CodeTransformRegistration<{ artifact: string, group: string, version?: string }> = {
     name: "add-maven-plugin",
-    intent: ["add plugin", "add maven plugin"],
+    intent: ["add maven plugin"],
     description: "Add a Maven plugin to the project",
     parameters: {
         artifact: { description: "Plugin artifact id to add" },
@@ -79,6 +112,29 @@ export const AddMavenPlugin: CodeTransformRegistration<{ artifact: string, group
     transform: [
         async (p, ci) =>
             addPluginTransform(
+                { ...ci.parameters })(p, ci),
+    ],
+    transformPresentation: ci => new editModes.PullRequest(
+        `add-dependency-${ci.parameters.artifact}`,
+        `Add dependency ${ci.parameters.artifact}`,
+    ),
+};
+
+/**
+ * Command to add a Maven plugin to the project
+ */
+export const AddManagedMavenPlugin: CodeTransformRegistration<{ artifact: string, group: string, version: string }> = {
+    name: "add-maven-plugin",
+    intent: ["add managed maven plugin"],
+    description: "Add a Maven plugin to the project",
+    parameters: {
+        artifact: { description: "Plugin artifact id to add" },
+        group: { description: "Group of the artifact" },
+        version: { description: "Plugin version" },
+    },
+    transform: [
+        async (p, ci) =>
+            addManagedPluginTransform(
                 { ...ci.parameters })(p, ci),
     ],
     transformPresentation: ci => new editModes.PullRequest(
@@ -99,19 +155,28 @@ function pluginStanza(plugin: Plugin) {
     `</plugin>`;
 }
 
-function versionTag(plugin: Plugin) {
+function managedPluginStanza(plugin: ManagedPlugin) {
+    return `<plugin>
+    <groupId>${plugin.group}</groupId>
+    <artifactId>${plugin.artifact}</artifactId>` +
+        versionTag(plugin) +
+        configurationTag(plugin) +
+        `</plugin>`;
+}
+
+function versionTag(plugin: {version?: string}) {
     return `${!!plugin.version ? `\n    <version>${plugin.version}</version>` : ""}`;
 }
 
-function inheritedTag(plugin: Plugin) {
+function inheritedTag(plugin: {inherited?: boolean}) {
     return `${!!plugin.inherited ? `\n    <inherited>${plugin.inherited}</inherited>` : ""}`;
 }
 
-function extensionsTag(plugin: Plugin) {
+function extensionsTag(plugin: {extensions?: boolean}) {
     return `${!!plugin.extensions ? `\n    <extensions>${plugin.extensions}</extensions>` : ""}`;
 }
 
-function configurationTag(plugin: Plugin) {
+function configurationTag(plugin: {configuration?: any}) {
     return `${!!plugin.configuration ? `\n    <configuration>
 ${_.join(getAsTagLines(plugin.configuration, 2), "\n")}
     </configuration>` : ""}`;

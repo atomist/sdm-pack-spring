@@ -37,6 +37,24 @@ export interface Plugin extends DependencySpecifier {
     executions?: PluginExecution[];
 }
 
+export interface ManagedPlugin extends DependencySpecifier {
+    group: string;
+
+    artifact: string;
+
+    version: string;
+
+    configuration?: any;
+
+    extensions?: boolean;
+
+    inherited?: boolean;
+
+    dependencies?: VersionedArtifact[];
+
+    executions?: PluginExecution[];
+}
+
 export interface PluginExecution {
     id: string;
 
