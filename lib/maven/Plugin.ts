@@ -19,6 +19,16 @@ import {
     VersionedArtifact,
 } from "./VersionedArtifact";
 
+/**
+ * Collection of plugins
+ */
+export interface Plugins {
+    plugins: Plugin[];
+}
+
+/**
+ * Plugin definition for a Maven POM
+ */
 export interface Plugin extends DependencySpecifier {
     group: string;
 
@@ -37,6 +47,9 @@ export interface Plugin extends DependencySpecifier {
     executions?: PluginExecution[];
 }
 
+/**
+ * Managed plugin definition for a Maven POM
+ */
 export interface ManagedPlugin extends DependencySpecifier {
     group: string;
 
@@ -55,6 +68,9 @@ export interface ManagedPlugin extends DependencySpecifier {
     executions?: PluginExecution[];
 }
 
+/**
+ * Plugin execution definition for a Maven POM
+ */
 export interface PluginExecution {
     id: string;
 
@@ -67,6 +83,9 @@ export interface PluginExecution {
     configuration: any;
 }
 
+/**
+ * Plugin execution goal definition for a Maven POM
+ */
 export interface PluginExecutionGoal {
     name: string;
 }

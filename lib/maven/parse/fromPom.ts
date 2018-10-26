@@ -24,9 +24,9 @@ import {
     XmldocTreeNode,
 } from "../../xml/XmldocFileParser";
 import { Dependencies } from "../inspection/findDependencies";
-import { Plugins } from "../inspection/findPlugins";
 import {
     Plugin,
+    Plugins,
 } from "../Plugin";
 import {
     VersionedArtifact,
@@ -51,7 +51,7 @@ export async function findDeclaredPlugins(p: Project, glob: string = "pom.xml"):
 }
 
 /**
- * Return plugins under plugins section
+ * Return plugins under plugin management section
  */
 export async function findDeclaredManagedPlugins(p: Project, glob: string = "pom.xml"): Promise<Plugins> {
     return findDeclaredPluginsWith(p,
@@ -131,7 +131,7 @@ export function extractVersionedArtifact(n: XmldocTreeNode): VersionedArtifact &
     };
 }
 
-export function extractPlugin(n: XmldocTreeNode): Plugin & { name: string } {
+function extractPlugin(n: XmldocTreeNode): Plugin {
     const groupId = n.$children.find(c => c.$value.startsWith("<groupId>"));
     const artifactId = n.$children.find(c => c.$value.startsWith("<artifactId>"));
     const version = n.$children.find(c => c.$value.startsWith("<version>"));
@@ -145,7 +145,6 @@ export function extractPlugin(n: XmldocTreeNode): Plugin & { name: string } {
     return {
         group: groupId.innerValue,
         artifact: artifactId.innerValue,
-        name: artifactId.innerValue,
         version: !!version ? version.innerValue : undefined,
         configuration: !!configuration ? parseConfiguration(configuration.$children) : undefined,
         inherited: !!inherited ? !!inherited.innerValue : undefined,
