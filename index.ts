@@ -96,7 +96,13 @@ export {
 
 export { MavenPerBranchDeployment } from "./lib/java/deploy/MavenPerBranchDeployment";
 export { setSpringBootVersionTransform } from "./lib/spring/transform/setSpringBootVersionTransform";
-export { MavenTest } from "./lib/maven/goal/mavenTest";
+export {
+    MavenTest,
+    MavenTestResultListener,
+    MavenTestResult,
+    JUnitTestExecutionHandler,
+    TestExecutionHandler,
+} from "./lib/maven/goal/mavenTest";
 export * from "./lib/properties/propertiesParser";
 export {
     GradlePerBranchDeployment,

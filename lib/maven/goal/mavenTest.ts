@@ -32,11 +32,23 @@ import {
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 import { determineMavenCommand } from "../mavenCommand";
 
+export interface TestExecutionHandler {
+    testsExecuted(p: Project): void | Promise<void>;
+}
+
+export interface MavenTestResult {
+    testsRun: number;
+    testsInError?: number;
+    testsFailed?: number;
+}
+
 /**
  * Goal to execute Maven tests. Shows failures or errors if there are any.
  * @type {GoalWithFulfillment}
  */
 export class MavenTest extends GoalWithFulfillment {
+    private listeners: TestExecutionHandler[] = [];
+
     constructor() {
         super({
             uniqueName: "maven-test",
@@ -47,12 +59,16 @@ export class MavenTest extends GoalWithFulfillment {
         } as GoalDefinition);
         this.with({
             name: "maven-test",
-            goalExecutor: executeMavenTest,
+            goalExecutor: gi => executeMavenTest(gi, this.listeners),
         } as Implementation);
+    }
+
+    public withListener(listener: TestExecutionHandler) {
+        this.listeners.push(listener);
     }
 }
 
-function executeMavenTest(goalInvocation: GoalInvocation) {
+function executeMavenTest(goalInvocation: GoalInvocation, listeners: TestExecutionHandler[]) {
     const {credentials, id} = goalInvocation;
     return goalInvocation.configuration.sdm.projectLoader.doWithProject(
         {id, credentials, readOnly: true},
@@ -63,23 +79,32 @@ function executeMavenTest(goalInvocation: GoalInvocation) {
             {cwd: p.baseDir},
             new LoggingProgressLog("maven-test", "info"),
             {});
-        const r = await getJUnitTestResults(p);
-        const prefix = r.tests === 1 ? `1 test` : `${r.tests} tests`;
-        if (result.code === 0) {
-            return {
-                code: 0,
-                phase: r.tests > 0 ? prefix : undefined,
-            };
-        } else {
-            const messages = [prefix];
-            if (r.failures > 0) { messages.push(`${r.failures} failed`); }
-            if (r.errors > 0) { messages.push(`${r.errors} with errors`); }
-            return {
-                code: 1,
-                phase: messages.join(", "),
-            };
-        }
+        listeners.forEach(async value => value.testsExecuted(p));
+        return {
+            code: result.code,
+        };
     });
+}
+
+export type MavenTestResultListener = (result: MavenTestResult) => void;
+
+export class JUnitTestExecutionHandler implements TestExecutionHandler {
+    private readonly listener: MavenTestResultListener;
+    constructor(listener: MavenTestResultListener) {
+        this.listener = listener;
+    }
+
+    public async testsExecuted(p: Project): Promise<void> {
+        const r = await getJUnitTestResults(p);
+        const testResult: MavenTestResult = {
+            testsRun: r.tests,
+            testsFailed: r.failures,
+            testsInError: r.errors,
+        };
+        if (this.listener !== undefined) {
+            this.listener(testResult);
+        }
+    }
 }
 
 async function getJUnitTestResults(p: Project):
