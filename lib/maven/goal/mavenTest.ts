@@ -47,7 +47,7 @@ export interface MavenTestResult {
  * @type {GoalWithFulfillment}
  */
 export class MavenTest extends GoalWithFulfillment {
-    private listeners: TestExecutionHandler[] = [];
+    private readonly listeners: TestExecutionHandler[] = [];
 
     constructor() {
         super({
