@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { asSpawnCommand, AutofixRegistration, localCommandsCodeTransform } from "@atomist/sdm";
+import {
+    asSpawnCommand,
+    AutofixRegistration,
+    localCommandsCodeTransform,
+} from "@atomist/sdm";
 import { IsJava } from "../../../java/pushtest/pushTests";
 
 // const FORMAT_JAR = "target/spring-format-0.1.0-SNAPSHOT-jar-with-dependencies.jar";
