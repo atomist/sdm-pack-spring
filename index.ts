@@ -118,5 +118,4 @@ export {
     Plugin,
     PluginExecution,
     PluginExecutionGoal,
-    Plugins,
 } from "./lib/maven/Plugin";

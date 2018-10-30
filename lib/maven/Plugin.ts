@@ -20,13 +20,6 @@ import {
 } from "./VersionedArtifact";
 
 /**
- * Collection of plugins
- */
-export interface Plugins {
-    plugins: Plugin[];
-}
-
-/**
  * Plugin definition for a Maven POM
  */
 export interface Plugin extends DependencySpecifier {

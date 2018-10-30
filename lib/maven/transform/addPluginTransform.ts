@@ -46,15 +46,15 @@ export function addPluginTransform(plugin: Plugin): CodeTransform {
     return async p => {
         if (await p.hasFile("pom.xml")) {
             const plg = await findDeclaredPlugins(p);
-            if (plg.plugins.length === 0) {
+            if (plg.length === 0) {
                 throw new Error("No plugins in POM: Cannot add plugin");
             }
-            if (plg.plugins.some(pl => plugin.artifact === pl.artifact && plugin.group === pl.group)) {
+            if (plg.some(pl => plugin.artifact === pl.artifact && plugin.group === pl.group)) {
                 logger.info("Plugin [%s] already present. Nothing to do", plugin.artifact);
             } else {
                 logger.info("Adding plugin [%s]", plugin.artifact);
                 // Add after last dependency
-                const lastPlugin = _.last(plg.plugins);
+                const lastPlugin = _.last(plg);
                 await astUtils.doWithAllMatches(p, new XmldocFileParser(), "pom.xml",
                     `//project/build/plugins/plugin[/artifactId[@innerValue='${lastPlugin.artifact}']]`,
                     m => {
@@ -77,15 +77,15 @@ export function addManagedPluginTransform(plugin: ManagedPlugin): CodeTransform 
     return async p => {
         if (await p.hasFile("pom.xml")) {
             const plg = await findDeclaredManagedPlugins(p);
-            if (plg.plugins.length === 0) {
+            if (plg.length === 0) {
                 throw new Error("No plugin management in POM: Cannot add plugin");
             }
-            if (plg.plugins.some(pl => plugin.artifact === pl.artifact && plugin.group === pl.group)) {
+            if (plg.some(pl => plugin.artifact === pl.artifact && plugin.group === pl.group)) {
                 logger.info("Plugin [%s] already present. Nothing to do", plugin.artifact);
             } else {
                 logger.info("Adding plugin [%s]", plugin.artifact);
                 // Add after last dependency
-                const lastPlugin = _.last(plg.plugins);
+                const lastPlugin = _.last(plg);
                 await astUtils.doWithAllMatches(p, new XmldocFileParser(), "pom.xml",
                     `//project/build/pluginmanagement/plugins/plugin[/artifactId[@innerValue='${lastPlugin.artifact}']]`,
                     m => {
@@ -98,7 +98,7 @@ export function addManagedPluginTransform(plugin: ManagedPlugin): CodeTransform 
 }
 
 /**
- * Command to add a Maven plugin to the project
+ * Command to add a Maven plugin to the project in <build><plugins>
  */
 export const AddMavenPlugin: CodeTransformRegistration<{ artifact: string, group: string, version?: string }> = {
     name: "add-maven-plugin",
@@ -121,12 +121,12 @@ export const AddMavenPlugin: CodeTransformRegistration<{ artifact: string, group
 };
 
 /**
- * Command to add a Maven plugin to the project
+ * Command to add a Maven plugin to the project in pluginManagement
  */
 export const AddManagedMavenPlugin: CodeTransformRegistration<{ artifact: string, group: string, version: string }> = {
     name: "add-maven-plugin",
     intent: ["add managed maven plugin"],
-    description: "Add a Maven plugin to the project",
+    description: "Add a Maven plugin oin pluginManagement to the project",
     parameters: {
         artifact: { description: "Plugin artifact id to add" },
         group: { description: "Group of the artifact" },

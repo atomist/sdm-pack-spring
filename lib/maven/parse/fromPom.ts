@@ -26,7 +26,6 @@ import {
 import { Dependencies } from "../inspection/findDependencies";
 import {
     Plugin,
-    Plugins,
 } from "../Plugin";
 import {
     VersionedArtifact,
@@ -44,7 +43,7 @@ export async function findDeclaredDependencies(p: Project, glob: string = "pom.x
 /**
  * Return plugins under plugins section
  */
-export async function findDeclaredPlugins(p: Project, glob: string = "pom.xml"): Promise<Plugins> {
+export async function findDeclaredPlugins(p: Project, glob: string = "pom.xml"): Promise<Plugin[]> {
     return findDeclaredPluginsWith(p,
         "//project/build/plugins/plugin",
         glob, {});
@@ -53,7 +52,7 @@ export async function findDeclaredPlugins(p: Project, glob: string = "pom.xml"):
 /**
  * Return plugins under plugin management section
  */
-export async function findDeclaredManagedPlugins(p: Project, glob: string = "pom.xml"): Promise<Plugins> {
+export async function findDeclaredManagedPlugins(p: Project, glob: string = "pom.xml"): Promise<Plugin[]> {
     return findDeclaredPluginsWith(p,
         "//project/build/pluginManagement/plugins/plugin",
         glob, {});
@@ -95,14 +94,14 @@ async function findDeclaredDependenciesWith(p: Project,
 async function findDeclaredPluginsWith(p: Project,
                                        pathExpression: string,
                                        glob: string = "pom.xml",
-                                       functionRegistry: FunctionRegistry): Promise<Plugins> {
+                                       functionRegistry: FunctionRegistry): Promise<Plugin[]> {
     const plugins = await astUtils.gatherFromMatches(p, new XmldocFileParser(),
         glob,
         pathExpression,
         m => {
             return extractPlugin(m as any as XmldocTreeNode);
         }, functionRegistry);
-    return { plugins };
+    return plugins;
 }
 
 /*
