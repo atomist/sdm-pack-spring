@@ -16,6 +16,9 @@
 
 import {
     asSpawnCommand,
+    configurationValue,
+} from "@atomist/automation-client";
+import {
     AutofixRegistration,
     localCommandsCodeTransform,
 } from "@atomist/sdm";
@@ -26,10 +29,10 @@ import { IsJava } from "../../../java/pushtest/pushTests";
 /**
  * Invoke spring-format. It must be available as a main class at the given path
  */
-export function springFormat(formatJarPath: string = process.env.FORMAT_JAR): AutofixRegistration {
+export function springFormat(formatJarPath: string =
+         configurationValue<string>("sdm.spring.formatJar", process.env.FORMAT_JAR)): AutofixRegistration {
     return {
-
-        name: "SpringFormat",
+        name: "Spring format",
         pushTest: IsJava,
         transform: localCommandsCodeTransform([
             asSpawnCommand(`java -jar ${formatJarPath}`),
