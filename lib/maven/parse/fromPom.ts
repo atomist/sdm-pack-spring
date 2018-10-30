@@ -24,7 +24,12 @@ import {
     XmldocTreeNode,
 } from "../../xml/XmldocFileParser";
 import { Dependencies } from "../inspection/findDependencies";
-import { VersionedArtifact } from "../VersionedArtifact";
+import {
+    Plugin,
+} from "../Plugin";
+import {
+    VersionedArtifact,
+} from "../VersionedArtifact";
 
 /**
  * Return dependencies under dependencies section
@@ -32,6 +37,24 @@ import { VersionedArtifact } from "../VersionedArtifact";
 export async function findDeclaredDependencies(p: Project, glob: string = "pom.xml"): Promise<Dependencies> {
     return findDeclaredDependenciesWith(p,
         "//project/dependencies/dependency",
+        glob, {});
+}
+
+/**
+ * Return plugins under plugins section
+ */
+export async function findDeclaredPlugins(p: Project, glob: string = "pom.xml"): Promise<Plugin[]> {
+    return findDeclaredPluginsWith(p,
+        "//project/build/plugins/plugin",
+        glob, {});
+}
+
+/**
+ * Return plugins under plugin management section
+ */
+export async function findDeclaredManagedPlugins(p: Project, glob: string = "pom.xml"): Promise<Plugin[]> {
+    return findDeclaredPluginsWith(p,
+        "//project/build/pluginManagement/plugins/plugin",
         glob, {});
 }
 
@@ -58,6 +81,29 @@ async function findDeclaredDependenciesWith(p: Project,
     return { dependencies };
 }
 
+/**
+ * Find declared plugins using the given path expression.
+ * Control over the path expression allows us to look under pluginManagement,
+ * or directly in plugin section under project/build
+ * @param {Project} p
+ * @param {string} pathExpression
+ * @param {string} glob
+ * @param {FunctionRegistry} functionRegistry
+ * @return {Promise<Dependencies>}
+ */
+async function findDeclaredPluginsWith(p: Project,
+                                       pathExpression: string,
+                                       glob: string = "pom.xml",
+                                       functionRegistry: FunctionRegistry): Promise<Plugin[]> {
+    const plugins = await astUtils.gatherFromMatches(p, new XmldocFileParser(),
+        glob,
+        pathExpression,
+        m => {
+            return extractPlugin(m as any as XmldocTreeNode);
+        }, functionRegistry);
+    return plugins;
+}
+
 /*
 
 <dependency>
@@ -82,4 +128,51 @@ export function extractVersionedArtifact(n: XmldocTreeNode): VersionedArtifact &
         version: !!version ? version.innerValue : undefined,
         scope: !!scope ? scope.innerValue : undefined,
     };
+}
+
+function extractPlugin(n: XmldocTreeNode): Plugin {
+    const groupId = n.$children.find(c => c.$value.startsWith("<groupId>"));
+    const artifactId = n.$children.find(c => c.$value.startsWith("<artifactId>"));
+    const version = n.$children.find(c => c.$value.startsWith("<version>"));
+    const configuration = n.$children.find(c => c.$value.startsWith("<configuration>"));
+    const inherited = n.$children.find(c => c.$value.startsWith("<inherited>"));
+    const extensions = n.$children.find(c => c.$value.startsWith("<extensions>"));
+
+    if (!(!!groupId && !!artifactId)) {
+        throw new Error(`groupId and artifactId are required in [${n.$value}]`);
+    }
+    return {
+        group: groupId.innerValue,
+        artifact: artifactId.innerValue,
+        version: !!version ? version.innerValue : undefined,
+        configuration: !!configuration ? parseConfiguration(configuration.$children) : undefined,
+        inherited: !!inherited ? !!inherited.innerValue : undefined,
+        extensions: !!extensions ? !!extensions.innerValue : undefined,
+    };
+}
+
+function parseConfigurationNode(n: XmldocTreeNode): any {
+    const configurations: any = {};
+    const configurationName = n.$name;
+    if (n.$children.length === 0) {
+        configurations[configurationName] = n.innerValue;
+    } else {
+        const configurationValue = parseConfigurationNode(n);
+        configurations[configurationName] = configurationValue;
+    }
+    return configurations;
+}
+
+function parseConfiguration(nodes: XmldocTreeNode[]): any {
+    const configurations: any = {};
+    for (const n of nodes) {
+        const configurationName = n.$name;
+        if (n.$children.length === 0) {
+            configurations[configurationName] = n.innerValue;
+        } else {
+            const configurationValue = parseConfigurationNode(n);
+            configurations[configurationName] = configurationValue;
+        }
+    }
+    return configurations;
 }
