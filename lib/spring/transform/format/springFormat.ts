@@ -23,10 +23,12 @@ import {
 import * as _ from "lodash";
 import { IsJava } from "../../../java/pushtest/pushTests";
 
-// const FORMAT_JAR = "target/spring-format-0.1.0-SNAPSHOT-jar-with-dependencies.jar";
-
 /**
- * Invoke spring-format. It must be available as a main class at the given path
+ * Autofix to invoke the Spring team's spring-format via the
+ * Atomist executable JAR wrapper (https://github.com/atomist/spring-format).
+ * The JAR wrapper must be available at the path under
+ * sdm.spring.formatJar or the FORMAT_JAR environment variable on the system on which the
+ * current SDM is running.
  */
 export function springFormat(configuration: SoftwareDeliveryMachineConfiguration): AutofixRegistration {
     const formatJarPath = _.get(configuration, "sdm.spring.formatJar") || process.env.FORMAT_JAR;
