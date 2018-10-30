@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import {
-    asSpawnCommand,
-    configurationValue,
-} from "@atomist/automation-client";
+import { asSpawnCommand } from "@atomist/automation-client";
 import {
     AutofixRegistration,
     localCommandsCodeTransform,
+    SoftwareDeliveryMachineConfiguration,
 } from "@atomist/sdm";
+import * as _ from "lodash";
 import { IsJava } from "../../../java/pushtest/pushTests";
 
 // const FORMAT_JAR = "target/spring-format-0.1.0-SNAPSHOT-jar-with-dependencies.jar";
@@ -29,8 +28,8 @@ import { IsJava } from "../../../java/pushtest/pushTests";
 /**
  * Invoke spring-format. It must be available as a main class at the given path
  */
-export function springFormat(formatJarPath: string =
-         configurationValue<string>("sdm.spring.formatJar", process.env.FORMAT_JAR)): AutofixRegistration {
+export function springFormat(configuration: SoftwareDeliveryMachineConfiguration): AutofixRegistration {
+    const formatJarPath = _.get(configuration, "sdm.spring.formatJar") || process.env.FORMAT_JAR;
     return {
         name: "Spring format",
         pushTest: IsJava,
