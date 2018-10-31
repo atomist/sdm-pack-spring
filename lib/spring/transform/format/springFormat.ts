@@ -32,10 +32,14 @@ import { IsJava } from "../../../java/pushtest/pushTests";
  */
 export function springFormat(configuration: SoftwareDeliveryMachineConfiguration): AutofixRegistration {
     const formatJarPath = _.get(configuration, "sdm.spring.formatJar") || process.env.FORMAT_JAR;
+    if (!formatJarPath) {
+        throw new Error("'sdm.spring.formatJar' configuration property or FORMAT_JAR environment variable must be set to use spring-format");
+    }
     return {
         name: "Spring format",
         pushTest: IsJava,
         transform: localCommandsCodeTransform([
+            // Format will run on current directory, which will be project root
             asSpawnCommand(`java -jar ${formatJarPath}`),
         ]),
     };

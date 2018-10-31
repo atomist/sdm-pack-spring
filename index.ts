@@ -119,3 +119,5 @@ export {
     PluginExecution,
     PluginExecutionGoal,
 } from "./lib/maven/Plugin";
+
+export { springFormat } from "./lib/spring/transform/format/springFormat";
