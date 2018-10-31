@@ -48,7 +48,6 @@ export interface MavenTestResult {
  */
 export class MavenTest extends GoalWithFulfillment {
     private testExecutionHandlers: TestExecutionHandler[] = [];
-
     constructor() {
         super({
             uniqueName: "maven-test",
