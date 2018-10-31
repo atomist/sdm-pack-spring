@@ -47,7 +47,7 @@ export interface MavenTestResult {
  * @type {GoalWithFulfillment}
  */
 export class MavenTest extends GoalWithFulfillment {
-    private listeners: TestExecutionHandler[] = [];
+    private testExecutionHandlers: TestExecutionHandler[] = [];
 
     constructor() {
         super({
@@ -59,12 +59,12 @@ export class MavenTest extends GoalWithFulfillment {
         } as GoalDefinition);
         this.with({
             name: "maven-test",
-            goalExecutor: gi => executeMavenTest(gi, this.listeners),
+            goalExecutor: gi => executeMavenTest(gi, this.testExecutionHandlers),
         } as Implementation);
     }
 
-    public withListener(listener: TestExecutionHandler) {
-        this.listeners.push(listener);
+    public withExecutionHandler(listener: TestExecutionHandler) {
+        this.testExecutionHandlers.push(listener);
     }
 }
 
