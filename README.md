@@ -7,7 +7,8 @@
 providing automated creation, building, and delivery of
 [Spring][spring] and [Spring Boot][spring-boot] applications.
 
-Also includes Java, Kotlin, Maven and Gradle support.
+Also includes Java, Kotlin, Maven and Gradle support and Java formatting support
+using `spring-format`.
 
 [spring]: https://spring.io/ (Spring)
 [spring-boot]: http://spring.io/projects/spring-boot (Spring Boot)
@@ -113,6 +114,11 @@ documentation.
 ```
 $ npm run build
 ```
+
+To use the `spring-format` support, you need to clone the Atomist `spring-format` 
+wrapper project from https://github.com/atomist/spring-format and follow the instructions
+to create an executable JAR file and specify its path in the `sdm.spring.formatJar` configuration
+property or the `FORMAT_JAR` environment variable.
 
 ### Release
 
