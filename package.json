@@ -28,7 +28,7 @@
   "types": "./index.d.ts",
   "dependencies": {
     "@atomist/antlr": "1.0.0-RC.1",
-    "@atomist/microgrammar": "1.0.0-master.20180916080140",
+    "@atomist/microgrammar": "1.0.0-M.4",
     "@atomist/tree-path": "1.0.0-RC.2",
     "@types/cross-spawn": "^6.0.0",
     "@types/dateformat": "^1.0.1",
@@ -48,7 +48,8 @@
   "peerDependencies": {
     "@atomist/automation-client": "*",
     "@atomist/sdm": "*",
-    "@atomist/sdm-core": "*"
+    "@atomist/sdm-core": "*",
+    "@atomist/sdm-pack-build": "*"
   },
   "devDependencies": {
     "@atomist/automation-client": "1.0.0-RC.2",
