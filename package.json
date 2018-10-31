@@ -30,6 +30,7 @@
     "@atomist/antlr": "1.0.0-RC.1",
     "@atomist/microgrammar": "1.0.0-master.20180916080140",
     "@atomist/tree-path": "1.0.0-RC.2",
+    "@atomist/slack-messages": "^1.0.0",
     "@types/cross-spawn": "^6.0.0",
     "@types/dateformat": "^1.0.1",
     "@types/decompress": "^4.2.3",

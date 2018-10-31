@@ -102,6 +102,7 @@ export {
     MavenTestResult,
     JUnitTestExecutionHandler,
     TestExecutionHandler,
+    SlackAttachmentMavenTestResultListener,
 } from "./lib/maven/goal/mavenTest";
 export * from "./lib/properties/propertiesParser";
 export {

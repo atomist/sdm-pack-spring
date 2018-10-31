@@ -29,11 +29,12 @@ import {
     LoggingProgressLog,
     spawnAndWatch,
 } from "@atomist/sdm";
+import { SlackMessage } from "@atomist/slack-messages";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 import { determineMavenCommand } from "../mavenCommand";
 
 export interface TestExecutionHandler {
-    testsExecuted(p: Project): void | Promise<void>;
+    testsExecuted(p: Project, gi: GoalInvocation): void | Promise<void>;
 }
 
 export interface MavenTestResult {
@@ -78,14 +79,14 @@ function executeMavenTest(goalInvocation: GoalInvocation, listeners: TestExecuti
             {cwd: p.baseDir},
             new LoggingProgressLog("maven-test", "info"),
             {});
-        listeners.forEach(async value => value.testsExecuted(p));
+        listeners.forEach(async value => value.testsExecuted(p, goalInvocation));
         return {
             code: result.code,
         };
     });
 }
 
-export type MavenTestResultListener = (result: MavenTestResult) => void;
+export type MavenTestResultListener = (r: MavenTestResult, gi: GoalInvocation) => void;
 
 export class JUnitTestExecutionHandler implements TestExecutionHandler {
     private readonly listener: MavenTestResultListener;
@@ -93,7 +94,7 @@ export class JUnitTestExecutionHandler implements TestExecutionHandler {
         this.listener = listener;
     }
 
-    public async testsExecuted(p: Project): Promise<void> {
+    public async testsExecuted(p: Project, gi: GoalInvocation): Promise<void> {
         const r = await getJUnitTestResults(p);
         const testResult: MavenTestResult = {
             testsRun: r.tests,
@@ -101,10 +102,22 @@ export class JUnitTestExecutionHandler implements TestExecutionHandler {
             testsInError: r.errors,
         };
         if (this.listener !== undefined) {
-            this.listener(testResult);
+            this.listener(testResult, gi);
         }
     }
 }
+
+export const SlackAttachmentMavenTestResultListener: MavenTestResultListener = (r, gi) => {
+    const color: string = (r.testsInError > 0 || r.testsFailed > 0) ? "#880000" : "#008800";
+    const slackMessage: SlackMessage = {
+        attachments: [{
+             color,
+            text: `:dash: ${r.testsRun} tests run\n:x: ${r.testsFailed} tests failed\n:bangbang: ${r.testsInError}`,
+            fallback: `${r.testsRun} tests run\n${r.testsFailed} tests failed\n${r.testsInError}`,
+        }],
+    };
+    gi.addressChannels(slackMessage);
+};
 
 async function getJUnitTestResults(p: Project):
     Promise<{tests: number, failures: number, errors: number}> {
