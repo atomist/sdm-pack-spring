@@ -36,6 +36,7 @@ import { MutableInjectionsReviewer } from "./spring/review/mutableInjectionsRevi
 import { OldSpringBootVersionReviewer } from "./spring/review/oldSpringBootVersionReviewer";
 import { addSpringBootActuator } from "./spring/transform/addSpringBootActuator";
 import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
+import { springFormat } from "./spring/transform/format/springFormat";
 import { ApplySecuredWebAppGuide } from "./spring/transform/guide/securingWebApp";
 import { FixAutowiredOnSoleConstructor } from "./spring/transform/removeUnnecessaryAutowiredAnnotations";
 import {
@@ -43,7 +44,6 @@ import {
     UnnecessaryComponentScanReviewer,
 } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
-import { springFormat } from "./spring/transform/format/springFormat";
 
 /**
  * Categories of functionality to enable
