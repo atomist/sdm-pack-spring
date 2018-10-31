@@ -110,8 +110,20 @@ export {
     springBootGradleArgs,
     ListGradleBranchDeploys,
 } from "./lib/gradle/deploy/GradlePerBranchSpringBootDeploymentGoal";
-
 export * from "./lib/riff/riffGeneration";
 export * from "./lib/riff/riffPushTests";
-
 export * from "./lib/riff/RiffDeployment";
+export {
+    addPluginTransform,
+    addManagedPluginTransform,
+    AddManagedMavenPlugin,
+    AddMavenPlugin,
+} from "./lib/maven/transform/addPluginTransform";
+export {
+    ManagedPlugin,
+    Plugin,
+    PluginExecution,
+    PluginExecutionGoal,
+} from "./lib/maven/Plugin";
+
+export { springFormat } from "./lib/spring/transform/format/springFormat";
