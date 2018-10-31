@@ -43,6 +43,7 @@ import {
     UnnecessaryComponentScanReviewer,
 } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
 import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
+import { springFormat } from "./spring/transform/format/springFormat";
 
 /**
  * Categories of functionality to enable
@@ -74,6 +75,11 @@ export interface SpringSupportOptions {
     review: Categories;
 
     autofix: Categories;
+
+    /**
+     * Whether to apply spring-format automatically, if an autofixGoal is provided
+     */
+    springFormat?: boolean;
 
     /**
      * Review listeners that let you publish review results.
@@ -131,6 +137,10 @@ export function springSupport(options: SpringSupportOptions): ExtensionPack {
                     options.autofixGoal
                         .with(UnnecessaryComponentScanAutofix)
                         .with(FixAutowiredOnSoleConstructor);
+                }
+                if (options.springFormat) {
+                    options.autofixGoal
+                        .with(springFormat(sdm.configuration));
                 }
             }
         },
