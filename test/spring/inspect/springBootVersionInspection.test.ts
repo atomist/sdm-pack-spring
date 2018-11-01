@@ -115,7 +115,6 @@ describe("springBootVersionInspection", () => {
             await verifyPom(project);
         });
 
-
         async function verifyPom(project: Project) {
             const pom = await project.getFile("pom.xml");
             const xml = await pom.getContent();

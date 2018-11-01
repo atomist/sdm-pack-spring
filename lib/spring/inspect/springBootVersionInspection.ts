@@ -53,20 +53,16 @@ export interface SpringBootVersions {
  * @constructor
  */
 export const SpringBootVersionInspection: CodeInspection<SpringBootVersions> = async p => {
-    const versions: SpringBootVersion[] = [];
-    await astUtils.doWithAllMatches(p,
+    const allVersions: string[] = await astUtils.gatherFromMatches(p,
         new XmldocFileParser(),
         "**/pom.xml",
         "//parent[/artifactId[@innerValue='spring-boot-starter-parent']]",
         m => {
             const va = extractVersionedArtifact(m as any as XmldocTreeNode);
-            const found = versions.find(v => v.version === va.version);
-            if (!found) {
-                versions.push({ version: va.version, count: 1 });
-            } else {
-                found.count = found.count + 1;
-            }
+            return va.version;
         });
+    const uniqVersions = _.uniq(allVersions);
+    const versions = uniqVersions.map(version => ({ version, count: _.sumBy(allVersions, v => v === version ? 1 : 0)}));
     return { versions };
 };
 
