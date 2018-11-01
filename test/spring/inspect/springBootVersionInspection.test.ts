@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { InMemoryProject } from "@atomist/automation-client";
+import { InMemoryProject, Project } from "@atomist/automation-client";
 import * as assert from "assert";
 import {
     consolidateSpringBootVersions,
@@ -22,6 +22,7 @@ import {
     SpringBootVersions,
 } from "../../../lib/spring/inspect/springBootVersionInspection";
 import { springBootPom } from "../generator/TestPoms";
+import { tempProject } from "../transform/setSpringBootVersionTransform.test";
 
 describe("springBootVersionInspection", () => {
 
@@ -80,6 +81,47 @@ describe("springBootVersionInspection", () => {
             const v1 = results.versions.find(v => v.version === bootVersion1);
             assert.strictEqual(v1.count, 2);
         });
+
+        it("repeated inspection should not affect POM in InMemoryProject", async () => {
+            const bootVersion = "1.3.2";
+            const project = InMemoryProject.of({
+                path: "pom.xml",
+                content: springBootPom(bootVersion),
+            });
+            const r = await SpringBootVersionInspection(project, undefined);
+            assert.strictEqual(r.versions.length, 1);
+            assert.strictEqual(r.versions[0].version, bootVersion);
+            await verifyPom(project);
+            const r2 = await SpringBootVersionInspection(project, undefined);
+            assert.strictEqual(r2.versions.length, 1);
+            assert.strictEqual(r2.versions[0].version, bootVersion);
+            await verifyPom(project);
+        });
+
+        it("repeated inspection should not affect POM in FS project", async () => {
+            const bootVersion = "1.3.2";
+            const project = tempProject();
+            await project.addFile(
+                "pom.xml",
+               springBootPom(bootVersion),
+            );
+            const r = await SpringBootVersionInspection(project, undefined);
+            assert.strictEqual(r.versions.length, 1);
+            assert.strictEqual(r.versions[0].version, bootVersion);
+            await verifyPom(project);
+            const r2 = await SpringBootVersionInspection(project, undefined);
+            assert.strictEqual(r2.versions.length, 1);
+            assert.strictEqual(r2.versions[0].version, bootVersion);
+            await verifyPom(project);
+        });
+
+
+        async function verifyPom(project: Project) {
+            const pom = await project.getFile("pom.xml");
+            const xml = await pom.getContent();
+            assert(!!xml);
+            assert(xml.length > 100);
+        }
 
     });
 
