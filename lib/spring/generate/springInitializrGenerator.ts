@@ -31,7 +31,12 @@ import * as decompress from "decompress";
 import * as fs from "fs";
 import * as path from "path";
 import * as tmp from "tmp-promise";
-import { JavaIdentifierRegExp, JavaPackageRegExp, MavenArtifactIdRegExp, MavenGroupIdRegExp } from "../../java/javaPatterns";
+import {
+    JavaIdentifierRegExp,
+    JavaPackageRegExp,
+    MavenArtifactIdRegExp,
+    MavenGroupIdRegExp,
+} from "../../java/javaPatterns";
 import { AddGradleBootRunArgsSupport } from "./gradleBuildTransforms";
 import { SetAtomistTeamInApplicationYml } from "./springBootTransforms";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";

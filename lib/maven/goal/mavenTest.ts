@@ -14,9 +14,19 @@
  * limitations under the License.
  */
 
-import { astUtils, LocalProject, Project } from "@atomist/automation-client";
+import {
+    astUtils,
+    LocalProject,
+    Project,
+} from "@atomist/automation-client";
 import { DefaultExcludes } from "@atomist/automation-client/lib/project/fileGlobs";
-import { GoalInvocation, GoalWithFulfillment, IndependentOfEnvironment, LoggingProgressLog, spawnAndWatch } from "@atomist/sdm";
+import {
+    GoalInvocation,
+    GoalWithFulfillment,
+    IndependentOfEnvironment,
+    LoggingProgressLog,
+    spawnAndWatch,
+} from "@atomist/sdm";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 import { determineMavenCommand } from "../mavenCommand";
 

@@ -23,7 +23,8 @@ import {
     DelimitedWriteProgressLogDecorator,
     DeployableArtifact,
     Deployer,
-    Deployment, InterpretLog,
+    Deployment,
+    InterpretLog,
     lastLinesLogInterpreter,
     ProgressLog,
 } from "@atomist/sdm";
