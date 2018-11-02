@@ -21,6 +21,7 @@ import {
 } from "@atomist/automation-client";
 import { DefaultExcludes } from "@atomist/automation-client/lib/project/fileGlobs";
 import {
+    ExecuteGoalResult,
     GoalDefinition,
     GoalInvocation,
     GoalWithFulfillment,
@@ -41,6 +42,7 @@ export interface MavenTestResult {
     testsRun: number;
     testsInError?: number;
     testsFailed?: number;
+    testFailures?: Array<{testName: string, className: string, failureMessage: string}>;
 }
 
 /**
@@ -85,7 +87,7 @@ function executeMavenTest(goalInvocation: GoalInvocation, listeners: TestExecuti
         listeners.forEach(async value => value.testsExecuted(p, goalInvocation));
         return {
             code: result.code,
-        };
+        } as ExecuteGoalResult;
     });
 }
 
@@ -100,9 +102,16 @@ export class JUnitTestExecutionHandler implements TestExecutionHandler {
     public async testsExecuted(p: Project, gi: GoalInvocation): Promise<void> {
         const r = await getJUnitTestResults(p);
         const testResult: MavenTestResult = {
-            testsRun: r.tests,
-            testsFailed: r.failures,
-            testsInError: r.errors,
+            testsRun: r.summary.tests,
+            testsFailed: r.summary.failures,
+            testsInError: r.summary.errors,
+            testFailures: r.failedTests.map(t => {
+                return {
+                    testName: t.testName,
+                    className: t.className,
+                    failureMessage: t.failureMessage,
+                };
+            }),
         };
         if (this.listener !== undefined) {
             this.listener(testResult, gi);
@@ -110,10 +119,15 @@ export class JUnitTestExecutionHandler implements TestExecutionHandler {
     }
 }
 
+function presentTestFailures(testFailures: Array<{ testName: string; className: string; failureMessage: string }>) {
+    return testFailures.map(f => `* ${f.testName} in ${f.className}`)
+        .join("\n");
+}
+
 export const SlackAttachmentMavenTestResultListener: MavenTestResultListener = async (r, gi) => {
     const color: string = (r.testsInError > 0 || r.testsFailed > 0) ? "#880000" : "#008800";
     const message = `:dash: ${r.testsRun} tests run` +
-        ((r.testsFailed > 0) ? `\n:x: ${r.testsFailed} tests failed` : "") +
+        ((r.testsFailed > 0) ? `\n:x: ${r.testsFailed} tests failed:\n${presentTestFailures(r.testFailures)}` : "") +
         ((r.testsInError > 0) ? `\n:bangbang: ${r.testsInError} tests in error` : "");
     const slackMessage: SlackMessage = {
         attachments: [{
@@ -126,7 +140,7 @@ export const SlackAttachmentMavenTestResultListener: MavenTestResultListener = a
 };
 
 async function getJUnitTestResults(p: Project):
-    Promise<{tests: number, failures: number, errors: number}> {
+    Promise<{summary: any, failedTests: any[]}> {
     const oldExcludes = DefaultExcludes;
     DefaultExcludes.splice(0, DefaultExcludes.length);  // necessary evil
     const testFailures = await astUtils.gatherFromMatches(p,
@@ -141,7 +155,7 @@ async function getJUnitTestResults(p: Project):
             };
         });
     DefaultExcludes.push(...oldExcludes);
-    return testFailures
+    const summary =  testFailures
         .reduce((previousValue, currentValue) => {
             return {
                 tests: previousValue.tests + currentValue.tests,
@@ -149,4 +163,21 @@ async function getJUnitTestResults(p: Project):
                 errors: previousValue.errors + currentValue.errors,
             };
         });
+    const failedTests = await astUtils.gatherFromMatches(p,
+        new XmldocFileParser(),
+        "target/surefire-reports/*.xml",
+        "/testsuite/testcase/failure",
+        m => {
+            const parent = m.$parent as any;
+            const node = m as any;
+            return {
+                testName: parent.name,
+                className: parent.classname,
+                failureMessage: node.message,
+            };
+        });
+    return {
+        summary,
+        failedTests,
+    };
 }
