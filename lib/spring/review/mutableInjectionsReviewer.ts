@@ -32,8 +32,8 @@ export const MutableInjectionCategory = "Mutable injection";
 export class MutableInjection implements ReviewComment {
 
     public severity: Severity = "warn";
-    public category = SpringStyle;
-    public subcategory = MutableInjectionCategory;
+    public category: string = SpringStyle;
+    public subcategory: string = MutableInjectionCategory;
 
     constructor(public name: string, public type: "field" | "setter",
                 public sourceLocation: SourceLocation) {

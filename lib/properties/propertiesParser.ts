@@ -102,19 +102,19 @@ export function addProperty(prop: Property, path: string): CodeTransform {
 
 class PropertiesFileImpl implements PropertiesFile {
 
-    get properties() {
+    get properties(): Property[] {
         return !!this.updatable ? this.updatable.matches : [];
     }
 
-    get obj() {
+    get obj(): { [key: string]: string } {
         const props = this.properties;
         const x: { [key: string]: string } = {};
         for (const prop of props) {
             Object.defineProperty(x, prop.key, {
-                get() {
+                get(): any {
                     return prop.value;
                 },
-                set(to) {
+                set(to: any): void {
                     throw new Error("Set not supported");
                 },
             });
@@ -122,7 +122,7 @@ class PropertiesFileImpl implements PropertiesFile {
         return x;
     }
 
-    public async addProperty(prop: Property) {
+    public async addProperty(prop: Property): Promise<void> {
         const existing = this.properties.find(p => p.key === prop.key);
         if (!!existing) {
             existing.value = prop.value;
@@ -139,7 +139,7 @@ class PropertiesFileImpl implements PropertiesFile {
         }
     }
 
-    public async flush() {
+    public async flush(): Promise<void> {
         if (!!this.updatable) {
             const f = await this.project.getFile(this.path);
             await f.setContent(this.updatable.updated());

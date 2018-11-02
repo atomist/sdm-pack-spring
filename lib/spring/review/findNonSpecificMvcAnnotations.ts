@@ -30,8 +30,8 @@ import * as category from "./springReviewCategories";
 export class NonSpecificMvcAnnotation implements ReviewComment {
 
     public readonly severity: Severity = "info";
-    public readonly category = category.SpringStyle;
-    public readonly subcategory = "Old style MVC annotation";
+    public readonly category: string = category.SpringStyle;
+    public readonly subcategory: string = "Old style MVC annotation";
 
     constructor(public raw: string, public sourceLocation: SourceLocation) {
     }
