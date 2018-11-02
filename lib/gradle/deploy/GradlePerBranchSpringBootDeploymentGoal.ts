@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-import {
-    HandlerContext, HandlerResult,
-    LocalProject,
-    logger,
-    poisonAndWait,
-    Success,
-} from "@atomist/automation-client";
+import { HandlerContext, HandlerResult, LocalProject, logger, poisonAndWait, Success } from "@atomist/automation-client";
 import {
     CommandHandlerRegistration,
     DefaultGoalNameGenerator,
@@ -31,14 +25,11 @@ import {
     getGoalDefinitionFrom,
     GoalInvocation,
     GoalWithPrecondition,
-    Implementation,
     ImplementationRegistration,
     IndependentOfEnvironment,
 } from "@atomist/sdm";
 import { SpawnedDeployment } from "@atomist/sdm-core";
-import {
-    ChildProcess,
-} from "child_process";
+import { ChildProcess } from "child_process";
 import * as spawn from "cross-spawn";
 import * as os from "os";
 import * as portfinder from "portfinder";
@@ -308,7 +299,7 @@ export class GradlePerBranchDeployment extends FulfillableGoalWithRegistrations<
             name: DefaultGoalNameGenerator.generateName("deployer"),
             goalExecutor: executeGradlePerBranchSpringBootDeploy(deploymentOptions),
             ...registration as ImplementationRegistration,
-        } as Implementation);
+        });
         return this;
     }
 }

@@ -23,7 +23,6 @@ import {
     RemoteLocator,
     RepoCreationParameters,
     SmartParameters,
-    ValidationError,
     ValidationResult,
 } from "@atomist/automation-client";
 import { SoftwareDeliveryMachine } from "@atomist/sdm";
@@ -32,12 +31,7 @@ import * as decompress from "decompress";
 import * as fs from "fs";
 import * as path from "path";
 import * as tmp from "tmp-promise";
-import {
-    JavaIdentifierRegExp,
-    JavaPackageRegExp,
-    MavenArtifactIdRegExp,
-    MavenGroupIdRegExp,
-} from "../../java/javaPatterns";
+import { JavaIdentifierRegExp, JavaPackageRegExp, MavenArtifactIdRegExp, MavenGroupIdRegExp } from "../../java/javaPatterns";
 import { AddGradleBootRunArgsSupport } from "./gradleBuildTransforms";
 import { SetAtomistTeamInApplicationYml } from "./springBootTransforms";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
@@ -258,7 +252,7 @@ export class SpringInitializrProjectCreationParameters implements SmartParameter
                 }
             }
             if (validationErrors && validationErrors.length > 0) {
-                return Promise.resolve({message: validationErrors.join("\n")} as ValidationError);
+                return Promise.resolve({message: validationErrors.join("\n")});
             } else {
                 return undefined;
             }

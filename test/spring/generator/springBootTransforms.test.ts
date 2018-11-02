@@ -97,7 +97,11 @@ describe("springBootTransforms", () => {
             } as any,
             version,
         };
-        const context = { context: undefined, addressChannels: undefined, credentials: undefined } as ParametersInvocation<SpringProjectCreationParameters>;
+        const context: ParametersInvocation<SpringProjectCreationParameters> = {
+            context: undefined,
+            addressChannels: undefined,
+            credentials: undefined,
+        };
         await TransformSeedToCustomProject(p, context, params);
         const pom = p.findFileSync("pom.xml").getContentSync();
         assert(pom.includes(`<name>repoName</name>`), "Name should be repo name");
@@ -132,7 +136,11 @@ describe("springBootTransforms", () => {
             } as any,
             version: "1.0",
         };
-        const context = { context: undefined, addressChannels: undefined, credentials: undefined } as ParametersInvocation<SpringProjectCreationParameters>;
+        const context: ParametersInvocation<SpringProjectCreationParameters> = {
+            context: undefined,
+            addressChannels: undefined,
+            credentials: undefined,
+        };
         await TransformSeedToCustomProject(p, context, params);
         const f = p.findFileSync("src/main/java/com/test/FooApplication.java");
         assert(!!f);

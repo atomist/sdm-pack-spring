@@ -34,6 +34,7 @@ describe("MavenFingerprinter", () => {
     it.skip("should find some dependencies", async () => {
         const p = tempProject();
         p.addFileSync("pom.xml", testPom());
+        // tslint:disable-next-line:no-object-literal-type-assertion
         const fp = await new MavenFingerprinter().action({ project: p } as PushImpactListenerInvocation);
         const f1 = JSON.parse(fp[0].data) as VersionedArtifact[];
         assert(f1.length > 0);

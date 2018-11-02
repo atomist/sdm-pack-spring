@@ -89,7 +89,7 @@
     "no-import-side-effect": true,
     "no-inferred-empty-object-type": true,
     "no-internal-module": true,
-    "no-invalid-template-strings": true,
+    "no-invalid-template-strings": false,
     "no-invalid-this": true,
     "no-magic-numbers": false,
     "no-misused-new": true,
@@ -172,7 +172,7 @@
       "options": ["allow-null-check"]
     },
     "typedef": [
-      true,
+      false,
       "call-signature",
       "parameter",
       "property-declaration",
