@@ -53,6 +53,8 @@ export class MavenTest extends GoalWithFulfillment {
         super({
             uniqueName: "maven-test",
             environment: IndependentOfEnvironment,
+            plannedDescription: "Testing planned",
+            readyDescription: "Ready to test",
             workingDescription: "Testing",
             completedDescription: "Tests succeeded",
             failedDescription: "Tests failed",
@@ -63,8 +65,9 @@ export class MavenTest extends GoalWithFulfillment {
         } as Implementation);
     }
 
-    public withExecutionHandler(listener: TestExecutionHandler) {
+    public withExecutionHandler(listener: TestExecutionHandler): MavenTest {
         this.testExecutionHandlers.push(listener);
+        return this;
     }
 }
 
@@ -109,11 +112,14 @@ export class JUnitTestExecutionHandler implements TestExecutionHandler {
 
 export const SlackAttachmentMavenTestResultListener: MavenTestResultListener = async (r, gi) => {
     const color: string = (r.testsInError > 0 || r.testsFailed > 0) ? "#880000" : "#008800";
+    const message = `:dash: ${r.testsRun} tests run` +
+        (r.testsFailed > 0) ? `\n:x: ${r.testsFailed} tests failed` : "" +
+        (r.testsInError > 0) ? `\n:bangbang: ${r.testsInError} tests in error` : "";
     const slackMessage: SlackMessage = {
         attachments: [{
              color,
-            text: `:dash: ${r.testsRun} tests run\n:x: ${r.testsFailed} tests failed\n:bangbang: ${r.testsInError}`,
-            fallback: `${r.testsRun} tests run\n${r.testsFailed} tests failed\n${r.testsInError}`,
+            text: message,
+            fallback: `${r.testsRun} tests run\n${r.testsFailed} tests failed\n${r.testsInError} tests in error`,
         }],
     };
     await gi.addressChannels(slackMessage);
