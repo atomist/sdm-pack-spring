@@ -34,7 +34,7 @@ describe("addDependencyTransformTest", () => {
         };
         // const pom = PomWithReplaceMe.replace("replaceMe", "");
         const p = InMemoryProject.of();
-        await addDependencyTransform(dae)(p, null, null);
+        await addDependencyTransform(dae)(p, undefined, undefined);
         assert(!(await p.getFile("pom.xml")));
     });
 
@@ -47,7 +47,7 @@ describe("addDependencyTransformTest", () => {
         };
         const pom = PomWithReplaceMe.replace(ReplaceMe, "");
         const p = projectOfPom(pom);
-        await addDependencyTransform(dae)(p, null, null);
+        await addDependencyTransform(dae)(p, undefined, undefined);
         const newPomContent = p.findFileSync("pom.xml").getContentSync();
         // console.log(newPomContent);
         assert(xml.validate(newPomContent));
@@ -65,7 +65,7 @@ describe("addDependencyTransformTest", () => {
         };
         const pom = PomWithReplaceMe.replace(ReplaceMe, "");
         const p = projectOfPom(pom);
-        await addDependencyTransform(dae)(p, null, null);
+        await addDependencyTransform(dae)(p, undefined, undefined);
         const newPomContent = p.findFileSync("pom.xml").getContentSync();
         assert(pom === newPomContent);
     });

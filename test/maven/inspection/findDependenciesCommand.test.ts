@@ -25,7 +25,7 @@ import * as assert from "assert";
 describe("FindDependenciesCommand", () => {
 
     it.skip("should find some dependencies", async () => {
-        const project = await GitCommandGitProject.cloned({ token: null },
+        const project = await GitCommandGitProject.cloned({ token: undefined },
             new GitHubRepoRef("atomist-seeds", "spring-rest-seed"));
         const deps = await FindDependenciesCommand.inspection(project, undefined);
         assert(deps.dependencies.length > 0);

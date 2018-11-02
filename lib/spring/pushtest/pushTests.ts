@@ -84,7 +84,7 @@ export function hasStarter(artifact: string,
 export const IsSpringBoot2Project: PredicatePushTest = predicatePushTest(
     "IsSpringBoot2Project",
     async p => {
-        const versions = await SpringBootVersionInspection(p, null);
+        const versions = await SpringBootVersionInspection(p, undefined);
         return versions.versions.filter(v => v.version.startsWith("2.")).length > 0;
     },
 );
@@ -96,7 +96,7 @@ export const IsSpringBoot2Project: PredicatePushTest = predicatePushTest(
 export const IsSecure: PredicatePushTest = predicatePushTest(
     "IsSecureSpringBootApplication",
     async p => {
-        const versions = await SpringSecurityVersionInspection(p, null);
+        const versions = await SpringSecurityVersionInspection(p, undefined);
         return versions.length > 0;
     },
 );

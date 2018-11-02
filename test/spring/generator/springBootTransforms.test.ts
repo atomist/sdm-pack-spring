@@ -87,7 +87,7 @@ describe("springBootTransforms", () => {
             groupId: "atomist",
             addAtomistWebhook: false,
             rootPackage: "com.test",
-            source: null,
+            source: undefined,
             enteredServiceClassName: "foo",
             target: {
                 description: "x",
@@ -97,7 +97,7 @@ describe("springBootTransforms", () => {
             } as any,
             version,
         };
-        const context = { context: null, addressChannels: null, credentials: null } as ParametersInvocation<SpringProjectCreationParameters>;
+        const context = { context: undefined, addressChannels: undefined, credentials: undefined } as ParametersInvocation<SpringProjectCreationParameters>;
         await TransformSeedToCustomProject(p, context, params);
         const pom = p.findFileSync("pom.xml").getContentSync();
         assert(pom.includes(`<name>repoName</name>`), "Name should be repo name");
@@ -122,7 +122,7 @@ describe("springBootTransforms", () => {
             groupId: "atomist",
             addAtomistWebhook: false,
             rootPackage: "com.test",
-            source: null,
+            source: undefined,
             enteredServiceClassName: "foo",
             target: {
                 description: "x",
@@ -132,7 +132,7 @@ describe("springBootTransforms", () => {
             } as any,
             version: "1.0",
         };
-        const context = { context: null, addressChannels: null, credentials: null } as ParametersInvocation<SpringProjectCreationParameters>;
+        const context = { context: undefined, addressChannels: undefined, credentials: undefined } as ParametersInvocation<SpringProjectCreationParameters>;
         await TransformSeedToCustomProject(p, context, params);
         const f = p.findFileSync("src/main/java/com/test/FooApplication.java");
         assert(!!f);

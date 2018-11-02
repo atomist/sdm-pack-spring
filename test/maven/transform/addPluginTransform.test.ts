@@ -34,7 +34,7 @@ describe("addPluginTransformTest", () => {
         };
         // const pom = PomWithReplaceMe.replace("replaceMe", "");
         const p = InMemoryProject.of();
-        await addPluginTransform(dae)(p, null, null);
+        await addPluginTransform(dae)(p, undefined, undefined);
         assert(!(await p.getFile("pom.xml")));
     });
 
@@ -52,7 +52,7 @@ describe("addPluginTransformTest", () => {
             },
         };
         const p = projectOfPom(Pom);
-        await addPluginTransform(dae)(p, null, null);
+        await addPluginTransform(dae)(p, undefined, undefined);
         const newPomContent = p.findFileSync("pom.xml").getContentSync();
         // console.log(newPomContent);
         assert(xml.validate(newPomContent));
@@ -68,7 +68,7 @@ describe("addPluginTransformTest", () => {
             artifact: "spring-boot-maven-plugin",
         };
         const p = projectOfPom(Pom);
-        await addPluginTransform(dae)(p, null, null);
+        await addPluginTransform(dae)(p, undefined, undefined);
         const newPomContent = p.findFileSync("pom.xml").getContentSync();
         assert(Pom === newPomContent);
     });

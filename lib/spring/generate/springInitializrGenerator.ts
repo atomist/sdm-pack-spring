@@ -260,7 +260,7 @@ export class SpringInitializrProjectCreationParameters implements SmartParameter
             if (validationErrors && validationErrors.length > 0) {
                 return Promise.resolve({message: validationErrors.join("\n")} as ValidationError);
             } else {
-                return null;
+                return undefined;
             }
         });
 

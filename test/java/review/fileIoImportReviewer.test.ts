@@ -60,7 +60,7 @@ describe("fileIoImport", () => {
         const f = new InMemoryProjectFile("src/main/kotlin/Thing.kt",
             "import java.io.File;\npublic class Thing {}");
         const p = InMemoryProject.from(id, f);
-        const r = await ImportIoFileReviewer.inspection(p, null);
+        const r = await ImportIoFileReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 1);
         const comment = r.comments[0];
         assert.equal(comment.subcategory, ImportIoFile);
@@ -72,7 +72,7 @@ describe("fileIoImport", () => {
         const f = new InMemoryProjectFile("src/main/java/com/atomist/Melb1Application.java",
             Bad1);
         const p = InMemoryProject.from(id, f);
-        const r = await ImportIoFileReviewer.inspection(p, null);
+        const r = await ImportIoFileReviewer.inspection(p, undefined);
         assert.equal(r.comments.length, 1);
         const comment = r.comments[0];
         assert.equal(comment.subcategory, ImportIoFile);

@@ -25,7 +25,7 @@ describe("remove unnecessary annotations", () => {
 
         it("doesn't fail on empty project", async () => {
             const p = new InMemoryProject();
-            await removeUnnecessaryComponentScanTransform(p, null);
+            await removeUnnecessaryComponentScanTransform(p, undefined);
         });
 
         it("removes unnecessary annotation", async () => {
@@ -33,7 +33,7 @@ describe("remove unnecessary annotations", () => {
             const content = "public @SpringBootApplication @ComponentScan class MyApp {}";
             const p = InMemoryProject.of(
                 { path, content });
-            await removeUnnecessaryComponentScanTransform(p, null);
+            await removeUnnecessaryComponentScanTransform(p, undefined);
             const f = p.findFileSync(path);
             assert(f.getContentSync() === content.replace("@ComponentScan ", ""));
         });
@@ -47,7 +47,7 @@ describe("remove unnecessary annotations", () => {
             const content = "public @ComponentScan class MyApp {}";
             const p = InMemoryProject.of(
                 { path, content });
-            await removeUnnecessaryComponentScanTransform(p, null);
+            await removeUnnecessaryComponentScanTransform(p, undefined);
             const f = p.findFileSync(path);
             assert(f.getContentSync() === content);
         });
@@ -57,7 +57,7 @@ describe("remove unnecessary annotations", () => {
 
         it("doesn't fail on empty project", async () => {
             const p = new InMemoryProject();
-            await removeAutowiredOnSoleConstructor(p, null);
+            await removeAutowiredOnSoleConstructor(p, undefined);
         });
 
         it("removes unnecessary annotation", async () => {
@@ -65,7 +65,7 @@ describe("remove unnecessary annotations", () => {
             const content = "public class MyApp { @Autowired public MyApp(Thing t) {} }";
             const p = InMemoryProject.of(
                 { path, content });
-            await removeAutowiredOnSoleConstructor(p, null);
+            await removeAutowiredOnSoleConstructor(p, undefined);
             const f = p.findFileSync(path);
             assert.strictEqual(f.getContentSync(), content.replace("@Autowired ", ""));
         });
@@ -79,7 +79,7 @@ describe("remove unnecessary annotations", () => {
             const content = "public class MyApp { @Autowired public MyApp(Thing t) {} @Autowired public MyApp(Thing t, OtherThing ot) {} }";
             const p = InMemoryProject.of(
                 { path, content });
-            await removeAutowiredOnSoleConstructor(p, null);
+            await removeAutowiredOnSoleConstructor(p, undefined);
             const f = p.findFileSync(path);
             assert.strictEqual(f.getContentSync(), content);
         });

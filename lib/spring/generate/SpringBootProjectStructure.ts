@@ -85,10 +85,10 @@ export class SpringBootProjectStructure {
                                                             pathExpression: string | PathExpression): Promise<SpringBootProjectStructure> {
         const fileHits = await astUtils.findFileMatches(p, parserOrRegistry, globPattern, pathExpression);
         if (fileHits.length === 0) {
-            return null;
+            return undefined;
         }
         if (fileHits.length > 1) {
-            return null;
+            return undefined;
         }
         const fh = fileHits[0];
 
@@ -106,7 +106,7 @@ export class SpringBootProjectStructure {
         } else {
             logger.debug("Unsuccessful Spring Boot inference on %j: packageName '%j', '%s'",
                 p.id, packageName, appClass);
-            return null;
+            return undefined;
         }
     }
 

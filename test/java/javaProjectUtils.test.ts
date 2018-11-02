@@ -114,11 +114,11 @@ describe("javaProjectUtils", () => {
         });
 
         it("rename Java class and internal reference", async () => {
-            const p = InMemoryProject.of(new InMemoryProjectFile("src/main/java/Thing.java", "public class Thing { static t: Thing = null; }"));
+            const p = InMemoryProject.of(new InMemoryProjectFile("src/main/java/Thing.java", "public class Thing { static t: Thing = undefined; }"));
             await renameClass(p, "Thing", "OtherThing");
             const renamed = await p.findFile("src/main/java/OtherThing.java");
             assert(!!renamed);
-            assert.strictEqual(renamed.getContentSync(), "public class OtherThing { static t: OtherThing = null; }");
+            assert.strictEqual(renamed.getContentSync(), "public class OtherThing { static t: OtherThing = undefined; }");
         });
 
         it("rename Java class and no-space internal reference", async () => {
