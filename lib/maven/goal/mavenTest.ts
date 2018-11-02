@@ -113,8 +113,8 @@ export class JUnitTestExecutionHandler implements TestExecutionHandler {
 export const SlackAttachmentMavenTestResultListener: MavenTestResultListener = async (r, gi) => {
     const color: string = (r.testsInError > 0 || r.testsFailed > 0) ? "#880000" : "#008800";
     const message = `:dash: ${r.testsRun} tests run` +
-        (r.testsFailed > 0) ? `\n:x: ${r.testsFailed} tests failed` : "" +
-        (r.testsInError > 0) ? `\n:bangbang: ${r.testsInError} tests in error` : "";
+        ((r.testsFailed > 0) ? `\n:x: ${r.testsFailed} tests failed` : "") +
+        ((r.testsInError > 0) ? `\n:bangbang: ${r.testsInError} tests in error` : "");
     const slackMessage: SlackMessage = {
         attachments: [{
              color,
