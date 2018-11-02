@@ -36,7 +36,7 @@ import {
 } from "../Plugin";
 
 /**
- * Add the given polugin to projects. It's not an error
+ * Add the given plugin to projects. It's not an error
  * if the project doesn't have a POM. The transform will do nothing
  * in this case.
  * @param {Plugin} plugin
