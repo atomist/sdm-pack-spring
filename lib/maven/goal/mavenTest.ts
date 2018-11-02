@@ -107,7 +107,7 @@ export class JUnitTestExecutionHandler implements TestExecutionHandler {
     }
 }
 
-export const SlackAttachmentMavenTestResultListener: MavenTestResultListener = (r, gi) => {
+export const SlackAttachmentMavenTestResultListener: MavenTestResultListener = async (r, gi) => {
     const color: string = (r.testsInError > 0 || r.testsFailed > 0) ? "#880000" : "#008800";
     const slackMessage: SlackMessage = {
         attachments: [{
@@ -116,7 +116,7 @@ export const SlackAttachmentMavenTestResultListener: MavenTestResultListener = (
             fallback: `${r.testsRun} tests run\n${r.testsFailed} tests failed\n${r.testsInError}`,
         }],
     };
-    gi.addressChannels(slackMessage);
+    await gi.addressChannels(slackMessage);
 };
 
 async function getJUnitTestResults(p: Project):
