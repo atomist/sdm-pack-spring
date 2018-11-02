@@ -144,7 +144,7 @@ export const AddManagedMavenPlugin: CodeTransformRegistration<{ artifact: string
 };
 
 // TODO: add executions support
-function pluginStanza(plugin: Plugin) {
+function pluginStanza(plugin: Plugin): string {
     return `<plugin>
     <groupId>${plugin.group}</groupId>
     <artifactId>${plugin.artifact}</artifactId>` +
@@ -155,7 +155,7 @@ function pluginStanza(plugin: Plugin) {
     `</plugin>`;
 }
 
-function managedPluginStanza(plugin: ManagedPlugin) {
+function managedPluginStanza(plugin: ManagedPlugin): string {
     return `<plugin>
     <groupId>${plugin.group}</groupId>
     <artifactId>${plugin.artifact}</artifactId>` +
@@ -164,19 +164,19 @@ function managedPluginStanza(plugin: ManagedPlugin) {
         `</plugin>`;
 }
 
-function versionTag(plugin: {version?: string}) {
+function versionTag(plugin: {version?: string}): string {
     return `${!!plugin.version ? `\n    <version>${plugin.version}</version>` : ""}`;
 }
 
-function inheritedTag(plugin: {inherited?: boolean}) {
+function inheritedTag(plugin: {inherited?: boolean}): string {
     return `${!!plugin.inherited ? `\n    <inherited>${plugin.inherited}</inherited>` : ""}`;
 }
 
-function extensionsTag(plugin: {extensions?: boolean}) {
+function extensionsTag(plugin: {extensions?: boolean}): string {
     return `${!!plugin.extensions ? `\n    <extensions>${plugin.extensions}</extensions>` : ""}`;
 }
 
-function configurationTag(plugin: {configuration?: any}) {
+function configurationTag(plugin: {configuration?: any}): string {
     return `${!!plugin.configuration ? `\n    <configuration>
 ${_.join(getAsTagLines(plugin.configuration, 2), "\n")}
     </configuration>` : ""}`;

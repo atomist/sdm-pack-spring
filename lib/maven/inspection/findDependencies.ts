@@ -77,7 +77,7 @@ export function uniqueDependencies(deps: Dependencies[]): Dependencies {
     return {
         dependencies: _.uniqBy(
             _.flatten(deps.map(d => d.dependencies)),
-            d => coordinates(d)),
+            coordinates),
     };
 }
 
@@ -104,5 +104,5 @@ function toVersionArtifact(gav: string[]): VersionedArtifact {
 function extractVersionedArtifacts(f: string): VersionedArtifact[] {
     return f.split("\n")
         .map(dep => dep.split(":"))
-        .map(gav => toVersionArtifact(gav));
+        .map(toVersionArtifact);
 }

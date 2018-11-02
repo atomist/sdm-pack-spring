@@ -14,21 +14,9 @@
  * limitations under the License.
  */
 
-import {
-    astUtils,
-    LocalProject,
-    Project,
-} from "@atomist/automation-client";
+import { astUtils, LocalProject, Project } from "@atomist/automation-client";
 import { DefaultExcludes } from "@atomist/automation-client/lib/project/fileGlobs";
-import {
-    GoalDefinition,
-    GoalInvocation,
-    GoalWithFulfillment,
-    Implementation,
-    IndependentOfEnvironment,
-    LoggingProgressLog,
-    spawnAndWatch,
-} from "@atomist/sdm";
+import { GoalInvocation, GoalWithFulfillment, IndependentOfEnvironment, LoggingProgressLog, spawnAndWatch } from "@atomist/sdm";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 import { determineMavenCommand } from "../mavenCommand";
 
@@ -44,15 +32,15 @@ export class MavenTest extends GoalWithFulfillment {
             workingDescription: "Testing",
             completedDescription: "Tests succeeded",
             failedDescription: "Tests failed",
-        } as GoalDefinition);
+        });
         this.with({
             name: "maven-test",
             goalExecutor: executeMavenTest,
-        } as Implementation);
+        });
     }
 }
 
-function executeMavenTest(goalInvocation: GoalInvocation) {
+function executeMavenTest(goalInvocation: GoalInvocation): Promise<{ code: number; phase: string }> {
     const {credentials, id} = goalInvocation;
     return goalInvocation.configuration.sdm.projectLoader.doWithProject(
         {id, credentials, readOnly: true},

@@ -15,7 +15,7 @@
  */
 
 import {
-    HandlerContext,
+    HandlerContext, HandlerResult,
     LocalProject,
     logger,
     poisonAndWait,
@@ -53,14 +53,14 @@ export const ListGradleBranchDeploys: CommandHandlerRegistration = {
     listener: async ci => handleListDeploys(ci.context),
 };
 
-function deploymentToString(deploymentKey: string) {
+function deploymentToString(deploymentKey: string): string {
     const deployment = deploymentEndpoints[deploymentKey];
     const abbreviatedSha = deployment.sha.slice(0, 7);
     const deploymentEndpoint = deployment.endpoint;
     return `${deploymentKey} deployed ${abbreviatedSha} at ${deploymentEndpoint}`;
 }
 
-async function handleListDeploys(ctx: HandlerContext) {
+async function handleListDeploys(ctx: HandlerContext): Promise<HandlerResult> {
     const message = `${Object.keys(deploymentEndpoints).length} branches currently deployed on ${os.hostname()}:\n${
         Object.keys(deploymentEndpoints).map(deploymentToString).join("\n")}`;
     await ctx.messageClient.respond(message);
@@ -232,7 +232,7 @@ class GradleDeployer {
     }
 }
 
-async function reportFailureToUser(gi: GoalInvocation, log: string) {
+async function reportFailureToUser(gi: GoalInvocation, log: string): Promise<void> {
     const interpretation = GradleLogInterpreter(log);
     if (!!interpretation) {
         await gi.addressChannels(`✘ Gradle deployment failure for ${gi.id.url}/${gi.sdmGoal.branch}`);

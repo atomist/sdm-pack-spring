@@ -23,7 +23,7 @@ import {
     DelimitedWriteProgressLogDecorator,
     DeployableArtifact,
     Deployer,
-    Deployment,
+    Deployment, InterpretLog,
     lastLinesLogInterpreter,
     ProgressLog,
 } from "@atomist/sdm";
@@ -64,14 +64,14 @@ export function executableJarDeployer(opts: LocalDeployerOptions): Deployer<Mana
 
 class ExecutableJarDeployer implements Deployer<ManagedDeploymentTargetInfo, Deployment> {
 
-    public logInterpreter = lastLinesLogInterpreter("Executable jar deployment");
+    public logInterpreter: InterpretLog = lastLinesLogInterpreter("Executable jar deployment");
 
     constructor(public opts: LocalDeployerOptions) {
     }
 
     public async findDeployments(id: RemoteRepoRef,
                                  ti: ManagedDeploymentTargetInfo,
-                                 creds: ProjectOperationCredentials) {
+                                 creds: ProjectOperationCredentials): Promise<Deployment[] | any[]> {
         const thisDeployment = this.deploymentFor(ti);
         return thisDeployment ? [thisDeployment] : [];
     }
@@ -133,7 +133,7 @@ class ExecutableJarDeployer implements Deployer<ManagedDeploymentTargetInfo, Dep
         })];
     }
 
-    private contextRoot(id: RemoteRepoRef) {
+    private contextRoot(id: RemoteRepoRef): string {
         return `/${id.owner}/${id.repo}/staging`;
     }
 

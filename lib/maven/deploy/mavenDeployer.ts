@@ -239,7 +239,7 @@ function appFailedToStart(log: string) {
     return likelyLines.join("\n");
 }
 
-function mavenErrors(log: string) {
+function mavenErrors(log: string): string {
     if (log.match(/^\[ERROR]/m)) {
         return log.split("\n")
             .filter(l => l.startsWith("[ERROR]"))
