@@ -74,6 +74,14 @@ describe("SpringBootProjectStructure: Java inference", () => {
             assert(structure.applicationPackage === "");
             assert(structure.appClassFile.path === "src/main/java/App.java");
         });
+
+        it("handle ill-formed application class", async () => {
+            const structure = await SpringBootProjectStructure.inferFromJavaSource(ProblemProject());
+            assert(structure.applicationPackage === "com.av");
+            assert(structure.applicationClass === "AardvarkApplication",
+                `Expected name not to be ${structure.appClassFile.name}`);
+            assert(structure.appClassFile.path === "src/main/java/com/av/AardvarkApplication.java");
+        });
     });
 
     describe("kotlin support", () => {
@@ -152,6 +160,7 @@ const SimplePom = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 export const GishJavaPath = "src/main/java/com/smashing/pumpkins/Gish.java";
+
 export const GishProject: () => Project = () => InMemoryProject.from(
     { owner: "smashing-pumpkins", repo: "gish", url: "" },
     {
@@ -186,3 +195,30 @@ export const KotlinGishProject: () => Project = () => InMemoryProject.from(
         content: SimplePom,
     },
 );
+
+export const ProblemProject: () => Project = () => InMemoryProject.from(
+    { owner: "smashing-pumpkins", repo: "gish", url: "" },
+    {
+        path: "src/main/java/com/av/AardvarkApplication.java",
+        content: ProblemFile1,
+    }, {
+        path: "pom.xml",
+        content: SimplePom,
+    },
+);
+
+
+const ProblemFile1 = `
+package com.av;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class AardvarkApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run
+	}
+}
+`;
