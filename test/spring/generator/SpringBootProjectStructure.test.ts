@@ -207,7 +207,6 @@ export const ProblemProject: () => Project = () => InMemoryProject.from(
     },
 );
 
-
 const ProblemFile1 = `
 package com.av;
 
