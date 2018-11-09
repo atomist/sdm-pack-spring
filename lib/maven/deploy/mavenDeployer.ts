@@ -19,14 +19,12 @@ import {
     logger,
     ProjectOperationCredentials,
     RemoteRepoRef,
-    Success,
 } from "@atomist/automation-client";
 import {
     DelimitedWriteProgressLogDecorator,
     DeployableArtifact,
     Deployer,
     Deployment,
-    ExecuteGoalResult,
     InterpretedLog,
     InterpretLog,
     ProgressLog,
@@ -114,10 +112,10 @@ class MavenSourceDeployer implements Deployer<ManagedDeploymentTargetInfo> {
         ti: ManagedDeploymentTargetInfo,
         deployment: Deployment,
         log: ProgressLog,
-    ): Promise<ExecuteGoalResult> {
+    ): Promise<void> {
 
         await managedMavenDeployments.terminateIfRunning(ti.managedDeploymentKey, LookupStrategy.branch);
-        return Success;
+        return;
     }
 
     public logInterpreter(log: string): InterpretedLog | undefined {

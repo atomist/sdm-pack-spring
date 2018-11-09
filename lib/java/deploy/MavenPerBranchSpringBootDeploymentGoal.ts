@@ -105,11 +105,15 @@ export function executeMavenPerBranchSpringBootDeploy(opts: Partial<MavenDeploye
     return async goalInvocation => {
         const { credentials, id } = goalInvocation;
         try {
-            const deployment = await goalInvocation.configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true },
+            const deployment = await goalInvocation.configuration.sdm.projectLoader.doWithProject({
+                    credentials,
+                    id,
+                    readOnly: true,
+                },
                 project => deployer.deployProject(goalInvocation, project));
             const deploymentKey = `${id.owner}/${id.repo}/${goalInvocation.sdmGoal.branch}`;
             deploymentEndpoints[deploymentKey] = { sha: goalInvocation.sdmGoal.sha, endpoint: deployment.endpoint };
-            return { code: 0, targetUrl: deployment.endpoint };
+            return { code: 0, externalUrls: [{ label: "Endpoint", url: deployment.endpoint }] };
         } catch (err) {
             return { code: 1, message: err.stack };
         }
