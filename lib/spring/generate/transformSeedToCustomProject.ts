@@ -20,7 +20,10 @@ import {
     CodeTransform,
 } from "@atomist/sdm";
 import { inferStructureAndMovePackageTransform } from "../../java/javaProjectUtils";
-import {updateMultiModulePomTransform, updatePomTransform} from "../../maven/generate/updatePom";
+import {
+    updateMultiModulePomTransform,
+    updatePomTransform,
+} from "../../maven/generate/updatePom";
 import { inferSpringStructureAndRenameTransform } from "./springBootUtils";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 
