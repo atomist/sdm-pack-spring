@@ -15,8 +15,8 @@
  */
 
 import assert = require("power-assert");
-import {FormatPomCodeTransform} from "../../../lib/maven/transform/formatPom";
-import {projectOfPom} from "./addPluginTransform.test";
+import { FormatPomCodeTransform } from "../../../lib/maven/transform/formatPom";
+import { projectOfPom } from "./addPluginTransform.test";
 
 describe("formatPomTest", () => {
 
