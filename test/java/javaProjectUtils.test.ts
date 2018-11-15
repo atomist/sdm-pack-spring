@@ -51,7 +51,7 @@ describe("javaProjectUtils", () => {
         assert.strictEqual(found.getContentSync(), "package com.something.else;\npublic class Foo {}");
     });
 
-    it("should refactor using common path prefix", async () => {
+    it("should refactor using common path artifactPrefix", async () => {
         const p = InMemoryProject.of(
             {
                 path: "src/main/java/com/bands/smashing/pumpkins/Gish.java",

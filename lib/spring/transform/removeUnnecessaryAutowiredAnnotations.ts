@@ -46,6 +46,7 @@ export const FixAutowiredOnSoleConstructor: AutofixRegistration = {
     pushTest: allSatisfied(IsSpringBoot2Project),
     transform: removeAutowiredOnSoleConstructor,
     options: {
+        considerOnlyChangedFiles: false,
         ignoreFailure: false,
     },
 };

@@ -20,8 +20,8 @@ import {
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import { computeArtifactId } from "../../java/generate/JavaProjectCreationParameters";
+import { SpringProjectCreationParameters } from "../../spring/generate/SpringProjectCreationParameters";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
-import { SpringProjectCreationParameters } from "./../../spring/generate/SpringProjectCreationParameters";
 
 /**
  * Record change to POM. Project will subsequently need flushing
@@ -42,50 +42,60 @@ export async function updatePom(
     version: string,
     description: string,
     multiModuleArgs?: {
-        prefix: string,
+        artifactPrefix: string,
     },
 ): Promise<Project> {
-    astUtils.doWithAllMatches(project, new XmldocFileParser(), "**/pom.xml", "/project", m => {
+    const pomProjects = await astUtils.findFileMatches(project, new XmldocFileParser(), "**/pom.xml", "/project"); // , m => {
+    for (const pomProject of pomProjects) {
+        const m = pomProject.matches[0];
         const parentElement = m.$children.find(n => n.$name === "parent");
         const parentGroupId = parentElement.$children.find(n => n.$name === "groupId");
         const parentArtifactId = parentElement.$children.find(n => n.$name === "artifactId");
-        const parentVersion = parentElement.$children.find(n => n.$name === "artifactId");
         const pomGroupId = m.$children.find(n => n.$name === "groupId");
         const pomArtifactId = m.$children.find(n => n.$name === "artifactId");
         const pomVersion = m.$children.find(n => n.$name === "artifactId");
-        const pomDescription = m.$children.find(n => n.$name === "description");
+
         if (parentElement) {
             if (pomGroupId) {
                 if (pomGroupId.$value === parentGroupId.$value) {
-                    parentGroupId.$value = groupId;
-                    parentVersion.$value = version;
-                    if (multiModuleArgs.prefix) {
-                        parentArtifactId.$value = parentArtifactId.$value.replace(new RegExp(multiModuleArgs.prefix + "-(.*)"), `${artifactId}-$1`);
+                    await updateNode(project, pomProject.file.path, "/project/parent/groupId", `<groupId>${groupId}</groupId>`);
+                    await updateNode(project, pomProject.file.path, "/project/parent/version", `<version>${version}</version>`);
+                    if (multiModuleArgs.artifactPrefix) {
+                        await updateNode(project, pomProject.file.path, "/project/parent/artifactId", parentArtifactId.$value.replace(
+                            new RegExp(multiModuleArgs.artifactPrefix + "-(.*)"), `${artifactId}-$1`));
                     }
                 }
             } else {
-                parentGroupId.$value = groupId;
-                parentVersion.$value = version;
-                if (multiModuleArgs.prefix) {
-                    parentArtifactId.$value = parentArtifactId.$value.replace(new RegExp(multiModuleArgs.prefix + "-(.*)"), `${artifactId}-$1`);
+                await updateNode(project, pomProject.file.path, "/project/parent/groupId", `<groupId>${groupId}</groupId>`);
+                await updateNode(project, pomProject.file.path, "/project/parent/version", `<version>${version}</version>`);
+                if (multiModuleArgs.artifactPrefix) {
+                    await updateNode(project, pomProject.file.path, "/project/parent/artifactId", parentArtifactId.$value.replace(
+                        new RegExp(multiModuleArgs.artifactPrefix + "-(.*)"), `${artifactId}-$1`));
                 }
             }
         }
-        pomGroupId.$value = groupId;
-        if (multiModuleArgs.prefix) {
-            pomArtifactId.$value = pomArtifactId.$value.replace(new RegExp(multiModuleArgs.prefix + "-(.*)"), `${artifactId}-$1`);
+        await updateNode(project, pomProject.file.path, "/project/groupId", `<groupId>${groupId}</groupId>`);
+        if (!!multiModuleArgs) {
+            await updateNode(project, pomProject.file.path, "/project/artifactId",
+                pomArtifactId.$value.replace(new RegExp(multiModuleArgs.artifactPrefix + "-(.*)"), `${artifactId}-$1`));
         } else {
-            pomArtifactId.$value = artifactId;
+            await updateNode(project, pomProject.file.path, "/project/artifactId", `<artifactId>${artifactId}</artifactId>`);
         }
-        if (pomVersion) {
-            pomVersion.$value = version;
+        if (!!pomVersion) {
+            await updateNode(project, pomProject.file.path, "/project/version", `<version>${version}</version>`);
         }
-        if (!multiModuleArgs) {
-            pomDescription.$value = description;
+        if (!(!!multiModuleArgs)) {
+            await updateNode(project, pomProject.file.path, "/project/description", `<description>${description}</description>`);
+            await updateNode(project, pomProject.file.path, "/project/name", `<name>${name}</name>`);
         }
-
-    });
+    }
     return project;
+}
+
+export async function updateNode(project: Project, f: string, path: string, value: string) {
+    await astUtils.doWithAllMatches(project, new XmldocFileParser(), f, path, m => {
+        m.$value = value;
+    });
 }
 
 export const updatePomTransform: CodeTransform<SpringProjectCreationParameters> = async (project, c, params) => updatePom(project,
@@ -94,11 +104,11 @@ export const updatePomTransform: CodeTransform<SpringProjectCreationParameters> 
     params.groupId, params.version,
     params.description || params.target.repoRef.repo);
 
-export function updateMultiModulePomTransform(prefix: string): CodeTransform<SpringProjectCreationParameters> {
+export function updateMultiModulePomTransform(artifactPrefix: string): CodeTransform<SpringProjectCreationParameters> {
     return async (project, c, params) => updatePom(project,
         params.target.repoRef.repo,
         computeArtifactId(params),
         params.groupId, params.version,
         params.description || params.target.repoRef.repo,
-        { prefix });
+        { artifactPrefix });
 }
