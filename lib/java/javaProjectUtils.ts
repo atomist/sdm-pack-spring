@@ -26,15 +26,15 @@ import { JavaProjectStructure } from "./JavaProjectStructure";
 
 export const AllJavaFiles = "**/*.java";
 
-export const JavaSourceFiles = "src/main/java/**/*.java";
+export const JavaSourceFiles = "**/src/main/java/**/*.java";
 
-export const JavaTestFiles = "src/main/test/**/*.java";
+export const JavaTestFiles = "**/src/main/test/**/*.java";
 
 export const AllJavaAndKotlinFiles = "**/{*.java,*.kt}";
 
-export const JavaAndKotlinSource = "src/main/**/{*.java,*.kt}";
+export const JavaAndKotlinSource = "**/src/main/**/{*.java,*.kt}";
 
-export const KotlinSourceFiles = "src/main/kotlin/**/*.kt";
+export const KotlinSourceFiles = "**/src/main/kotlin/**/*.kt";
 
 /**
  * Move files from one package to another. Defaults to

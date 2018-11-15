@@ -15,11 +15,12 @@
  */
 
 import {
+    astUtils,
     Project,
-    projectUtils,
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import { computeArtifactId } from "../../java/generate/JavaProjectCreationParameters";
+import { XmldocFileParser } from "../../xml/XmldocFileParser";
 import { SpringProjectCreationParameters } from "./../../spring/generate/SpringProjectCreationParameters";
 
 /**
@@ -33,21 +34,58 @@ import { SpringProjectCreationParameters } from "./../../spring/generate/SpringP
  * @param {string} description
  * @return project promise, project will need to be flushed
  */
-export function updatePom(
+export async function updatePom(
     project: Project,
     name: string,
     artifactId: string,
     groupId: string,
     version: string,
     description: string,
+    multiModuleArgs?: {
+        prefix: string,
+    },
 ): Promise<Project> {
-    return projectUtils.doWithFiles(project, "pom.xml", async f => {
-        await f.replace(/<artifactId>[\S\s]*?<\/artifactId>/, `<artifactId>${artifactId}</artifactId>`);
-        await f.replace(/<name>[\S\s]*?<\/name>/, `<name>${name}</name>`);
-        await f.replace(/<groupId>[\S\s]*?<\/groupId>/, `<groupId>${groupId}</groupId>`);
-        await f.replace(/<version>[\S\s]*?<\/version>/, `<version>${version}</version>`);
-        await f.replace(/<description>[\S\s]*?<\/description>/, `<description>${description}</description>`);
+    astUtils.doWithAllMatches(project, new XmldocFileParser(), "**/pom.xml", "/project", m => {
+        const parentElement = m.$children.find(n => n.$name === "parent");
+        const parentGroupId = parentElement.$children.find(n => n.$name === "groupId");
+        const parentArtifactId = parentElement.$children.find(n => n.$name === "artifactId");
+        const parentVersion = parentElement.$children.find(n => n.$name === "artifactId");
+        const pomGroupId = m.$children.find(n => n.$name === "groupId");
+        const pomArtifactId = m.$children.find(n => n.$name === "artifactId");
+        const pomVersion = m.$children.find(n => n.$name === "artifactId");
+        const pomDescription = m.$children.find(n => n.$name === "description");
+        if (parentElement) {
+            if (pomGroupId) {
+                if (pomGroupId.$value === parentGroupId.$value) {
+                    parentGroupId.$value = groupId;
+                    parentVersion.$value = version;
+                    if (multiModuleArgs.prefix) {
+                        parentArtifactId.$value = parentArtifactId.$value.replace(new RegExp(multiModuleArgs.prefix + "-(.*)"), `${artifactId}-$1`);
+                    }
+                }
+            } else {
+                parentGroupId.$value = groupId;
+                parentVersion.$value = version;
+                if (multiModuleArgs.prefix) {
+                    parentArtifactId.$value = parentArtifactId.$value.replace(new RegExp(multiModuleArgs.prefix + "-(.*)"), `${artifactId}-$1`);
+                }
+            }
+        }
+        pomGroupId.$value = groupId;
+        if (multiModuleArgs.prefix) {
+            pomArtifactId.$value = pomArtifactId.$value.replace(new RegExp(multiModuleArgs.prefix + "-(.*)"), `${artifactId}-$1`);
+        } else {
+            pomArtifactId.$value = artifactId;
+        }
+        if (pomVersion) {
+            pomVersion.$value = version;
+        }
+        if (!multiModuleArgs) {
+            pomDescription.$value = description;
+        }
+
     });
+    return project;
 }
 
 export const updatePomTransform: CodeTransform<SpringProjectCreationParameters> = async (project, c, params) => updatePom(project,
@@ -55,3 +93,12 @@ export const updatePomTransform: CodeTransform<SpringProjectCreationParameters> 
     computeArtifactId(params),
     params.groupId, params.version,
     params.description || params.target.repoRef.repo);
+
+export function updateMultiModulePomTransform(prefix: string): CodeTransform<SpringProjectCreationParameters> {
+    return async (project, c, params) => updatePom(project,
+        params.target.repoRef.repo,
+        computeArtifactId(params),
+        params.groupId, params.version,
+        params.description || params.target.repoRef.repo,
+        { prefix });
+}
