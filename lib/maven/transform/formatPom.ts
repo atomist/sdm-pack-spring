@@ -22,7 +22,7 @@ import {
     AutofixRegistration,
     CodeTransform,
 } from "@atomist/sdm";
-import format = require("xml-formatter");
+import * as format from "xml-formatter";
 import { IsMaven } from "../pushtest/pushTests";
 
 function formatXml(f: ProjectFile) {
