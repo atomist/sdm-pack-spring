@@ -43,7 +43,8 @@
     "portfinder": "^1.0.13",
     "tmp-promise": "^1.0.5",
     "toml": "^2.3.3",
-    "xmldoc": "^1.1.2"
+    "xmldoc": "^1.1.2",
+    "xml-formatter": "^1.0.1"
   },
   "peerDependencies": {
     "@atomist/automation-client": ">=1.0.1",
