@@ -19,11 +19,11 @@ import {
     GitProject,
     LocalProject,
     RemoteRepoRef,
-    spawnAndWatch,
 } from "@atomist/automation-client";
 import {
     AppInfo,
     ProgressLog,
+    spawnAndWatch,
 } from "@atomist/sdm";
 import {
     Builder,

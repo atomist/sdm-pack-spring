@@ -17,7 +17,6 @@
 import {
     ChildProcessResult,
     RemoteRepoRef,
-    spawnAndWatch,
 } from "@atomist/automation-client";
 import {
     Literal,
@@ -25,6 +24,7 @@ import {
 } from "@atomist/microgrammar";
 import {
     AppInfo,
+    spawnAndWatch,
     StringCapturingProgressLog,
 } from "@atomist/sdm";
 import {
