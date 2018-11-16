@@ -119,5 +119,16 @@ export {
     PluginExecution,
     PluginExecutionGoal,
 } from "./lib/maven/Plugin";
-
 export { springFormat } from "./lib/spring/transform/format/springFormat";
+export {
+    migrateArtifactIdTransform,
+    migrateGroupIdTransform,
+} from "./lib/maven/transform/migrateDependencies";
+export {
+    FormatPomCodeTransform,
+    FormatPomAutofix,
+} from "./lib/maven/transform/formatPom";
+export {
+    updateMultiModulePomTransform,
+    updatePomTransform,
+} from "./lib/maven/generate/updatePom";
