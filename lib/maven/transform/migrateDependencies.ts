@@ -7,7 +7,7 @@
  */
 import { projectUtils } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
-import {SpringProjectCreationParameters} from "../../spring/generate/SpringProjectCreationParameters";
+import { SpringProjectCreationParameters } from "../../spring/generate/SpringProjectCreationParameters";
 
 export function migrateGroupIdTransform(old: RegExp, replacement?: string): CodeTransform<SpringProjectCreationParameters> {
     return async (p, context, params) => {
