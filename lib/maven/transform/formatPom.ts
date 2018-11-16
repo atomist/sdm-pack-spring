@@ -22,11 +22,11 @@ import {
     AutofixRegistration,
     CodeTransform,
 } from "@atomist/sdm";
-import * as format from "xml-formatter";
+import * as format from "prettify-xml";
 import { IsMaven } from "../pushtest/pushTests";
 
 function formatXml(f: ProjectFile) {
-    f.setContentSync(format(f.getContentSync(), {indentation: "    ", stripComments: false, debug: false}));
+    f.setContentSync(format(f.getContentSync(), {indent: 4, newline: "\n"}));
 }
 
 export const FormatPomCodeTransform: CodeTransform = p => {

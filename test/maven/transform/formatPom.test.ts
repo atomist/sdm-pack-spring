@@ -21,15 +21,15 @@ import { projectOfPom } from "./addPluginTransform.test";
 describe("formatPomTest", () => {
 
     it("no POM causes no change, no error", async () => {
-        const xml = '<root><!-- content --><content><p xml:space="preserve">This is <b>some</b> content.</content></p>';
+        const xml = "<root><!-- content --><p><p>This is <b>some</b> content.</p></p></root>";
         const p = projectOfPom(xml);
         await FormatPomCodeTransform(p, {} as any);
         const pom = await p.getFile("pom.xml");
         const expected = `<root>
     <!-- content -->
-    <content>
-        <p xml:space="preserve">This is <b>some</b> content.</p>
-    </content>
+    <p>
+        <p>This is <b>some</b> content.</p>
+    </p>
 </root>`;
         assert(pom.getContentSync() === expected);
     });

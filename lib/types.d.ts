@@ -1,1 +1,1 @@
-declare module "xml-formatter";
+declare module "prettify-xml";
