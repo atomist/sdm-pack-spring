@@ -7,27 +7,36 @@
  */
 import { projectUtils } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
+import {SpringProjectCreationParameters} from "../../spring/generate/SpringProjectCreationParameters";
 
-export function migrateGroupIdTransform(old: RegExp, replacement: string): CodeTransform {
-    return async p => {
+export function migrateGroupIdTransform(old: RegExp, replacement?: string): CodeTransform<SpringProjectCreationParameters> {
+    return async (p, context, params) => {
         await projectUtils.doWithFiles(p, "**/pom.xml", async f => {
             const content = await f.getContent();
             const toReplace = new RegExp(`<groupId>${old.source}</groupId>`, "g");
-            const replace = `<groupId>${replacement}</groupId>`;
+            const replace = !!replacement ? `<groupId>${replacement}</groupId>` : `<groupId>${params.groupId}</groupId>`;
             await f.setContent(content.replace(toReplace, replace));
         });
         return p;
     };
 }
 
-export function migrateArtifactIdTransform(old: RegExp, replacement: string): CodeTransform {
-    return async p => {
+function hasGroups(old: RegExp) {
+    return /\(.*\)/.test(old.source);
+}
+
+export function migrateArtifactIdTransform(old: RegExp, replacement?: string): CodeTransform<SpringProjectCreationParameters> {
+    return async (p, context, params) => {
         await projectUtils.doWithFiles(p, "**/pom.xml", async f => {
             const content = await f.getContent();
             const toReplace = new RegExp(`<artifactId>${old.source}</artifactId>`, "g");
-            const replace = `<artifactId>${replacement}</artifactId>`;
-            await f.setContent(content.replace(toReplace, replace));
+            if (hasGroups(old)) {
+                const replace = !!replacement ? `<artifactId>${replacement}</artifactId>` : `<artifactId>${params.enteredArtifactId}-$1</artifactId>`;
+                await f.setContent(content.replace(toReplace, replace));
+            } else {
+                const replace = !!replacement ? `<artifactId>${replacement}</artifactId>` : `<artifactId>${params.enteredArtifactId}</artifactId>`;
+                await f.setContent(content.replace(toReplace, replace));
+            }
         });
-        return p;
     };
 }
