@@ -20,7 +20,10 @@ import {
     Project,
 } from "@atomist/automation-client";
 import * as assert from "power-assert";
-import {migrateArtifactIdTransform, migrateGroupIdTransform} from "../../../lib/maven/transform/migrateDependencies";
+import {
+    migrateArtifactIdTransform,
+    migrateGroupIdTransform,
+} from "../../../lib/maven/transform/migrateDependencies";
 
 describe("migrateDependenciesTest", () => {
 
