@@ -31,10 +31,14 @@ export function migrateArtifactIdTransform(old: RegExp, replacement?: string): C
             const content = await f.getContent();
             const toReplace = new RegExp(`<artifactId>${old.source}</artifactId>`, "g");
             if (hasGroups(old)) {
-                const replace = !!replacement ? `<artifactId>${replacement}</artifactId>` : `<artifactId>${params.enteredArtifactId}-$1</artifactId>`;
+                const replace = !!replacement
+                    ? `<artifactId>${replacement}</artifactId>`
+                    : `<artifactId>${params.target.repoRef.repo}-$1</artifactId>`;
                 await f.setContent(content.replace(toReplace, replace));
             } else {
-                const replace = !!replacement ? `<artifactId>${replacement}</artifactId>` : `<artifactId>${params.enteredArtifactId}</artifactId>`;
+                const replace = !!replacement
+                    ? `<artifactId>${replacement}</artifactId>`
+                    : `<artifactId>${params.target.repoRef.repo}</artifactId>`;
                 await f.setContent(content.replace(toReplace, replace));
             }
         });
