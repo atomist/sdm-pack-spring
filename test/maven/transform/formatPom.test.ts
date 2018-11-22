@@ -20,7 +20,7 @@ import { projectOfPom } from "./addPluginTransform.test";
 
 describe("formatPomTest", () => {
 
-    it("no POM causes no change, no error", async () => {
+    it("should format XML correctly", async () => {
         const xml = "<root><!-- content --><p><p>This is <b>some</b> content.</p></p></root>";
         const p = projectOfPom(xml);
         await FormatPomCodeTransform(p, {} as any);

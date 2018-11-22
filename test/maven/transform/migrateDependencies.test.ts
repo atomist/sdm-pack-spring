@@ -35,7 +35,7 @@ describe("migrateDependenciesTest", () => {
             assert(!(await p.getFile("pom.xml")));
         });
 
-        it("no POM causes no change, no error", async () => {
+        it("a POM with an dependency, no error", async () => {
             const p = projectOfPom(Pom);
 
             await migrateGroupIdTransform(/com\.atomist/, "io.atomist")(p, undefined, undefined);
@@ -53,7 +53,7 @@ describe("migrateDependenciesTest", () => {
             assert(!(await p.getFile("pom.xml")));
         });
 
-        it("no POM causes no change, no error", async () => {
+        it("a POM with an dependency, no error", async () => {
             const p = projectOfPom(Pom);
 
             await migrateArtifactIdTransform(/atomist-(.*)/, "foo-$1")(p, undefined, undefined);
