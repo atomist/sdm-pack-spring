@@ -23,6 +23,7 @@ export { executableJarDeployer } from "./lib/java/deploy/executableJarDeployer";
 export {
     AllJavaFiles,
     JavaAndKotlinSource,
+    inferStructureAndMovePackageTransform,
 } from "./lib/java/javaProjectUtils";
 export {
     IsJava,
@@ -132,3 +133,7 @@ export {
     updateMultiModulePomTransform,
     updatePomTransform,
 } from "./lib/maven/generate/updatePom";
+export {
+    inferSpringStructureAndRenameTransform,
+    inferSpringStructureAndDoTransform,
+} from "./lib/spring/generate/springBootUtils";
