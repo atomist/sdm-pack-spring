@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Support multi-module builds and deployments. [#83](https://github.com/atomist/sdm-pack-spring/issues/83)
 
+### Changed
+
+-   Move sdm-pack-build to dependency section. [#96](https://github.com/atomist/sdm-pack-spring/issues/96)
+
 ## [1.0.1](https://github.com/atomist/sdm-pack-spring/compare/1.0.0-RC.2...1.0.1) - 2018-11-09
 
 ### Changed
