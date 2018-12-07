@@ -17,7 +17,6 @@
 import {
     GitProject,
     Project,
-    spawnAndWatch,
 } from "@atomist/automation-client";
 import {
     ExecuteGoalResult,
@@ -28,6 +27,7 @@ import {
     PrepareForGoalExecution,
     ProgressLog,
     SdmGoalEvent,
+    spawnAndWatch,
 } from "@atomist/sdm";
 import {
     ProjectVersioner,
