@@ -20,7 +20,10 @@ import {
     CodeTransform,
 } from "@atomist/sdm";
 import { inferStructureAndMovePackageTransform } from "../../java/javaProjectUtils";
-import { updatePomTransform } from "../../maven/generate/updatePom";
+import {
+    updateMultiModulePomTransform,
+    updatePomTransform,
+} from "../../maven/generate/updatePom";
 import { inferSpringStructureAndRenameTransform } from "./springBootUtils";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
 
@@ -45,3 +48,16 @@ export const TransformSeedToCustomProject: CodeTransform<SpringProjectCreationPa
     inferStructureAndMovePackageTransform,
     inferSpringStructureAndRenameTransform,
 );
+
+/**
+ * Transform a seed to a custom Spring Boot project.
+ */
+export function transformMultiModuleSeedToCustomProject(artifactPrefix: string): CodeTransform<SpringProjectCreationParameters> {
+    return chainTransforms(
+        cleanReadMe,
+        updateMultiModulePomTransform(artifactPrefix),
+        inferStructureAndMovePackageTransform,
+        inferSpringStructureAndRenameTransform,
+    );
+
+}

@@ -15,12 +15,13 @@
  */
 
 import {
+    astUtils,
     Project,
-    projectUtils,
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import { computeArtifactId } from "../../java/generate/JavaProjectCreationParameters";
-import { SpringProjectCreationParameters } from "./../../spring/generate/SpringProjectCreationParameters";
+import { SpringProjectCreationParameters } from "../../spring/generate/SpringProjectCreationParameters";
+import { XmldocFileParser } from "../../xml/XmldocFileParser";
 
 /**
  * Record change to POM. Project will subsequently need flushing
@@ -33,20 +34,67 @@ import { SpringProjectCreationParameters } from "./../../spring/generate/SpringP
  * @param {string} description
  * @return project promise, project will need to be flushed
  */
-export function updatePom(
+export async function updatePom(
     project: Project,
     name: string,
     artifactId: string,
     groupId: string,
     version: string,
     description: string,
+    multiModuleArgs?: {
+        artifactPrefix: string,
+    },
 ): Promise<Project> {
-    return projectUtils.doWithFiles(project, "pom.xml", async f => {
-        await f.replace(/<artifactId>[\S\s]*?<\/artifactId>/, `<artifactId>${artifactId}</artifactId>`);
-        await f.replace(/<name>[\S\s]*?<\/name>/, `<name>${name}</name>`);
-        await f.replace(/<groupId>[\S\s]*?<\/groupId>/, `<groupId>${groupId}</groupId>`);
-        await f.replace(/<version>[\S\s]*?<\/version>/, `<version>${version}</version>`);
-        await f.replace(/<description>[\S\s]*?<\/description>/, `<description>${description}</description>`);
+    const pomProjects = await astUtils.findFileMatches(project, new XmldocFileParser(), "**/pom.xml", "/project"); // , m => {
+    for (const pomProject of pomProjects) {
+        const m = pomProject.matches[0];
+        const parentElement = m.$children.find(n => n.$name === "parent");
+        const parentGroupId = parentElement.$children.find(n => n.$name === "groupId");
+        const parentArtifactId = parentElement.$children.find(n => n.$name === "artifactId");
+        const pomGroupId = m.$children.find(n => n.$name === "groupId");
+        const pomArtifactId = m.$children.find(n => n.$name === "artifactId");
+        const pomVersion = m.$children.find(n => n.$name === "artifactId");
+
+        if (parentElement) {
+            if (pomGroupId) {
+                if (pomGroupId.$value === parentGroupId.$value) {
+                    await updateNode(project, pomProject.file.path, "/project/parent/groupId", `<groupId>${groupId}</groupId>`);
+                    await updateNode(project, pomProject.file.path, "/project/parent/version", `<version>${version}</version>`);
+                    if (multiModuleArgs.artifactPrefix) {
+                        await updateNode(project, pomProject.file.path, "/project/parent/artifactId", parentArtifactId.$value.replace(
+                            new RegExp(multiModuleArgs.artifactPrefix + "-(.*)"), `${artifactId}-$1`));
+                    }
+                }
+            } else {
+                await updateNode(project, pomProject.file.path, "/project/parent/groupId", `<groupId>${groupId}</groupId>`);
+                await updateNode(project, pomProject.file.path, "/project/parent/version", `<version>${version}</version>`);
+                if (multiModuleArgs.artifactPrefix) {
+                    await updateNode(project, pomProject.file.path, "/project/parent/artifactId", parentArtifactId.$value.replace(
+                        new RegExp(multiModuleArgs.artifactPrefix + "-(.*)"), `${artifactId}-$1`));
+                }
+            }
+        }
+        await updateNode(project, pomProject.file.path, "/project/groupId", `<groupId>${groupId}</groupId>`);
+        if (!!multiModuleArgs) {
+            await updateNode(project, pomProject.file.path, "/project/artifactId",
+                pomArtifactId.$value.replace(new RegExp(multiModuleArgs.artifactPrefix + "-(.*)"), `${artifactId}-$1`));
+        } else {
+            await updateNode(project, pomProject.file.path, "/project/artifactId", `<artifactId>${artifactId}</artifactId>`);
+        }
+        if (!!pomVersion) {
+            await updateNode(project, pomProject.file.path, "/project/version", `<version>${version}</version>`);
+        }
+        if (!(!!multiModuleArgs)) {
+            await updateNode(project, pomProject.file.path, "/project/description", `<description>${description}</description>`);
+            await updateNode(project, pomProject.file.path, "/project/name", `<name>${name}</name>`);
+        }
+    }
+    return project;
+}
+
+export async function updateNode(project: Project, f: string, path: string, value: string) {
+    await astUtils.doWithAllMatches(project, new XmldocFileParser(), f, path, m => {
+        m.$value = value;
     });
 }
 
@@ -55,3 +103,12 @@ export const updatePomTransform: CodeTransform<SpringProjectCreationParameters> 
     computeArtifactId(params),
     params.groupId, params.version,
     params.description || params.target.repoRef.repo);
+
+export function updateMultiModulePomTransform(artifactPrefix: string): CodeTransform<SpringProjectCreationParameters> {
+    return async (project, c, params) => updatePom(project,
+        params.target.repoRef.repo,
+        computeArtifactId(params),
+        params.groupId, params.version,
+        params.description || params.target.repoRef.repo,
+        { artifactPrefix });
+}

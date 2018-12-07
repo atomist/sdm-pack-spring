@@ -23,6 +23,7 @@ export { executableJarDeployer } from "./lib/java/deploy/executableJarDeployer";
 export {
     AllJavaFiles,
     JavaAndKotlinSource,
+    inferStructureAndMovePackageTransform,
 } from "./lib/java/javaProjectUtils";
 export {
     IsJava,
@@ -119,5 +120,20 @@ export {
     PluginExecution,
     PluginExecutionGoal,
 } from "./lib/maven/Plugin";
-
 export { springFormat } from "./lib/spring/transform/format/springFormat";
+export {
+    migrateArtifactIdTransform,
+    migrateGroupIdTransform,
+} from "./lib/maven/transform/migrateDependencies";
+export {
+    FormatPomCodeTransform,
+    FormatPomAutofix,
+} from "./lib/maven/transform/formatPom";
+export {
+    updateMultiModulePomTransform,
+    updatePomTransform,
+} from "./lib/maven/generate/updatePom";
+export {
+    inferSpringStructureAndRenameTransform,
+    inferSpringStructureAndDoTransform,
+} from "./lib/spring/generate/springBootUtils";

@@ -33,13 +33,36 @@ import {
  * @return {Promise<Project>}
  */
 export async function inferSpringStructureAndRename(serviceClassName: string, p: Project): Promise<Project> {
+    return inferSpringStructureAndDo(p, async (project, structure) => {
+        return renameClass(await project, structure.applicationClassStem, serviceClassName);
+    });
+}
+
+/**
+ * Infer the Spring Boot structure and perform an action
+ * @param {string} serviceClassName
+ * @param {Project} p
+ * @return {Promise<Project>}
+ */
+export async function inferSpringStructureAndDo(
+    p: Project,
+    action: (p: Project,
+             structure: SpringBootProjectStructure,
+             params?: SpringProjectCreationParameters) => Promise<Project>,
+    params?: SpringProjectCreationParameters): Promise<Project> {
     const structure = await SpringBootProjectStructure.inferFromJavaOrKotlinSource(p);
     if (structure) {
-        return renameClass(p, structure.applicationClassStem, serviceClassName);
+        return action(p, structure, params);
     } else {
         logger.warn("Spring Boot project structure not found");
         return p;
     }
 }
+
 export const inferSpringStructureAndRenameTransform: CodeTransform<SpringProjectCreationParameters> =
     (p, c, params) => inferSpringStructureAndRename(computeServiceClassName(params), p);
+
+export function inferSpringStructureAndDoTransform(
+    action: (p: Project, structure: SpringBootProjectStructure) => Promise<Project>): CodeTransform<SpringProjectCreationParameters> {
+       return (p, c, params) => inferSpringStructureAndDo(p, action, params);
+}
