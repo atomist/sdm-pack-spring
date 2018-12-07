@@ -34,7 +34,7 @@ import {
  */
 export async function inferSpringStructureAndRename(serviceClassName: string, p: Project): Promise<Project> {
     return inferSpringStructureAndDo(p, async (project, structure) => {
-        return renameClass(await project, structure.applicationClassStem, serviceClassName);
+        return renameClass(project, structure.applicationClassStem, serviceClassName);
     });
 }
 
