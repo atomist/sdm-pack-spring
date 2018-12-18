@@ -23,6 +23,8 @@ import { CodeTransform } from "@atomist/sdm";
 import * as _ from "lodash";
 import { SpringProjectCreationParameters } from "../spring/generate/SpringProjectCreationParameters";
 import { JavaProjectStructure } from "./JavaProjectStructure";
+import * as path from "path";
+import * as fs from "fs";
 
 export const AllJavaFiles = "**/*.java";
 
@@ -54,8 +56,13 @@ export async function movePackage(project: Project,
     logger.debug("Replacing path '%s' with '%s', package '%s' with '%s'",
         pathToReplace, newPath, oldPackage, newPackage);
     return projectUtils.doWithFiles(project, globPattern, async f => {
+        const oldDirectoryPath = path.dirname(f.path);
         await f.replaceAll(oldPackage, newPackage);
         await f.setPath(f.path.replace(pathToReplace, newPath));
+        const oldDirectory = fs.readdirSync(oldDirectoryPath);
+        if (oldDirectory.length === 0) {
+            fs.rmdirSync(oldDirectoryPath);
+        }
     });
 }
 
