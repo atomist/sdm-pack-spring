@@ -20,11 +20,11 @@ import {
     projectUtils,
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
+import * as fs from "fs";
 import * as _ from "lodash";
+import * as path from "path";
 import { SpringProjectCreationParameters } from "../spring/generate/SpringProjectCreationParameters";
 import { JavaProjectStructure } from "./JavaProjectStructure";
-import * as path from "path";
-import * as fs from "fs";
 
 export const AllJavaFiles = "**/*.java";
 
