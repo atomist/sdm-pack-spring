@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-import {JavaFileParser} from "@atomist/antlr";
-import {astUtils, InMemoryProject} from "@atomist/automation-client";
-import {CodeTransform} from "@atomist/sdm";
-import {SpringBootAppClassInJava} from "../../../lib/spring/generate/SpringBootProjectStructure";
+import { JavaFileParser } from "@atomist/antlr";
+import {
+    astUtils,
+    InMemoryProject,
+} from "@atomist/automation-client";
+import { CodeTransform } from "@atomist/sdm";
+import { SpringBootAppClassInJava } from "../../../lib/spring/generate/SpringBootProjectStructure";
 
 describe("java 8 ast", () => {
 
