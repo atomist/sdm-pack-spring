@@ -93,7 +93,7 @@ export function renameClass(project: Project,
     return projectUtils.doWithFiles(project, AllJavaAndKotlinFiles, async f => {
         if (f.name.includes(oldClass)) {
             await f.rename(f.name.replace(oldClass, newClass));
-            const oldClassRe = new RegExp("([\( \t])" + oldClass, "gm");
+            const oldClassRe = new RegExp("([\( \t<])" + oldClass, "gm");
             await f.replace(oldClassRe, `$1${newClass}`);
         }
     });

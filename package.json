@@ -27,9 +27,9 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "dependencies": {
-    "@atomist/antlr": "1.0.1-master.20181109104959",
-    "@atomist/microgrammar": "1.0.1-master.20181109093737",
-    "@atomist/tree-path": "1.0.1-master.20181109094247",
+    "@atomist/antlr": "1.0.1",
+    "@atomist/microgrammar": "1.0.1",
+    "@atomist/tree-path": "1.0.1",
     "@atomist/sdm-pack-build": "1.0.2-master.20181129174927",
     "@types/cross-spawn": "^6.0.0",
     "@types/dateformat": "^1.0.1",
