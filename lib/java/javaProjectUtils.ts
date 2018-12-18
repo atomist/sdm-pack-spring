@@ -59,8 +59,13 @@ export async function movePackage(project: Project,
         const oldDirectoryPath = path.dirname(f.path);
         await f.replaceAll(oldPackage, newPackage);
         await f.setPath(f.path.replace(pathToReplace, newPath));
-        const oldDirectory = fs.readdirSync(oldDirectoryPath);
-        if (oldDirectory.length === 0) {
+        let fileCountInDir = -1;
+        fs.readdir(oldDirectoryPath, (err, files) => {
+            if (!err) {
+                fileCountInDir = files.length;
+            }
+        });
+        if (fileCountInDir === 0) {
             fs.rmdirSync(oldDirectoryPath);
         }
     });

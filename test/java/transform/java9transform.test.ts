@@ -27,8 +27,8 @@ describe("java 8 ast", () => {
     it("method references and lambda should be able to be parsed", async () => {
         const p = InMemoryProject.from(
             { owner: "wicked", repo: "defying-gravity", url: "" });
-        p.addFile("src/main/java/Lambda.java", LambdaJavaFile);
-        p.addFile("src/main/java/MethodReference.java", MethodReferenceJavaFile);
+        await p.addFile("src/main/java/Lambda.java", LambdaJavaFile);
+        await p.addFile("src/main/java/MethodReference.java", MethodReferenceJavaFile);
 
         const changePackage: CodeTransform = async (project, ctx) => {
             await astUtils.doWithAllMatches(p, JavaFileParser, "**/*.java", SpringBootAppClassInJava, m => {
