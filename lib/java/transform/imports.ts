@@ -15,14 +15,14 @@
  */
 
 import { Java9FileParser } from "@atomist/antlr";
-import { astUtils, logger, Project, } from "@atomist/automation-client";
+import { astUtils, logger, Project } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
+import { evaluateScalar } from "@atomist/tree-path";
 import * as _ from "lodash";
 import { countTill, insertAt } from "../../util/formatUtils";
 import { classNameFromFqn } from "../javaProjectUtils";
 import { JavaImports } from "../query/javaPathExpressions";
 import { packageInfo } from "../query/packageInfo";
-import { evaluateScalar } from "@atomist/tree-path";
 
 export interface Import {
 
