@@ -15,10 +15,23 @@
  */
 
 import { Java9FileParser, KotlinFileParser } from "@atomist/antlr";
-import { astUtils, FileParser, FileParserRegistry, logger, Project, ProjectFile } from "@atomist/automation-client";
-import { evaluateScalarValue, PathExpression } from "@atomist/tree-path";
+import {
+    astUtils,
+    FileParser,
+    FileParserRegistry,
+    logger,
+    Project,
+    ProjectFile,
+} from "@atomist/automation-client";
+import {
+    evaluateScalarValue,
+    PathExpression,
+} from "@atomist/tree-path";
 import { KotlinPackage } from "../../java/JavaProjectStructure";
-import { JavaSourceFiles, KotlinSourceFiles } from "../../java/javaProjectUtils";
+import {
+    JavaSourceFiles,
+    KotlinSourceFiles,
+} from "../../java/javaProjectUtils";
 import { packageInfo } from "../../java/query/packageInfo";
 
 /**
