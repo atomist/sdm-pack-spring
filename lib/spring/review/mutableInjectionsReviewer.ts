@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { JavaFileParser } from "@atomist/antlr";
+import { Java9FileParser } from "@atomist/antlr";
 import {
     astUtils,
     Project,
@@ -36,7 +36,7 @@ export class MutableInjection implements ReviewComment {
     public subcategory: string = MutableInjectionCategory;
 
     constructor(public name: string, public type: "field" | "setter",
-                public sourceLocation: SourceLocation) {
+        public sourceLocation: SourceLocation) {
     }
 
     get detail() {
@@ -64,7 +64,7 @@ const InjectedFields = `//classBodyDeclaration[//annotation[@value='@Autowired']
  * location of source tree.
  */
 export async function findMutableInjections(p: Project, globPattern: string = JavaSourceFiles): Promise<ProjectReview> {
-    const fileHits = await astUtils.findMatches(p, JavaFileParser, globPattern, InjectedFields);
+    const fileHits = await astUtils.findMatches(p, Java9FileParser, globPattern, InjectedFields);
     const comments = fileHits.map(m => new MutableInjection(
         m.$value,
         m.$value.startsWith("set") ? "setter" : "field",

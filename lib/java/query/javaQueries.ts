@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { JavaFileParser } from "@atomist/antlr";
+import { Java9FileParser } from "@atomist/antlr";
 import {
     astUtils,
     Project,
@@ -31,7 +31,7 @@ export async function existingAnnotations(p: Project, opts: {
     sourceFilePath: string,
     className: string,
 }): Promise<Annotation[]> {
-    return astUtils.gatherFromMatches(p, JavaFileParser, opts.sourceFilePath,
+    return astUtils.gatherFromMatches(p, Java9FileParser, opts.sourceFilePath,
         annotationsOnJavaClass(opts.className),
         toBoundedElement);
 }

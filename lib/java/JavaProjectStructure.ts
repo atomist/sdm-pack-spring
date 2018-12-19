@@ -15,7 +15,7 @@
  */
 
 import {
-    JavaFileParser,
+    Java9FileParser,
     KotlinFileParser,
 } from "@atomist/antlr";
 import {
@@ -50,7 +50,7 @@ export class JavaProjectStructure {
      */
     public static async infer(p: ProjectAsync): Promise<JavaProjectStructure> {
         // Treat Java and Kotlin as one
-        const packages = (await astUtils.findMatches(p, JavaFileParser, JavaSourceFiles, JavaPackageName))
+        const packages = (await astUtils.findMatches(p, Java9FileParser, JavaSourceFiles, JavaPackageName))
             .concat(await astUtils.findMatches(p, KotlinFileParser, KotlinSourceFiles, KotlinPackage));
         const uniquePackages = _.uniq(packages.map(pack => pack.$value));
         if (uniquePackages.length === 0) {

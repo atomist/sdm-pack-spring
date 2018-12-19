@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { JavaFileParser } from "@atomist/antlr";
+import { Java9FileParser } from "@atomist/antlr";
 import {
     astUtils,
     logger,
@@ -47,7 +47,7 @@ export interface Import {
  * @return {Promise<Import[]>}
  */
 export async function existingImports(p: Project, path: string): Promise<Import[]> {
-    return astUtils.gatherFromMatches(p, JavaFileParser, path, JavaImports, m => {
+    return astUtils.gatherFromMatches(p, Java9FileParser, path, JavaImports, m => {
         const fqnChild = m.$children.find(c => c.$name === "qualifiedName");
         return {
             fqn: fqnChild.$value,
@@ -113,7 +113,7 @@ export function removeUnusedImports(opts: {
         const file = await p.getFile(opts.sourceFilePath);
         if (!!file) {
             const source = await file.getContent();
-            return astUtils.doWithAllMatches(p, JavaFileParser, opts.sourceFilePath, JavaImports, m => {
+            return astUtils.doWithAllMatches(p, Java9FileParser, opts.sourceFilePath, JavaImports, m => {
                 if (m.$value.includes(".*")) {
                     // Don't touch .* imports, we can't figure it out
                     return;

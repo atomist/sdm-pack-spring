@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { JavaFileParser } from "@atomist/antlr";
+import { Java9FileParser } from "@atomist/antlr";
 import {
     astUtils,
     Project,
@@ -52,7 +52,7 @@ const RequestMappingAnnotation = `//annotation[//annotationName[@value='RequestM
 export async function findNonSpecificMvcAnnotations(p: Project, globPattern: string = JavaSourceFiles): Promise<ProjectReview> {
     return {
         repoId: p.id,
-        comments: await astUtils.gatherFromMatches(p, JavaFileParser, globPattern, RequestMappingAnnotation,
+        comments: await astUtils.gatherFromMatches(p, Java9FileParser, globPattern, RequestMappingAnnotation,
             m => new NonSpecificMvcAnnotation(
                 m.$value,
                 m.sourceLocation)),
