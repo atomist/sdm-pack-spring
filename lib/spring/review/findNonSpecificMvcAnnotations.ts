@@ -41,7 +41,7 @@ export class NonSpecificMvcAnnotation implements ReviewComment {
     }
 }
 
-const RequestMappingAnnotation = `//annotation[//annotationName[@value='RequestMapping']]`;
+const RequestMappingAnnotation = `//annotation[//typeName[@value='RequestMapping']]`;
 
 /**
  * Find all non specific, old style @RequestMapping annotations
