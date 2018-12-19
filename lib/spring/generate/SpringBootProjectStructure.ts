@@ -14,28 +14,12 @@
  * limitations under the License.
  */
 
-import {
-    Java9FileParser,
-    KotlinFileParser,
-} from "@atomist/antlr";
-import {
-    astUtils,
-    FileParser,
-    FileParserRegistry,
-    logger,
-    ProjectAsync,
-    ProjectFile,
-} from "@atomist/automation-client";
-import {
-    evaluateScalarValue,
-    PathExpression,
-} from "@atomist/tree-path";
+import { Java9FileParser, KotlinFileParser, } from "@atomist/antlr";
+import { astUtils, FileParser, FileParserRegistry, logger, Project, ProjectAsync, ProjectFile, } from "@atomist/automation-client";
+import { evaluateScalarValue, PathExpression, } from "@atomist/tree-path";
 import { KotlinPackage } from "../../java/JavaProjectStructure";
-import {
-    JavaSourceFiles,
-    KotlinSourceFiles,
-} from "../../java/javaProjectUtils";
-import { JavaPackageName } from "../../java/query/javaPathExpressions";
+import { JavaSourceFiles, KotlinSourceFiles, } from "../../java/javaProjectUtils";
+import { packageInfo } from "../../java/query/packageInfo";
 
 /**
  * Path expression for a class name annotated with Spring Boot.
@@ -79,7 +63,7 @@ export class SpringBootProjectStructure {
         return await this.inferFromJavaSource(p) || this.inferFromKotlinSource(p);
     }
 
-    private static async inferFromSourceWithJavaLikeImports(p: ProjectAsync,
+    private static async inferFromSourceWithJavaLikeImports(p: Project,
                                                             parserOrRegistry: FileParser | FileParserRegistry,
                                                             globPattern: string,
                                                             pathExpression: string | PathExpression): Promise<SpringBootProjectStructure> {
@@ -94,7 +78,9 @@ export class SpringBootProjectStructure {
 
         // It's in the default package if no match found
         const packageName: { name: string } = {
-            name: evaluateScalarValue(fh.fileNode, JavaPackageName) ||
+            name: fh.file.extension === "java" ?
+                // TODO using package workaround for Antlr bug
+                ((await packageInfo(p, fh.file.path)) || { fqn: "" }).fqn :
                 evaluateScalarValue(fh.fileNode, KotlinPackage) ||
                 "",
         };
