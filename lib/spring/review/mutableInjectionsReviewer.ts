@@ -36,7 +36,7 @@ export class MutableInjection implements ReviewComment {
     public subcategory: string = MutableInjectionCategory;
 
     constructor(public name: string, public type: "field" | "setter",
-        public sourceLocation: SourceLocation) {
+                public sourceLocation: SourceLocation) {
     }
 
     get detail() {

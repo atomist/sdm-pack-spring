@@ -80,9 +80,9 @@ export class SpringBootProjectStructure {
     }
 
     private static async inferFromSourceWithJavaLikeImports(p: ProjectAsync,
-        parserOrRegistry: FileParser | FileParserRegistry,
-        globPattern: string,
-        pathExpression: string | PathExpression): Promise<SpringBootProjectStructure> {
+                                                            parserOrRegistry: FileParser | FileParserRegistry,
+                                                            globPattern: string,
+                                                            pathExpression: string | PathExpression): Promise<SpringBootProjectStructure> {
         const fileHits = await astUtils.findFileMatches(p, parserOrRegistry, globPattern, pathExpression);
         if (fileHits.length === 0) {
             return undefined;
@@ -121,8 +121,8 @@ export class SpringBootProjectStructure {
      * @param appClassFile path to the file containing the @SpringBootApplication annotation
      */
     private constructor(public readonly applicationPackage: string,
-        public readonly applicationClass: string,
-        public readonly appClassFile: ProjectFile) {
+                        public readonly applicationClass: string,
+                        public readonly appClassFile: ProjectFile) {
     }
 
 }
