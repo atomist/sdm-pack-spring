@@ -39,7 +39,7 @@ export interface PackageInfo extends BoundedElement {
 export async function packageInfo(p: Project, path: string): Promise<PackageInfo> {
     const packages = await astUtils.gatherFromMatches(p, Java9FileParser, path, JavaPackage, m => {
         return {
-            fqn: m.$children.find(c => c.$name === "qualifiedName").$value,
+            fqn: m.$children.find(c => c.$name === "packageName").$value,
             ...toBoundedElement(m),
         };
     });

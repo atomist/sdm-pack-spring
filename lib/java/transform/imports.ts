@@ -15,20 +15,14 @@
  */
 
 import { Java9FileParser } from "@atomist/antlr";
-import {
-    astUtils,
-    logger,
-    Project,
-} from "@atomist/automation-client";
+import { astUtils, logger, Project, } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import * as _ from "lodash";
-import {
-    countTill,
-    insertAt,
-} from "../../util/formatUtils";
+import { countTill, insertAt } from "../../util/formatUtils";
 import { classNameFromFqn } from "../javaProjectUtils";
 import { JavaImports } from "../query/javaPathExpressions";
 import { packageInfo } from "../query/packageInfo";
+import { evaluateScalar } from "@atomist/tree-path";
 
 export interface Import {
 
@@ -48,7 +42,7 @@ export interface Import {
  */
 export async function existingImports(p: Project, path: string): Promise<Import[]> {
     return astUtils.gatherFromMatches(p, Java9FileParser, path, JavaImports, m => {
-        const fqnChild = m.$children.find(c => c.$name === "qualifiedName");
+        const fqnChild = evaluateScalar(m, "//typeName");
         return {
             fqn: fqnChild.$value,
             offset: m.$offset,
