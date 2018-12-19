@@ -51,9 +51,9 @@ const InjectedFields = `//classBodyDeclaration[//annotation[@value='@Autowired']
                          //classBodyDeclaration[//annotation[@value='@Inject']]
                             //fieldDeclaration//variableDeclaratorId |
                          //classBodyDeclaration[//annotation[@value='@Autowired']]
-                            //methodDeclaration//Identifier[1] |
+                            //methodDeclaration//methodDeclarator/identifier |
                          //classBodyDeclaration[//annotation[@value='@Inject']]
-                            //methodDeclaration//Identifier[1]`;
+                            //methodDeclaration//methodDeclarator/identifier`;
 
 /**
  * Find all fields or setters annotated with @Autowired or @Inject in the codebase.
