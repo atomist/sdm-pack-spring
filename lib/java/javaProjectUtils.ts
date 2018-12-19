@@ -15,6 +15,7 @@
  */
 
 import {
+    LocalProject,
     logger,
     Project,
     projectUtils,
@@ -55,7 +56,7 @@ export async function movePackage(project: Project,
     const newPath = packageToPath(newPackage);
     logger.debug("Replacing path '%s' with '%s', package '%s' with '%s'",
         pathToReplace, newPath, oldPackage, newPackage);
-    return projectUtils.doWithFiles(project, globPattern, async f => {
+    await projectUtils.doWithFiles(project, globPattern, async f => {
         const oldDirectoryPath = path.dirname(f.path);
         await f.replaceAll(oldPackage, newPackage);
         await f.setPath(f.path.replace(pathToReplace, newPath));
@@ -69,6 +70,31 @@ export async function movePackage(project: Project,
             fs.rmdirSync(oldDirectoryPath);
         }
     });
+    cleanEmptyFoldersRecursively((project as LocalProject).baseDir);
+    return project;
+}
+
+function cleanEmptyFoldersRecursively(folder: string) {
+    const isDir = fs.statSync(folder).isDirectory();
+    if (!isDir) {
+        return;
+    }
+    let files = fs.readdirSync(folder);
+    if (files.length > 0) {
+        files.forEach(file => {
+            const fullPath = path.join(folder, file);
+            cleanEmptyFoldersRecursively(fullPath);
+        });
+
+        // re-evaluate files; after deleting subfolder
+        // we may have parent folder empty now
+        files = fs.readdirSync(folder);
+    }
+
+    if (files.length === 0) {
+        fs.rmdirSync(folder);
+        return;
+    }
 }
 
 /**
