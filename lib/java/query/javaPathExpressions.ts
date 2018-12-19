@@ -20,12 +20,6 @@
  */
 export const JavaPackage = "//packageDeclaration";
 
-/**
- * Path expression using the Java grammar for a Java package declaration
- * @type {string}
- */
-export const JavaPackageName = "//packageDeclaration/packageName";
-
 export const JavaImports = "//importDeclaration";
 
 /**

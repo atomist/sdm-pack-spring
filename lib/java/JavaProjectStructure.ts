@@ -28,7 +28,7 @@ import {
     JavaSourceFiles,
     KotlinSourceFiles,
 } from "./javaProjectUtils";
-import { JavaPackageName } from "./query/javaPathExpressions";
+import { JavaPackage } from "./query/javaPathExpressions";
 
 /**
  * Path expression using the Kotlin grammar for a Java package declaration
@@ -50,9 +50,11 @@ export class JavaProjectStructure {
      */
     public static async infer(p: ProjectAsync): Promise<JavaProjectStructure> {
         // Treat Java and Kotlin as one
-        const packages = (await astUtils.findMatches(p, Java9FileParser, JavaSourceFiles, JavaPackageName))
-            .concat(await astUtils.findMatches(p, KotlinFileParser, KotlinSourceFiles, KotlinPackage));
-        const uniquePackages = _.uniq(packages.map(pack => pack.$value));
+        const packages = (await astUtils.gatherFromMatches(p, Java9FileParser, JavaSourceFiles, JavaPackage,
+            // TODO workaround for recursive ANTLR bug
+            m => m.$value.replace(/.*package (.*);/, "$1") ))
+            .concat((await astUtils.findMatches(p, KotlinFileParser, KotlinSourceFiles, KotlinPackage)).map(m => m.$value));
+        const uniquePackages = _.uniq(packages);
         if (uniquePackages.length === 0) {
             return undefined;
         }

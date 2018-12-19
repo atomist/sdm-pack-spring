@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Java9FileParser, KotlinFileParser, } from "@atomist/antlr";
-import { astUtils, FileParser, FileParserRegistry, logger, Project, ProjectAsync, ProjectFile, } from "@atomist/automation-client";
-import { evaluateScalarValue, PathExpression, } from "@atomist/tree-path";
+import { Java9FileParser, KotlinFileParser } from "@atomist/antlr";
+import { astUtils, FileParser, FileParserRegistry, logger, Project, ProjectFile } from "@atomist/automation-client";
+import { evaluateScalarValue, PathExpression } from "@atomist/tree-path";
 import { KotlinPackage } from "../../java/JavaProjectStructure";
 import { JavaSourceFiles, KotlinSourceFiles, } from "../../java/javaProjectUtils";
 import { packageInfo } from "../../java/query/packageInfo";
@@ -51,15 +51,15 @@ export class SpringBootProjectStructure {
      * @param {ProjectAsync} p
      * @return {Promise<SpringBootProjectStructure>}
      */
-    public static async inferFromJavaSource(p: ProjectAsync): Promise<SpringBootProjectStructure> {
+    public static async inferFromJavaSource(p: Project): Promise<SpringBootProjectStructure> {
         return this.inferFromSourceWithJavaLikeImports(p, Java9FileParser, JavaSourceFiles, SpringBootAppClassInJava);
     }
 
-    public static async inferFromKotlinSource(p: ProjectAsync): Promise<SpringBootProjectStructure> {
+    public static async inferFromKotlinSource(p: Project): Promise<SpringBootProjectStructure> {
         return this.inferFromSourceWithJavaLikeImports(p, KotlinFileParser, KotlinSourceFiles, SpringBootAppClassInKotlin);
     }
 
-    public static async inferFromJavaOrKotlinSource(p: ProjectAsync): Promise<SpringBootProjectStructure> {
+    public static async inferFromJavaOrKotlinSource(p: Project): Promise<SpringBootProjectStructure> {
         return await this.inferFromJavaSource(p) || this.inferFromKotlinSource(p);
     }
 
