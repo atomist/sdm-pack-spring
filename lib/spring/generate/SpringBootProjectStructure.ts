@@ -42,9 +42,9 @@ import { JavaPackageName } from "../../java/query/javaPathExpressions";
  * Uses Java formal grammar.
  * @type {string}
  */
-export const SpringBootAppClassInJava = `//typeDeclaration
+export const SpringBootAppClassInJava = `//normalClassDeclaration
                                 [//annotation[@value='@SpringBootApplication']]
-                                /classDeclaration//Identifier`;
+                                /identifier`;
 
 /**
  * Path expression for a class name annotated with Spring Boot.
