@@ -112,7 +112,7 @@ export function removeUnusedImports(opts: {
                     // Don't touch .* imports, we can't figure it out
                     return;
                 }
-                const fqnChild = m.$children.find(c => c.$name === "qualifiedName");
+                const fqnChild = evaluateScalar(m, "//typeName");
                 const simpleName = classNameFromFqn(fqnChild.$value);
 
                 // Look in the remainder of the file
