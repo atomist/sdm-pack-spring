@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { JavaFileParser } from "@atomist/antlr";
+import { Java9FileParser } from "@atomist/antlr";
 import {
     astUtils,
     Project,
@@ -37,9 +37,10 @@ export interface PackageInfo extends BoundedElement {
  * @return {Promise<Import[]>}
  */
 export async function packageInfo(p: Project, path: string): Promise<PackageInfo> {
-    const packages = await astUtils.gatherFromMatches(p, JavaFileParser, path, JavaPackage, m => {
+    const packages = await astUtils.gatherFromMatches(p, Java9FileParser, path, JavaPackage, m => {
         return {
-            fqn: m.$children.find(c => c.$name === "qualifiedName").$value,
+            // TODO this is inelegant pending recursive Antlr grammar fix
+            fqn: m.$value.replace(/.*package (.*);/, "$1"),
             ...toBoundedElement(m),
         };
     });

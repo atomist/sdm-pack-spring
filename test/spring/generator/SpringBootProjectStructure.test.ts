@@ -57,6 +57,22 @@ describe("SpringBootProjectStructure: Java inference", () => {
             assert(structure.appClassFile.path === GishJavaPath);
         });
 
+        it("infer application package and class when present using lambda", async () => {
+            const structure = await SpringBootProjectStructure.inferFromJavaSource(GishProjectWithLambda());
+            assert(structure.applicationPackage === "com.smashing.pumpkins");
+            assert(structure.applicationClass === "GishApplication",
+                `Expected name not to be ${structure.appClassFile.name}`);
+            assert(structure.appClassFile.path === GishJavaPath);
+        });
+
+        it("infer application package and class when present using local type inference", async () => {
+            const structure = await SpringBootProjectStructure.inferFromJavaSource(GishProjectWithLocalTypeInference());
+            assert(structure.applicationPackage === "com.smashing.pumpkins");
+            assert(structure.applicationClass === "GishApplication",
+                `Expected name not to be ${structure.appClassFile.name}`);
+            assert(structure.appClassFile.path === GishJavaPath);
+        });
+
         it("infer application package and class when present, ignoring extraneous comment", async () => {
             const structure = await SpringBootProjectStructure.inferFromJavaSource(GishProjectWithComment());
             assert(structure.applicationPackage === "com.smashing.pumpkins");
@@ -124,6 +140,7 @@ const javaSource =
 
 @SpringBootApplication
 class GishApplication {
+    //1
 }
 
 `;
@@ -166,6 +183,29 @@ export const GishProject: () => Project = () => InMemoryProject.from(
     {
         path: GishJavaPath,
         content: javaSource,
+    }, {
+        path: "pom.xml",
+        content: SimplePom,
+    },
+);
+
+export const GishProjectWithLambda: () => Project = () => InMemoryProject.from(
+    { owner: "smashing-pumpkins", repo: "gish", url: "" },
+    {
+        path: GishJavaPath,
+        content: javaSource.replace("//1", `NumericTest isEven = (n) -> (n % 2) == 0;
+	NumericTest isNegative = (n) -> (n < 0);`),
+    }, {
+        path: "pom.xml",
+        content: SimplePom,
+    },
+);
+
+export const GishProjectWithLocalTypeInference: () => Project = () => InMemoryProject.from(
+    { owner: "smashing-pumpkins", repo: "gish", url: "" },
+    {
+        path: GishJavaPath,
+        content: javaSource.replace("//1", "var x = new HashMap<String,Integer>();"),
     }, {
         path: "pom.xml",
         content: SimplePom,

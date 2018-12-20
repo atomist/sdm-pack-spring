@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { JavaFileParser } from "@atomist/antlr";
+import { Java9FileParser } from "@atomist/antlr";
 import {
     astUtils,
     Project,
@@ -51,9 +51,9 @@ const InjectedFields = `//classBodyDeclaration[//annotation[@value='@Autowired']
                          //classBodyDeclaration[//annotation[@value='@Inject']]
                             //fieldDeclaration//variableDeclaratorId |
                          //classBodyDeclaration[//annotation[@value='@Autowired']]
-                            //methodDeclaration//Identifier[1] |
+                            //methodDeclaration//methodDeclarator/identifier |
                          //classBodyDeclaration[//annotation[@value='@Inject']]
-                            //methodDeclaration//Identifier[1]`;
+                            //methodDeclaration//methodDeclarator/identifier`;
 
 /**
  * Find all fields or setters annotated with @Autowired or @Inject in the codebase.
@@ -64,7 +64,7 @@ const InjectedFields = `//classBodyDeclaration[//annotation[@value='@Autowired']
  * location of source tree.
  */
 export async function findMutableInjections(p: Project, globPattern: string = JavaSourceFiles): Promise<ProjectReview> {
-    const fileHits = await astUtils.findMatches(p, JavaFileParser, globPattern, InjectedFields);
+    const fileHits = await astUtils.findMatches(p, Java9FileParser, globPattern, InjectedFields);
     const comments = fileHits.map(m => new MutableInjection(
         m.$value,
         m.$value.startsWith("set") ? "setter" : "field",
