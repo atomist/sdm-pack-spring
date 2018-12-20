@@ -26,6 +26,8 @@ import {
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
 import { IsSpringBoot2Project } from "../pushtest/pushTests";
 
+// TODO this path expression is non-performant as it doesn't use @Value
+// The logic in this class is also probably incorrect
 const Constructors = `//classBodyDeclaration[//constructorDeclaration]`;
 
 /**

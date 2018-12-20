@@ -42,6 +42,8 @@ describe("remove unnecessary annotations", () => {
 
         it("does not remove import if multiple uses");
 
+        it("correctly handles multiple classes in one file");
+
         it("doesn't remove necessary annotation", async () => {
             const path = "src/main/java/Foo.java";
             const content = "public @ComponentScan class MyApp {}";
