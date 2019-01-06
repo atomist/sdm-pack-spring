@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { JavaFileParser } from "@atomist/antlr";
+import { Java9FileParser } from "@atomist/antlr";
 import {
     astUtils,
 } from "@atomist/automation-client";
@@ -26,6 +26,8 @@ import {
 import { JavaSourceFiles } from "../../java/javaProjectUtils";
 import { IsSpringBoot2Project } from "../pushtest/pushTests";
 
+// TODO this path expression is non-performant as it doesn't use @Value
+// The logic in this class is also probably incorrect
 const Constructors = `//classBodyDeclaration[//constructorDeclaration]`;
 
 /**
@@ -34,9 +36,9 @@ const Constructors = `//classBodyDeclaration[//constructorDeclaration]`;
  * @return {Promise<void>}
  */
 export const removeAutowiredOnSoleConstructor: CodeTransform = async p => {
-    const constructors = await astUtils.findMatches(p, JavaFileParser, JavaSourceFiles, Constructors);
+    const constructors = await astUtils.findMatches(p, Java9FileParser, JavaSourceFiles, Constructors);
     if (constructors.length === 1 && constructors[0].$value.includes("@Autowired")) {
-        await astUtils.doWithAllMatches(p, JavaFileParser, JavaSourceFiles, Constructors, constructor =>
+        await astUtils.doWithAllMatches(p, Java9FileParser, JavaSourceFiles, Constructors, constructor =>
             constructor.$value = constructor.$value.replace(/@Autowired[\s]+/, ""));
     }
 };

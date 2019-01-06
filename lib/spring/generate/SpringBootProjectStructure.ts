@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-import {
-    JavaFileParser,
-    KotlinFileParser,
-} from "@atomist/antlr";
+import { Java9FileParser, KotlinFileParser } from "@atomist/antlr";
 import {
     astUtils,
     FileParser,
     FileParserRegistry,
     logger,
-    ProjectAsync,
+    Project,
     ProjectFile,
 } from "@atomist/automation-client";
 import {
@@ -35,16 +32,16 @@ import {
     JavaSourceFiles,
     KotlinSourceFiles,
 } from "../../java/javaProjectUtils";
-import { JavaPackageName } from "../../java/query/javaPathExpressions";
+import { packageInfo } from "../../java/query/packageInfo";
 
 /**
  * Path expression for a class name annotated with Spring Boot.
  * Uses Java formal grammar.
  * @type {string}
  */
-export const SpringBootAppClassInJava = `//typeDeclaration
+export const SpringBootAppClassInJava = `//normalClassDeclaration
                                 [//annotation[@value='@SpringBootApplication']]
-                                /classDeclaration//Identifier`;
+                                /identifier`;
 
 /**
  * Path expression for a class name annotated with Spring Boot.
@@ -67,19 +64,19 @@ export class SpringBootProjectStructure {
      * @param {ProjectAsync} p
      * @return {Promise<SpringBootProjectStructure>}
      */
-    public static async inferFromJavaSource(p: ProjectAsync): Promise<SpringBootProjectStructure> {
-        return this.inferFromSourceWithJavaLikeImports(p, JavaFileParser, JavaSourceFiles, SpringBootAppClassInJava);
+    public static async inferFromJavaSource(p: Project): Promise<SpringBootProjectStructure> {
+        return this.inferFromSourceWithJavaLikeImports(p, Java9FileParser, JavaSourceFiles, SpringBootAppClassInJava);
     }
 
-    public static async inferFromKotlinSource(p: ProjectAsync): Promise<SpringBootProjectStructure> {
+    public static async inferFromKotlinSource(p: Project): Promise<SpringBootProjectStructure> {
         return this.inferFromSourceWithJavaLikeImports(p, KotlinFileParser, KotlinSourceFiles, SpringBootAppClassInKotlin);
     }
 
-    public static async inferFromJavaOrKotlinSource(p: ProjectAsync): Promise<SpringBootProjectStructure> {
+    public static async inferFromJavaOrKotlinSource(p: Project): Promise<SpringBootProjectStructure> {
         return await this.inferFromJavaSource(p) || this.inferFromKotlinSource(p);
     }
 
-    private static async inferFromSourceWithJavaLikeImports(p: ProjectAsync,
+    private static async inferFromSourceWithJavaLikeImports(p: Project,
                                                             parserOrRegistry: FileParser | FileParserRegistry,
                                                             globPattern: string,
                                                             pathExpression: string | PathExpression): Promise<SpringBootProjectStructure> {
@@ -94,9 +91,11 @@ export class SpringBootProjectStructure {
 
         // It's in the default package if no match found
         const packageName: { name: string } = {
-            name: evaluateScalarValue(fh.fileNode, JavaPackageName) ||
-            evaluateScalarValue(fh.fileNode, KotlinPackage) ||
-            "",
+            name: fh.file.extension === "java" ?
+                // TODO using package workaround for Antlr bug
+                ((await packageInfo(p, fh.file.path)) || { fqn: "" }).fqn :
+                evaluateScalarValue(fh.fileNode, KotlinPackage) ||
+                "",
         };
         const appClass = fh.matches[0].$value;
         if (packageName && appClass) {

@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import { JavaFileParser } from "@atomist/antlr";
+import { Java9FileParser } from "@atomist/antlr";
 import {
     astUtils,
     logger,
     Project,
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
+import { evaluateScalar } from "@atomist/tree-path";
 import * as _ from "lodash";
 import {
     countTill,
@@ -47,8 +48,8 @@ export interface Import {
  * @return {Promise<Import[]>}
  */
 export async function existingImports(p: Project, path: string): Promise<Import[]> {
-    return astUtils.gatherFromMatches(p, JavaFileParser, path, JavaImports, m => {
-        const fqnChild = m.$children.find(c => c.$name === "qualifiedName");
+    return astUtils.gatherFromMatches(p, Java9FileParser, path, JavaImports, m => {
+        const fqnChild = evaluateScalar(m, "//typeName");
         return {
             fqn: fqnChild.$value,
             offset: m.$offset,
@@ -113,12 +114,12 @@ export function removeUnusedImports(opts: {
         const file = await p.getFile(opts.sourceFilePath);
         if (!!file) {
             const source = await file.getContent();
-            return astUtils.doWithAllMatches(p, JavaFileParser, opts.sourceFilePath, JavaImports, m => {
+            return astUtils.doWithAllMatches(p, Java9FileParser, opts.sourceFilePath, JavaImports, m => {
                 if (m.$value.includes(".*")) {
                     // Don't touch .* imports, we can't figure it out
                     return;
                 }
-                const fqnChild = m.$children.find(c => c.$name === "qualifiedName");
+                const fqnChild = evaluateScalar(m, "//typeName");
                 const simpleName = classNameFromFqn(fqnChild.$value);
 
                 // Look in the remainder of the file

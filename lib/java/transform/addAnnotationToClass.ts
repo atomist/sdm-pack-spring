@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { JavaFileParser } from "@atomist/antlr";
+import { Java9FileParser } from "@atomist/antlr";
 import { astUtils } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
 import { classNameFromFqn } from "../javaProjectUtils";
@@ -37,7 +37,7 @@ export function addAnnotationToClassRaw(opts: {
         const existing = await existingAnnotations(p, opts);
         if (!existing.some(ann => ann.value.startsWith("@" + opts.annotationName))) {
             await astUtils.doWithAllMatches(p,
-                JavaFileParser,
+                Java9FileParser,
                 opts.sourceFilePath,
                 javaClassDeclarationWithName(opts.className), m => {
                     m.$value = `@${opts.annotationName}\n${m.$value}`;
