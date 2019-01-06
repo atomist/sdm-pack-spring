@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { JavaFileParser } from "@atomist/antlr";
+import { Java9FileParser } from "@atomist/antlr";
 import {
     astUtils,
     InMemoryProject,
@@ -31,7 +31,7 @@ describe("java 8 ast", () => {
         await p.addFile("src/main/java/MethodReference.java", MethodReferenceJavaFile);
 
         const changePackage: CodeTransform = async (project, ctx) => {
-            await astUtils.doWithAllMatches(p, JavaFileParser, "**/*.java", SpringBootAppClassInJava, m => {
+            await astUtils.doWithAllMatches(p, Java9FileParser, "**/*.java", SpringBootAppClassInJava, m => {
                 console.debug(m.$value);
             });
             return p;
