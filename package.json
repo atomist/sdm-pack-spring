@@ -27,7 +27,7 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "dependencies": {
-    "@atomist/antlr": "^1.0.2-java9.20181219033844",
+    "@atomist/antlr": "^1.0.2",
     "@atomist/microgrammar": "^1.0.1",
     "@atomist/sdm-pack-build": "^1.0.3",
     "@atomist/tree-path": "^1.0.1",
