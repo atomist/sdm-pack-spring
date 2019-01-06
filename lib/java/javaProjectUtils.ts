@@ -15,12 +15,15 @@
  */
 
 import {
+    LocalProject,
     logger,
     Project,
     projectUtils,
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
+import * as fs from "fs";
 import * as _ from "lodash";
+import * as path from "path";
 import { SpringProjectCreationParameters } from "../spring/generate/SpringProjectCreationParameters";
 import { JavaProjectStructure } from "./JavaProjectStructure";
 
@@ -53,10 +56,38 @@ export async function movePackage(project: Project,
     const newPath = packageToPath(newPackage);
     logger.debug("Replacing path '%s' with '%s', package '%s' with '%s'",
         pathToReplace, newPath, oldPackage, newPackage);
-    return projectUtils.doWithFiles(project, globPattern, async f => {
+    await projectUtils.doWithFiles(project, globPattern, async f => {
         await f.replaceAll(oldPackage, newPackage);
         await f.setPath(f.path.replace(pathToReplace, newPath));
     });
+    const projectDir = (project as LocalProject).baseDir;
+    if (projectDir) {
+        cleanEmptyFoldersRecursively(projectDir);
+    }
+    return project;
+}
+
+function cleanEmptyFoldersRecursively(folder: string) {
+    const isDir = fs.statSync(folder).isDirectory();
+    if (!isDir) {
+        return;
+    }
+    let files = fs.readdirSync(folder);
+    if (files.length > 0) {
+        files.forEach(file => {
+            const fullPath = path.join(folder, file);
+            cleanEmptyFoldersRecursively(fullPath);
+        });
+
+        // re-evaluate files; after deleting subfolder
+        // we may have parent folder empty now
+        files = fs.readdirSync(folder);
+    }
+
+    if (files.length === 0) {
+        fs.rmdirSync(folder);
+        return;
+    }
 }
 
 /**
@@ -93,7 +124,7 @@ export function renameClass(project: Project,
     return projectUtils.doWithFiles(project, AllJavaAndKotlinFiles, async f => {
         if (f.name.includes(oldClass)) {
             await f.rename(f.name.replace(oldClass, newClass));
-            const oldClassRe = new RegExp("([\( \t])" + oldClass, "gm");
+            const oldClassRe = new RegExp("([\( \t<])" + oldClass, "gm");
             await f.replace(oldClassRe, `$1${newClass}`);
         }
     });
