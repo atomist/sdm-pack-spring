@@ -62,7 +62,7 @@ export const RiffProjectCreationTransform: CodeTransform<RiffProjectCreationPara
     await riffToml.replaceAll(parsed.handler, ci.parameters.fqn);
 };
 
-export const RiffProjectCreationParameterDefinitions: ParametersObject = {
+export const RiffProjectCreationParameterDefinitions: ParametersObject<any, any> = {
     fqn: {
         pattern: /[a-zA-Z][a-zA-Z0-9]*\.[a-zA-Z0-9.]+/,
         description: "Fully qualified name of the function class. Don't use default package",

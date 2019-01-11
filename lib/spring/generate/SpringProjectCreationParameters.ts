@@ -39,7 +39,7 @@ export interface SpringProjectCreationParameters extends JavaProjectCreationPara
  * Parameters for creating Spring Boot apps.
  * Based on Java project creation parameters.
  */
-export const SpringProjectCreationParameterDefinitions: ParametersObject = {
+export const SpringProjectCreationParameterDefinitions: ParametersObject<any, any> = {
 
     ...JavaProjectCreationParameterDefinitions,
 

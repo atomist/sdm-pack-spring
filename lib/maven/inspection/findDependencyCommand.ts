@@ -31,7 +31,7 @@ export interface FindDependencyParameters {
     artifact: string;
 }
 
-export const FindDependencyParametersDefinitions: ParametersObject = {
+export const FindDependencyParametersDefinitions: ParametersObject<any, any> = {
     artifact: {
         ...MavenArtifactIdRegExp,
     },

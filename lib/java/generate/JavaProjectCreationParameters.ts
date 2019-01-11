@@ -41,7 +41,7 @@ export interface JavaProjectCreationParameters extends SeedDrivenGeneratorParame
 /**
  * Java project generator parameters definitions.
  */
-export const JavaProjectCreationParameterDefinitions: ParametersObject = {
+export const JavaProjectCreationParameterDefinitions: ParametersObject<any, any> = {
 
     enteredArtifactId: {
         ...MavenArtifactIdRegExp,
