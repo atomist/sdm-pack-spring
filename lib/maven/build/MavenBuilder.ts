@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Atomist, Inc.
+ * Copyright © 2018 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,15 @@
  */
 
 import {
-    ChildProcessResult,
     GitProject,
     LocalProject,
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import {
     AppInfo,
-    FulfillableGoalDetails,
-    goal,
-    Goal,
     ProgressLog,
-    spawnAndWatch,
+    spawnLog,
+    SpawnLogResult,
 } from "@atomist/sdm";
 import {
     Builder,
@@ -69,7 +66,7 @@ class UpdatingBuild implements BuildInProgress {
     public deploymentUnitFile: string;
 
     constructor(public repoRef: RemoteRepoRef,
-                public buildResult: ChildProcessResult) {
+                public buildResult: SpawnLogResult) {
     }
 
     get appInfo(): AppInfo {
@@ -78,37 +75,16 @@ class UpdatingBuild implements BuildInProgress {
 
 }
 
-export const mavenPackage = mavenRunGoal;
-
-export async function mavenRunGoal(p: GitProject,
+export async function mavenPackage(p: GitProject,
                                    progressLog: ProgressLog,
-                                   args: Array<{ name: string, value?: string }> = [],
-                                   mavenGoal: string = "package"): Promise<ChildProcessResult> {
+                                   args: Array<{ name: string, value?: string }> = []): Promise<SpawnLogResult> {
     const command = await determineMavenCommand(p);
-    return spawnAndWatch({
+    return spawnLog(
             command,
-            args: [mavenGoal, ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
-        },
+            ["package", ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
         {
             cwd: p.baseDir,
+            log: progressLog,
         },
-        progressLog,
     );
-}
-
-/**
- * Run an arbitrary Maven goal with the given arguments.
- * Does not take account of any generated artifact.
- * @param details goal details
- * @param {string} mavenGoal
- * @param args
- * @return {Builder}
- */
-export function mavenRunner(details: FulfillableGoalDetails, mavenGoal: string, args: Array<{ name: string, value?: string }> = []): Goal {
-    return goal(details, async goalInvocation => {
-        const { configuration, credentials, progressLog, id } = goalInvocation;
-        return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
-            await mavenPackage(p, progressLog, args, mavenGoal);
-        });
-    });
 }

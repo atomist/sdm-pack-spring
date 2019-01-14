@@ -26,8 +26,7 @@ import {
     LogSuppressor,
     PrepareForGoalExecution,
     ProgressLog,
-    SdmGoalEvent,
-    spawnAndWatch,
+    SdmGoalEvent, spawnLog,
 } from "@atomist/sdm";
 import {
     ProjectVersioner,
@@ -73,10 +72,9 @@ export const MavenVersionPreparation: PrepareForGoalExecution = async (p: GitPro
 async function changeMavenVersion(version: string, p: GitProject, progressLog: ProgressLog): Promise<ExecuteGoalResult> {
     const command = await determineMavenCommand(p);
     const args = ["build-helper:parse-version", "versions:set", `-DnewVersion=${version}`, "versions:commit"];
-    return spawnAndWatch(
-        { command, args },
-        { cwd: p.baseDir },
-        progressLog);
+    return spawnLog(
+        command, args,
+        { cwd: p.baseDir, log: progressLog });
 }
 
 /**
@@ -108,26 +106,26 @@ export async function mavenIncrementPatchVersionCommand(p: GitProject, progressL
         "\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}-\${parsedVersion.qualifier}",
         "versions:commit",
     ];
-    return spawnAndWatch(
-        { command, args },
-        { cwd: p.baseDir },
-        progressLog);
+    return spawnLog(
+        command, args,
+        { cwd: p.baseDir, log: progressLog });
 }
 
 export async function mvnVersionProjectListener(p: GitProject,
                                                 gi: GoalInvocation,
                                                 event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
+    const command = await determineMavenCommand(p);
     if (event === GoalProjectListenerEvent.before) {
         const v = await readSdmVersion(
-            gi.sdmGoal.repo.owner,
-            gi.sdmGoal.repo.name,
-            gi.sdmGoal.repo.providerId,
-            gi.sdmGoal.sha,
-            gi.sdmGoal.branch,
+            gi.goalEvent.repo.owner,
+            gi.goalEvent.repo.name,
+            gi.goalEvent.repo.providerId,
+            gi.goalEvent.sha,
+            gi.goalEvent.branch,
             gi.context);
-        return spawnAndWatch({
-            command: "mvn", args: ["versions:set", `-DnewVersion=${v}`, "versions:commit"],
-        }, { cwd: p.baseDir }, gi.progressLog);
+        return spawnLog(
+            command, ["versions:set", `-DnewVersion=${v}`, "versions:commit"],
+            { cwd: p.baseDir, log: gi.progressLog });
     }
 }
 
@@ -140,15 +138,14 @@ export const MvnVersion: GoalProjectListenerRegistration = {
 async function mvnPackageProjectListener(p: GitProject,
                                          gi: GoalInvocation,
                                          event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
+    const command = await determineMavenCommand(p);
     if (event === GoalProjectListenerEvent.before) {
-        return spawnAndWatch({
-                command: "mvn",
-                args: ["package", "-DskipTests=true", `-Dartifact.name=${p.id.repo}`],
-            },
+        return spawnLog(command,
+                ["package", "-DskipTests=true", `-Dartifact.name=${p.id.repo}`],
             {
                 cwd: p.baseDir,
-            },
-            gi.progressLog);
+                log: gi.progressLog,
+            });
     }
 }
 
