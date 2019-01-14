@@ -15,6 +15,7 @@
  */
 
 import {
+    ChildProcessResult,
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import {
@@ -23,8 +24,7 @@ import {
 } from "@atomist/microgrammar";
 import {
     AppInfo,
-    spawnLog,
-    SpawnLogResult,
+    spawnAndWatch,
     StringCapturingProgressLog,
 } from "@atomist/sdm";
 import {
@@ -47,17 +47,19 @@ export function gradleSingleModuleBuilder(): Builder {
         return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
             const propertiesOutput = new StringCapturingProgressLog();
             const command = determineGradleCommand(p);
-            await spawnLog(
-                command, ["properties"],
-                { cwd: p.baseDir, log: propertiesOutput});
+            await spawnAndWatch(
+                { command, args: ["properties"] },
+                { cwd: p.baseDir },
+                propertiesOutput);
             const appName = nameGrammar.firstMatch(propertiesOutput.log).$matched;
             const version = versionGrammar.firstMatch(propertiesOutput.log).$matched;
 
-            const buildResult = spawnLog(
-                command, ["--console=plain", "clean", "build"],
-                { cwd: p.baseDir,
-                log: progressLog,
-                errorFinder: (code, signal, l) => l.log.includes("[ERROR]")});
+            const buildResult = spawnAndWatch(
+                { command, args: ["--console=plain", "clean", "build"] },
+                { cwd: p.baseDir },
+                progressLog, {
+                    errorFinder: (code, signal, l) => l.log.includes("[ERROR]"),
+                });
 
             const rb = new UpdatingBuild(id, await buildResult);
             rb.ai = { id, name: appName, version };
@@ -90,7 +92,7 @@ class UpdatingBuild implements BuildInProgress {
     public deploymentUnitFile: string;
 
     constructor(public repoRef: RemoteRepoRef,
-                public buildResult: SpawnLogResult) {
+                public buildResult: ChildProcessResult) {
     }
 
     get appInfo(): AppInfo {
