@@ -15,6 +15,7 @@
  */
 
 import {
+    ChildProcessResult,
     GitProject,
     LocalProject,
     RemoteRepoRef,
@@ -22,8 +23,7 @@ import {
 import {
     AppInfo,
     ProgressLog,
-    spawnLog,
-    SpawnLogResult,
+    spawnAndWatch,
 } from "@atomist/sdm";
 import {
     Builder,
@@ -66,7 +66,7 @@ class UpdatingBuild implements BuildInProgress {
     public deploymentUnitFile: string;
 
     constructor(public repoRef: RemoteRepoRef,
-                public buildResult: SpawnLogResult) {
+                public buildResult: ChildProcessResult) {
     }
 
     get appInfo(): AppInfo {
@@ -77,14 +77,15 @@ class UpdatingBuild implements BuildInProgress {
 
 export async function mavenPackage(p: GitProject,
                                    progressLog: ProgressLog,
-                                   args: Array<{ name: string, value?: string }> = []): Promise<SpawnLogResult> {
+                                   args: Array<{ name: string, value?: string }> = []): Promise<ChildProcessResult> {
     const command = await determineMavenCommand(p);
-    return spawnLog(
+    return spawnAndWatch({
             command,
-            ["package", ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
+            args: ["package", ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
+        },
         {
             cwd: p.baseDir,
-            log: progressLog,
         },
+        progressLog,
     );
 }
