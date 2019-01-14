@@ -24,8 +24,7 @@ import {
     GoalInvocation,
     GoalWithFulfillment,
     IndependentOfEnvironment,
-    LoggingProgressLog,
-    spawnAndWatch,
+    LoggingProgressLog, spawnLog,
 } from "@atomist/sdm";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 import { determineMavenCommand } from "../mavenCommand";
@@ -56,11 +55,9 @@ function executeMavenTest(goalInvocation: GoalInvocation): Promise<{ code: numbe
         {id, credentials, readOnly: true},
         async (p: LocalProject) => {
         const mavenCommand = await determineMavenCommand(p);
-        const result = await spawnAndWatch(
-            {command: mavenCommand, args: ["test"]},
-            {cwd: p.baseDir},
-            new LoggingProgressLog("maven-test", "info"),
-            {});
+        const result = await spawnLog(
+            mavenCommand, ["test"],
+            {cwd: p.baseDir, log: new LoggingProgressLog("maven-test", "info")});
         const r = await getJUnitTestResults(p);
         const prefix = r.tests === 1 ? `1 test` : `${r.tests} tests`;
         if (result.code === 0) {
