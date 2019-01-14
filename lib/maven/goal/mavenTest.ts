@@ -24,7 +24,8 @@ import {
     GoalInvocation,
     GoalWithFulfillment,
     IndependentOfEnvironment,
-    LoggingProgressLog, spawnLog,
+    LoggingProgressLog,
+    spawnLog,
 } from "@atomist/sdm";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 import { determineMavenCommand } from "../mavenCommand";

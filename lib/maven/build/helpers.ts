@@ -26,7 +26,8 @@ import {
     LogSuppressor,
     PrepareForGoalExecution,
     ProgressLog,
-    SdmGoalEvent, spawnLog,
+    SdmGoalEvent,
+    spawnLog,
 } from "@atomist/sdm";
 import {
     ProjectVersioner,
