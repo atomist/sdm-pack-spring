@@ -60,7 +60,7 @@ export async function inferSpringStructureAndDo(
 }
 
 export const inferSpringStructureAndRenameTransform: CodeTransform<SpringProjectCreationParameters> =
-    (p, c, params) => inferSpringStructureAndRename(computeServiceClassName(params), p);
+    (p, c, params) => inferSpringStructureAndRename(computeServiceClassName(params, p), p);
 
 export function inferSpringStructureAndDoTransform(
     action: (p: Project, structure: SpringBootProjectStructure) => Promise<Project>): CodeTransform<SpringProjectCreationParameters> {

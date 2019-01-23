@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { projectUtils } from "@atomist/automation-client";
+import {
+    projectUtils,
+    SeedDrivenGeneratorParameters,
+} from "@atomist/automation-client";
 import {
     chainTransforms,
     CodeTransform,
@@ -31,7 +34,7 @@ import { SpringProjectCreationParameters } from "./SpringProjectCreationParamete
  * Get a transform that removes content from a README specific to this project.
  * @param project      project whose README should be cleaned
  */
-const cleanReadMe: CodeTransform<SpringProjectCreationParameters> =
+const cleanReadMe: CodeTransform<SpringProjectCreationParameters & SeedDrivenGeneratorParameters> =
     async (project, c, params) => projectUtils.doWithFiles(project, "README.md", readMe => {
         return readMe.replace(/^#[\\s\\S]*?## Development/, `# ${project.name}
 This project contains ${params.target.description}.

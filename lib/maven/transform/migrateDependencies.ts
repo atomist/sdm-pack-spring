@@ -26,19 +26,19 @@ function hasGroups(old: RegExp) {
 }
 
 export function migrateArtifactIdTransform(old: RegExp, replacement?: string): CodeTransform<SpringProjectCreationParameters> {
-    return async (p, context, params) => {
+    return async p => {
         await projectUtils.doWithFiles(p, "**/pom.xml", async f => {
             const content = await f.getContent();
             const toReplace = new RegExp(`<artifactId>${old.source}</artifactId>`, "g");
             if (hasGroups(old)) {
                 const replace = !!replacement
                     ? `<artifactId>${replacement}</artifactId>`
-                    : `<artifactId>${params.target.repoRef.repo}-$1</artifactId>`;
+                    : `<artifactId>${p.id.repo}-$1</artifactId>`;
                 await f.setContent(content.replace(toReplace, replace));
             } else {
                 const replace = !!replacement
                     ? `<artifactId>${replacement}</artifactId>`
-                    : `<artifactId>${params.target.repoRef.repo}</artifactId>`;
+                    : `<artifactId>${p.id.repo}</artifactId>`;
                 await f.setContent(content.replace(toReplace, replace));
             }
         });
