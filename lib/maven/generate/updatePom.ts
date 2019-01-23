@@ -99,16 +99,16 @@ export async function updateNode(project: Project, f: string, path: string, valu
 }
 
 export const updatePomTransform: CodeTransform<SpringProjectCreationParameters> = async (project, c, params) => updatePom(project,
-    params.target.repoRef.repo,
-    computeArtifactId(params),
+    project.id.repo,
+    computeArtifactId(params, project),
     params.groupId, params.version,
-    params.description || params.target.repoRef.repo);
+    params.description || project.id.repo);
 
 export function updateMultiModulePomTransform(artifactPrefix: string): CodeTransform<SpringProjectCreationParameters> {
     return async (project, c, params) => updatePom(project,
-        params.target.repoRef.repo,
-        computeArtifactId(params),
+        project.id.repo,
+        computeArtifactId(params, project),
         params.groupId, params.version,
-        params.description || params.target.repoRef.repo,
+        params.description || project.id.repo,
         { artifactPrefix });
 }

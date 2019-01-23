@@ -17,6 +17,7 @@
 import {
     GitHubRepoRef,
     InMemoryProject,
+    SeedDrivenGeneratorParameters,
     SimpleRepoId,
 } from "@atomist/automation-client";
 import { ParametersInvocation } from "@atomist/sdm";
@@ -57,7 +58,7 @@ describe("springBootTransforms", () => {
         const p = InMemoryProject.from(new SimpleRepoId("owner", "repo"),
             { path: "README.md", content: Readme1 });
         const version = "0.1.0";
-        const parameters: SpringProjectCreationParameters = {
+        const parameters: SpringProjectCreationParameters & SeedDrivenGeneratorParameters = {
             groupId: "atomist",
             addAtomistWebhook: false,
             rootPackage: undefined,
@@ -83,7 +84,7 @@ describe("springBootTransforms", () => {
             { path: "README.md", content: Readme1 },
             { path: "pom.xml", content: springBootPom() });
         const version = "0.1.7";
-        const params: SpringProjectCreationParameters = {
+        const params: SpringProjectCreationParameters & SeedDrivenGeneratorParameters = {
             groupId: "atomist",
             addAtomistWebhook: false,
             rootPackage: "com.test",
@@ -122,7 +123,7 @@ describe("springBootTransforms", () => {
             { path: "pom.xml", content: "<xml>" },
             { path: "src/main/java/com/foo/AppApplication.java", content: "package com.foo;\n@SpringBootApplication public class App {}" },
         );
-        const params: SpringProjectCreationParameters = {
+        const params: SpringProjectCreationParameters & SeedDrivenGeneratorParameters = {
             groupId: "atomist",
             addAtomistWebhook: false,
             rootPackage: "com.test",

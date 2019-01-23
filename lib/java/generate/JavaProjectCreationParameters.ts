@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SeedDrivenGeneratorParameters } from "@atomist/automation-client";
+import { Project } from "@atomist/automation-client";
 import { ParametersObject } from "@atomist/sdm";
 import {
     JavaPackageRegExp,
@@ -25,7 +25,7 @@ import {
 /**
  * Parameter interface for Java project creation.
  */
-export interface JavaProjectCreationParameters extends SeedDrivenGeneratorParameters {
+export interface JavaProjectCreationParameters {
 
     enteredArtifactId?: string;
 
@@ -41,7 +41,8 @@ export interface JavaProjectCreationParameters extends SeedDrivenGeneratorParame
 /**
  * Java project generator parameters definitions.
  */
-export const JavaProjectCreationParameterDefinitions: ParametersObject<any, any> = {
+export const JavaProjectCreationParameterDefinitions
+    : ParametersObject<{ enteredArtifactId: string, groupId: string, rootPackage: string, version: string }> = {
 
     enteredArtifactId: {
         ...MavenArtifactIdRegExp,
@@ -75,9 +76,7 @@ export const JavaProjectCreationParameterDefinitions: ParametersObject<any, any>
 /**
  * Compute the artifact id to use from the given parameters.
  * Falls back to repo name if not provided
- * @param {JavaProjectCreationParameters} params
- * @return {string}
  */
-export function computeArtifactId(params: JavaProjectCreationParameters): string {
-    return params.enteredArtifactId || params.target.repoRef.repo;
+export function computeArtifactId(params: JavaProjectCreationParameters, project: Project): string {
+    return params.enteredArtifactId || project.id.repo;
 }

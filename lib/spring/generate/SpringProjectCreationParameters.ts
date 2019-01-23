@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Project } from "@atomist/automation-client";
 import { ParametersObject } from "@atomist/sdm";
 import {
     computeArtifactId,
@@ -39,7 +40,8 @@ export interface SpringProjectCreationParameters extends JavaProjectCreationPara
  * Parameters for creating Spring Boot apps.
  * Based on Java project creation parameters.
  */
-export const SpringProjectCreationParameterDefinitions: ParametersObject<any, any> = {
+export const SpringProjectCreationParameterDefinitions
+    : ParametersObject<{ enteredServiceClassName: string, enteredArtifactId: string, groupId: string, rootPackage: string, version: string }> = {
 
     ...JavaProjectCreationParameterDefinitions,
 
@@ -51,10 +53,10 @@ export const SpringProjectCreationParameterDefinitions: ParametersObject<any, an
     },
 };
 
-export function computeServiceClassName(params: SpringProjectCreationParameters) {
+export function computeServiceClassName(params: SpringProjectCreationParameters, project: Project) {
     return !!params.enteredServiceClassName ?
         toInitialCap(params.enteredServiceClassName) :
-        toInitialCap(camelize(computeArtifactId(params)));
+        toInitialCap(camelize(computeArtifactId(params, project)));
 }
 
 function toInitialCap(s: string) {

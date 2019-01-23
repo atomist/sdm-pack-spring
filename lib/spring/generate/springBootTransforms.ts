@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { projectUtils } from "@atomist/automation-client";
+import {
+    projectUtils,
+    SeedDrivenGeneratorParameters,
+} from "@atomist/automation-client";
 import {
     CodeTransform,
     CodeTransformOrTransforms,
@@ -25,7 +28,7 @@ import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
 /**
  * Update the readme
  */
-export const ReplaceReadmeTitle: CodeTransform<SpringProjectCreationParameters> = async (p, ci) => {
+export const ReplaceReadmeTitle: CodeTransform<SpringProjectCreationParameters & SeedDrivenGeneratorParameters> = async (p, ci) => {
     return projectUtils.doWithFiles(p, "README.md", async readMe => {
         await readMe.replace(/^#[\s\S]*?## /, titleBlock(ci.parameters));
     });
@@ -41,7 +44,7 @@ export const SetAtomistTeamInApplicationYml: CodeTransform =
             f.replace(/\${ATOMIST_TEAM}/, ci.context.workspaceId));
     };
 
-function titleBlock(params: SpringProjectCreationParameters): string {
+function titleBlock(params: SpringProjectCreationParameters & SeedDrivenGeneratorParameters): string {
     return `# ${params.target.repoRef.repo}
 ${params.target.description}
 
@@ -54,7 +57,7 @@ Based on seed project \`${params.source.repoRef.owner}:${params.source.repoRef.r
  * Default transformation to turn a Spring Boot seed project into a custom project
  * @type {(CodeTransform<SpringProjectCreationParameters> | CodeTransform)[]}
  */
-export const SpringBootGeneratorTransform: CodeTransformOrTransforms<SpringProjectCreationParameters> = [
+export const SpringBootGeneratorTransform: CodeTransformOrTransforms<SpringProjectCreationParameters & SeedDrivenGeneratorParameters> = [
     ReplaceReadmeTitle,
     SetAtomistTeamInApplicationYml,
     TransformSeedToCustomProject,
