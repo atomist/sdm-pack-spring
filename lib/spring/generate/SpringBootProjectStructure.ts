@@ -27,6 +27,7 @@ import {
     evaluateScalarValue,
     PathExpression,
 } from "@atomist/tree-path";
+import * as path from "path";
 import { KotlinPackage } from "../../java/JavaProjectStructure";
 import {
     JavaSourceFiles,
@@ -64,12 +65,12 @@ export class SpringBootProjectStructure {
      * @param {ProjectAsync} p
      * @return {Promise<SpringBootProjectStructure>}
      */
-    public static async inferFromJavaSource(p: Project): Promise<SpringBootProjectStructure> {
-        return this.inferFromSourceWithJavaLikeImports(p, Java9FileParser, JavaSourceFiles, SpringBootAppClassInJava);
+    public static async inferFromJavaSource(p: Project, globOptions: string | string[] = JavaSourceFiles): Promise<SpringBootProjectStructure> {
+        return this.inferFromSourceWithJavaLikeImports(p, Java9FileParser, globOptions, SpringBootAppClassInJava);
     }
 
-    public static async inferFromKotlinSource(p: Project): Promise<SpringBootProjectStructure> {
-        return this.inferFromSourceWithJavaLikeImports(p, KotlinFileParser, KotlinSourceFiles, SpringBootAppClassInKotlin);
+    public static async inferFromKotlinSource(p: Project, globOptions: string | string[] = KotlinSourceFiles): Promise<SpringBootProjectStructure> {
+        return this.inferFromSourceWithJavaLikeImports(p, KotlinFileParser, globOptions, SpringBootAppClassInKotlin);
     }
 
     public static async inferFromJavaOrKotlinSource(p: Project): Promise<SpringBootProjectStructure> {
@@ -78,14 +79,17 @@ export class SpringBootProjectStructure {
 
     private static async inferFromSourceWithJavaLikeImports(p: Project,
                                                             parserOrRegistry: FileParser | FileParserRegistry,
-                                                            globPattern: string,
+                                                            globOptions: string | string[],
                                                             pathExpression: string | PathExpression): Promise<SpringBootProjectStructure> {
-        const fileHits = await astUtils.findFileMatches(p, parserOrRegistry, globPattern, pathExpression);
+        const fileHits = await astUtils.findFileMatches(p, parserOrRegistry, globOptions, pathExpression);
         if (fileHits.length === 0) {
             return undefined;
         }
         if (fileHits.length > 1) {
-            return undefined;
+            const msg = `Found more than one Spring Boot application annotation in files: ` +
+                fileHits.map(f => path.join(f.file.path, f.file.name)).join(",");
+            logger.warn(msg);
+            throw new Error(msg);
         }
         const fh = fileHits[0];
 

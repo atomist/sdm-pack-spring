@@ -23,7 +23,7 @@ import { addAnnotationToSpringBootClass } from "../../../lib/spring/transform/ad
 import {
     GishJavaPath,
     GishProject,
-} from "../generator/SpringBootProjectStructure.test";
+} from "../generator/springProjects";
 
 describe("addAnnotationToSpringBootClass", () => {
 
