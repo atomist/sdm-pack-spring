@@ -137,3 +137,6 @@ export {
     inferSpringStructureAndRenameTransform,
     inferSpringStructureAndDoTransform,
 } from "./lib/spring/generate/springBootUtils";
+export {
+    SpringBootVersions, SpringBootVersionInspection,
+} from "./lib/spring/inspect/springBootVersionInspection";
