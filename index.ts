@@ -140,3 +140,6 @@ export {
 export {
     SpringBootVersions, SpringBootVersionInspection,
 } from "./lib/spring/inspect/springBootVersionInspection";
+export {
+    SpringBootProjectStructure,
+} from "./lib/spring/generate/SpringBootProjectStructure";
