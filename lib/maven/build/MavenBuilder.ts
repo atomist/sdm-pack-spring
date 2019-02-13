@@ -21,7 +21,7 @@ import {
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import {
-    AppInfo,
+    AppInfo, FulfillableGoalDetails, Goal, goal,
     ProgressLog,
     spawnAndWatch,
 } from "@atomist/sdm";
@@ -75,17 +75,37 @@ class UpdatingBuild implements BuildInProgress {
 
 }
 
-export async function mavenPackage(p: GitProject,
+export const mavenPackage = mavenRunGoal;
+
+export async function mavenRunGoal(p: GitProject,
                                    progressLog: ProgressLog,
-                                   args: Array<{ name: string, value?: string }> = []): Promise<ChildProcessResult> {
+                                   args: Array<{ name: string, value?: string }> = [],
+                                   mavenGoal: string = "package"): Promise<ChildProcessResult> {
     const command = await determineMavenCommand(p);
     return spawnAndWatch({
             command,
-            args: ["package", ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
+            args: [mavenGoal, ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
         },
         {
             cwd: p.baseDir,
         },
         progressLog,
     );
+}
+
+/**
+ * Run an arbitrary Maven goal with the given arguments.
+ * Does not take account of any generated artifact.
+ * @param details goal details
+ * @param {string} mavenGoal
+ * @param args
+ * @return {Builder}
+ */
+export function mavenRunner(details: FulfillableGoalDetails, mavenGoal: string, args: Array<{ name: string, value?: string }> = []): Goal {
+    return goal(details, async goalInvocation => {
+        const { configuration, credentials, progressLog, id } = goalInvocation;
+        return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
+            await mavenPackage(p, progressLog, args, mavenGoal);
+        });
+    });
 }

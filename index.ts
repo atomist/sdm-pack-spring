@@ -41,6 +41,7 @@ export { ListBranchDeploys } from "./lib/java/deploy/MavenPerBranchSpringBootDep
 export {
     mavenBuilder,
     mavenPackage,
+    mavenRunner,
 } from "./lib/maven/build/MavenBuilder";
 export {
     GradleSingleModuleBuilder,
