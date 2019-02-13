@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Atomist, Inc.
+ * Copyright © 2018 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,29 +55,27 @@ function executeMavenTest(goalInvocation: GoalInvocation): Promise<{ code: numbe
     return goalInvocation.configuration.sdm.projectLoader.doWithProject(
         {id, credentials, readOnly: true},
         async (p: LocalProject) => {
-        const mavenCommand = await determineMavenCommand(p);
-        const result = await spawnAndWatch(
-            {command: mavenCommand, args: ["test"]},
-            {cwd: p.baseDir},
-            new LoggingProgressLog("maven-test", "info"),
-            {});
-        const r = await getJUnitTestResults(p);
-        const prefix = r.tests === 1 ? `1 test` : `${r.tests} tests`;
-        if (result.code === 0) {
-            return {
-                code: 0,
-                phase: r.tests > 0 ? prefix : undefined,
-            };
-        } else {
-            const messages = [prefix];
-            if (r.failures > 0) { messages.push(`${r.failures} failed`); }
-            if (r.errors > 0) { messages.push(`${r.errors} with errors`); }
-            return {
-                code: 1,
-                phase: messages.join(", "),
-            };
-        }
-    });
+            const mavenCommand = await determineMavenCommand(p);
+            const result = await spawnLog(
+                mavenCommand, ["test"],
+                {cwd: p.baseDir, log: new LoggingProgressLog("maven-test", "info")});
+            const r = await getJUnitTestResults(p);
+            const prefix = r.tests === 1 ? `1 test` : `${r.tests} tests`;
+            if (result.code === 0) {
+                return {
+                    code: 0,
+                    phase: r.tests > 0 ? prefix : undefined,
+                };
+            } else {
+                const messages = [prefix];
+                if (r.failures > 0) { messages.push(`${r.failures} failed`); }
+                if (r.errors > 0) { messages.push(`${r.errors} with errors`); }
+                return {
+                    code: 1,
+                    phase: messages.join(", "),
+                };
+            }
+        });
 }
 
 async function getJUnitTestResults(p: Project):
