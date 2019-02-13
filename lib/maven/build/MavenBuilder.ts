@@ -20,7 +20,10 @@ import {
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import {
-    AppInfo, FulfillableGoalDetails, goal, Goal,
+    AppInfo,
+    FulfillableGoalDetails,
+    goal,
+    Goal,
     ProgressLog,
     spawnLog,
     SpawnLogResult,
