@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Atomist, Inc.
+ * Copyright © 2019 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,28 @@ import { KotlinFileParser } from "@atomist/antlr";
 import {
     astUtils,
     InMemoryProject,
-    Project,
 } from "@atomist/automation-client";
 import { evaluateExpression } from "@atomist/tree-path";
 import * as assert from "power-assert";
-import { KotlinSourceFiles } from "../../../lib/java/javaProjectUtils";
+import {
+    JavaSourceFiles,
+    KotlinSourceFiles,
+} from "../../../lib/java/javaProjectUtils";
 import {
     SpringBootAppClassInKotlin,
     SpringBootProjectStructure,
 } from "../../../lib/spring/generate/SpringBootProjectStructure";
+import {
+    GishJavaPath,
+    GishKotlinPath,
+    GishProject,
+    GishProjectWithComment,
+    GishProjectWithLambda,
+    GishProjectWithLocalTypeInference,
+    javaSource,
+    KotlinGishProject,
+    ProblemProject,
+} from "./springProjects";
 
 describe("SpringBootProjectStructure: Java inference", () => {
 
@@ -98,6 +111,38 @@ describe("SpringBootProjectStructure: Java inference", () => {
                 `Expected name not to be ${structure.appClassFile.name}`);
             assert(structure.appClassFile.path === "src/main/java/com/av/AardvarkApplication.java");
         });
+
+        it("should throw an exception if more than one spring boot app found", async () => {
+            let caught = false;
+            try {
+                await SpringBootProjectStructure.inferFromJavaSource(
+                    InMemoryProject.of(
+                        { path: "pom.xml", content: "<xml>" },
+                        { path: "src/main/java/App.java", content: "@SpringBootApplication public\nclass App {}" },
+                        { path: "src/main/java/Oop.java", content: "@SpringBootApplication public\nclass Oop {}" },
+                    ),
+                );
+                assert.fail("Expected an exception to be thrown, but it was not");
+            } catch (e) {
+                caught = true;
+                assert(/Found more than one Spring Boot application annotation in files:/.test(e.message));
+            }
+            assert(caught, "Expected an exception to be thrown, but it was not");
+        });
+
+        it("should exclude unwanted files in project", async () => {
+            const structure = await SpringBootProjectStructure.inferFromJavaSource(
+                InMemoryProject.of(
+                    { path: "pom.xml", content: "<xml>" },
+                    { path: "src/main/java/App.java", content: "@SpringBootApplication public\nclass App {}" },
+                    { path: "example/main/java/Oop.java", content: "@SpringBootApplication public\nclass Oop {}" },
+                ),
+                [JavaSourceFiles, "!(example/**/*)"],
+            );
+            assert(structure.applicationPackage === "");
+            assert(structure.appClassFile.path === "src/main/java/App.java");
+        });
+
     });
 
     describe("kotlin support", () => {
@@ -134,130 +179,3 @@ describe("SpringBootProjectStructure: Java inference", () => {
     });
 
 });
-
-const javaSource =
-    `package com.smashing.pumpkins;
-
-@SpringBootApplication
-class GishApplication {
-    //1
-}
-
-`;
-
-const kotlinSource =
-    `package com.smashing.pumpkins
-
-@SpringBootApplication
-class GishApplication {
-}
-
-`;
-
-const SimplePom = `<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.example</groupId>
-    <artifactId>flux-flix-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
-    <name>flux-flix-service</name>
-    <description>Demo project for Spring Boot</description>
-
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.0.BUILD-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
-</project>
-`;
-
-export const GishJavaPath = "src/main/java/com/smashing/pumpkins/Gish.java";
-
-export const GishProject: () => Project = () => InMemoryProject.from(
-    { owner: "smashing-pumpkins", repo: "gish", url: "" },
-    {
-        path: GishJavaPath,
-        content: javaSource,
-    }, {
-        path: "pom.xml",
-        content: SimplePom,
-    },
-);
-
-export const GishProjectWithLambda: () => Project = () => InMemoryProject.from(
-    { owner: "smashing-pumpkins", repo: "gish", url: "" },
-    {
-        path: GishJavaPath,
-        content: javaSource.replace("//1", `NumericTest isEven = (n) -> (n % 2) == 0;
-	NumericTest isNegative = (n) -> (n < 0);`),
-    }, {
-        path: "pom.xml",
-        content: SimplePom,
-    },
-);
-
-export const GishProjectWithLocalTypeInference: () => Project = () => InMemoryProject.from(
-    { owner: "smashing-pumpkins", repo: "gish", url: "" },
-    {
-        path: GishJavaPath,
-        content: javaSource.replace("//1", "var x = new HashMap<String,Integer>();"),
-    }, {
-        path: "pom.xml",
-        content: SimplePom,
-    },
-);
-
-export const GishProjectWithComment: () => Project = () => InMemoryProject.from(
-    { owner: "smashing-pumpkins", repo: "gish", url: "" },
-    {
-        path: GishJavaPath,
-        content: javaSource.replace("@SpringBootApplication", "@SpringBootApplication // ha ha trying to fool you"),
-    }, {
-        path: "pom.xml",
-        content: SimplePom,
-    },
-);
-
-export const GishKotlinPath = "src/main/kotlin/com/smashing/pumpkins/Gish.kt";
-
-export const KotlinGishProject: () => Project = () => InMemoryProject.from(
-    { owner: "smashing-pumpkins", repo: "gish", url: "" },
-    {
-        path: GishKotlinPath,
-        content: kotlinSource,
-    }, {
-        path: "pom.xml",
-        content: SimplePom,
-    },
-);
-
-export const ProblemProject: () => Project = () => InMemoryProject.from(
-    { owner: "smashing-pumpkins", repo: "gish", url: "" },
-    {
-        path: "src/main/java/com/av/AardvarkApplication.java",
-        content: ProblemFile1,
-    }, {
-        path: "pom.xml",
-        content: SimplePom,
-    },
-);
-
-const ProblemFile1 = `
-package com.av;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
-public class AardvarkApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run
-	}
-}
-`;

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/1.1.0...HEAD)
 
+### Changed
+
+-   Change project inference interface. [#117](https://github.com/atomist/sdm-pack-spring/issues/117)
+
 ### Fixed
 
 -   Fixes tests. [#114](https://github.com/atomist/sdm-pack-spring/issues/114)
