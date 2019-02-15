@@ -144,3 +144,9 @@ export {
 export {
     SpringBootProjectStructure,
 } from "./lib/spring/generate/SpringBootProjectStructure";
+
+export { springBootScanner, SpringBootStack } from "./lib/stack/springBootScanner";
+export { springBootStackSupport } from "./lib/stack/springBootStackSupport";
+export { SpringBootTransformRecipeContributor } from "./lib/stack/SpringBootTransformRecipeContributor";
+export { MavenPerBranchLocalDeployInterpreter } from "./lib/stack/MavenPerBranchLocalDeployInterpreter";
+export { SpringBootBuildInterpreter } from "./lib/stack/SpringBootBuildInterpreter";

@@ -20,6 +20,7 @@ import {
     InMemoryProject,
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
+import * as assert from "assert";
 import { SpringBootAppClassInJava } from "../../../lib/spring/generate/SpringBootProjectStructure";
 
 describe("java 8 ast", () => {
@@ -32,7 +33,7 @@ describe("java 8 ast", () => {
 
         const changePackage: CodeTransform = async (project, ctx) => {
             await astUtils.doWithAllMatches(p, Java9FileParser, "**/*.java", SpringBootAppClassInJava, m => {
-                console.debug(m.$value);
+                assert(!!m.$value);
             });
             return p;
         };
