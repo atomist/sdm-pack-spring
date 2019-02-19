@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 -   Change project inference interface. [#117](https://github.com/atomist/sdm-pack-spring/issues/117)
+-   Removes deprecated APIs. [#119](https://github.com/atomist/sdm-pack-spring/issues/119)
 
 ### Fixed
 
