@@ -15,7 +15,6 @@
  */
 
 import {
-    ChildProcessResult,
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import {
@@ -24,7 +23,8 @@ import {
 } from "@atomist/microgrammar";
 import {
     AppInfo,
-    spawnAndWatch,
+    spawnLog,
+    SpawnLogResult,
     StringCapturingProgressLog,
 } from "@atomist/sdm";
 import {
@@ -47,20 +47,21 @@ export function gradleSingleModuleBuilder(): Builder {
         return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
             const propertiesOutput = new StringCapturingProgressLog();
             const command = determineGradleCommand(p);
-            await spawnAndWatch(
-                { command, args: ["properties"] },
-                { cwd: p.baseDir },
-                propertiesOutput);
+            await spawnLog(
+                command,
+                ["properties"],
+                { cwd: p.baseDir, log: propertiesOutput });
             const appName = nameGrammar.firstMatch(propertiesOutput.log).$matched;
             const version = versionGrammar.firstMatch(propertiesOutput.log).$matched;
 
-            const buildResult = spawnAndWatch(
-                { command, args: ["--console=plain", "clean", "build"] },
-                { cwd: p.baseDir },
-                progressLog, {
+            const buildResult = spawnLog(
+                command,
+                ["--console=plain", "clean", "build"],
+                {
+                    cwd: p.baseDir,
+                    log: progressLog,
                     errorFinder: (code, signal, l) => l.log.includes("[ERROR]"),
                 });
-
             const rb = new UpdatingBuild(id, await buildResult);
             rb.ai = { id, name: appName, version };
             rb.deploymentUnitFile = `${p.baseDir}/build/libs/${appName}.jar`;
@@ -92,7 +93,7 @@ class UpdatingBuild implements BuildInProgress {
     public deploymentUnitFile: string;
 
     constructor(public repoRef: RemoteRepoRef,
-                public buildResult: ChildProcessResult) {
+                public buildResult: SpawnLogResult) {
     }
 
     get appInfo(): AppInfo {

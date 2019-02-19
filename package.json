@@ -29,7 +29,7 @@
   "dependencies": {
     "@atomist/antlr": "^1.0.2",
     "@atomist/microgrammar": "^1.0.1",
-    "@atomist/sdm-pack-build": "^1.0.3",
+    "@atomist/sdm-pack-build": "1.0.4-master.20190219145928",
     "@atomist/tree-path": "^1.0.1",
     "@types/cross-spawn": "^6.0.0",
     "@types/dateformat": "^1.0.1",
