@@ -42,7 +42,7 @@ export interface JavaProjectCreationParameters {
  * Java project generator parameters definitions.
  */
 export const JavaProjectCreationParameterDefinitions
-    : ParametersObject<{ enteredArtifactId: string, groupId: string, rootPackage: string, version: string }> = {
+    : ParametersObject<{ enteredArtifactId: string, groupId: string, rootPackage: string, version: string, description: string }> = {
 
     enteredArtifactId: {
         ...MavenArtifactIdRegExp,
@@ -69,6 +69,12 @@ export const JavaProjectCreationParameterDefinitions
         description: "Version to use",
         required: false,
         defaultValue: "0.1.0-SNAPSHOT",
+    },
+
+    description: {
+        pattern: /.*/,
+        required: false,
+        description: "Description for the new project",
     },
 
 };

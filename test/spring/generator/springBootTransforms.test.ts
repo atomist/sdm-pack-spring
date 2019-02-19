@@ -102,6 +102,7 @@ describe("springBootTransforms", () => {
             context: undefined,
             addressChannels: undefined,
             credentials: undefined,
+            preferences: undefined,
         };
         await TransformSeedToCustomProject(p, context, params);
         const pom = p.findFileSync("pom.xml").getContentSync();
@@ -141,6 +142,7 @@ describe("springBootTransforms", () => {
             context: undefined,
             addressChannels: undefined,
             credentials: undefined,
+            preferences: undefined,
         };
         await TransformSeedToCustomProject(p, context, params);
         const f = p.findFileSync("src/main/java/com/test/FooApplication.java");

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Atomist, Inc.
+ * Copyright © 2019 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import {
     InMemoryProject,
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
+import * as assert from "assert";
 import { SpringBootAppClassInJava } from "../../../lib/spring/generate/SpringBootProjectStructure";
 
 describe("java 8 ast", () => {
@@ -32,7 +33,7 @@ describe("java 8 ast", () => {
 
         const changePackage: CodeTransform = async (project, ctx) => {
             await astUtils.doWithAllMatches(p, Java9FileParser, "**/*.java", SpringBootAppClassInJava, m => {
-                console.debug(m.$value);
+                assert(!!m.$value);
             });
             return p;
         };
