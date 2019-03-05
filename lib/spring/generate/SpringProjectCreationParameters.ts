@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import {Project} from "@atomist/automation-client";
-import {ParametersObject} from "@atomist/sdm";
+import { Project } from "@atomist/automation-client";
+import { ParametersObject } from "@atomist/sdm";
 import {
     computeArtifactId,
     JavaProjectCreationParameterDefinitions,
     JavaProjectCreationParameters,
 } from "../../java/generate/JavaProjectCreationParameters";
-import {JavaIdentifierRegExp} from "../../java/javaPatterns";
+import { JavaIdentifierRegExp } from "../../java/javaPatterns";
 
 /**
  * Parameter interface for Spring Boot project creation
