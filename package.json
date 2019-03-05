@@ -50,7 +50,9 @@
   "peerDependencies": {
     "@atomist/automation-client": ">=1.1.0",
     "@atomist/sdm": ">=1.1.0",
-    "@atomist/sdm-core": ">=1.1.0",
+    "@atomist/sdm-core": ">=1.1.0"
+  },
+  "optionalDependencies": {
     "@atomist/sdm-pack-analysis": "*"
   },
   "devDependencies": {
