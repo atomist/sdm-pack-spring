@@ -53,11 +53,10 @@
     "@atomist/sdm-core": ">=1.1.0"
   },
   "optionalDependencies": {
-    "@atomist/sdm-pack-analysis": "*"
+    "@atomist/sdm-pack-analysis": "^0.1.0-master.20190213071419"
   },
   "devDependencies": {
     "@atomist/automation-client": "1.2.1-master.20190110143442",
-    "@atomist/sdm-pack-analysis": "0.1.0-master.20190213071419",
     "@atomist/sdm": "1.3.0-master.20190129205714",
     "@atomist/sdm-core": "1.2.1-master.20190109175717",
     "@types/mocha": "^5.2.5",
