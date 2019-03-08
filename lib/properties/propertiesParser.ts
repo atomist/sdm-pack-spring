@@ -159,4 +159,5 @@ const propertiesGrammar = Microgrammar.fromString<Property>(
     {
         key: PropertyKey,
         value: /.*/,
+        comment: undefined,
     });
