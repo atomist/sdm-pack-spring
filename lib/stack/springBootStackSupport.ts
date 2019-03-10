@@ -21,10 +21,26 @@ import { SpringBootBuildInterpreter } from "./SpringBootBuildInterpreter";
 import { springBootScanner } from "./springBootScanner";
 import { SpringBootTransformRecipeContributor } from "./SpringBootTransformRecipeContributor";
 
-export function springBootStackSupport(opts: {
-    condition?: RunCondition,
-    deployLocally: boolean,
-} = { deployLocally: false }): StackSupport {
+export interface SpringBootStackSupportOptions {
+
+    /**
+     * When should the capabilities of this stack take effect?
+     * Enable feature flagging
+     */
+    condition?: RunCondition;
+
+    /**
+     * Deploy locally from Maven? Only use for development use.
+     */
+    deployLocally: boolean;
+}
+
+/**
+ * Spring stack support based on sdm-pack-analysis. Used in Uhura-based SDMs.
+ * @param opts options
+ * @return {StackSupport}
+ */
+export function springBootStackSupport(opts: SpringBootStackSupportOptions = { deployLocally: false }): StackSupport {
     return {
         scanners: [springBootScanner],
         interpreters: [
