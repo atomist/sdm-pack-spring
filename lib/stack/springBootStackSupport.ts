@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
+import { logger } from "@atomist/automation-client";
+import { SoftwareDeliveryMachineConfiguration } from "@atomist/sdm";
 import { StackSupport } from "@atomist/sdm-pack-analysis";
 import { RunCondition } from "@atomist/sdm-pack-analysis/lib/analysis/ProjectAnalyzer";
+import * as _ from "lodash";
+import { Categories } from "../spring";
 import { MavenPerBranchLocalDeployInterpreter } from "./MavenPerBranchLocalDeployInterpreter";
 import { SpringBootBuildInterpreter } from "./SpringBootBuildInterpreter";
 import { springBootScanner } from "./springBootScanner";
 import { SpringBootTransformRecipeContributor } from "./SpringBootTransformRecipeContributor";
+import { SpringReviewInterpreter } from "./SpringReviewInterpreter";
 
 export interface SpringBootStackSupportOptions {
 
@@ -29,25 +34,30 @@ export interface SpringBootStackSupportOptions {
      */
     condition?: RunCondition;
 
-    /**
-     * Deploy locally from Maven? Only use for development use.
-     */
-    deployLocally: boolean;
 }
 
 /**
  * Spring stack support based on sdm-pack-analysis. Used in Uhura-based SDMs.
- * @param opts options
+ * Uses sdm.spring.deployLocally and sdm.spring.review
  * @return {StackSupport}
  */
-export function springBootStackSupport(opts: SpringBootStackSupportOptions = { deployLocally: false }): StackSupport {
+export function springBootStackSupport(configuration: SoftwareDeliveryMachineConfiguration,
+                                       opts: SpringBootStackSupportOptions = {}): StackSupport {
+    const deployLocally = _.get(configuration, "sdm.spring.deployLocally", "false") === "true";
+    const reviewCategories: Categories = _.get(configuration, "sdm.spring.review", {
+        springStyle: true,
+        cloudNative: true,
+    });
+    logger.info("Spring pack: Local deployment is %s", deployLocally ? "ENABLED" : "DISABLED");
+    logger.info("Spring pack: Review categories=%j", reviewCategories);
     return {
         scanners: [springBootScanner],
         interpreters: [
+            new SpringReviewInterpreter(reviewCategories),
             new SpringBootBuildInterpreter(),
             {
                 action: new MavenPerBranchLocalDeployInterpreter(),
-                runWhen: () => opts.deployLocally,
+                runWhen: () => deployLocally,
             },
         ],
         transformRecipeContributors: [{
