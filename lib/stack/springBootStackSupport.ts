@@ -43,7 +43,7 @@ export interface SpringBootStackSupportOptions {
  */
 export function springBootStackSupport(configuration: SoftwareDeliveryMachineConfiguration,
                                        opts: SpringBootStackSupportOptions = {}): StackSupport {
-    const deployLocally = _.get(configuration, "sdm.spring.deployLocally", "false") === "true";
+    const deployLocally = _.get(configuration, "sdm.spring.deployLocally", false);
     const reviewCategories: Categories = _.get(configuration, "sdm.spring.review", {
         springStyle: true,
         cloudNative: true,
