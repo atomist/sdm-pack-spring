@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { AutofixRegistration, SoftwareDeliveryMachineConfiguration, spawnCodeTransform } from "@atomist/sdm";
+import {
+    AutofixRegistration,
+    SoftwareDeliveryMachineConfiguration,
+    spawnCodeTransform,
+} from "@atomist/sdm";
 import * as _ from "lodash";
 import { IsJava } from "../../../java/pushtest/pushTests";
 

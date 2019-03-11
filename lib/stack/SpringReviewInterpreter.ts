@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-import { AutoInspectRegistration, SdmContext } from "@atomist/sdm";
-import { CodeInspectionRegisteringInterpreter, Interpretation } from "@atomist/sdm-pack-analysis";
+import {
+    AutoInspectRegistration,
+    SdmContext,
+} from "@atomist/sdm";
+import {
+    CodeInspectionRegisteringInterpreter,
+    Interpretation,
+} from "@atomist/sdm-pack-analysis";
 import { ImportDotStarReviewer } from "../java/review/importDotStarReviewer";
 import { ImportIoFileReviewer } from "../java/review/importIoFileReviewer";
 import { ProvidedDependencyReviewer } from "../maven/review/providedDependencyReviewer";
