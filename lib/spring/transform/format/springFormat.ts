@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Atomist, Inc.
+ * Copyright © 2019 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { asSpawnCommand } from "@atomist/automation-client";
 import {
     AutofixRegistration,
-    localCommandsCodeTransform,
     SoftwareDeliveryMachineConfiguration,
+    spawnCodeTransform,
 } from "@atomist/sdm";
 import * as _ from "lodash";
 import { IsJava } from "../../../java/pushtest/pushTests";
@@ -38,9 +37,11 @@ export function springFormat(configuration: SoftwareDeliveryMachineConfiguration
     return {
         name: "Spring format",
         pushTest: IsJava,
-        transform: localCommandsCodeTransform([
+        transform: spawnCodeTransform([{
             // Format will run on current directory, which will be project root
-            asSpawnCommand(`java -jar ${formatJarPath}`),
+            command: "java",
+            args: ["-jar", formatJarPath],
+        },
         ]),
     };
 }
