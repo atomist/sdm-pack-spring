@@ -150,3 +150,7 @@ export { springBootStackSupport } from "./lib/stack/springBootStackSupport";
 export { SpringBootTransformRecipeContributor } from "./lib/stack/SpringBootTransformRecipeContributor";
 export { MavenPerBranchLocalDeployInterpreter } from "./lib/stack/MavenPerBranchLocalDeployInterpreter";
 export { SpringBootBuildInterpreter } from "./lib/stack/SpringBootBuildInterpreter";
+export { NonSpecificMvcAnnotationsReviewer } from "./lib/spring/review/findNonSpecificMvcAnnotations";
+export { MutableInjectionsReviewer } from "./lib/spring/review/mutableInjectionsReviewer";
+export { OldSpringBootVersionReviewer } from "./lib/spring/review/oldSpringBootVersionReviewer";
+export { UnnecessaryComponentScanReviewer } from "./lib/spring/transform/removeUnnecessaryComponentScanAnnotations";
