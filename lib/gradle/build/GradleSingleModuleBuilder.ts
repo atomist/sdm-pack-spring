@@ -15,6 +15,7 @@
  */
 
 import {
+    LocalProject,
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import {
@@ -31,6 +32,7 @@ import {
     Builder,
     BuildInProgress,
 } from "@atomist/sdm-pack-build";
+import { VersionedArtifact } from "../../maven/VersionedArtifact";
 import { determineGradleCommand } from "../gradleCommand";
 
 /**
@@ -42,6 +44,11 @@ import { determineGradleCommand } from "../gradleCommand";
  * artifacts.
  */
 export function gradleSingleModuleBuilder(): Builder {
+    return gradleBuilder();
+}
+
+export function gradleBuilder(deploymentUnitFileLocator: (p: LocalProject, mpi: VersionedArtifact) => string =
+                                  (p, mpi) => `${p.baseDir}/build/libs/${mpi.artifact}-${mpi.version}.jar`): Builder {
     return async goalInvocation => {
         const { configuration, id, progressLog, credentials } = goalInvocation;
         return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
@@ -53,6 +60,7 @@ export function gradleSingleModuleBuilder(): Builder {
                 { cwd: p.baseDir, log: propertiesOutput });
             const appName = nameGrammar.firstMatch(propertiesOutput.log).$matched;
             const version = versionGrammar.firstMatch(propertiesOutput.log).$matched;
+            const va: VersionedArtifact = {group: "", artifact: appName, version};
 
             const buildResult = spawnLog(
                 command,
@@ -64,7 +72,7 @@ export function gradleSingleModuleBuilder(): Builder {
                 });
             const rb = new UpdatingBuild(id, await buildResult);
             rb.ai = { id, name: appName, version };
-            rb.deploymentUnitFile = `${p.baseDir}/build/libs/${appName}.jar`;
+            rb.deploymentUnitFile = deploymentUnitFileLocator(p, va);
             return rb;
         });
     };
