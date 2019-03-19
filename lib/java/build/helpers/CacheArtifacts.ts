@@ -84,7 +84,11 @@ export function restoreArtifacts(artifactArchiveCache: ArtifactArchiveCache): Go
 export function removeArchivedArtifacts(artifactArchiveCache: ArtifactArchiveCache): GoalProjectListenerRegistration {
     return {
         name: "remove-archived-artifacts",
-        listener: async (p, gi) => artifactArchiveCache.removeFromCache(gi.id),
+        listener: async (p, gi, event) => {
+            if (event === GoalProjectListenerEvent.after) {
+                artifactArchiveCache.removeFromCache(gi.id);
+            }
+        },
         pushTest: anySatisfied(IsMaven, IsGradle),
     };
 }
