@@ -48,9 +48,9 @@
     "xmldoc": "^1.1.2"
   },
   "peerDependencies": {
-    "@atomist/automation-client": ">=1.1.0",
-    "@atomist/sdm": ">=1.1.0",
-    "@atomist/sdm-core": ">=1.1.0"
+    "@atomist/automation-client": ">=1.3.0",
+    "@atomist/sdm": ">=1.3.0",
+    "@atomist/sdm-core": ">=1.3.0"
   },
   "devDependencies": {
     "@atomist/automation-client": "^1.3.0",

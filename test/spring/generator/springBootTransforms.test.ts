@@ -60,7 +60,6 @@ describe("springBootTransforms", () => {
         const version = "0.1.0";
         const parameters: SpringProjectCreationParameters & SeedDrivenGeneratorParameters = {
             groupId: "atomist",
-            addAtomistWebhook: false,
             rootPackage: undefined,
             source: {
                 repoRef: new GitHubRepoRef("foo", "sourceRepoName"),
@@ -86,7 +85,6 @@ describe("springBootTransforms", () => {
         const version = "0.1.7";
         const params: SpringProjectCreationParameters & SeedDrivenGeneratorParameters = {
             groupId: "atomist",
-            addAtomistWebhook: false,
             rootPackage: "com.test",
             source: undefined,
             enteredServiceClassName: "foo",
@@ -103,6 +101,7 @@ describe("springBootTransforms", () => {
             addressChannels: undefined,
             credentials: undefined,
             preferences: undefined,
+            configuration: undefined,
         };
         await TransformSeedToCustomProject(p, context, params);
         const pom = p.findFileSync("pom.xml").getContentSync();
@@ -126,7 +125,6 @@ describe("springBootTransforms", () => {
         );
         const params: SpringProjectCreationParameters & SeedDrivenGeneratorParameters = {
             groupId: "atomist",
-            addAtomistWebhook: false,
             rootPackage: "com.test",
             source: undefined,
             enteredServiceClassName: "foo",
@@ -143,6 +141,7 @@ describe("springBootTransforms", () => {
             addressChannels: undefined,
             credentials: undefined,
             preferences: undefined,
+            configuration: undefined,
         };
         await TransformSeedToCustomProject(p, context, params);
         const f = p.findFileSync("src/main/java/com/test/FooApplication.java");
