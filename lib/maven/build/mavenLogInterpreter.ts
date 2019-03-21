@@ -116,7 +116,7 @@ const timingGrammar = Microgrammar.fromString<{ seconds: number }>("Total time: 
 const testSummaryGrammar = Microgrammar.fromString<TestStatus>(
     "Tests run: ${testsRun}, Failures: ${failingTests}, Errors: ${errors}, Skipped: ${pendingTests}",
     {
-        totalTests: Integer,
+        testsRun: Integer,
         failingTests: Integer,
         pendingTests: Integer,
         errors: Integer,
@@ -124,7 +124,7 @@ const testSummaryGrammar = Microgrammar.fromString<TestStatus>(
 
 export interface TestStatus {
 
-    totalTests: number;
+    testsRun: number;
 
     pendingTests: number;
 
