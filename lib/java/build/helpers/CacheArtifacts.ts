@@ -19,17 +19,14 @@ import {
     RepoRef,
 } from "@atomist/automation-client";
 import {
-    anySatisfied,
+    AnyPush,
     ExecuteGoalResult,
     GoalInvocation,
     GoalProjectListenerEvent,
-    GoalProjectListenerRegistration,
+    GoalProjectListenerRegistration, PushTest,
     spawnLog,
-    StringCapturingProgressLog,
 } from "@atomist/sdm";
 import * as glob from "glob";
-import { IsGradle } from "../../../gradle/pushtest/gradlePushTests";
-import { IsMaven } from "../../../maven/pushtest/pushTests";
 
 export interface ArtifactArchiveCache {
     putInCache(id: RepoRef, file: string): void;
@@ -39,10 +36,12 @@ export interface ArtifactArchiveCache {
 
 const defaultCacheArtifactOptions = {
     skipDirectories: true,
+    pushTest: AnyPush,
 };
 
 export interface CacheArtifactsOptions {
     skipDirectories: boolean;
+    pushTest: PushTest;
 }
 
 export function cacheArtifacts(artifactArchiveCacher: ArtifactArchiveCache,
@@ -56,46 +55,53 @@ export function cacheArtifacts(artifactArchiveCacher: ArtifactArchiveCache,
     return {
         name: "cache-artifacts",
         listener: archiveAndCacheArtifacts,
-        pushTest: anySatisfied(IsMaven, IsGradle),
+        pushTest: optionsToUse.pushTest,
     };
-
-    async function archiveFiles(project: GitProject, id: RepoRef, artifacts: string[]) {
-        const log = new StringCapturingProgressLog();
-        const archiveFileName = `atomistArtifactCacheArchive.tar.gz`;
-        await spawnLog("tar", ["-czf", `"${archiveFileName}"`, ...artifacts], { cwd: project.baseDir, log});
-        return archiveFileName;
-    }
 
     async function archiveAndCacheArtifacts(p: GitProject,
                                             gi: GoalInvocation,
                                             event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
         if (event === GoalProjectListenerEvent.after) {
             const jars = await glob.__promisify__(globPattern, {cwd: p.baseDir, nodir: optionsToUse.skipDirectories});
-            const archive = await archiveFiles(p, gi.id, jars);
-            artifactArchiveCacher.putInCache(gi.id, archive);
+            const log = gi.progressLog;
+            const archiveFileName = `atomistArtifactCacheArchive.tar.gz`;
+            await spawnLog("tar", ["-czf", `"${archiveFileName}"`, ...jars], { cwd: p.baseDir, log});
+            artifactArchiveCacher.putInCache(gi.id, archiveFileName);
         }
     }
 }
 
-export function restoreArtifacts(artifactArchiveCache: ArtifactArchiveCache): GoalProjectListenerRegistration {
+export function restoreArtifacts(artifactArchiveCache: ArtifactArchiveCache,
+                                 options: Partial<CacheArtifactsOptions> = {}): GoalProjectListenerRegistration {
+    const optionsToUse = {
+        ...defaultCacheArtifactOptions,
+        ...options,
+    };
+
     return {
         name: "restore-artifacts",
         listener: retrieveAndRestoreArtifacts,
-        pushTest: anySatisfied(IsMaven, IsGradle),
+        pushTest: optionsToUse.pushTest,
     };
 
     async function retrieveAndRestoreArtifacts(p: GitProject,
                                                gi: GoalInvocation,
                                                event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
         if (event === GoalProjectListenerEvent.before) {
+            const log = gi.progressLog;
             const archive = artifactArchiveCache.retrieveFromCache(gi.id, p.baseDir);
-            const log = new StringCapturingProgressLog();
             await spawnLog("tar", ["-xzf", `"${archive}"`], { cwd: p.baseDir, log});
         }
     }
 }
 
-export function removeArchivedArtifacts(artifactArchiveCache: ArtifactArchiveCache): GoalProjectListenerRegistration {
+export function removeArchivedArtifacts(artifactArchiveCache: ArtifactArchiveCache,
+                                        options: Partial<CacheArtifactsOptions> = {}): GoalProjectListenerRegistration {
+    const optionsToUse = {
+        ...defaultCacheArtifactOptions,
+        ...options,
+    };
+
     return {
         name: "remove-archived-artifacts",
         listener: async (p, gi, event) => {
@@ -103,6 +109,6 @@ export function removeArchivedArtifacts(artifactArchiveCache: ArtifactArchiveCac
                 artifactArchiveCache.removeFromCache(gi.id);
             }
         },
-        pushTest: anySatisfied(IsMaven, IsGradle),
+        pushTest: optionsToUse.pushTest,
     };
 }
