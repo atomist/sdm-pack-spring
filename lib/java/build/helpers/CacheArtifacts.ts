@@ -23,7 +23,8 @@ import {
     ExecuteGoalResult,
     GoalInvocation,
     GoalProjectListenerEvent,
-    GoalProjectListenerRegistration, PushTest,
+    GoalProjectListenerRegistration,
+    PushTest,
     spawnLog,
 } from "@atomist/sdm";
 import * as glob from "glob";
