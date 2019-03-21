@@ -15,38 +15,39 @@
  */
 
 import {
-    GitProject,
+    GitProject, Project,
     RepoRef,
 } from "@atomist/automation-client";
+import {gatherFromFiles} from "@atomist/automation-client/lib/project/util/projectUtils";
 import {
     AnyPush,
     ExecuteGoalResult,
-    GoalInvocation,
+    GoalInvocation, GoalProjectListener,
     GoalProjectListenerEvent,
-    GoalProjectListenerRegistration,
-    PushTest,
-    spawnLog,
+    GoalProjectListenerRegistration, ProgressLog, PushTest,
 } from "@atomist/sdm";
-import * as glob from "glob";
 
 export interface ArtifactArchiveCache {
-    putInCache(id: RepoRef, file: string): void;
-    retrieveFromCache(id: RepoRef, baseDir: string): string;
-    removeFromCache(id: RepoRef): void;
+    putInCache(id: RepoRef, project: Project, file: string[], log: ProgressLog): Promise<void>;
+    retrieveFromCache(id: RepoRef, project: Project, log: ProgressLog): Promise<void>;
+    removeFromCache(id: RepoRef): Promise<void>;
 }
 
-const defaultCacheArtifactOptions = {
+const defaultCacheArtifactOptions: CacheArtifactsOptions = {
     skipDirectories: true,
     pushTest: AnyPush,
+    globPattern: "**/*.jar",
+    fallbackListenerOnCacheMiss: () => { throw Error("No entry found in cache"); },
 };
 
 export interface CacheArtifactsOptions {
     skipDirectories: boolean;
     pushTest: PushTest;
+    globPattern: string;
+    fallbackListenerOnCacheMiss: GoalProjectListener;
 }
 
 export function cacheArtifacts(artifactArchiveCacher: ArtifactArchiveCache,
-                               globPattern: string = "**/*.jar",
                                options: Partial<CacheArtifactsOptions> = {}): GoalProjectListenerRegistration {
     const optionsToUse = {
         ...defaultCacheArtifactOptions,
@@ -63,13 +64,14 @@ export function cacheArtifacts(artifactArchiveCacher: ArtifactArchiveCache,
                                             gi: GoalInvocation,
                                             event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
         if (event === GoalProjectListenerEvent.after) {
-            const jars = await glob.__promisify__(globPattern, {cwd: p.baseDir, nodir: optionsToUse.skipDirectories});
-            const log = gi.progressLog;
-            const archiveFileName = `atomistArtifactCacheArchive.tar.gz`;
-            await spawnLog("tar", ["-czf", `"${archiveFileName}"`, ...jars], { cwd: p.baseDir, log});
-            artifactArchiveCacher.putInCache(gi.id, archiveFileName);
+            const jars = await getFilePathsThroughPattern(p, options.globPattern);
+            await artifactArchiveCacher.putInCache(gi.id, p, jars, gi.progressLog);
         }
     }
+}
+
+export function getFilePathsThroughPattern(project: Project, globPattern: string): Promise<string[]> {
+    return gatherFromFiles(project, globPattern, async f => f.path);
 }
 
 export function restoreArtifacts(artifactArchiveCache: ArtifactArchiveCache,
@@ -89,9 +91,7 @@ export function restoreArtifacts(artifactArchiveCache: ArtifactArchiveCache,
                                                gi: GoalInvocation,
                                                event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
         if (event === GoalProjectListenerEvent.before) {
-            const log = gi.progressLog;
-            const archive = artifactArchiveCache.retrieveFromCache(gi.id, p.baseDir);
-            await spawnLog("tar", ["-xzf", `"${archive}"`], { cwd: p.baseDir, log});
+            await artifactArchiveCache.retrieveFromCache(gi.id, p, gi.progressLog);
         }
     }
 }
