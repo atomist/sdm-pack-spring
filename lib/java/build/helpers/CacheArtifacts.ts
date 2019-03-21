@@ -37,8 +37,22 @@ export interface ArtifactArchiveCache {
     removeFromCache(id: RepoRef): void;
 }
 
+const defaultCacheArtifactOptions = {
+    skipDirectories: true,
+};
+
+export interface CacheArtifactsOptions {
+    skipDirectories: boolean;
+}
+
 export function cacheArtifacts(artifactArchiveCacher: ArtifactArchiveCache,
-                               globPattern: string = "**/*.jar"): GoalProjectListenerRegistration {
+                               globPattern: string = "**/*.jar",
+                               options: Partial<CacheArtifactsOptions> = {}): GoalProjectListenerRegistration {
+    const optionsToUse = {
+        ...defaultCacheArtifactOptions,
+        ...options,
+    };
+
     return {
         name: "cache-artifacts",
         listener: archiveAndCacheArtifacts,
@@ -56,7 +70,7 @@ export function cacheArtifacts(artifactArchiveCacher: ArtifactArchiveCache,
                                             gi: GoalInvocation,
                                             event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
         if (event === GoalProjectListenerEvent.after) {
-            const jars = await glob.__promisify__(globPattern, {cwd: p.baseDir, nodir: true});
+            const jars = await glob.__promisify__(globPattern, {cwd: p.baseDir, nodir: optionsToUse.skipDirectories});
             const archive = await archiveFiles(p, gi.id, jars);
             artifactArchiveCacher.putInCache(gi.id, archive);
         }
