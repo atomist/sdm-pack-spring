@@ -14,10 +14,23 @@
  * limitations under the License.
  */
 
-import {GitProject, InMemoryProject, Project, ProjectFile, RepoRef} from "@atomist/automation-client";
-import {GoalProjectListenerEvent, ProgressLog} from "@atomist/sdm";
+import {
+    GitProject,
+    InMemoryProject,
+    Project,
+    ProjectFile,
+    RepoRef,
+} from "@atomist/automation-client";
+import {
+    GoalProjectListenerEvent,
+    ProgressLog,
+} from "@atomist/sdm";
 import * as assert from "power-assert";
-import {ArtifactArchiveCache, cacheArtifacts, restoreArtifacts} from "../../../../lib/java/build/helpers/CacheArtifacts";
+import {
+    ArtifactArchiveCache,
+    cacheArtifacts,
+    restoreArtifacts,
+} from "../../../../lib/java/build/helpers/CacheArtifacts";
 
 describe("CacheArtifacts", () => {
 

@@ -15,16 +15,20 @@
  */
 
 import {
-    GitProject, Project,
+    GitProject,
+    Project,
     RepoRef,
 } from "@atomist/automation-client";
-import {gatherFromFiles} from "@atomist/automation-client/lib/project/util/projectUtils";
+import { gatherFromFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
 import {
     AnyPush,
     ExecuteGoalResult,
-    GoalInvocation, GoalProjectListener,
+    GoalInvocation,
+    GoalProjectListener,
     GoalProjectListenerEvent,
-    GoalProjectListenerRegistration, ProgressLog, PushTest,
+    GoalProjectListenerRegistration,
+    ProgressLog,
+    PushTest,
 } from "@atomist/sdm";
 
 export interface ArtifactArchiveCache {
