@@ -15,14 +15,13 @@
  */
 
 import {
+    LocalProject,
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import {
-    Literal,
-    Microgrammar,
-} from "@atomist/microgrammar";
-import {
     AppInfo,
+    ErrorFinder,
+    ProgressLog,
     spawnLog,
     SpawnLogResult,
     StringCapturingProgressLog,
@@ -32,6 +31,10 @@ import {
     BuildInProgress,
 } from "@atomist/sdm-pack-build";
 import { determineGradleCommand } from "../gradleCommand";
+import {
+    gradlePropertiesNameGrammar,
+    gradlePropertiesVersionGrammar,
+} from "./helpers";
 
 /**
  * Build with Gradle in the local automation client.
@@ -46,28 +49,56 @@ export function gradleSingleModuleBuilder(): Builder {
         const { configuration, id, progressLog, credentials } = goalInvocation;
         return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
             const propertiesOutput = new StringCapturingProgressLog();
-            const command = determineGradleCommand(p);
-            await spawnLog(
-                command,
-                ["properties"],
-                { cwd: p.baseDir, log: propertiesOutput });
-            const appName = nameGrammar.firstMatch(propertiesOutput.log).$matched;
-            const version = versionGrammar.firstMatch(propertiesOutput.log).$matched;
-
-            const buildResult = spawnLog(
-                command,
-                ["--console=plain", "clean", "build"],
-                {
-                    cwd: p.baseDir,
-                    log: progressLog,
-                    errorFinder: (code, signal, l) => l.log.includes("[ERROR]"),
-                });
+            await gradleCommand(p, { progressLog: propertiesOutput, tasks: ["properties"]});
+            const appName = gradlePropertiesNameGrammar.firstMatch(propertiesOutput.log).$matched;
+            const version = gradlePropertiesVersionGrammar.firstMatch(propertiesOutput.log).$matched;
+            const buildResult = gradleCommand(p, {
+                progressLog,
+                errorFinder: (code, signal, l) => l.log.includes("[ERROR]"),
+                flags: ["--console=plain"],
+                tasks: ["clean", "build"],
+            });
             const rb = new UpdatingBuild(id, await buildResult);
             rb.ai = { id, name: appName, version };
             rb.deploymentUnitFile = `${p.baseDir}/build/libs/${appName}.jar`;
             return rb;
         });
     };
+}
+
+export interface GradleCommandOptions {
+    args: Array<{ name: string, value?: string }>;
+    tasks: string[];
+    flags: string[];
+    errorFinder: ErrorFinder;
+    progressLog: ProgressLog;
+}
+
+export const DefaultGradleCommandOptions: GradleCommandOptions = {
+    args: [],
+    tasks: ["build"],
+    flags: [],
+    errorFinder: () => false,
+    progressLog: new StringCapturingProgressLog(),
+};
+
+export async function gradleCommand(p: LocalProject,
+                                    options: Partial<GradleCommandOptions>): Promise<SpawnLogResult> {
+    const optionsToUse: GradleCommandOptions = {
+        ...DefaultGradleCommandOptions,
+        ...options,
+    };
+
+    const command = await determineGradleCommand(p);
+    return spawnLog(
+        command,
+        [...optionsToUse.args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`), ...optionsToUse.tasks],
+        {
+            cwd: p.baseDir,
+            log: optionsToUse.progressLog,
+            errorFinder: optionsToUse.errorFinder,
+        },
+    );
 }
 
 export const GradleSingleModuleBuilder = gradleSingleModuleBuilder();
@@ -77,14 +108,6 @@ export interface GradleInfo {
 
     success: boolean;
 }
-
-const nameGrammar = Microgrammar.fromString<{ name: string }>("name: ${name}", {
-    name: Literal,
-});
-
-const versionGrammar = Microgrammar.fromString<{ name: string }>("version: ${name}", {
-    name: Literal,
-});
 
 class UpdatingBuild implements BuildInProgress {
 
