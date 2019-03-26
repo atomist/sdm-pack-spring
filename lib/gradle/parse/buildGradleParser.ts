@@ -2,9 +2,9 @@ import {
     LocalProject,
     Project,
 } from "@atomist/automation-client";
+import { StringCapturingProgressLog } from "@atomist/sdm";
 import { ProjectIdentification } from "@atomist/sdm-core/lib/internal/delivery/build/local/projectIdentifier";
 import { VersionedArtifact } from "../../maven/VersionedArtifact";
-import { StringCapturingProgressLog } from "@atomist/sdm";
 import { gradleCommand } from "../build/GradleSingleModuleBuilder";
 import {
     gradlePropertiesGroupGrammar,
@@ -30,4 +30,4 @@ export const GradleProjectIdentifier: (p: Project) => Promise<VersionedArtifact 
         version,
         group,
     };
-}
+};
