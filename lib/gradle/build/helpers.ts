@@ -16,7 +16,7 @@
 
 import {
     GitProject,
-    Project,
+    Project, projectUtils,
 } from "@atomist/automation-client";
 import {
     Literal,
@@ -30,7 +30,6 @@ import {
     LogSuppressor,
     NoProgressReport,
     PrepareForGoalExecution,
-    ProgressLog,
     SdmGoalEvent,
     spawnLog,
 } from "@atomist/sdm";
@@ -39,6 +38,7 @@ import {
     readSdmVersion,
 } from "@atomist/sdm-core";
 import * as df from "dateformat";
+import * as _ from "lodash";
 import { determineGradleCommand } from "../gradleCommand";
 import { GradleProjectIdentifier } from "../parse/buildGradleParser";
 import { IsGradle } from "../pushtest/gradlePushTests";
@@ -59,7 +59,7 @@ async function newVersion(sdmGoal: SdmGoalEvent, p: Project): Promise<string> {
  */
 export const GradleProjectVersioner: ProjectVersioner = async (sdmGoal, p, log) => {
     const version = await newVersion(sdmGoal, p);
-    await changeGradleVersion(version, p, log);
+    await changeGradleVersion(version, p);
     return version;
 };
 
@@ -71,16 +71,19 @@ export const GradleProjectVersioner: ProjectVersioner = async (sdmGoal, p, log) 
  */
 export const GradleVersionPreparation: PrepareForGoalExecution = async (p: GitProject, goalInvocation: GoalInvocation) => {
     const version = await newVersion(goalInvocation.sdmGoal, p);
-    return changeGradleVersion(version, p, goalInvocation.progressLog);
+    return changeGradleVersion(version, p);
 };
 
-async function changeGradleVersion(version: string, p: GitProject, progressLog: ProgressLog): Promise<ExecuteGoalResult> {
-    return undefined;
-    // const command = await determineMavenCommand(p);
-    // const args = ["build-helper:parse-version", "versions:set", `-DnewVersion=${version}`, "versions:commit"];
-    // return spawnLog(
-    //     command, args,
-    //     { cwd: p.baseDir, log: progressLog });
+async function changeGradleVersion(version: string, p: GitProject): Promise<ExecuteGoalResult> {
+    await projectUtils.doWithFiles(p, "gradle.properties", async file => {
+        const content = await file.getContent();
+        const versionUpdate = Microgrammar.updatable(gradlePropertiesVersionGrammar.findMatches(content), content);
+        _.head(versionUpdate.matches).version = version;
+        await file.setContent(versionUpdate.updated());
+    });
+    return {
+        code: 0,
+    };
 }
 
 /**
@@ -148,14 +151,18 @@ export const GradleDefaultOptions = {
     progressReporter: NoProgressReport,
 };
 
-export const gradlePropertiesNameGrammar = Microgrammar.fromString<{ name: string }>("name: ${name}", {
+export const gradlePropertiesTaskNameGrammar = Microgrammar.fromString<{ name: string }>("name: ${name}", {
     name: Literal,
 });
 
-export const gradlePropertiesVersionGrammar = Microgrammar.fromString<{ name: string }>("version: ${name}", {
-    name: Literal,
+export const gradlePropertiesVersionGrammar = Microgrammar.fromString<{ version: string }>("version: ${version}",  {
+    version: Literal,
 });
 
-export const gradlePropertiesGroupGrammar = Microgrammar.fromString<{ name: string }>("group: ${name}", {
-    name: Literal,
+export const gradlePropertiesTaskVersionGrammar = Microgrammar.fromString<{ version: string }>("version=${version}", {
+    version: Literal,
+});
+
+export const gradlePropertiesTaskGroupGrammar = Microgrammar.fromString<{ group: string }>("group: ${group}", {
+    group: Literal,
 });
