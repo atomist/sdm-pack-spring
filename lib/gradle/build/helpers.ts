@@ -16,7 +16,8 @@
 
 import {
     GitProject,
-    Project, projectUtils,
+    Project,
+    projectUtils,
 } from "@atomist/automation-client";
 import {
     Literal,

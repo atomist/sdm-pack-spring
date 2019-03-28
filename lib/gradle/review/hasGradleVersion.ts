@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-import {Project, ReviewComment, Severity} from "@atomist/automation-client";
-import {ReviewerRegistration} from "@atomist/sdm";
-import {IsGradle} from "../pushtest/gradlePushTests";
+import {
+    Project,
+    ReviewComment,
+    Severity,
+} from "@atomist/automation-client";
+import { ReviewerRegistration } from "@atomist/sdm";
+import { IsGradle } from "../pushtest/gradlePushTests";
 
 /**
  * Checks whether a project has a gradle.properties and if so, if a version
