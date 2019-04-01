@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import {projectUtils} from "@atomist/automation-client";
 import {
     predicatePushTest,
     PredicatePushTest,
@@ -44,6 +45,20 @@ export const HasSpringBootPom: PredicatePushTest = predicatePushTest(
             return false;
         }
         return (await pom.getContent()).includes("spring-boot");
+    },
+);
+
+/**
+ * Does this project's Gradle use Spring boot?
+ * @type {PredicatePushTest}
+ */
+export const HasSpringBootGradleDependency: PredicatePushTest = predicatePushTest(
+    "Has Spring Boot POM",
+    async p => {
+        const gathered = await projectUtils.gatherFromFiles(p, "**/build.(gradle|gradle.kts)", async f => {
+            return (await f.getContent()).includes("spring-boot");
+        });
+        return gathered.filter(f => f).length > 0;
     },
 );
 
