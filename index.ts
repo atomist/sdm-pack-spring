@@ -42,11 +42,15 @@ export {
     mavenBuilder,
     mavenPackage,
     mavenRunner,
+    mavenRunner,
 } from "./lib/maven/build/MavenBuilder";
 export {
     GradleBuilder,
     gradleBuilder,
 } from "./lib/gradle/build/gradleBuilder";
+export {
+    IsGradle,
+} from "./lib/gradle/pushtest/gradlePushTests";
 export { ListLocalDeploys } from "./lib/maven/deploy/listLocalDeploys";
 export { mavenDeployer } from "./lib/maven/deploy/mavenDeployer";
 export { MavenFingerprinter } from "./lib/maven/fingerprint/MavenFingerprinter";
