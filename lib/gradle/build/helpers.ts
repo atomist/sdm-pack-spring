@@ -33,6 +33,7 @@ import {
     PrepareForGoalExecution,
     SdmGoalEvent,
     spawnLog,
+    SuccessIsReturn0ErrorFinder,
 } from "@atomist/sdm";
 import {
     ProjectVersioner,
@@ -43,7 +44,7 @@ import * as _ from "lodash";
 import { determineGradleCommand } from "../gradleCommand";
 import { GradleProjectIdentifier } from "../parse/buildGradleParser";
 import { IsGradle } from "../pushtest/gradlePushTests";
-import { gradleCommand } from "./GradleSingleModuleBuilder";
+import { gradleCommand } from "./gradleBuilder";
 
 async function newVersion(sdmGoal: SdmGoalEvent, p: Project): Promise<string> {
     const pi = await GradleProjectIdentifier(p);
@@ -104,13 +105,17 @@ export const GradleCompilePreparation: PrepareForGoalExecution = gradleBuildPrep
  */
 export function gradleBuildPreparation(args: Array<{ name: string, value: string }> = []): PrepareForGoalExecution {
     return async (p: GitProject, goalInvocation: GoalInvocation) => {
-        return gradleCommand(p, {tasks: ["build"], progressLog: goalInvocation.progressLog, args});
+        return gradleCommand(p, {
+            tasks: ["build"],
+            progressLog: goalInvocation.progressLog,
+            args,
+            errorFinder: SuccessIsReturn0ErrorFinder});
     };
 }
 
-export async function gradleVersionProjectListener(p: GitProject,
-                                                   gi: GoalInvocation,
-                                                   event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
+async function gradleVersionProjectListener(p: GitProject,
+                                            gi: GoalInvocation,
+                                            event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
     const command = await determineGradleCommand(p);
     if (event === GoalProjectListenerEvent.before) {
         const v = await readSdmVersion(
@@ -130,20 +135,24 @@ export const GradleVersion: GoalProjectListenerRegistration = {
     name: "gradle-version",
     listener: gradleVersionProjectListener,
     pushTest: IsGradle,
+    events: [GoalProjectListenerEvent.before],
 };
 
-async function gradleBuildProjectListener(p: GitProject,
-                                          gi: GoalInvocation,
-                                          event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
-    if (event === GoalProjectListenerEvent.before) {
-        return gradleCommand(p, {progressLog: gi.progressLog, tasks: ["build"], args: [{name: "artifact.name", value: p.id.repo}]});
-    }
+function gradleBuildProjectListener(p: GitProject,
+                                    gi: GoalInvocation): Promise<void | ExecuteGoalResult> {
+    return gradleCommand(p, {
+        progressLog: gi.progressLog,
+        tasks: ["build"],
+        args: [{name: "artifact.name", value: p.id.repo}],
+        errorFinder: SuccessIsReturn0ErrorFinder,
+    });
 }
 
 export const GradleBuild: GoalProjectListenerRegistration = {
     name: "mvn-package",
     listener: gradleBuildProjectListener,
     pushTest: IsGradle,
+    events: [GoalProjectListenerEvent.before],
 };
 
 export const GradleDefaultOptions = {

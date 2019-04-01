@@ -44,9 +44,9 @@ export {
     mavenRunner,
 } from "./lib/maven/build/MavenBuilder";
 export {
-    GradleSingleModuleBuilder,
-    gradleSingleModuleBuilder,
-} from "./lib/gradle/build/GradleSingleModuleBuilder";
+    GradleBuilder,
+    gradleBuilder,
+} from "./lib/gradle/build/gradleBuilder";
 export { ListLocalDeploys } from "./lib/maven/deploy/listLocalDeploys";
 export { mavenDeployer } from "./lib/maven/deploy/mavenDeployer";
 export { MavenFingerprinter } from "./lib/maven/fingerprint/MavenFingerprinter";

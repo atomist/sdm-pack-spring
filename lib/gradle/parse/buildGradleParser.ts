@@ -18,14 +18,17 @@ import {
     LocalProject,
     Project,
 } from "@atomist/automation-client";
-import { StringCapturingProgressLog } from "@atomist/sdm";
+import {
+    StringCapturingProgressLog,
+    SuccessIsReturn0ErrorFinder,
+} from "@atomist/sdm";
 import { ProjectIdentification } from "@atomist/sdm-core/lib/internal/delivery/build/local/projectIdentifier";
 import { VersionedArtifact } from "../../maven/VersionedArtifact";
-import { gradleCommand } from "../build/GradleSingleModuleBuilder";
+import { gradleCommand } from "../build/gradleBuilder";
 import {
-    gradlePropertiesGroupGrammar,
-    gradlePropertiesNameGrammar,
-    gradlePropertiesVersionGrammar,
+    gradlePropertiesTaskGroupGrammar,
+    gradlePropertiesTaskNameGrammar,
+    gradlePropertiesTaskVersionGrammar,
 } from "../build/helpers";
 
 /**
@@ -36,10 +39,10 @@ import {
  */
 export const GradleProjectIdentifier: (p: Project) => Promise<VersionedArtifact & ProjectIdentification> = async p => {
     const propertiesOutput = new StringCapturingProgressLog();
-    await gradleCommand(p as LocalProject, { progressLog: propertiesOutput, tasks: ["properties"]});
-    const appName = gradlePropertiesNameGrammar.firstMatch(propertiesOutput.log).$matched;
-    const version = gradlePropertiesVersionGrammar.firstMatch(propertiesOutput.log).$matched;
-    const group = gradlePropertiesGroupGrammar.firstMatch(propertiesOutput.log).$matched;
+    await gradleCommand(p as LocalProject, { progressLog: propertiesOutput, tasks: ["properties"], errorFinder: SuccessIsReturn0ErrorFinder});
+    const appName = gradlePropertiesTaskNameGrammar.firstMatch(propertiesOutput.log).name;
+    const version = gradlePropertiesTaskVersionGrammar.firstMatch(propertiesOutput.log).version;
+    const group = gradlePropertiesTaskGroupGrammar.firstMatch(propertiesOutput.log).group;
     return {
         name: appName,
         artifact: appName,

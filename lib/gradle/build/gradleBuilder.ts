@@ -24,17 +24,23 @@ import {
     ProgressLog,
     spawnLog,
     SpawnLogResult,
-    StringCapturingProgressLog,
 } from "@atomist/sdm";
+import { ProjectIdentification } from "@atomist/sdm-core/lib/internal/delivery/build/local/projectIdentifier";
 import {
     Builder,
     BuildInProgress,
 } from "@atomist/sdm-pack-build";
+import { VersionedArtifact } from "../../maven/VersionedArtifact";
 import { determineGradleCommand } from "../gradleCommand";
-import {
-    gradlePropertiesNameGrammar,
-    gradlePropertiesVersionGrammar,
-} from "./helpers";
+import { GradleProjectIdentifier } from "../parse/buildGradleParser";
+
+export interface GradleSingleModuleBuilderOptions {
+    deploymentUnitFileLocator: (p: LocalProject, id: VersionedArtifact & ProjectIdentification) => string;
+}
+
+export const DefaultGradleSingleModuleBuilderOptions: GradleSingleModuleBuilderOptions = {
+    deploymentUnitFileLocator: (p, id) => `${p.baseDir}/build/libs/${id.name}.jar`,
+};
 
 /**
  * Build with Gradle in the local automation client.
@@ -44,14 +50,11 @@ import {
  * vulnerability in builds of unrelated tenants getting at each others
  * artifacts.
  */
-export function gradleSingleModuleBuilder(): Builder {
+export function gradleBuilder(options: GradleSingleModuleBuilderOptions = DefaultGradleSingleModuleBuilderOptions): Builder {
     return async goalInvocation => {
         const { configuration, id, progressLog, credentials } = goalInvocation;
         return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
-            const propertiesOutput = new StringCapturingProgressLog();
-            await gradleCommand(p, { progressLog: propertiesOutput, tasks: ["properties"]});
-            const appName = gradlePropertiesNameGrammar.firstMatch(propertiesOutput.log).$matched;
-            const version = gradlePropertiesVersionGrammar.firstMatch(propertiesOutput.log).$matched;
+            const gradleProjectIdentifier = await GradleProjectIdentifier(p);
             const buildResult = gradleCommand(p, {
                 progressLog,
                 errorFinder: (code, signal, l) => l.log.includes("[ERROR]"),
@@ -59,49 +62,36 @@ export function gradleSingleModuleBuilder(): Builder {
                 tasks: ["clean", "build"],
             });
             const rb = new UpdatingBuild(id, await buildResult);
-            rb.ai = { id, name: appName, version };
-            rb.deploymentUnitFile = `${p.baseDir}/build/libs/${appName}.jar`;
+            rb.ai = { id, name: gradleProjectIdentifier.name,  version: gradleProjectIdentifier.version };
+            rb.deploymentUnitFile = options.deploymentUnitFileLocator(p, gradleProjectIdentifier);
             return rb;
         });
     };
 }
 
 export interface GradleCommandOptions {
-    args: Array<{ name: string, value?: string }>;
+    args?: Array<{ name: string, value?: string }>;
     tasks: string[];
-    flags: string[];
+    flags?: string[];
     errorFinder: ErrorFinder;
     progressLog: ProgressLog;
 }
 
-export const DefaultGradleCommandOptions: GradleCommandOptions = {
-    args: [],
-    tasks: ["build"],
-    flags: [],
-    errorFinder: () => false,
-    progressLog: new StringCapturingProgressLog(),
-};
-
 export async function gradleCommand(p: LocalProject,
-                                    options: Partial<GradleCommandOptions>): Promise<SpawnLogResult> {
-    const optionsToUse: GradleCommandOptions = {
-        ...DefaultGradleCommandOptions,
-        ...options,
-    };
-
+                                    options: GradleCommandOptions): Promise<SpawnLogResult> {
     const command = await determineGradleCommand(p);
     return spawnLog(
         command,
-        [...optionsToUse.args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`), ...optionsToUse.tasks],
+        [...options.flags, ...options.args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`), ...options.tasks],
         {
             cwd: p.baseDir,
-            log: optionsToUse.progressLog,
-            errorFinder: optionsToUse.errorFinder,
+            log: options.progressLog,
+            errorFinder: options.errorFinder,
         },
     );
 }
 
-export const GradleSingleModuleBuilder = gradleSingleModuleBuilder();
+export const GradleBuilder = gradleBuilder();
 
 export interface GradleInfo {
     timeMillis?: number;
