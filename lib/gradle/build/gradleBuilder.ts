@@ -34,12 +34,18 @@ import { VersionedArtifact } from "../../maven/VersionedArtifact";
 import { determineGradleCommand } from "../gradleCommand";
 import { GradleProjectIdentifier } from "../parse/buildGradleParser";
 
-export interface GradleSingleModuleBuilderOptions {
+export interface GradleBuilderOptions {
     deploymentUnitFileLocator: (p: LocalProject, id: VersionedArtifact & ProjectIdentification) => string;
+    tasks: string[];
+    flags: string[];
+    arguments: Array<{ name: string, value?: string }>;
 }
 
-export const DefaultGradleSingleModuleBuilderOptions: GradleSingleModuleBuilderOptions = {
+export const DefaultGradleBuilderOptions: GradleBuilderOptions = {
     deploymentUnitFileLocator: (p, id) => `${p.baseDir}/build/libs/${id.name}.jar`,
+    tasks: ["clean", "build"],
+    flags: [],
+    arguments: [],
 };
 
 /**
@@ -50,7 +56,7 @@ export const DefaultGradleSingleModuleBuilderOptions: GradleSingleModuleBuilderO
  * vulnerability in builds of unrelated tenants getting at each others
  * artifacts.
  */
-export function gradleBuilder(options: GradleSingleModuleBuilderOptions = DefaultGradleSingleModuleBuilderOptions): Builder {
+export function gradleBuilder(options: GradleBuilderOptions = DefaultGradleBuilderOptions): Builder {
     return async goalInvocation => {
         const { configuration, id, progressLog, credentials } = goalInvocation;
         return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
@@ -58,8 +64,9 @@ export function gradleBuilder(options: GradleSingleModuleBuilderOptions = Defaul
             const buildResult = gradleCommand(p, {
                 progressLog,
                 errorFinder: (code, signal, l) => l.log.includes("[ERROR]"),
-                flags: ["--console=plain"],
-                tasks: ["clean", "build"],
+                flags: ["--console=plain", ...options.flags],
+                tasks: options.tasks,
+                args: options.arguments,
             });
             const rb = new UpdatingBuild(id, await buildResult);
             rb.ai = { id, name: gradleProjectIdentifier.name,  version: gradleProjectIdentifier.version };
