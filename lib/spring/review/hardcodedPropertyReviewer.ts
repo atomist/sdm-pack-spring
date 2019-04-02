@@ -25,7 +25,7 @@ import { ReviewerRegistration } from "@atomist/sdm";
 import * as _ from "lodash";
 import { CloudNative } from "../../common/review/reviewCategories";
 import { parseProperties } from "../../properties/propertiesParser";
-import { HasSpringPom } from "../pushtest/pushTests";
+import { HasSpringBootApplicationClass } from "../pushtest/pushTests";
 
 const PropertyKeysToCheck = [
     "server.port",
@@ -41,7 +41,7 @@ export const HardcodePropertyCategory = "Hardcoded properties";
  */
 export const HardcodedPropertyReviewer: ReviewerRegistration = {
     name: HardcodePropertyCategory,
-    pushTest: HasSpringPom,
+    pushTest: HasSpringBootApplicationClass,
     inspection: async project => {
         return {
             repoId: project.id,
