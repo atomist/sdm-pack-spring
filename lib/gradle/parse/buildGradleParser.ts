@@ -25,11 +25,21 @@ import {
 import { ProjectIdentification } from "@atomist/sdm-core/lib/internal/delivery/build/local/projectIdentifier";
 import { VersionedArtifact } from "../../maven/VersionedArtifact";
 import { gradleCommand } from "../build/gradleBuilder";
-import {
-    gradlePropertiesTaskGroupGrammar,
-    gradlePropertiesTaskNameGrammar,
-    gradlePropertiesTaskVersionGrammar,
-} from "../build/helpers";
+
+export async function getGradleProjectInfo(p: Project) {
+    const propertiesOutput = new StringCapturingProgressLog();
+    if (!await p.hasFile(".atomist.gradle.json")) {
+        await p.addFile("atomist.init.gradle", ATOMIST_INIT_GRADLE_SCRIPT);
+        await gradleCommand(p as LocalProject,
+            {
+                progressLog: propertiesOutput,
+                initScript: "atomist.init.gradle",
+                tasks: ["printDepsTreeInJson"],
+                errorFinder: SuccessIsReturn0ErrorFinder,
+            });
+    }
+    return JSON.parse(await (await p.getFile(".atomist.gradle.json")).getContent());
+}
 
 /**
  * Return the identification of a project: name and version
@@ -38,11 +48,10 @@ import {
  * @constructor
  */
 export const GradleProjectIdentifier: (p: Project) => Promise<VersionedArtifact & ProjectIdentification> = async p => {
-    const propertiesOutput = new StringCapturingProgressLog();
-    await gradleCommand(p as LocalProject, { progressLog: propertiesOutput, tasks: ["properties"], errorFinder: SuccessIsReturn0ErrorFinder});
-    const appName = gradlePropertiesTaskNameGrammar.firstMatch(propertiesOutput.log).name;
-    const version = gradlePropertiesTaskVersionGrammar.firstMatch(propertiesOutput.log).version;
-    const group = gradlePropertiesTaskGroupGrammar.firstMatch(propertiesOutput.log).group;
+    const projectInfo = await getGradleProjectInfo(p);
+    const appName = projectInfo.name;
+    const version = projectInfo.version;
+    const group = projectInfo.group;
     return {
         name: appName,
         artifact: appName,
@@ -50,3 +59,69 @@ export const GradleProjectIdentifier: (p: Project) => Promise<VersionedArtifact 
         group,
     };
 };
+
+export const ATOMIST_INIT_GRADLE_SCRIPT = `
+rootProject {
+    task printDepsTreeInJson {
+        doLast {
+            def jsonProject = new JsonProject()
+            jsonProject.name = project.name
+            jsonProject.version = project.version
+            jsonProject.group = project.group
+            jsonProject.dependencies = getDependencies(project)
+            jsonProject.plugins = getPlugins(project)
+            jsonProject.subProjects = project.subprojects.collect { p ->
+                def sub = new JsonProject()
+                sub.name = p.name
+                sub.version = p.version
+                sub.group = p.group
+                sub.dependencies = getDependencies(p)
+                sub.plugins = getPlugins(p)
+                sub
+            }
+            def builder = new JsonBuilder(jsonProject)
+            def jsonFile = project.file(".atomist.gradle.json")
+            if(jsonFile.exists()) {
+                jsonFile.delete()
+            }
+            jsonFile.createNewFile()
+            jsonFile.append(builder.toPrettyString())
+        }
+    }
+}
+
+def getDependencies(Project p) {
+    return p.configurations.runtimeClasspath.incoming.getResolutionResult().allDependencies.toArray().collect() { depResult ->
+        def dep = new JsonDependency()
+        dep.dependency = depResult.requested
+        dep.from = depResult.from
+        dep
+    }
+}
+
+def getPlugins(Project p) {
+    return p.plugins.collect { plugin ->
+        def pl = new JsonPlugin()
+        pl.plugin = plugin.class
+        pl
+    }
+}
+
+class JsonDependency {
+    String dependency
+    String from
+}
+
+class JsonPlugin {
+    String plugin
+}
+
+class JsonProject {
+    String group
+    String name
+    String version
+    List<JsonProject> subProjects
+    List<JsonDependency> dependencies
+    List<JsonPlugin> plugins
+}
+`;

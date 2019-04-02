@@ -82,14 +82,22 @@ export interface GradleCommandOptions {
     flags?: string[];
     errorFinder: ErrorFinder;
     progressLog: ProgressLog;
+    initScript?: string;
 }
 
 export async function gradleCommand(p: LocalProject,
                                     options: GradleCommandOptions): Promise<SpawnLogResult> {
     const command = await determineGradleCommand(p);
+    const args = [];
+    args.push(...options.flags);
+    args.push(...options.args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`));
+    if(options.initScript) {
+        args.push(`-I ${options.initScript}`);
+    }
+    args.push(...options.tasks);
     return spawnLog(
         command,
-        [...options.flags, ...options.args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`), ...options.tasks],
+        args,
         {
             cwd: p.baseDir,
             log: options.progressLog,
