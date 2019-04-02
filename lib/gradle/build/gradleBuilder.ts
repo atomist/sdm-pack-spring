@@ -91,7 +91,7 @@ export async function gradleCommand(p: LocalProject,
     const args = [];
     args.push(...options.flags);
     args.push(...options.args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`));
-    if(options.initScript) {
+    if (options.initScript) {
         args.push(`-I ${options.initScript}`);
     }
     args.push(...options.tasks);

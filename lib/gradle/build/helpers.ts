@@ -32,7 +32,6 @@ import {
     NoProgressReport,
     PrepareForGoalExecution,
     SdmGoalEvent,
-    spawnLog,
     SuccessIsReturn0ErrorFinder,
 } from "@atomist/sdm";
 import {
@@ -41,7 +40,6 @@ import {
 } from "@atomist/sdm-core";
 import * as df from "dateformat";
 import * as _ from "lodash";
-import { determineGradleCommand } from "../gradleCommand";
 import { GradleProjectIdentifier } from "../parse/buildGradleParser";
 import { IsGradle } from "../pushtest/gradlePushTests";
 import { gradleCommand } from "./gradleBuilder";
@@ -116,19 +114,14 @@ export function gradleBuildPreparation(args: Array<{ name: string, value: string
 async function gradleVersionProjectListener(p: GitProject,
                                             gi: GoalInvocation,
                                             event: GoalProjectListenerEvent): Promise<void | ExecuteGoalResult> {
-    const command = await determineGradleCommand(p);
-    if (event === GoalProjectListenerEvent.before) {
-        const v = await readSdmVersion(
-            gi.goalEvent.repo.owner,
-            gi.goalEvent.repo.name,
-            gi.goalEvent.repo.providerId,
-            gi.goalEvent.sha,
-            gi.goalEvent.branch,
-            gi.context);
-        return spawnLog(
-            command, ["versions:set", `-DnewVersion=${v}`, "versions:commit"],
-            { cwd: p.baseDir, log: gi.progressLog });
-    }
+    const v = await readSdmVersion(
+        gi.goalEvent.repo.owner,
+        gi.goalEvent.repo.name,
+        gi.goalEvent.repo.providerId,
+        gi.goalEvent.sha,
+        gi.goalEvent.branch,
+        gi.context);
+    return changeGradleVersion(v, p);
 }
 
 export const GradleVersion: GoalProjectListenerRegistration = {
@@ -149,7 +142,7 @@ function gradleBuildProjectListener(p: GitProject,
 }
 
 export const GradleBuild: GoalProjectListenerRegistration = {
-    name: "mvn-package",
+    name: "gradle-build",
     listener: gradleBuildProjectListener,
     pushTest: IsGradle,
     events: [GoalProjectListenerEvent.before],
