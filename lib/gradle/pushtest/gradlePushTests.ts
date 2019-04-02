@@ -25,4 +25,4 @@ import {
  */
 export const IsGradle: PredicatePushTest = predicatePushTest(
     "Is Gradle",
-    async p => !!(await p.getFile("build.gradle")) || !!(await p.getFile("build.gradle.kt")));
+    async p => !!(await p.getFile("build.gradle")) || !!(await p.getFile("build.gradle.kts")));
