@@ -158,11 +158,11 @@ export const gradlePropertiesTaskNameGrammar = Microgrammar.fromString<{ name: s
     name: Literal,
 });
 
-export const gradlePropertiesVersionGrammar = Microgrammar.fromString<{ version: string }>("version: ${version}",  {
+export const gradlePropertiesTaskVersionGrammar = Microgrammar.fromString<{ version: string }>("version: ${version}",  {
     version: Literal,
 });
 
-export const gradlePropertiesTaskVersionGrammar = Microgrammar.fromString<{ version: string }>("version=${version}", {
+export const gradlePropertiesVersionGrammar = Microgrammar.fromString<{ version: string }>("version=${version}", {
     version: Literal,
 });
 
