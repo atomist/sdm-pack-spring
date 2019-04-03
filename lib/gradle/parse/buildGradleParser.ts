@@ -24,15 +24,15 @@ import {
 } from "@atomist/sdm";
 import { ProjectIdentification } from "@atomist/sdm-core/lib/internal/delivery/build/local/projectIdentifier";
 import { VersionedArtifact } from "../../maven/VersionedArtifact";
+import { parseProperties } from "../../properties/propertiesParser";
 import { gradleCommand } from "../build/gradleBuilder";
 import {
     gradlePropertiesTaskGroupGrammar,
-    gradlePropertiesVersionGrammar,
 } from "../build/helpers";
 
 async function getProjectVersion(p: Project): Promise<string> {
-    const gradleProperties = await (await p.getFile("gradle.properties")).getContent();
-    return gradlePropertiesVersionGrammar.firstMatch(gradleProperties).version;
+    const propertiesFile = await parseProperties(p, "gradle.properties");
+    return propertiesFile.properties.find(prop => prop.key === "version").value;
 }
 
 async function getProjectGroup(p: Project): Promise<string> {

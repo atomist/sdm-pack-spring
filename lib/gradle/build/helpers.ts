@@ -17,7 +17,6 @@
 import {
     GitProject,
     Project,
-    projectUtils,
 } from "@atomist/automation-client";
 import {
     Literal,
@@ -39,7 +38,7 @@ import {
     readSdmVersion,
 } from "@atomist/sdm-core";
 import * as df from "dateformat";
-import * as _ from "lodash";
+import { parseProperties } from "../../properties/propertiesParser";
 import { GradleProjectIdentifier } from "../parse/buildGradleParser";
 import { IsGradle } from "../pushtest/gradlePushTests";
 import { gradleCommand } from "./gradleBuilder";
@@ -75,12 +74,9 @@ export const GradleVersionPreparation: PrepareForGoalExecution = async (p: GitPr
 };
 
 async function changeGradleVersion(version: string, p: GitProject): Promise<ExecuteGoalResult> {
-    await projectUtils.doWithFiles(p, "gradle.properties", async file => {
-        const content = await file.getContent();
-        const versionUpdate = Microgrammar.updatable(gradlePropertiesVersionGrammar.findMatches(content), content);
-        _.head(versionUpdate.matches).version = version;
-        await file.setContent(versionUpdate.updated());
-    });
+    const propertiesFile = await parseProperties(p, "gradle.properties");
+    propertiesFile.properties.find(prop => prop.key === "version").value = version;
+    await propertiesFile.flush();
     return {
         code: 0,
     };
@@ -159,10 +155,6 @@ export const gradlePropertiesTaskNameGrammar = Microgrammar.fromString<{ name: s
 });
 
 export const gradlePropertiesTaskVersionGrammar = Microgrammar.fromString<{ version: string }>("version: ${version}",  {
-    version: Literal,
-});
-
-export const gradlePropertiesVersionGrammar = Microgrammar.fromString<{ version: string }>("version=${version}", {
     version: Literal,
 });
 
