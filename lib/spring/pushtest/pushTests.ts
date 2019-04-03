@@ -18,7 +18,6 @@ import {
     predicatePushTest,
     PredicatePushTest,
 } from "@atomist/sdm";
-import { getGradleProjectInfo } from "../../gradle/parse/buildGradleParser";
 import { hasDeclaredDependency } from "../../maven/pushtest/pushTests";
 import { SpringBootProjectStructure } from "../generate/SpringBootProjectStructure";
 import { SpringBootVersionInspection } from "../inspect/springBootVersionInspection";
@@ -45,44 +44,6 @@ export const HasSpringBootPom: PredicatePushTest = predicatePushTest(
             return false;
         }
         return (await pom.getContent()).includes("spring-boot");
-    },
-);
-
-/**
- * Does this project's Gradle use Spring boot?
- * @type {PredicatePushTest}
- */
-export const HasSpringBootGradleDependency: PredicatePushTest = predicatePushTest(
-    "Has Spring Boot Gradle dependency",
-    async p => {
-        const projectInfo = await getGradleProjectInfo(p);
-
-        function hasSpringBootDependency(moduleInfo: any) {
-            return moduleInfo.dependencies.filter((d: any) => {
-                return (d.dependency as string).indexOf("spring-boot") > 0;
-            }).length > 0;
-        }
-
-        return hasSpringBootDependency(projectInfo) || projectInfo.subprojects.filter((sub: any)  => hasSpringBootDependency(projectInfo)).length > 0;
-    },
-);
-
-/**
- * Does this project's Gradle use Spring boot?
- * @type {PredicatePushTest}
- */
-export const HasSpringBootGradlePlugin: PredicatePushTest = predicatePushTest(
-    "Has Spring Boot Gradle plugin",
-    async p => {
-        const projectInfo = await getGradleProjectInfo(p);
-
-        function hasSpringBootDependency(moduleInfo: any) {
-            return moduleInfo.plugins.filter((d: any) => {
-                return (d.dependency as string).indexOf("SpringBootPlugin") > 0;
-            }).length > 0;
-        }
-
-        return hasSpringBootDependency(projectInfo) || projectInfo.subprojects.filter((sub: any)  => hasSpringBootDependency(projectInfo)).length > 0;
     },
 );
 
