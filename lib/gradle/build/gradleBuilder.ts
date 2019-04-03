@@ -89,12 +89,16 @@ export async function gradleCommand(p: LocalProject,
                                     options: GradleCommandOptions): Promise<SpawnLogResult> {
     const command = await determineGradleCommand(p);
     const args = [];
-    args.push(...options.flags);
-    args.push(...options.args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`));
+    if (options.flags) {
+        args.push(...options.flags);
+    }
+    if (options.args) {
+        args.push(...options.args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`));
+    }
     if (options.initScript) {
         args.push(`-I ${options.initScript}`);
     }
-    args.push(...options.tasks);
+    args.push(...(options.tasks || ["build"]));
     return spawnLog(
         command,
         args,
