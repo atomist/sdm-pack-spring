@@ -45,7 +45,7 @@ import { gradleCommand } from "./gradleBuilder";
 async function newVersion(sdmGoal: SdmGoalEvent, p: Project): Promise<string> {
     const pi = await GradleProjectIdentifier(p);
     const branch = sdmGoal.branch.split("/").join(".");
-    return `${pi.version}-${branch}.${formatDate(new Date(), "yyyymmddHHMMss")}`;
+    return `${pi.version}-${branch}.${formatDate()}`;
 }
 
 /**
