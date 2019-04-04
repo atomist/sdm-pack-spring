@@ -149,14 +149,6 @@ export const GradleDefaultOptions = {
     progressReporter: NoProgressReport,
 };
 
-export const gradlePropertiesTaskNameGrammar = Microgrammar.fromString<{ name: string }>("name: ${name}", {
-    name: Literal,
-});
-
-export const gradlePropertiesTaskVersionGrammar = Microgrammar.fromString<{ version: string }>("version: ${version}",  {
-    version: Literal,
-});
-
 export const gradlePropertiesTaskGroupGrammar = Microgrammar.fromString<{ group: string }>("group: ${group}", {
     group: Literal,
 });
