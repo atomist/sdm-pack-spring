@@ -23,7 +23,7 @@ import {
     Microgrammar,
 } from "@atomist/microgrammar";
 import {
-    ExecuteGoalResult,
+    ExecuteGoalResult, formatDate,
     GoalInvocation,
     GoalProjectListenerEvent,
     GoalProjectListenerRegistration,
@@ -37,7 +37,6 @@ import {
     ProjectVersioner,
     readSdmVersion,
 } from "@atomist/sdm-core";
-import * as df from "dateformat";
 import { parseProperties } from "../../properties/propertiesParser";
 import { GradleProjectIdentifier } from "../parse/buildGradleParser";
 import { IsGradle } from "../pushtest/gradlePushTests";
@@ -46,7 +45,7 @@ import { gradleCommand } from "./gradleBuilder";
 async function newVersion(sdmGoal: SdmGoalEvent, p: Project): Promise<string> {
     const pi = await GradleProjectIdentifier(p);
     const branch = sdmGoal.branch.split("/").join(".");
-    return `${pi.version}-${branch}.${df(new Date(), "yyyymmddHHMMss")}`;
+    return `${pi.version}-${branch}.${formatDate(new Date(), "yyyymmddHHMMss")}`;
 }
 
 /**
@@ -121,7 +120,7 @@ async function gradleVersionProjectListener(p: GitProject,
 }
 
 export const GradleVersion: GoalProjectListenerRegistration = {
-    name: "gradle-version",
+    name: "gradle version",
     listener: gradleVersionProjectListener,
     pushTest: IsGradle,
     events: [GoalProjectListenerEvent.before],
@@ -138,7 +137,7 @@ function gradleBuildProjectListener(p: GitProject,
 }
 
 export const GradleBuild: GoalProjectListenerRegistration = {
-    name: "gradle-build",
+    name: "gradle build",
     listener: gradleBuildProjectListener,
     pushTest: IsGradle,
     events: [GoalProjectListenerEvent.before],

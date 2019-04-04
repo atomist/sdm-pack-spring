@@ -157,3 +157,6 @@ export {
     GradleVersion,
     GradleDefaultOptions,
 } from "./lib/gradle/build/helpers";
+export {
+    GradleVersionInspection,
+} from "./lib/gradle/review/hasGradleVersion";

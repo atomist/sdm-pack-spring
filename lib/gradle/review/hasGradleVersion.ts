@@ -26,7 +26,7 @@ import { IsGradle } from "../pushtest/gradlePushTests";
  * Checks whether a project has a gradle.properties and if so, if a version
  * is defined in that properties file.
  */
-export const HasVersionDefinedInGradleProperties: ReviewerRegistration = {
+export const GradleVersionInspection: ReviewerRegistration = {
     name: "gradle-version-check",
     pushTest: IsGradle,
     inspection: async project => {
