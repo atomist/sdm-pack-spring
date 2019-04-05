@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/sdm-pack-spring/compare/1.1.1...HEAD)
 
+### Added
+
+-   **BREAKING** Added extended Gradle support. [#130](https://github.com/atomist/sdm-pack-spring/issues/130)
+
 ## [1.1.1](https://github.com/atomist/sdm-pack-spring/compare/1.1.0...1.1.1) - 2019-03-20
 
 ### Changed
