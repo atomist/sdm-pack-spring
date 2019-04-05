@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Atomist, Inc.
+ * Copyright © 2019 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import { logger } from "@atomist/automation-client";
 import { InterpretLog } from "@atomist/sdm";
-import { GradleInfo } from "./GradleSingleModuleBuilder";
+import { GradleInfo } from "./gradleBuilder";
 
 export const GradleLogInterpreter: InterpretLog<GradleInfo> = log => {
     const data: GradleInfo = {

@@ -44,9 +44,12 @@ export {
     mavenRunner,
 } from "./lib/maven/build/MavenBuilder";
 export {
-    GradleSingleModuleBuilder,
-    gradleSingleModuleBuilder,
-} from "./lib/gradle/build/GradleSingleModuleBuilder";
+    GradleBuilder,
+    gradleBuilder,
+} from "./lib/gradle/build/gradleBuilder";
+export {
+    IsGradle,
+} from "./lib/gradle/pushtest/gradlePushTests";
 export { ListLocalDeploys } from "./lib/maven/deploy/listLocalDeploys";
 export { mavenDeployer } from "./lib/maven/deploy/mavenDeployer";
 export { MavenFingerprinter } from "./lib/maven/fingerprint/MavenFingerprinter";
@@ -144,8 +147,16 @@ export {
 export {
     SpringBootProjectStructure,
 } from "./lib/spring/generate/SpringBootProjectStructure";
-
 export { NonSpecificMvcAnnotationsReviewer } from "./lib/spring/review/findNonSpecificMvcAnnotations";
 export { MutableInjectionsReviewer } from "./lib/spring/review/mutableInjectionsReviewer";
 export { OldSpringBootVersionReviewer } from "./lib/spring/review/oldSpringBootVersionReviewer";
 export { UnnecessaryComponentScanReviewer } from "./lib/spring/transform/removeUnnecessaryComponentScanAnnotations";
+export {
+    GradleProjectVersioner,
+    GradleBuild,
+    GradleVersion,
+    GradleDefaultOptions,
+} from "./lib/gradle/build/helpers";
+export {
+    GradleVersionInspection,
+} from "./lib/gradle/review/hasGradleVersion";
