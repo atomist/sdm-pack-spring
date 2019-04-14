@@ -32,6 +32,7 @@ import { ChildProcess } from "child_process";
 import * as spawn from "cross-spawn";
 import * as os from "os";
 import * as portfinder from "portfinder";
+import { MavenOptions } from "../../maven/build/helpers";
 import { MavenLogInterpreter } from "../../maven/build/mavenLogInterpreter";
 import { determineMavenCommand } from "../../maven/mavenCommand";
 import { SpringBootSuccessPatterns } from "../../spring/deploy/springLoggingPatterns";
@@ -166,6 +167,7 @@ class MavenDeployer {
         const childProcess = spawn(mvn,
             [
                 "spring-boot:run",
+                ...MavenOptions,
             ].concat(this.options.commandLineArgumentsFor(port, contextRoot)),
             {
                 cwd: project.baseDir,

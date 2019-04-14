@@ -40,6 +40,9 @@ import { MavenProjectIdentifier } from "../parse/pomParser";
 import { IsMaven } from "../pushtest/pushTests";
 import { mavenPackage } from "./MavenBuilder";
 
+export const MavenOptions =
+    ["-B", "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"];
+
 async function newVersion(sdmGoal: SdmGoalEvent, p: Project): Promise<string> {
     const pi = await MavenProjectIdentifier(p);
     const branch = sdmGoal.branch.split("/").join(".");
@@ -71,8 +74,9 @@ export const MavenVersionPreparation: PrepareForGoalExecution = async (p: GitPro
 };
 
 async function changeMavenVersion(version: string, p: GitProject, progressLog: ProgressLog): Promise<ExecuteGoalResult> {
-    const command = await determineMavenCommand(p);
-    const args = ["build-helper:parse-version", "versions:set", `-DnewVersion=${version}`, "versions:commit"];
+    const command = await
+        determineMavenCommand(p);
+    const args = ["build-helper:parse-version", "versions:set", `-DnewVersion=${version}`, "versions:commit", ...MavenOptions];
     return spawnLog(
         command, args,
         { cwd: p.baseDir, log: progressLog });
@@ -106,6 +110,7 @@ export async function mavenIncrementPatchVersionCommand(p: GitProject, progressL
         "versions:set",
         "\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}-\${parsedVersion.qualifier}",
         "versions:commit",
+        ...MavenOptions,
     ];
     return spawnLog(
         command, args,
@@ -125,7 +130,7 @@ export async function mvnVersionProjectListener(p: GitProject,
             gi.goalEvent.branch,
             gi.context);
         return spawnLog(
-            command, ["versions:set", `-DnewVersion=${v}`, "versions:commit"],
+            command, ["versions:set", `-DnewVersion=${v}`, "versions:commit", ...MavenOptions, ],
             { cwd: p.baseDir, log: gi.progressLog });
     }
 }
@@ -142,7 +147,7 @@ async function mvnPackageProjectListener(p: GitProject,
     const command = await determineMavenCommand(p);
     if (event === GoalProjectListenerEvent.before) {
         return spawnLog(command,
-            ["package", "-DskipTests=true", `-Dartifact.name=${p.id.repo}`],
+            ["package", ...MavenOptions, "-DskipTests=true", `-Dartifact.name=${p.id.repo}`],
             {
                 cwd: p.baseDir,
                 log: gi.progressLog,

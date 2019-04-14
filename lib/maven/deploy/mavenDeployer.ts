@@ -39,6 +39,7 @@ import {
     SpawnedDeployment,
 } from "@atomist/sdm-core";
 import * as spawn from "cross-spawn";
+import { MavenOptions } from "../build/helpers";
 import { determineMavenCommand } from "../mavenCommand";
 
 /**
@@ -138,6 +139,7 @@ class MavenSourceDeployer implements Deployer<ManagedDeploymentTargetInfo> {
         const childProcess = spawn(mvn,
             [
                 "spring-boot:run",
+                ...MavenOptions,
             ].concat(this.opts.commandLineArgumentsFor(startupInfo)),
             {
                 cwd: project.baseDir,

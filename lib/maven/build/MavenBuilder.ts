@@ -35,6 +35,7 @@ import {
 import { determineMavenCommand } from "../mavenCommand";
 import { MavenProjectIdentifier } from "../parse/pomParser";
 import { VersionedArtifact } from "../VersionedArtifact";
+import { MavenOptions } from "./helpers";
 
 /**
  * Build with Maven in the local automation client.
@@ -85,7 +86,7 @@ export async function mavenPackage(p: GitProject,
     const command = await determineMavenCommand(p);
     return spawnLog(
         command,
-        [mavenGoal, ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
+        [mavenGoal, ...MavenOptions, ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
         {
             cwd: p.baseDir,
             log: progressLog,

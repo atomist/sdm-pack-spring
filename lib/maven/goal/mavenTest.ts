@@ -28,6 +28,7 @@ import {
     spawnLog,
 } from "@atomist/sdm";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
+import { MavenOptions } from "../build/helpers";
 import { determineMavenCommand } from "../mavenCommand";
 
 /**
@@ -51,14 +52,14 @@ export class MavenTest extends GoalWithFulfillment {
 }
 
 function executeMavenTest(goalInvocation: GoalInvocation): Promise<{ code: number; phase: string }> {
-    const {credentials, id} = goalInvocation;
+    const { credentials, id } = goalInvocation;
     return goalInvocation.configuration.sdm.projectLoader.doWithProject(
-        {id, credentials, readOnly: true},
+        { id, credentials, readOnly: true },
         async (p: LocalProject) => {
             const mavenCommand = await determineMavenCommand(p);
             const result = await spawnLog(
-                mavenCommand, ["test"],
-                {cwd: p.baseDir, log: new LoggingProgressLog("maven-test", "info")});
+                mavenCommand, ["test", ...MavenOptions],
+                { cwd: p.baseDir, log: new LoggingProgressLog("maven-test", "info") });
             const r = await getJUnitTestResults(p);
             const prefix = r.tests === 1 ? `1 test` : `${r.tests} tests`;
             if (result.code === 0) {
@@ -68,8 +69,12 @@ function executeMavenTest(goalInvocation: GoalInvocation): Promise<{ code: numbe
                 };
             } else {
                 const messages = [prefix];
-                if (r.failures > 0) { messages.push(`${r.failures} failed`); }
-                if (r.errors > 0) { messages.push(`${r.errors} with errors`); }
+                if (r.failures > 0) {
+                    messages.push(`${r.failures} failed`);
+                }
+                if (r.errors > 0) {
+                    messages.push(`${r.errors} with errors`);
+                }
                 return {
                     code: 1,
                     phase: messages.join(", "),
@@ -79,7 +84,7 @@ function executeMavenTest(goalInvocation: GoalInvocation): Promise<{ code: numbe
 }
 
 async function getJUnitTestResults(p: Project):
-    Promise<{tests: number, failures: number, errors: number}> {
+    Promise<{ tests: number, failures: number, errors: number }> {
     const oldExcludes = DefaultExcludes;
     DefaultExcludes.splice(0, DefaultExcludes.length);  // necessary evil
     const testFailures = await astUtils.gatherFromMatches(p,
