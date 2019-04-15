@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {InMemoryProject} from "@atomist/automation-client";
-import {GradleProjectIdentifier} from "../../../lib/gradle/parse/buildGradleParser";
+import { InMemoryProject } from "@atomist/automation-client";
+import { GradleProjectIdentifier } from "../../../lib/gradle/parse/buildGradleParser";
 
 import * as assert from "power-assert";
 
