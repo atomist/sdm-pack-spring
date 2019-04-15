@@ -25,7 +25,8 @@ import {
     CommandHandlerRegistration,
     DelimitedWriteProgressLogDecorator,
     ExecuteGoal,
-    GoalInvocation, killAndWait,
+    GoalInvocation,
+    killAndWait,
 } from "@atomist/sdm";
 import { SpawnedDeployment } from "@atomist/sdm-core";
 import { ChildProcess } from "child_process";
