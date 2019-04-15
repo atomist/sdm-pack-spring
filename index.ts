@@ -69,7 +69,10 @@ export {
     SpringProjectCreationParameters,
     SpringProjectCreationParameterDefinitions,
 } from "./lib/spring/generate/SpringProjectCreationParameters";
-export { TransformSeedToCustomProject } from "./lib/spring/generate/transformSeedToCustomProject";
+export {
+    TransformSeedToCustomProject,
+    TransformMavenSpringBootSeedToCustomProject,
+} from "./lib/spring/generate/transformSeedToCustomProject";
 export {
     HasSpringBootApplicationClass,
     HasSpringBootPom,
@@ -158,5 +161,5 @@ export {
     GradleDefaultOptions,
 } from "./lib/gradle/build/helpers";
 export {
-    GradleVersionInspection,
+    GradleVersionDefinedInPropertiesInspection,
 } from "./lib/gradle/review/hasGradleVersion";

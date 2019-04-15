@@ -15,34 +15,43 @@
  */
 
 import {
-    LocalProject,
     Project,
 } from "@atomist/automation-client";
-import {
-    StringCapturingProgressLog,
-    SuccessIsReturn0ErrorFinder,
-} from "@atomist/sdm";
 import { ProjectIdentification } from "@atomist/sdm-core/lib/internal/delivery/build/local/projectIdentifier";
 import { VersionedArtifact } from "../../maven/VersionedArtifact";
-import { parseProperties } from "../../properties/propertiesParser";
-import { gradleCommand } from "../build/gradleBuilder";
-import {
-    gradlePropertiesTaskGroupGrammar,
-} from "../build/helpers";
 
 async function getProjectVersion(p: Project): Promise<string> {
-    const propertiesFile = await parseProperties(p, "gradle.properties");
-    return propertiesFile.properties.find(prop => prop.key === "version").value;
+    let version: string;
+    const versionRegex = /^version[ ]?=[ ]?["']?([0-9.\-_A-Za-z])*['"]?$/;
+    if (p.hasFile("gradle.properties")) {
+        const gradleProperties = await (await p.getFile("gradle.properties")).getContent();
+        version = gradleProperties.match(versionRegex)[0];
+    } else if (p.hasFile("build.gradle")) {
+        const gradleBuild = await (await p.getFile("build.gradle")).getContent();
+        version = gradleBuild.match(versionRegex)[0];
+    } else if (p.hasFile("build.gradle.kts")) {
+        const gradleBuild = await (await p.getFile("build.gradle.kts")).getContent();
+        version = gradleBuild.match(versionRegex)[0];
+    }
+    return version || "0.0.1-SNAPSHOT";
+
 }
 
 async function getProjectGroup(p: Project): Promise<string> {
-    const log = new StringCapturingProgressLog();
-    await gradleCommand(p as LocalProject, {
-        tasks: ["properties"],
-        progressLog: log,
-        errorFinder: SuccessIsReturn0ErrorFinder,
-    });
-    return gradlePropertiesTaskGroupGrammar.firstMatch(log.log).group;
+    let group: string;
+    const groupRegex = /^group[ ]?=[ ]?["']?([0-9.\-_A-Za-z])*['"]?$/;
+    if (p.hasFile("gradle.properties")) {
+        const gradleProperties = await (await p.getFile("gradle.properties")).getContent();
+        group = gradleProperties.match(groupRegex)[0];
+    } else if (p.hasFile("build.gradle")) {
+        const gradleBuild = await (await p.getFile("build.gradle")).getContent();
+        group = gradleBuild.match(groupRegex)[0];
+    } else if (p.hasFile("build.gradle.kts")) {
+        const gradleBuild = await (await p.getFile("build.gradle.kts")).getContent();
+        group = gradleBuild.match(groupRegex)[0];
+    }
+    return group;
+
 }
 
 /**

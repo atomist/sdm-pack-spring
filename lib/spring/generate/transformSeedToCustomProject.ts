@@ -45,12 +45,19 @@ This project contains ${params.target.description}.
 /**
  * Transform a seed to a custom Spring Boot project.
  */
-export const TransformSeedToCustomProject: CodeTransform<SpringProjectCreationParameters> = chainTransforms(
+export const TransformMavenSpringBootSeedToCustomProject: Array<CodeTransform<SpringProjectCreationParameters & SeedDrivenGeneratorParameters>> = [
     cleanReadMe,
     updatePomTransform,
     inferStructureAndMovePackageTransform,
     inferSpringStructureAndRenameTransform,
-);
+];
+
+/**
+ * Transform a seed to a custom Spring Boot project.
+ * @deprecated Use TransformMavenSpringBootSeedToCustomProject
+ */
+export const TransformSeedToCustomProject: CodeTransform<SpringProjectCreationParameters> =
+    chainTransforms(...TransformMavenSpringBootSeedToCustomProject);
 
 /**
  * Transform a seed to a custom Spring Boot project.
