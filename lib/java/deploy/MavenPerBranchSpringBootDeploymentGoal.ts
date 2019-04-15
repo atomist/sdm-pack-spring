@@ -19,14 +19,13 @@ import {
     HandlerResult,
     LocalProject,
     logger,
-    poisonAndWait,
     Success,
 } from "@atomist/automation-client";
 import {
     CommandHandlerRegistration,
     DelimitedWriteProgressLogDecorator,
     ExecuteGoal,
-    GoalInvocation,
+    GoalInvocation, killAndWait,
 } from "@atomist/sdm";
 import { SpawnedDeployment } from "@atomist/sdm-core";
 import { ChildProcess } from "child_process";
@@ -152,7 +151,7 @@ class MavenDeployer {
         if (!!existingChildProcess) {
             logger.info("Killing existing process for branch '%s' of %s:%s with pid %s", branch,
                 project.id.owner, project.id.repo, existingChildProcess.pid);
-            await poisonAndWait(existingChildProcess);
+            await killAndWait(existingChildProcess);
         } else {
             logger.info("No existing process for branch '%s' of %s:%s", branch, project.id.owner, project.id.repo);
             // Check we won't end with a crazy number of child processes
