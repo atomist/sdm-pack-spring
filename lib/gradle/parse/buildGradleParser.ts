@@ -23,13 +23,13 @@ import { VersionedArtifact } from "../../maven/VersionedArtifact";
 async function getProjectVersion(p: Project): Promise<string> {
     let version: string;
     const versionRegex = /^version[ ]?=[ ]?["']?([0-9.\-_A-Za-z])*['"]?$/;
-    if (p.hasFile("gradle.properties")) {
+    if (await p.hasFile("gradle.properties")) {
         const gradleProperties = await (await p.getFile("gradle.properties")).getContent();
         version = gradleProperties.match(versionRegex)[0];
-    } else if (p.hasFile("build.gradle")) {
+    } else if (await p.hasFile("build.gradle")) {
         const gradleBuild = await (await p.getFile("build.gradle")).getContent();
         version = gradleBuild.match(versionRegex)[0];
-    } else if (p.hasFile("build.gradle.kts")) {
+    } else if (await p.hasFile("build.gradle.kts")) {
         const gradleBuild = await (await p.getFile("build.gradle.kts")).getContent();
         version = gradleBuild.match(versionRegex)[0];
     }
@@ -40,13 +40,13 @@ async function getProjectVersion(p: Project): Promise<string> {
 async function getProjectGroup(p: Project): Promise<string> {
     let group: string;
     const groupRegex = /^group[ ]?=[ ]?["']?([0-9.\-_A-Za-z])*['"]?$/;
-    if (p.hasFile("gradle.properties")) {
+    if (await p.hasFile("gradle.properties")) {
         const gradleProperties = await (await p.getFile("gradle.properties")).getContent();
         group = gradleProperties.match(groupRegex)[0];
-    } else if (p.hasFile("build.gradle")) {
+    } else if (await p.hasFile("build.gradle")) {
         const gradleBuild = await (await p.getFile("build.gradle")).getContent();
         group = gradleBuild.match(groupRegex)[0];
-    } else if (p.hasFile("build.gradle.kts")) {
+    } else if (await p.hasFile("build.gradle.kts")) {
         const gradleBuild = await (await p.getFile("build.gradle.kts")).getContent();
         group = gradleBuild.match(groupRegex)[0];
     }
