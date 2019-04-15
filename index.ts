@@ -70,7 +70,6 @@ export {
     SpringProjectCreationParameterDefinitions,
 } from "./lib/spring/generate/SpringProjectCreationParameters";
 export {
-    TransformSeedToCustomProject,
     TransformMavenSpringBootSeedToCustomProject,
 } from "./lib/spring/generate/transformSeedToCustomProject";
 export {
