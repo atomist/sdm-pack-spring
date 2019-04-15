@@ -69,7 +69,7 @@ export const MavenProjectVersioner: ProjectVersioner = async (sdmGoal, p, log) =
  * @constructor
  */
 export const MavenVersionPreparation: PrepareForGoalExecution = async (p: GitProject, goalInvocation: GoalInvocation) => {
-    const version = await newVersion(goalInvocation.sdmGoal, p);
+    const version = await newVersion(goalInvocation.goalEvent, p);
     return changeMavenVersion(version, p, goalInvocation.progressLog);
 };
 
@@ -130,7 +130,7 @@ export async function mvnVersionProjectListener(p: GitProject,
             gi.goalEvent.branch,
             gi.context);
         return spawnLog(
-            command, ["versions:set", `-DnewVersion=${v}`, "versions:commit", ...MavenOptions, ],
+            command, ["versions:set", `-DnewVersion=${v}`, "versions:commit", ...MavenOptions ],
             { cwd: p.baseDir, log: gi.progressLog });
     }
 }

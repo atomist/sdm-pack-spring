@@ -40,7 +40,7 @@ import {
 import { AddGradleBootRunArgsSupport } from "./gradleBuildTransforms";
 import { SetAtomistTeamInApplicationYml } from "./springBootTransforms";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
-import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
+import { TransformMavenSpringBootSeedToCustomProject } from "./transformSeedToCustomProject";
 
 export async function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine) {
     sdm.addGeneratorCommand<SpringInitializrProjectCreationParameters>({
@@ -52,7 +52,7 @@ export async function addSpringInitializrGenerator(sdm: SoftwareDeliveryMachine)
         transform: [
             SetAtomistTeamInApplicationYml,
             AddGradleBootRunArgsSupport,
-            TransformSeedToCustomProject,
+            ...TransformMavenSpringBootSeedToCustomProject,
         ],
     });
 }

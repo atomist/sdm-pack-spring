@@ -64,11 +64,11 @@ export const GradleProjectVersioner: ProjectVersioner = async (sdmGoal, p, log) 
  * @constructor
  */
 export const GradleVersionPreparation: PrepareForGoalExecution = async (p: GitProject, goalInvocation: GoalInvocation) => {
-    const version = await newVersion(goalInvocation.sdmGoal, p);
+    const version = await newVersion(goalInvocation.goalEvent, p);
     return changeGradleVersion(version, p);
 };
 
-async function tryChangingInGradlePropertiesFile(p: GitProject, version: string) {
+async function tryChangingInGradlePropertiesFile(p: GitProject, version: string): Promise<void>  {
     if (p.hasFile("gradle.properties")) {
         const propertiesFile = await parseProperties(p, "gradle.properties");
         const versionProperty = propertiesFile.properties.find(prop => prop.key === "version");
@@ -79,7 +79,7 @@ async function tryChangingInGradlePropertiesFile(p: GitProject, version: string)
     }
 }
 
-async function tryChangingInBuildGradleFile(p: GitProject, version: string) {
+async function tryChangingInBuildGradleFile(p: GitProject, version: string): Promise<void>  {
     const gradleBuildFile = await p.getFile("build.gradle");
     if (gradleBuildFile) {
         const gradleBuild = await (gradleBuildFile).getContent();
@@ -88,7 +88,7 @@ async function tryChangingInBuildGradleFile(p: GitProject, version: string) {
     }
 }
 
-async function tryChangingInBuildGradleKtsFile(p: GitProject, version: string) {
+async function tryChangingInBuildGradleKtsFile(p: GitProject, version: string): Promise<void> {
     const gradleBuildFile = await p.getFile("build.gradle.kts");
     if (gradleBuildFile) {
         const gradleBuild = await (gradleBuildFile).getContent();

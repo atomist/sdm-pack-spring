@@ -15,7 +15,7 @@
  */
 
 import {
-    HandlerContext,
+    HandlerContext, HandlerResult,
     LocalProject,
     logger,
     poisonAndWait,
@@ -44,14 +44,14 @@ export const ListBranchDeploys: CommandHandlerRegistration = {
     listener: async ci => handleListDeploys(ci.context),
 };
 
-function deploymentToString(deploymentKey: string) {
+function deploymentToString(deploymentKey: string): string {
     const deployment = deploymentEndpoints[deploymentKey];
     const abbreviatedSha = deployment.sha.slice(0, 7);
     const deploymentEndpoint = deployment.endpoint;
     return `${deploymentKey} deployed ${abbreviatedSha} at ${deploymentEndpoint}`;
 }
 
-async function handleListDeploys(ctx: HandlerContext) {
+async function handleListDeploys(ctx: HandlerContext): Promise<HandlerResult> {
     const message = `${Object.keys(deploymentEndpoints).length} branches currently deployed on ${os.hostname()}:\n${
         Object.keys(deploymentEndpoints).map(deploymentToString).join("\n")}`;
     await ctx.messageClient.respond(message);
@@ -112,8 +112,8 @@ export function executeMavenPerBranchSpringBootDeploy(opts: Partial<MavenDeploye
                     readOnly: true,
                 },
                 project => deployer.deployProject(goalInvocation, project));
-            const deploymentKey = `${id.owner}/${id.repo}/${goalInvocation.sdmGoal.branch}`;
-            deploymentEndpoints[deploymentKey] = { sha: goalInvocation.sdmGoal.sha, endpoint: deployment.endpoint };
+            const deploymentKey = `${id.owner}/${id.repo}/${goalInvocation.goalEvent.branch}`;
+            deploymentEndpoints[deploymentKey] = { sha: goalInvocation.goalEvent.sha, endpoint: deployment.endpoint };
             return { code: 0, externalUrls: [{ label: "Endpoint", url: deployment.endpoint }] };
         } catch (err) {
             return { code: 1, message: err.stack };
@@ -137,7 +137,7 @@ class MavenDeployer {
 
     public async deployProject(goalInvocation: GoalInvocation,
                                project: LocalProject): Promise<SpawnedDeployment> {
-        const branch = goalInvocation.sdmGoal.branch;
+        const branch = goalInvocation.goalEvent.branch;
         const contextRoot = `/${project.id.owner}/${project.id.repo}/${branch}`;
 
         let port = this.repoBranchToPort[project.id.repo + ":" + branch];
@@ -218,10 +218,10 @@ class MavenDeployer {
     }
 }
 
-async function reportFailureToUser(gi: GoalInvocation, log: string) {
+async function reportFailureToUser(gi: GoalInvocation, log: string): Promise<void> {
     const interpretation = MavenLogInterpreter(log);
     if (!!interpretation) {
-        await gi.addressChannels(`✘ Maven deployment failure for ${gi.id.url}/${gi.sdmGoal.branch}`);
+        await gi.addressChannels(`✘ Maven deployment failure for ${gi.id.url}/${gi.goalEvent.branch}`);
         if (!!interpretation.relevantPart) {
             await (gi.addressChannels(`\`\`\`\n${interpretation.relevantPart}\n\`\`\``));
         } else {

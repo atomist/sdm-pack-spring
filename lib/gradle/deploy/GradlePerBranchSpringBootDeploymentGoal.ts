@@ -19,7 +19,6 @@ import {
     HandlerResult,
     LocalProject,
     logger,
-    poisonAndWait,
     Success,
 } from "@atomist/automation-client";
 import {
@@ -33,7 +32,7 @@ import {
     GoalInvocation,
     GoalWithPrecondition,
     ImplementationRegistration,
-    IndependentOfEnvironment,
+    IndependentOfEnvironment, killAndWait,
 } from "@atomist/sdm";
 import { SpawnedDeployment } from "@atomist/sdm-core";
 import { ChildProcess } from "child_process";
@@ -130,8 +129,8 @@ export function executeGradlePerBranchSpringBootDeploy(opts: Partial<GradleDeplo
                     readOnly: true,
                 },
                 project => deployer.deployProject(goalInvocation, project));
-            const deploymentKey = `${id.owner}/${id.repo}/${goalInvocation.sdmGoal.branch}`;
-            deploymentEndpoints[deploymentKey] = { sha: goalInvocation.sdmGoal.sha, endpoint: deployment.endpoint };
+            const deploymentKey = `${id.owner}/${id.repo}/${goalInvocation.goalEvent.branch}`;
+            deploymentEndpoints[deploymentKey] = { sha: goalInvocation.goalEvent.sha, endpoint: deployment.endpoint };
             return { code: 0, externlaUrls: [{ label: "Endpoint", url: deployment.endpoint }] };
         } catch (err) {
             return { code: 1, message: err.stack };
@@ -155,7 +154,7 @@ class GradleDeployer {
 
     public async deployProject(goalInvocation: GoalInvocation,
                                project: LocalProject): Promise<SpawnedDeployment> {
-        const branch = goalInvocation.sdmGoal.branch;
+        const branch = goalInvocation.goalEvent.branch;
         const contextRoot = `/${project.id.owner}/${project.id.repo}/${branch}`;
 
         let port = this.repoBranchToPort[project.id.repo + ":" + branch];
@@ -169,7 +168,7 @@ class GradleDeployer {
         if (!!existingChildProcess) {
             logger.info("Killing existing process for branch '%s' of %s:%s with pid %s", branch,
                 project.id.owner, project.id.repo, existingChildProcess.pid);
-            await poisonAndWait(existingChildProcess);
+            await killAndWait(existingChildProcess);
         } else {
             logger.info("No existing process for branch '%s' of %s:%s", branch, project.id.owner, project.id.repo);
             // Check we won't end with a crazy number of child processes
@@ -238,7 +237,7 @@ class GradleDeployer {
 async function reportFailureToUser(gi: GoalInvocation, log: string): Promise<void> {
     const interpretation = GradleLogInterpreter(log);
     if (!!interpretation) {
-        await gi.addressChannels(`✘ Gradle deployment failure for ${gi.id.url}/${gi.sdmGoal.branch}`);
+        await gi.addressChannels(`✘ Gradle deployment failure for ${gi.id.url}/${gi.goalEvent.branch}`);
         if (!!interpretation.relevantPart) {
             await (gi.addressChannels(`\`\`\`\n${interpretation.relevantPart}\n\`\`\``));
         } else {

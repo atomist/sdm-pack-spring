@@ -15,14 +15,13 @@
  */
 
 import {
-    execIn,
     isLocalProject,
     LocalProject,
     Project,
     ProjectFile,
 } from "@atomist/automation-client";
 import {
-    CodeInspection,
+    CodeInspection, execPromise,
 } from "@atomist/sdm";
 import * as _ from "lodash";
 import {
@@ -85,7 +84,7 @@ const dependenciesFile = "dependencies.txt";
 
 async function extractDependencies(p: LocalProject): Promise<ProjectFile> {
     try {
-        await execIn(p.baseDir, `mvn`, [`dependency:list`, `-DoutputFile=${dependenciesFile}`]);
+        await execPromise(`mvn`, [`dependency:list`, `-DoutputFile=${dependenciesFile}`], {cwd: p.baseDir});
         return p.findFile(dependenciesFile);
     } catch (err) {
         throw err;
