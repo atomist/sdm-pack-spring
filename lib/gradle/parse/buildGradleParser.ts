@@ -20,35 +20,53 @@ import {
 import { ProjectIdentification } from "@atomist/sdm-core/lib/internal/delivery/build/local/projectIdentifier";
 import { VersionedArtifact } from "../../maven/VersionedArtifact";
 
-async function getProjectVersion(p: Project): Promise<string> {
+export async function getProjectVersion(p: Project): Promise<string> {
     let version: string;
-    const versionRegex = /^version[ ]?=[ ]?["']?([0-9.\-_A-Za-z])*['"]?$/;
+    const versionRegex = /version\s?=\s?["']?([0-9a-zA-Z.-]*)['"]?/;
     if (await p.hasFile("gradle.properties")) {
         const gradleProperties = await (await p.getFile("gradle.properties")).getContent();
-        version = gradleProperties.match(versionRegex)[0];
+        const match = gradleProperties.match(versionRegex);
+        if (!!match) {
+            version = gradleProperties.match(versionRegex)[1];
+        }
     } else if (await p.hasFile("build.gradle")) {
         const gradleBuild = await (await p.getFile("build.gradle")).getContent();
-        version = gradleBuild.match(versionRegex)[0];
+        const match = gradleBuild.match(versionRegex);
+        if (!!match) {
+            version = gradleBuild.match(versionRegex)[1];
+        }
     } else if (await p.hasFile("build.gradle.kts")) {
         const gradleBuild = await (await p.getFile("build.gradle.kts")).getContent();
-        version = gradleBuild.match(versionRegex)[0];
+        const match = gradleBuild.match(versionRegex);
+        if (!!match) {
+            version = gradleBuild.match(versionRegex)[1];
+        }
     }
     return version || "0.0.1-SNAPSHOT";
 
 }
 
-async function getProjectGroup(p: Project): Promise<string> {
+export async function getProjectGroup(p: Project): Promise<string> {
     let group: string;
-    const groupRegex = /^group[ ]?=[ ]?["']?([0-9.\-_A-Za-z])*['"]?$/;
+    const groupRegex = /group\s?=\s?["']?([0-9a-zA-Z.-]*)['"]?/;
     if (await p.hasFile("gradle.properties")) {
         const gradleProperties = await (await p.getFile("gradle.properties")).getContent();
-        group = gradleProperties.match(groupRegex)[0];
+        const match = gradleProperties.match(groupRegex);
+        if (!!match) {
+            group = gradleProperties.match(groupRegex)[1];
+        }
     } else if (await p.hasFile("build.gradle")) {
         const gradleBuild = await (await p.getFile("build.gradle")).getContent();
-        group = gradleBuild.match(groupRegex)[0];
+        const match = gradleBuild.match(groupRegex);
+        if (!!match) {
+            group = gradleBuild.match(groupRegex)[1];
+        }
     } else if (await p.hasFile("build.gradle.kts")) {
         const gradleBuild = await (await p.getFile("build.gradle.kts")).getContent();
-        group = gradleBuild.match(groupRegex)[0];
+        const match = gradleBuild.match(groupRegex);
+        if (!!match) {
+            group = gradleBuild.match(groupRegex)[1];
+        }
     }
     return group;
 
