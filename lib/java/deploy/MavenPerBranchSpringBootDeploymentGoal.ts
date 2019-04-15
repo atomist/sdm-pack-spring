@@ -15,7 +15,8 @@
  */
 
 import {
-    HandlerContext, HandlerResult,
+    HandlerContext,
+    HandlerResult,
     LocalProject,
     logger,
     poisonAndWait,

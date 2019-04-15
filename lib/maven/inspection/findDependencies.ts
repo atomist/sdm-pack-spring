@@ -21,7 +21,8 @@ import {
     ProjectFile,
 } from "@atomist/automation-client";
 import {
-    CodeInspection, execPromise,
+    CodeInspection,
+    execPromise,
 } from "@atomist/sdm";
 import * as _ from "lodash";
 import {

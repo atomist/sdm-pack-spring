@@ -32,7 +32,8 @@ import {
     GoalInvocation,
     GoalWithPrecondition,
     ImplementationRegistration,
-    IndependentOfEnvironment, killAndWait,
+    IndependentOfEnvironment,
+    killAndWait,
 } from "@atomist/sdm";
 import { SpawnedDeployment } from "@atomist/sdm-core";
 import { ChildProcess } from "child_process";

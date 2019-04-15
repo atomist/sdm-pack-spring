@@ -27,7 +27,7 @@ import {
     SetAtomistTeamInApplicationYml,
 } from "../../../lib/spring/generate/springBootTransforms";
 import { SpringProjectCreationParameters } from "../../../lib/spring/generate/SpringProjectCreationParameters";
-import {TransformMavenSpringBootSeedToCustomProject} from "../../../lib/spring/generate/transformSeedToCustomProject";
+import { TransformMavenSpringBootSeedToCustomProject } from "../../../lib/spring/generate/transformSeedToCustomProject";
 import { springBootPom } from "./TestPoms";
 
 const Readme1 = `# spring-rest-seed
