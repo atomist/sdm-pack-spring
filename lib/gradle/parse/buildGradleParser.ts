@@ -15,34 +15,61 @@
  */
 
 import {
-    LocalProject,
     Project,
 } from "@atomist/automation-client";
-import {
-    StringCapturingProgressLog,
-    SuccessIsReturn0ErrorFinder,
-} from "@atomist/sdm";
 import { ProjectIdentification } from "@atomist/sdm-core/lib/internal/delivery/build/local/projectIdentifier";
 import { VersionedArtifact } from "../../maven/VersionedArtifact";
-import { parseProperties } from "../../properties/propertiesParser";
-import { gradleCommand } from "../build/gradleBuilder";
-import {
-    gradlePropertiesTaskGroupGrammar,
-} from "../build/helpers";
 
-async function getProjectVersion(p: Project): Promise<string> {
-    const propertiesFile = await parseProperties(p, "gradle.properties");
-    return propertiesFile.properties.find(prop => prop.key === "version").value;
+export async function getProjectVersion(p: Project): Promise<string> {
+    let version: string;
+    const versionRegex = /version\s?=\s?["']?([0-9a-zA-Z.-]*)['"]?/;
+    if (await p.hasFile("gradle.properties")) {
+        const gradleProperties = await (await p.getFile("gradle.properties")).getContent();
+        const match = gradleProperties.match(versionRegex);
+        if (!!match) {
+            version = gradleProperties.match(versionRegex)[1];
+        }
+    } else if (await p.hasFile("build.gradle")) {
+        const gradleBuild = await (await p.getFile("build.gradle")).getContent();
+        const match = gradleBuild.match(versionRegex);
+        if (!!match) {
+            version = gradleBuild.match(versionRegex)[1];
+        }
+    } else if (await p.hasFile("build.gradle.kts")) {
+        const gradleBuild = await (await p.getFile("build.gradle.kts")).getContent();
+        const match = gradleBuild.match(versionRegex);
+        if (!!match) {
+            version = gradleBuild.match(versionRegex)[1];
+        }
+    }
+    return version || "0.0.1-SNAPSHOT";
+
 }
 
-async function getProjectGroup(p: Project): Promise<string> {
-    const log = new StringCapturingProgressLog();
-    await gradleCommand(p as LocalProject, {
-        tasks: ["properties"],
-        progressLog: log,
-        errorFinder: SuccessIsReturn0ErrorFinder,
-    });
-    return gradlePropertiesTaskGroupGrammar.firstMatch(log.log).group;
+export async function getProjectGroup(p: Project): Promise<string> {
+    let group: string;
+    const groupRegex = /group\s?=\s?["']?([0-9a-zA-Z.-]*)['"]?/;
+    if (await p.hasFile("gradle.properties")) {
+        const gradleProperties = await (await p.getFile("gradle.properties")).getContent();
+        const match = gradleProperties.match(groupRegex);
+        if (!!match) {
+            group = gradleProperties.match(groupRegex)[1];
+        }
+    } else if (await p.hasFile("build.gradle")) {
+        const gradleBuild = await (await p.getFile("build.gradle")).getContent();
+        const match = gradleBuild.match(groupRegex);
+        if (!!match) {
+            group = gradleBuild.match(groupRegex)[1];
+        }
+    } else if (await p.hasFile("build.gradle.kts")) {
+        const gradleBuild = await (await p.getFile("build.gradle.kts")).getContent();
+        const match = gradleBuild.match(groupRegex);
+        if (!!match) {
+            group = gradleBuild.match(groupRegex)[1];
+        }
+    }
+    return group;
+
 }
 
 /**

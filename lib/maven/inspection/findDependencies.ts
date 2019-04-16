@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Atomist, Inc.
+ * Copyright © 2019 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 import {
-    execIn,
     isLocalProject,
     LocalProject,
     Project,
@@ -23,6 +22,7 @@ import {
 } from "@atomist/automation-client";
 import {
     CodeInspection,
+    execPromise,
 } from "@atomist/sdm";
 import * as _ from "lodash";
 import {
@@ -85,7 +85,7 @@ const dependenciesFile = "dependencies.txt";
 
 async function extractDependencies(p: LocalProject): Promise<ProjectFile> {
     try {
-        await execIn(p.baseDir, `mvn`, [`dependency:list`, `-DoutputFile=${dependenciesFile}`]);
+        await execPromise(`mvn`, [`dependency:list`, `-DoutputFile=${dependenciesFile}`], {cwd: p.baseDir});
         return p.findFile(dependenciesFile);
     } catch (err) {
         throw err;

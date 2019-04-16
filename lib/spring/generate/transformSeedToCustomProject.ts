@@ -19,7 +19,6 @@ import {
     SeedDrivenGeneratorParameters,
 } from "@atomist/automation-client";
 import {
-    chainTransforms,
     CodeTransform,
 } from "@atomist/sdm";
 import { inferStructureAndMovePackageTransform } from "../../java/javaProjectUtils";
@@ -45,22 +44,23 @@ This project contains ${params.target.description}.
 /**
  * Transform a seed to a custom Spring Boot project.
  */
-export const TransformSeedToCustomProject: CodeTransform<SpringProjectCreationParameters> = chainTransforms(
+export const TransformMavenSpringBootSeedToCustomProject: Array<CodeTransform<SpringProjectCreationParameters & SeedDrivenGeneratorParameters>> = [
     cleanReadMe,
     updatePomTransform,
     inferStructureAndMovePackageTransform,
     inferSpringStructureAndRenameTransform,
-);
+];
 
 /**
  * Transform a seed to a custom Spring Boot project.
  */
-export function transformMultiModuleSeedToCustomProject(artifactPrefix: string): CodeTransform<SpringProjectCreationParameters> {
-    return chainTransforms(
+export function transformMultiModuleSeedToCustomProject(artifactPrefix: string):
+    Array<CodeTransform<SpringProjectCreationParameters  & SeedDrivenGeneratorParameters>> {
+    return [
         cleanReadMe,
         updateMultiModulePomTransform(artifactPrefix),
         inferStructureAndMovePackageTransform,
         inferSpringStructureAndRenameTransform,
-    );
+    ];
 
 }

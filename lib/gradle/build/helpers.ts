@@ -19,10 +19,6 @@ import {
     Project,
 } from "@atomist/automation-client";
 import {
-    Literal,
-    Microgrammar,
-} from "@atomist/microgrammar";
-import {
     ExecuteGoalResult, formatDate,
     GoalInvocation,
     GoalProjectListenerEvent,
@@ -68,14 +64,43 @@ export const GradleProjectVersioner: ProjectVersioner = async (sdmGoal, p, log) 
  * @constructor
  */
 export const GradleVersionPreparation: PrepareForGoalExecution = async (p: GitProject, goalInvocation: GoalInvocation) => {
-    const version = await newVersion(goalInvocation.sdmGoal, p);
+    const version = await newVersion(goalInvocation.goalEvent, p);
     return changeGradleVersion(version, p);
 };
 
+async function tryChangingInGradlePropertiesFile(p: GitProject, version: string): Promise<void>  {
+    if (p.hasFile("gradle.properties")) {
+        const propertiesFile = await parseProperties(p, "gradle.properties");
+        const versionProperty = propertiesFile.properties.find(prop => prop.key === "version");
+        if (versionProperty) {
+            versionProperty.value = version;
+            await propertiesFile.flush();
+        }
+    }
+}
+
+async function tryChangingInBuildGradleFile(p: GitProject, version: string): Promise<void>  {
+    const gradleBuildFile = await p.getFile("build.gradle");
+    if (gradleBuildFile) {
+        const gradleBuild = await (gradleBuildFile).getContent();
+        const versionRegex = /^version[ ]?=[ ]?["'][0-9.\-_A-Za-z]*['"]$/;
+        await gradleBuildFile.setContent(gradleBuild.replace(versionRegex, `version = '${version}'`));
+    }
+}
+
+async function tryChangingInBuildGradleKtsFile(p: GitProject, version: string): Promise<void> {
+    const gradleBuildFile = await p.getFile("build.gradle.kts");
+    if (gradleBuildFile) {
+        const gradleBuild = await (gradleBuildFile).getContent();
+        const versionRegex = /^version[ ]?=[ ]?["'][0-9.\-_A-Za-z]*['"]$/;
+        await gradleBuildFile.setContent(gradleBuild.replace(versionRegex, `version = '${version}'`));
+    }
+}
+
 async function changeGradleVersion(version: string, p: GitProject): Promise<ExecuteGoalResult> {
-    const propertiesFile = await parseProperties(p, "gradle.properties");
-    propertiesFile.properties.find(prop => prop.key === "version").value = version;
-    await propertiesFile.flush();
+    await tryChangingInGradlePropertiesFile(p, version);
+    await tryChangingInBuildGradleFile(p, version);
+    await tryChangingInBuildGradleKtsFile(p, version);
     return {
         code: 0,
     };
@@ -148,7 +173,3 @@ export const GradleDefaultOptions = {
     logInterpreter: LogSuppressor,
     progressReporter: NoProgressReport,
 };
-
-export const gradlePropertiesTaskGroupGrammar = Microgrammar.fromString<{ group: string }>("group: ${group}", {
-    group: Literal,
-});

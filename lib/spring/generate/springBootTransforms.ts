@@ -23,7 +23,7 @@ import {
     CodeTransformOrTransforms,
 } from "@atomist/sdm";
 import { SpringProjectCreationParameters } from "./SpringProjectCreationParameters";
-import { TransformSeedToCustomProject } from "./transformSeedToCustomProject";
+import { TransformMavenSpringBootSeedToCustomProject } from "./transformSeedToCustomProject";
 
 /**
  * Update the readme
@@ -60,5 +60,5 @@ Based on seed project \`${params.source.repoRef.owner}:${params.source.repoRef.r
 export const SpringBootGeneratorTransform: CodeTransformOrTransforms<SpringProjectCreationParameters & SeedDrivenGeneratorParameters> = [
     ReplaceReadmeTitle,
     SetAtomistTeamInApplicationYml,
-    TransformSeedToCustomProject,
+    ...TransformMavenSpringBootSeedToCustomProject,
 ];

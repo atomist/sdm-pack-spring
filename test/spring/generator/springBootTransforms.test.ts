@@ -27,7 +27,7 @@ import {
     SetAtomistTeamInApplicationYml,
 } from "../../../lib/spring/generate/springBootTransforms";
 import { SpringProjectCreationParameters } from "../../../lib/spring/generate/SpringProjectCreationParameters";
-import { TransformSeedToCustomProject } from "../../../lib/spring/generate/transformSeedToCustomProject";
+import { TransformMavenSpringBootSeedToCustomProject } from "../../../lib/spring/generate/transformSeedToCustomProject";
 import { springBootPom } from "./TestPoms";
 
 const Readme1 = `# spring-rest-seed
@@ -96,14 +96,16 @@ describe("springBootTransforms", () => {
             } as any,
             version,
         };
-        const context: ParametersInvocation<SpringProjectCreationParameters> = {
+        const context: ParametersInvocation<SpringProjectCreationParameters & SeedDrivenGeneratorParameters> = {
             context: undefined,
             addressChannels: undefined,
             credentials: undefined,
             preferences: undefined,
             configuration: undefined,
         };
-        await TransformSeedToCustomProject(p, context, params);
+        for (const t of TransformMavenSpringBootSeedToCustomProject) {
+            await t(p, context, params);
+        }
         const pom = p.findFileSync("pom.xml").getContentSync();
         assert(pom.includes(`<name>repoName</name>`), "Name should be repo name");
         assert(pom.includes(`<version>${version}</version>`), "Version should be correct");
@@ -136,14 +138,16 @@ describe("springBootTransforms", () => {
             } as any,
             version: "1.0",
         };
-        const context: ParametersInvocation<SpringProjectCreationParameters> = {
+        const context: ParametersInvocation<SpringProjectCreationParameters & SeedDrivenGeneratorParameters> = {
             context: undefined,
             addressChannels: undefined,
             credentials: undefined,
             preferences: undefined,
             configuration: undefined,
         };
-        await TransformSeedToCustomProject(p, context, params);
+        for (const t of TransformMavenSpringBootSeedToCustomProject) {
+            await t(p, context, params);
+        }
         const f = p.findFileSync("src/main/java/com/test/FooApplication.java");
         assert(!!f);
         assert(f.getContentSync().includes("package com.test;"));
