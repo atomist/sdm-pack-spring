@@ -24,7 +24,7 @@ import { CodeTransform } from "@atomist/sdm";
 import * as fs from "fs";
 import * as _ from "lodash";
 import * as path from "path";
-import { SpringProjectCreationParameters } from "../spring/generate/SpringProjectCreationParameters";
+import { JavaProjectCreationParameters } from "./generate/JavaProjectCreationParameters";
 import { JavaProjectStructure } from "./JavaProjectStructure";
 
 export const AllJavaFiles = "**/*.java";
@@ -143,5 +143,5 @@ async function inferStructureAndMovePackage(rootPackage: string, p: Project): Pr
         p;
 }
 
-export const inferStructureAndMovePackageTransform: CodeTransform<SpringProjectCreationParameters> =
+export const inferStructureAndMovePackageTransform: CodeTransform<JavaProjectCreationParameters> =
     (p, c, params) => inferStructureAndMovePackage(params.rootPackage, p);
