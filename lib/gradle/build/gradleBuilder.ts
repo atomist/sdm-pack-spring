@@ -87,7 +87,7 @@ export interface GradleCommandOptions {
 
 export async function gradleCommand(p: LocalProject,
                                     options: GradleCommandOptions): Promise<SpawnLogResult> {
-    const command = determineGradleCommand(p);
+    const command = await determineGradleCommand(p);
     const args = [];
     if (options.flags) {
         args.push(...options.flags);
