@@ -30,6 +30,15 @@ version=1.0.0-SNAPSHOT
             assert.equal(identifier.version, "1.0.0-SNAPSHOT");
         });
 
+        it("should not parse version from project with gradle properties if not exact match", async () => {
+            const propertiesContent = `
+node_version=1.0.0-SNAPSHOT
+`;
+            const project = InMemoryProject.of({path: "gradle.properties", content: propertiesContent});
+            const identifier = await GradleProjectIdentifier(project);
+            assert.equal(identifier.version, "0.0.1-SNAPSHOT");
+        });
+
         it("should parse version from project with build.gradle (single quotes)", async () => {
             const buildGradle = `
 version = '1.0.0-SNAPSHOT'
