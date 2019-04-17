@@ -17,10 +17,10 @@
 import { Project } from "@atomist/automation-client";
 import * as os from "os";
 
-export function determineGradleCommand(p: Project): string {
-    if (p.fileExistsSync("gradlew.bat") && os.platform() === "win32") {
+export async function determineGradleCommand(p: Project): Promise<string> {
+    if (await p.hasFile("gradlew.bat") && os.platform() === "win32") {
        return "gradlew";
-    } else if (p.fileExistsSync("gradlew")) {
+    } else if (await p.hasFile("gradlew")) {
         return "./gradlew";
     } else {
         return "gradle";

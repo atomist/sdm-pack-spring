@@ -19,7 +19,7 @@ import * as os from "os";
 
 export async function determineMavenCommand(p: Project): Promise<string> {
     if (os.platform() === "win32") {
-        if (process.env.JAVA_HOME && p.fileExistsSync("mvnw.cmd")) {
+        if (process.env.JAVA_HOME && await p.hasFile("mvnw.cmd")) {
             return "mvnw";
         } else {
             return "mvn";

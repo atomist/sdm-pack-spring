@@ -181,7 +181,7 @@ class GradleDeployer {
             }
         }
 
-        const gradle = determineGradleCommand(project);
+        const gradle = await determineGradleCommand(project);
         const childProcess = spawn(gradle,
             [
                 "bootRun",
