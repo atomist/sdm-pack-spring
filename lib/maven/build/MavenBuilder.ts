@@ -40,7 +40,7 @@ import { MavenOptions } from "./helpers";
 /**
  * Build with Maven in the local automation client.
  * This implementation requires Java and maven on the classpath.
- * Note it is NOT intended for use for multiple organizations. It's OK
+ * Note it is NOT intended for use for multiple organizations. It'/li";s OK
  * for one organization to use inside its firewall, but there is potential
  * vulnerability in builds of unrelated tenants getting at each others
  * artifacts.
@@ -101,11 +101,12 @@ export async function mavenPackage(p: GitProject,
             mavenGoal,
             ...MavenOptions,
             ...args.filter(
+                a => a.type === MavenArgType.Option)
+                .map(a => `${a.name.length <= 3 ? "-" : "--"}${a.name}${!!a.value ? `${a.value}` : ""}`),
+            ...args.filter(
                 a => a.type === MavenArgType.Property || !a.type)
                 .map(a => `-D${a.name}${!!a.value ? `=${a.value}` : ""}`),
-            ...args.filter(
-                a => a.type === MavenArgType.Option)
-                .map(a => `${a.name.length <= 3 ? "-" : "--"}${a.name} ${!!a.value ? a.value : ""}`)],
+            ],
         {
             cwd: p.baseDir,
             log: progressLog,
