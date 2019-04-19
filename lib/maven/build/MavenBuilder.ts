@@ -40,7 +40,7 @@ import { MavenOptions } from "./helpers";
 /**
  * Build with Maven in the local automation client.
  * This implementation requires Java and maven on the classpath.
- * Note it is NOT intended for use for multiple organizations. It'/li";s OK
+ * Note it is NOT intended for use for multiple organizations. It's OK
  * for one organization to use inside its firewall, but there is potential
  * vulnerability in builds of unrelated tenants getting at each others
  * artifacts.
