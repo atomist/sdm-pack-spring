@@ -32,6 +32,7 @@ import {
     Builder,
     BuildInProgress,
 } from "@atomist/sdm-pack-build";
+import _ = require("lodash");
 import { determineMavenCommand } from "../mavenCommand";
 import { MavenProjectIdentifier } from "../parse/pomParser";
 import { VersionedArtifact } from "../VersionedArtifact";
