@@ -38,7 +38,10 @@ import { determineMavenCommand } from "../mavenCommand";
 import { MavenProgressReporter } from "../MavenProgressReporter";
 import { MavenProjectIdentifier } from "../parse/pomParser";
 import { IsMaven } from "../pushtest/pushTests";
-import { mavenPackage } from "./MavenBuilder";
+import {
+    MavenArgs,
+    mavenPackage,
+} from "./MavenBuilder";
 
 export const MavenOptions =
     ["-B", "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"];
@@ -97,7 +100,7 @@ export const MavenCompilePreparation: PrepareForGoalExecution = mavenPackagePrep
  * Constructs a PrepareForGoalExecution taking additional command line args
  * @param args
  */
-export function mavenPackagePreparation(args: Array<{ name: string, value: string }> = []): PrepareForGoalExecution {
+export function mavenPackagePreparation(args: MavenArgs[] = []): PrepareForGoalExecution {
     return async (p: GitProject, goalInvocation: GoalInvocation) => {
         return mavenPackage(p, goalInvocation.progressLog, args);
     };
@@ -130,7 +133,7 @@ export async function mvnVersionProjectListener(p: GitProject,
             gi.goalEvent.branch,
             gi.context);
         return spawnLog(
-            command, ["versions:set", `-DnewVersion=${v}`, "versions:commit", ...MavenOptions ],
+            command, ["versions:set", `-DnewVersion=${v}`, "versions:commit", ...MavenOptions],
             { cwd: p.baseDir, log: gi.progressLog });
     }
 }
