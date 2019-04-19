@@ -100,9 +100,10 @@ export async function mavenPackage(p: GitProject,
         [
             mavenGoal,
             ...MavenOptions,
-            ...args.filter(
+            ..._.flatten(args.filter(
                 a => a.type === MavenArgType.Option)
-                .map(a => `${a.name.length <= 3 ? "-" : "--"}${a.name}${!!a.value ? `${a.value}` : ""}`),
+                .map(a => [`${a.name.length <= 3 ? "-" : "--"}${a.name}`, !!a.value ? `${a.value}` : undefined]))
+                .filter(a => !!a),
             ...args.filter(
                 a => a.type === MavenArgType.Property || !a.type)
                 .map(a => `-D${a.name}${!!a.value ? `=${a.value}` : ""}`),
