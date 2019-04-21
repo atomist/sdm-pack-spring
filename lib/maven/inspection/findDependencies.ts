@@ -46,7 +46,7 @@ export async function findDependenciesFromEffectivePom(p: Project): Promise<Vers
         return [];
     }
     if (!isLocalProject(p)) {
-        throw new Error(`Fingerprinting only works on local projects: had ${p.id.url}`);
+        throw new Error(`Dependency analysis only works on locally cloned projects: had ${p.id.url}`);
     }
     const dependencies = (await extractDependencies(p)).getContentSync().trim();
     const f: string = dependencies.substring(dependencies.indexOf("\n") + 1).replace(/[ ]/gi, "");
