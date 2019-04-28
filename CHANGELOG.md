@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 -   **BREAKING** Added extended Gradle support. [#130](https://github.com/atomist/sdm-pack-spring/issues/130)
+-   Allow to pass Maven CLI options and properties. [#139](https://github.com/atomist/sdm-pack-spring/issues/139)
 
 ## [1.1.1](https://github.com/atomist/sdm-pack-spring/compare/1.1.0...1.1.1) - 2019-03-20
 
