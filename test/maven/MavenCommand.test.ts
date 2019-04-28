@@ -44,6 +44,7 @@ describe("mavenCommand", () => {
 
         it("should use maven wrapper if it is present", async () => {
             const project = InMemoryProject.of({ path: "mvnw", content: "" });
+            project.makeExecutable = async () => project;
             const command = await determineMavenCommand(project);
             assert(command === "./mvnw");
         });
@@ -54,6 +55,7 @@ describe("mavenCommand", () => {
                 delete process.env.JAVA_HOME;
             }
             const project = InMemoryProject.of({ path: "mvnw", content: "" });
+            project.makeExecutable = async () => project;
             const command = await determineMavenCommand(project);
             assert(command === "./mvnw");
             if (javaHome) {
