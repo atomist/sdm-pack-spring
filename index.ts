@@ -162,3 +162,4 @@ export {
 export {
     GradleVersionDefinedInPropertiesInspection,
 } from "./lib/gradle/review/hasGradleVersion";
+export * from "./lib/gradle/GradleProgressReporter";

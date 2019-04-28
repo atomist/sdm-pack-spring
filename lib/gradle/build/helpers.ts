@@ -34,6 +34,7 @@ import {
     readSdmVersion,
 } from "@atomist/sdm-core";
 import { parseProperties } from "../../properties/propertiesParser";
+import { GradleProgressReporter } from "../GradleProgressReporter";
 import { GradleProjectIdentifier } from "../parse/buildGradleParser";
 import { IsGradle } from "../pushtest/gradlePushTests";
 import { gradleCommand } from "./gradleBuilder";
@@ -171,5 +172,5 @@ export const GradleBuild: GoalProjectListenerRegistration = {
 export const GradleDefaultOptions = {
     pushTest: IsGradle,
     logInterpreter: LogSuppressor,
-    progressReporter: NoProgressReport,
+    progressReporter: GradleProgressReporter,
 };
