@@ -19,12 +19,12 @@ import {
     Project,
 } from "@atomist/automation-client";
 import {
-    ExecuteGoalResult, formatDate,
+    ExecuteGoalResult, 
+    formatDate,
     GoalInvocation,
     GoalProjectListenerEvent,
     GoalProjectListenerRegistration,
     LogSuppressor,
-    NoProgressReport,
     PrepareForGoalExecution,
     SdmGoalEvent,
     SuccessIsReturn0ErrorFinder,
