@@ -21,6 +21,8 @@ export async function determineGradleCommand(p: Project): Promise<string> {
     if (await p.hasFile("gradlew.bat") && os.platform() === "win32") {
        return "gradlew";
     } else if (await p.hasFile("gradlew")) {
+        // Some times people end up storing the gradlew script in Git without executable flag; fix it
+        await p.makeExecutable("gradlew");
         return "./gradlew";
     } else {
         return "gradle";

@@ -25,6 +25,8 @@ export async function determineMavenCommand(p: Project): Promise<string> {
             return "mvn";
         }
     } else if (await p.hasFile("mvnw")) {
+        // Some times people end up storing the mvnw script in Git without executable flag; fix it
+        await p.makeExecutable("mvnw");
         return "./mvnw";
     } else {
         return "mvn";
