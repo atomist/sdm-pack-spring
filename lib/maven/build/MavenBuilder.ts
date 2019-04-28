@@ -32,6 +32,7 @@ import {
     Builder,
     BuildInProgress,
 } from "@atomist/sdm-pack-build";
+import _ = require("lodash");
 import { determineMavenCommand } from "../mavenCommand";
 import { MavenProjectIdentifier } from "../parse/pomParser";
 import { VersionedArtifact } from "../VersionedArtifact";
@@ -45,7 +46,7 @@ import { MavenOptions } from "./helpers";
  * vulnerability in builds of unrelated tenants getting at each others
  * artifacts.
  */
-export function mavenBuilder(args: Array<{ name: string, value?: string }> = [],
+export function mavenBuilder(args: MavenArgs[] = [],
                              deploymentUnitFileLocator: (p: LocalProject, mpi: VersionedArtifact) => string =
                                  (p, mpi) => `${p.baseDir}/target/${mpi.artifact}-${mpi.version}.jar`): Builder {
     return async goalInvocation => {
@@ -79,14 +80,35 @@ class UpdatingBuild implements BuildInProgress {
 
 }
 
+export interface MavenArgs {
+    name: string;
+    value?: string;
+    type?: MavenArgType;
+}
+
+export enum MavenArgType {
+    Property,
+    Option,
+}
+
 export async function mavenPackage(p: GitProject,
                                    progressLog: ProgressLog,
-                                   args: Array<{ name: string, value?: string }> = [],
+                                   args: MavenArgs[] = [],
                                    mavenGoal: string = "package"): Promise<SpawnLogResult> {
     const command = await determineMavenCommand(p);
     return spawnLog(
         command,
-        [mavenGoal, ...MavenOptions, ...args.map(a => `-D${a.name}${a.value ? `=${a.value}` : ""}`)],
+        [
+            mavenGoal,
+            ...MavenOptions,
+            ..._.flatten(args.filter(
+                a => a.type === MavenArgType.Option)
+                .map(a => [`${a.name.length <= 3 ? "-" : "--"}${a.name}`, !!a.value ? `${a.value}` : undefined]))
+                .filter(a => !!a),
+            ...args.filter(
+                a => a.type === MavenArgType.Property || !a.type)
+                .map(a => `-D${a.name}${!!a.value ? `=${a.value}` : ""}`),
+            ],
         {
             cwd: p.baseDir,
             log: progressLog,
@@ -102,7 +124,9 @@ export async function mavenPackage(p: GitProject,
  * @param args
  * @return {Builder}
  */
-export function mavenRunner(details: FulfillableGoalDetails, mavenGoal: string, args: Array<{ name: string, value?: string }> = []): Goal {
+export function mavenRunner(details: FulfillableGoalDetails,
+                            mavenGoal: string,
+                            args: MavenArgs[] = []): Goal {
     return goal(details, async goalInvocation => {
         const { configuration, credentials, progressLog, id } = goalInvocation;
         return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
