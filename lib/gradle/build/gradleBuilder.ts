@@ -63,7 +63,7 @@ export function gradleBuilder(options: GradleBuilderOptions = DefaultGradleBuild
             const gradleProjectIdentifier = await GradleProjectIdentifier(p);
             const buildResult = gradleCommand(p, {
                 progressLog,
-                errorFinder: (code, signal, l) => l.log.includes("[ERROR]"),
+                errorFinder: GradleErrorFinder,
                 flags: ["--console=plain", ...options.flags],
                 tasks: options.tasks,
                 args: options.arguments,
@@ -117,6 +117,11 @@ export interface GradleInfo {
 
     success: boolean;
 }
+
+export const GradleErrorFinder: ErrorFinder = (code, signal, log) => {
+    const failureRegex = /BUILD FAILED/;
+    return (code > 0) || failureRegex.test(log.log);
+};
 
 class UpdatingBuild implements BuildInProgress {
 
