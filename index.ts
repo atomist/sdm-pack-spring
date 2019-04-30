@@ -19,7 +19,6 @@ export {
     SpringSupportOptions,
     Categories,
 } from "./lib/spring";
-export { executableJarDeployer } from "./lib/java/deploy/executableJarDeployer";
 export {
     AllJavaFiles,
     JavaAndKotlinSource,
@@ -37,7 +36,6 @@ export {
     ImportDotStar,
     ImportDotStarReviewer,
 } from "./lib/java/review/importDotStarReviewer";
-export { ListBranchDeploys } from "./lib/java/deploy/MavenPerBranchSpringBootDeploymentGoal";
 export {
     mavenBuilder,
     mavenPackage,
@@ -50,19 +48,12 @@ export {
 export {
     IsGradle,
 } from "./lib/gradle/pushtest/gradlePushTests";
-export { ListLocalDeploys } from "./lib/maven/deploy/listLocalDeploys";
-export { mavenDeployer } from "./lib/maven/deploy/mavenDeployer";
 export { MavenFingerprinter } from "./lib/maven/fingerprint/MavenFingerprinter";
 export { MavenProjectIdentifier } from "./lib/maven/parse/pomParser";
 export { IsMaven } from "./lib/maven/pushtest/pushTests";
 export { ProvidedDependencyReviewer } from "./lib/maven/review/providedDependencyReviewer";
 export { addDependencyTransform } from "./lib/maven/transform/addDependencyTransform";
 export { VersionedArtifact } from "./lib/maven/VersionedArtifact";
-export {
-    localExecutableJarDeployer,
-    mavenSourceDeployer,
-} from "./lib/spring/deploy/localSpringBootDeployers";
-export { SpringBootSuccessPatterns } from "./lib/spring/deploy/springLoggingPatterns";
 export * from "./lib/spring/generate/springBootTransforms";
 export { addSpringInitializrGenerator } from "./lib/spring/generate/springInitializrGenerator";
 export {
@@ -101,16 +92,9 @@ export {
     springBootActuatorAutofix,
 } from "./lib/spring/transform/addSpringBootActuator";
 
-export { MavenPerBranchDeployment } from "./lib/java/deploy/MavenPerBranchDeployment";
 export { setSpringBootVersionTransform } from "./lib/spring/transform/setSpringBootVersionTransform";
 export { MavenTest } from "./lib/maven/goal/mavenTest";
 export * from "./lib/properties/propertiesParser";
-export {
-    GradlePerBranchDeployment,
-    GradlePerBranchDeploymentRegistration,
-    springBootGradleArgs,
-    ListGradleBranchDeploys,
-} from "./lib/gradle/deploy/GradlePerBranchSpringBootDeploymentGoal";
 export * from "./lib/riff/riffGeneration";
 export * from "./lib/riff/riffPushTests";
 export * from "./lib/riff/RiffDeployment";
