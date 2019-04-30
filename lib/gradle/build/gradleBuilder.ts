@@ -21,13 +21,14 @@ import {
 import {
     ErrorFinder,
     ProgressLog,
-    spawnLog, SpawnLogResult,
+    spawnLog,
+    SpawnLogResult,
 } from "@atomist/sdm";
 import {
     Builder,
     BuildInProgress,
 } from "@atomist/sdm-pack-build";
-import {determineGradleCommand} from "../gradleCommand";
+import { determineGradleCommand } from "../gradleCommand";
 
 export interface GradleBuilderOptions {
     tasks: string[];
