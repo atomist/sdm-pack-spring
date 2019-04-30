@@ -16,11 +16,9 @@
 
 import {
     GitProject,
-    LocalProject,
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import {
-    AppInfo,
     FulfillableGoalDetails,
     goal,
     Goal,
@@ -32,10 +30,8 @@ import {
     Builder,
     BuildInProgress,
 } from "@atomist/sdm-pack-build";
-import _ = require("lodash");
+import * as _ from "lodash";
 import { determineMavenCommand } from "../mavenCommand";
-import { MavenProjectIdentifier } from "../parse/pomParser";
-import { VersionedArtifact } from "../VersionedArtifact";
 import { MavenOptions } from "./helpers";
 
 /**
@@ -46,38 +42,20 @@ import { MavenOptions } from "./helpers";
  * vulnerability in builds of unrelated tenants getting at each others
  * artifacts.
  */
-export function mavenBuilder(args: MavenArgs[] = [],
-                             deploymentUnitFileLocator: (p: LocalProject, mpi: VersionedArtifact) => string =
-                                 (p, mpi) => `${p.baseDir}/target/${mpi.artifact}-${mpi.version}.jar`): Builder {
+export function mavenBuilder(args: MavenArgs[] = []): Builder {
     return async goalInvocation => {
         const { configuration, credentials, progressLog, id } = goalInvocation;
         return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
-            // Find the artifact info from Maven
-            const va = await MavenProjectIdentifier(p);
-            const appId = { ...va, name: va.artifact, id };
             const buildResult = await mavenPackage(p, progressLog, args);
-            const rb = new UpdatingBuild(id, buildResult);
-            rb.ai = appId;
-            rb.deploymentUnitFile = deploymentUnitFileLocator(p, va);
-            return rb;
+            return new UpdatingBuild(id, buildResult);
         });
     };
 }
 
 class UpdatingBuild implements BuildInProgress {
-
-    public ai: AppInfo;
-
-    public deploymentUnitFile: string;
-
     constructor(public repoRef: RemoteRepoRef,
                 public buildResult: SpawnLogResult) {
     }
-
-    get appInfo(): AppInfo {
-        return this.ai;
-    }
-
 }
 
 export interface MavenArgs {

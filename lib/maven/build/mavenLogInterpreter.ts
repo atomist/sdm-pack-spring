@@ -80,7 +80,7 @@ export const MavenLogInterpreter: InterpretLog<MavenInfo> = log => {
     };
 };
 
-function appFailedToStart(log: string) {
+function appFailedToStart(log: string): string {
     const lines = log.split("\n");
     const failedToStartLine = lines.indexOf("APPLICATION FAILED TO START");
     if (failedToStartLine < 1) {

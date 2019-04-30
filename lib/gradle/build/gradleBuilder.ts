@@ -19,30 +19,23 @@ import {
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import {
-    AppInfo,
     ErrorFinder,
     ProgressLog,
-    spawnLog,
-    SpawnLogResult,
+    spawnLog, SpawnLogResult,
 } from "@atomist/sdm";
-import { ProjectIdentification } from "@atomist/sdm-core/lib/internal/delivery/build/local/projectIdentifier";
 import {
     Builder,
     BuildInProgress,
 } from "@atomist/sdm-pack-build";
-import { VersionedArtifact } from "../../maven/VersionedArtifact";
-import { determineGradleCommand } from "../gradleCommand";
-import { GradleProjectIdentifier } from "../parse/buildGradleParser";
+import {determineGradleCommand} from "../gradleCommand";
 
 export interface GradleBuilderOptions {
-    deploymentUnitFileLocator: (p: LocalProject, id: VersionedArtifact & ProjectIdentification) => string;
     tasks: string[];
     flags: string[];
     arguments: Array<{ name: string, value?: string }>;
 }
 
 export const DefaultGradleBuilderOptions: GradleBuilderOptions = {
-    deploymentUnitFileLocator: (p, id) => `${p.baseDir}/build/libs/${id.name}.jar`,
     tasks: ["clean", "build"],
     flags: [],
     arguments: [],
@@ -60,7 +53,6 @@ export function gradleBuilder(options: GradleBuilderOptions = DefaultGradleBuild
     return async goalInvocation => {
         const { configuration, id, progressLog, credentials } = goalInvocation;
         return configuration.sdm.projectLoader.doWithProject({ credentials, id, readOnly: true }, async p => {
-            const gradleProjectIdentifier = await GradleProjectIdentifier(p);
             const buildResult = gradleCommand(p, {
                 progressLog,
                 errorFinder: GradleErrorFinder,
@@ -68,10 +60,7 @@ export function gradleBuilder(options: GradleBuilderOptions = DefaultGradleBuild
                 tasks: options.tasks,
                 args: options.arguments,
             });
-            const rb = new UpdatingBuild(id, await buildResult);
-            rb.ai = { id, name: gradleProjectIdentifier.name,  version: gradleProjectIdentifier.version };
-            rb.deploymentUnitFile = options.deploymentUnitFileLocator(p, gradleProjectIdentifier);
-            return rb;
+            return new UpdatingBuild(id, await buildResult);
         });
     };
 }
@@ -124,16 +113,7 @@ export const GradleErrorFinder: ErrorFinder = (code, signal, log) => {
 };
 
 class UpdatingBuild implements BuildInProgress {
-
-    public ai: AppInfo;
-
-    public deploymentUnitFile: string;
-
     constructor(public repoRef: RemoteRepoRef,
                 public buildResult: SpawnLogResult) {
-    }
-
-    get appInfo(): AppInfo {
-        return this.ai;
     }
 }

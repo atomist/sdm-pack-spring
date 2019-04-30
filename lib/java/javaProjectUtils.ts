@@ -67,7 +67,7 @@ export async function movePackage(project: Project,
     return project;
 }
 
-function cleanEmptyFoldersRecursively(folder: string) {
+function cleanEmptyFoldersRecursively(folder: string): void {
     const isDir = fs.statSync(folder).isDirectory();
     if (!isDir) {
         return;

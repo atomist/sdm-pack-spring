@@ -15,19 +15,18 @@
  */
 
 import {
+    configurationValue,
+    DefaultHttpClientFactory,
+    HttpClientFactory,
+    HttpMethod,
     InMemoryProject,
     InMemoryProjectFile,
     logger,
     projectUtils,
 } from "@atomist/automation-client";
-import {
-    CodeTransform,
-} from "@atomist/sdm";
-import axios from "axios";
+import { CodeTransform } from "@atomist/sdm";
 import * as _ from "lodash";
-import {
-    packageToPath,
-} from "../javaProjectUtils";
+import { packageToPath } from "../javaProjectUtils";
 import { packageInfo } from "../query/packageInfo";
 
 /**
@@ -44,8 +43,9 @@ export function bringInFile(url: string,
                             sourceRoot: string = "src/main/java",
                             targetPackage?: string): CodeTransform {
     return async p => {
-        const response = await axios.get(url);
-        const content: string = response.data;
+        const httpClient = configurationValue<HttpClientFactory>("http.client.factory", DefaultHttpClientFactory).create();
+        const response = await httpClient.exchange(url, { method: HttpMethod.Get });
+        const content: string = response.body as string;
         // Parse it to find the package
         const tempPath = "Some.java";
         const p1 = InMemoryProject.of(new InMemoryProjectFile(tempPath, content));
