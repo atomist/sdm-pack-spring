@@ -15,10 +15,16 @@
  */
 
 import {
+    LocalProject,
     Project,
 } from "@atomist/automation-client";
+import {
+    spawnLog,
+    StringCapturingProgressLog,
+} from "@atomist/sdm";
 import { ProjectIdentification } from "@atomist/sdm-core/lib/internal/delivery/build/local/projectIdentifier";
 import { VersionedArtifact } from "../../maven/VersionedArtifact";
+import { determineGradleCommand } from "../gradleCommand";
 
 export async function getProjectVersion(p: Project): Promise<string> {
     let version: string;
@@ -69,7 +75,65 @@ export async function getProjectGroup(p: Project): Promise<string> {
         }
     }
     return group;
+}
 
+export async function getGradleModules(p: Project): Promise<string[]> {
+    if (p.hasFile("settings.gradle")) {
+        const pattern = /include ["']([a-zA-Z0-9\-:]+)["']/;
+        const settingsContent = await (await p.getFile("settings.gradle")).getContent();
+        const matches = settingsContent.split(/\r?\n/)
+            .map(line => line.match(pattern))
+            .filter(m => m && m.length > 0)
+            .map(m => m[1]);
+        return matches;
+    }
+    return Promise.reject("Not a multimodule project");
+}
+
+export async function getRuntimeClasspath(p: LocalProject, module?: string): Promise<string[]> {
+    const initScript = `
+allprojects {
+    task generateRuntimeClasspath {
+        doLast {
+            println configurations.runtimeClasspath.resolve()
+        }
+    }
+}
+    `;
+    const log = new StringCapturingProgressLog();
+    p.addFileSync("atomist.gradle", initScript);
+    if (module) {
+        await spawnLog(await determineGradleCommand(p), ["--init-script", "atomist.gradle", "-q", `:${module}:generateRuntimeClasspath`], {log, cwd: p.baseDir});
+    } else {
+        await spawnLog(`${await determineGradleCommand(p)} --init-script atomist.gradle -q :generateRuntimeClasspath`, [], {log, cwd: p.baseDir});
+    }
+    p.deleteFileSync("atomist.gradle");
+    const output = log.log;
+    const dependencies = output.substring(1, output.length - 1);
+    return dependencies.split(", ");
+}
+
+export async function getCompileClasspath(p: LocalProject, module?: string): Promise<string[]> {
+    const initScript = `
+allprojects {
+    task generateRuntimeClasspath {
+        doLast {
+            println configurations.runtimeClasspath.resolve()
+        }
+    }
+}
+    `;
+    const log = new StringCapturingProgressLog();
+    p.addFileSync("atomist.gradle", initScript);
+    if (module) {
+        await spawnLog(await determineGradleCommand(p), ["--init-script", "atomist.gradle", "-q", `:${module}:generateRuntimeClasspath`], {log, cwd: p.baseDir});
+    } else {
+        await spawnLog(await determineGradleCommand(p), ["--init-script", "atomist.gradle", "-q", `:generateRuntimeClasspath`], {log, cwd: p.baseDir});
+    }
+    p.deleteFileSync("atomist.gradle");
+    const output = log.log;
+    const dependencies = output.substring(1, output.length - 1);
+    return dependencies.split(", ");
 }
 
 /**
