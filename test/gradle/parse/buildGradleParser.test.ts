@@ -20,9 +20,8 @@ import {
     NodeFsLocalProject,
 } from "@atomist/automation-client";
 import {
-    getCompileClasspath,
+    getClasspathForConfiguration,
     getGradleModules,
-    getRuntimeClasspath,
     GradleProjectIdentifier,
 } from "../../../lib/gradle/parse/buildGradleParser";
 
@@ -111,35 +110,25 @@ group = "com.example"
     });
 
     describe("module parser", () => {
-       it("should get modules double quote", async () => {
+       it("should get modules", async () => {
            const settingsGradle = `
 include "test"
 include "test2"
 `;
-           const project = InMemoryProject.of({path: "settings.gradle", content: settingsGradle});
+           const buildGradle = `
+allprojects {
+    apply plugin: "java"
+
+    repositories {
+        jcenter()
+    }
+}`;
+           const project = tempProject(uuid());
+           await project.addFile("settings.gradle", settingsGradle);
+           await project.addFile("build.gradle", buildGradle);
            const modules = await getGradleModules(project);
-           assert(modules.every((s: string) => s === "test" || s === "test2"), "should have all modules");
+           assert(modules.every((s: string) => s === ":test" || s === ":test2"), "should have all modules");
        });
-
-       it("should get modules single quote", async () => {
-            const settingsGradle = `
-include 'test'
-include 'test2'
-`;
-            const project = InMemoryProject.of({path: "settings.gradle", content: settingsGradle});
-            const modules = await getGradleModules(project);
-            assert(modules.every((s: string) => s === "test" || s === "test2"), "should have all modules");
-        });
-
-       it("should get modules with submodules", async () => {
-            const settingsGradle = `
-include 'test:one'
-include 'test:two'
-`;
-            const project = InMemoryProject.of({path: "settings.gradle", content: settingsGradle});
-            const modules = await getGradleModules(project);
-            assert(modules.every((s: string) => s === "test:one" || s === "test:two"), "should have all modules");
-        });
     });
 
     describe("runtime classpath", () => {
@@ -157,7 +146,7 @@ dependencies {
 `;
             const project = tempProject(uuid());
             project.addFileSync("build.gradle", buildGradle);
-            const dependencies = await getRuntimeClasspath(project);
+            const dependencies = await getClasspathForConfiguration(project, "runtimeClasspath");
             assert(!!dependencies.find(d => !!d.match(/h2/)), "h2 dependency should be present");
         }).enableTimeouts(false);
     });
@@ -178,7 +167,7 @@ dependencies {
 `;
             const project = tempProject(uuid());
             project.addFileSync("build.gradle", buildGradle);
-            const dependencies = await getCompileClasspath(project);
+            const dependencies = await getClasspathForConfiguration(project, "compileClasspath");
             assert(dependencies.find(d => !!d.match(/h2/)) !== undefined, "h2 dependency should be present");
             assert(dependencies.find(d => !!d.match(/spring/)) === undefined, "spring dependency should not be present");
         }).enableTimeouts(false);
