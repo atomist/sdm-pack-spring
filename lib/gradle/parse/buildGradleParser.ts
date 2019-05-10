@@ -94,21 +94,25 @@ export async function getRuntimeClasspath(p: LocalProject, module?: string): Pro
     const initScript = `
 allprojects {
     task generateRuntimeClasspath {
+        def output = new File(rootDir, ".atomist-dependencies.txt");
+
         doLast {
-            println configurations.runtimeClasspath.resolve()
+            output.text = configurations.runtimeClasspath.resolve()
         }
     }
 }
+
     `;
     const log = new StringCapturingProgressLog();
-    p.addFileSync("atomist.gradle", initScript);
+    p.addFileSync(".atomist.gradle", initScript);
     if (module) {
-        await spawnLog(await determineGradleCommand(p), ["--init-script", "atomist.gradle", "-q", `:${module}:generateRuntimeClasspath`], {log, cwd: p.baseDir});
+        await spawnLog(await determineGradleCommand(p), ["--init-script", ".atomist.gradle", "-q", `:${module}:generateRuntimeClasspath`], {log, cwd: p.baseDir});
     } else {
-        await spawnLog(`${await determineGradleCommand(p)} --init-script atomist.gradle -q :generateRuntimeClasspath`, [], {log, cwd: p.baseDir});
+        await spawnLog(await determineGradleCommand(p), ["--init-script", ".atomist.gradle", "-q", `:generateRuntimeClasspath`], {log, cwd: p.baseDir});
     }
-    p.deleteFileSync("atomist.gradle");
-    const output = log.log;
+    p.deleteFileSync(".atomist.gradle");
+    const output = await (await p.getFile(".atomist-dependencies.txt")).getContent();
+    p.deleteFileSync(".atomist-dependencies.txt");
     const dependencies = output.substring(1, output.length - 1);
     return dependencies.split(", ");
 }
@@ -116,22 +120,26 @@ allprojects {
 export async function getCompileClasspath(p: LocalProject, module?: string): Promise<string[]> {
     const initScript = `
 allprojects {
-    task generateRuntimeClasspath {
+    task generateCompileClasspath {
+        def output = new File(rootDir, ".atomist-dependencies.txt");
+
         doLast {
-            println configurations.runtimeClasspath.resolve()
+            output.text = configurations.compileClasspath.resolve()
         }
     }
 }
+
     `;
     const log = new StringCapturingProgressLog();
-    p.addFileSync("atomist.gradle", initScript);
+    p.addFileSync(".atomist.gradle", initScript);
     if (module) {
-        await spawnLog(await determineGradleCommand(p), ["--init-script", "atomist.gradle", "-q", `:${module}:generateRuntimeClasspath`], {log, cwd: p.baseDir});
+        await spawnLog(await determineGradleCommand(p), ["--init-script", ".atomist.gradle", "-q", `:${module}:generateCompileClasspath`], {log, cwd: p.baseDir});
     } else {
-        await spawnLog(await determineGradleCommand(p), ["--init-script", "atomist.gradle", "-q", `:generateRuntimeClasspath`], {log, cwd: p.baseDir});
+        await spawnLog(await determineGradleCommand(p), ["--init-script", ".atomist.gradle", "-q", `:generateCompileClasspath`], {log, cwd: p.baseDir});
     }
-    p.deleteFileSync("atomist.gradle");
-    const output = log.log;
+    p.deleteFileSync(".atomist.gradle");
+    const output = await (await p.getFile(".atomist-dependencies.txt")).getContent();
+    p.deleteFileSync(".atomist-dependencies.txt");
     const dependencies = output.substring(1, output.length - 1);
     return dependencies.split(", ");
 }

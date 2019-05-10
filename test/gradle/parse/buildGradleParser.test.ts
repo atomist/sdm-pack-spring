@@ -21,6 +21,7 @@ import {
 } from "@atomist/automation-client";
 import * as _ from "lodash";
 import {
+    getCompileClasspath,
     getGradleModules,
     getRuntimeClasspath,
     GradleProjectIdentifier,
@@ -158,7 +159,29 @@ dependencies {
             const project = tempProject(uuid());
             project.addFileSync("build.gradle", buildGradle);
             const dependencies = await getRuntimeClasspath(project);
-            assert(!!dependencies.find(d => !!d.match(/h2/)), "dependency not present");
+            assert(!!dependencies.find(d => !!d.match(/h2/)), "h2 dependency should be present");
+        });
+    });
+
+    describe("compile classpath", () => {
+        it("should get compile classpath", async () => {
+            const buildGradle = `
+apply plugin: "java"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation "com.h2database:h2:1.4.196"
+    runtime "org.springframework.boot:spring-boot-starter-webflux:2.1.2.RELEASE"
+}
+`;
+            const project = tempProject(uuid());
+            project.addFileSync("build.gradle", buildGradle);
+            const dependencies = await getCompileClasspath(project);
+            assert(dependencies.find(d => !!d.match(/h2/)) !== undefined, "h2 dependency should be present");
+            assert(dependencies.find(d => !!d.match(/spring/)) === undefined, "spring dependency should not be present");
         });
     });
 });
