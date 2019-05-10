@@ -19,7 +19,6 @@ import {
     LocalProject,
     NodeFsLocalProject,
 } from "@atomist/automation-client";
-import * as _ from "lodash";
 import {
     getCompileClasspath,
     getGradleModules,

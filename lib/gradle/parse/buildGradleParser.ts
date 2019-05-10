@@ -106,9 +106,11 @@ allprojects {
     const log = new StringCapturingProgressLog();
     p.addFileSync(".atomist.gradle", initScript);
     if (module) {
-        await spawnLog(await determineGradleCommand(p), ["--init-script", ".atomist.gradle", "-q", `:${module}:generateRuntimeClasspath`], {log, cwd: p.baseDir});
+        await spawnLog(await determineGradleCommand(p),
+            ["--init-script", ".atomist.gradle", "-q", `:${module}:generateRuntimeClasspath`], {log, cwd: p.baseDir});
     } else {
-        await spawnLog(await determineGradleCommand(p), ["--init-script", ".atomist.gradle", "-q", `:generateRuntimeClasspath`], {log, cwd: p.baseDir});
+        await spawnLog(await determineGradleCommand(p),
+            ["--init-script", ".atomist.gradle", "-q", `:generateRuntimeClasspath`], {log, cwd: p.baseDir});
     }
     p.deleteFileSync(".atomist.gradle");
     const output = await (await p.getFile(".atomist-dependencies.txt")).getContent();
@@ -133,9 +135,11 @@ allprojects {
     const log = new StringCapturingProgressLog();
     p.addFileSync(".atomist.gradle", initScript);
     if (module) {
-        await spawnLog(await determineGradleCommand(p), ["--init-script", ".atomist.gradle", "-q", `:${module}:generateCompileClasspath`], {log, cwd: p.baseDir});
+        await spawnLog(await determineGradleCommand(p),
+            ["--init-script", ".atomist.gradle", "-q", `:${module}:generateCompileClasspath`], {log, cwd: p.baseDir});
     } else {
-        await spawnLog(await determineGradleCommand(p), ["--init-script", ".atomist.gradle", "-q", `:generateCompileClasspath`], {log, cwd: p.baseDir});
+        await spawnLog(await determineGradleCommand(p),
+            ["--init-script", ".atomist.gradle", "-q", `:generateCompileClasspath`], {log, cwd: p.baseDir});
     }
     p.deleteFileSync(".atomist.gradle");
     const output = await (await p.getFile(".atomist-dependencies.txt")).getContent();
