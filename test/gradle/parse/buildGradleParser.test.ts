@@ -128,7 +128,7 @@ allprojects {
            await project.addFile("build.gradle", buildGradle);
            const modules = await getGradleModules(project);
            assert(modules.every((s: string) => s === ":test" || s === ":test2"), "should have all modules");
-       });
+       }).enableTimeouts(false);
     });
 
     describe("runtime classpath", () => {
