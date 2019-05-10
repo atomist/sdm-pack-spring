@@ -160,7 +160,7 @@ dependencies {
             project.addFileSync("build.gradle", buildGradle);
             const dependencies = await getRuntimeClasspath(project);
             assert(!!dependencies.find(d => !!d.match(/h2/)), "h2 dependency should be present");
-        });
+        }).enableTimeouts(false);
     });
 
     describe("compile classpath", () => {
@@ -182,7 +182,7 @@ dependencies {
             const dependencies = await getCompileClasspath(project);
             assert(dependencies.find(d => !!d.match(/h2/)) !== undefined, "h2 dependency should be present");
             assert(dependencies.find(d => !!d.match(/spring/)) === undefined, "spring dependency should not be present");
-        });
+        }).enableTimeouts(false);
     });
 });
 
