@@ -49,13 +49,12 @@ export async function updatePom(
     for (const pomProject of pomProjects) {
         const m = pomProject.matches[0];
         const parentElement = m.$children.find(n => n.$name === "parent");
-        const parentGroupId = parentElement.$children.find(n => n.$name === "groupId");
-        const parentArtifactId = parentElement.$children.find(n => n.$name === "artifactId");
         const pomGroupId = m.$children.find(n => n.$name === "groupId");
         const pomArtifactId = m.$children.find(n => n.$name === "artifactId");
         const pomVersion = m.$children.find(n => n.$name === "artifactId");
-
         if (parentElement) {
+            const parentGroupId = parentElement.$children.find(n => n.$name === "groupId");
+            const parentArtifactId = parentElement.$children.find(n => n.$name === "artifactId");
             if (pomGroupId) {
                 if (pomGroupId.$value === parentGroupId.$value) {
                     await updateNode(project, pomProject.file.path, "/project/parent/groupId", `<groupId>${groupId}</groupId>`);
@@ -92,7 +91,7 @@ export async function updatePom(
     return project;
 }
 
-export async function updateNode(project: Project, f: string, path: string, value: string) {
+export async function updateNode(project: Project, f: string, path: string, value: string): Promise<void> {
     await astUtils.doWithAllMatches(project, new XmldocFileParser(), f, path, m => {
         m.$value = value;
     });
