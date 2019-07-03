@@ -21,7 +21,7 @@ import {
 import { CodeTransform } from "@atomist/sdm";
 import {
     computeArtifactId,
-    JavaProjectCreationParameters
+    JavaProjectCreationParameters,
 } from "../../java/generate/JavaProjectCreationParameters";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 
