@@ -19,8 +19,10 @@ import {
     Project,
 } from "@atomist/automation-client";
 import { CodeTransform } from "@atomist/sdm";
-import { computeArtifactId } from "../../java/generate/JavaProjectCreationParameters";
-import { SpringProjectCreationParameters } from "../../spring/generate/SpringProjectCreationParameters";
+import {
+    computeArtifactId,
+    JavaProjectCreationParameters
+} from "../../java/generate/JavaProjectCreationParameters";
 import { XmldocFileParser } from "../../xml/XmldocFileParser";
 
 /**
@@ -97,13 +99,13 @@ export async function updateNode(project: Project, f: string, path: string, valu
     });
 }
 
-export const updatePomTransform: CodeTransform<SpringProjectCreationParameters> = async (project, c, params) => updatePom(project,
+export const updatePomTransform: CodeTransform<JavaProjectCreationParameters> = async (project, c, params) => updatePom(project,
     project.id.repo,
     computeArtifactId(params, project),
     params.groupId, params.version,
     params.description || project.id.repo);
 
-export function updateMultiModulePomTransform(artifactPrefix: string): CodeTransform<SpringProjectCreationParameters> {
+export function updateMultiModulePomTransform(artifactPrefix: string): CodeTransform<JavaProjectCreationParameters> {
     return async (project, c, params) => updatePom(project,
         project.id.repo,
         computeArtifactId(params, project),
