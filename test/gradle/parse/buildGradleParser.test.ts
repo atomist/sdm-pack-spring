@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-import { InMemoryProject } from "@atomist/automation-client";
-import { GradleProjectIdentifier } from "../../../lib/gradle/parse/buildGradleParser";
+import {
+    InMemoryProject,
+    LocalProject,
+    NodeFsLocalProject,
+} from "@atomist/automation-client";
+import {
+    getClasspathForConfiguration,
+    getGradleModules,
+    GradleProjectIdentifier,
+} from "../../../lib/gradle/parse/buildGradleParser";
 
 import * as assert from "power-assert";
+import * as tmp from "tmp";
+import uuid = require("uuid");
 
 describe("build gradle parser", () => {
     describe("parse versions", () => {
@@ -98,4 +108,73 @@ group = "com.example"
             assert.equal(identifier.group, "com.example");
         });
     });
+
+    describe("module parser", () => {
+       it("should get modules", async () => {
+           const settingsGradle = `
+include "test"
+include "test2"
+`;
+           const buildGradle = `
+allprojects {
+    apply plugin: "java"
+
+    repositories {
+        jcenter()
+    }
+}`;
+           const project = tempProject(uuid());
+           await project.addFile("settings.gradle", settingsGradle);
+           await project.addFile("build.gradle", buildGradle);
+           const modules = await getGradleModules(project);
+           assert(modules.every((s: string) => s === ":test" || s === ":test2"), "should have all modules");
+       }).enableTimeouts(false);
+    });
+
+    describe("runtime classpath", () => {
+        it("should get runtime classpath", async () => {
+            const buildGradle = `
+apply plugin: "java"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    runtime "com.h2database:h2:1.4.196"
+}
+`;
+            const project = tempProject(uuid());
+            project.addFileSync("build.gradle", buildGradle);
+            const dependencies = await getClasspathForConfiguration(project, "runtimeClasspath");
+            assert(!!dependencies.find(d => !!d.match(/h2/)), "h2 dependency should be present");
+        }).enableTimeouts(false);
+    });
+
+    describe("compile classpath", () => {
+        it("should get compile classpath", async () => {
+            const buildGradle = `
+apply plugin: "java"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation "com.h2database:h2:1.4.196"
+    runtime "org.springframework.boot:spring-boot-starter-webflux:2.1.2.RELEASE"
+}
+`;
+            const project = tempProject(uuid());
+            project.addFileSync("build.gradle", buildGradle);
+            const dependencies = await getClasspathForConfiguration(project, "compileClasspath");
+            assert(dependencies.find(d => !!d.match(/h2/)) !== undefined, "h2 dependency should be present");
+            assert(dependencies.find(d => !!d.match(/spring/)) === undefined, "spring dependency should not be present");
+        }).enableTimeouts(false);
+    });
 });
+
+function tempProject(id: string): LocalProject {
+    const dir = tmp.dirSync();
+    return new NodeFsLocalProject(id || "temp", dir.name);
+}
