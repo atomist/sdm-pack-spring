@@ -37,10 +37,10 @@ import {
     ManagedDeploymentTargetInfo,
     SpawnedDeployment,
 } from "@atomist/sdm-core";
+import { Deployment } from "@atomist/sdm/lib/spi/deploy/Deployment";
 import * as spawn from "cross-spawn";
 import { MavenOptions } from "../build/helpers";
 import { determineMavenCommand } from "../mavenCommand";
-import { Deployment } from "@atomist/sdm/lib/spi/deploy/Deployment";
 
 /**
  * Managed deployments
