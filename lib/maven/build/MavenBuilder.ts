@@ -20,7 +20,6 @@ import {
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import {
-    AppInfo,
     FulfillableGoalDetails,
     goal,
     Goal,
@@ -32,6 +31,7 @@ import {
     Builder,
     BuildInProgress,
 } from "@atomist/sdm-pack-build";
+import { AppInfo } from "@atomist/sdm/lib/spi/deploy/Deployment";
 import _ = require("lodash");
 import { determineMavenCommand } from "../mavenCommand";
 import { MavenProjectIdentifier } from "../parse/pomParser";

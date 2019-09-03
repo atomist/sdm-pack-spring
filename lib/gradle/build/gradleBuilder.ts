@@ -19,7 +19,6 @@ import {
     RemoteRepoRef,
 } from "@atomist/automation-client";
 import {
-    AppInfo,
     ErrorFinder,
     ProgressLog,
     spawnLog,
@@ -30,6 +29,7 @@ import {
     Builder,
     BuildInProgress,
 } from "@atomist/sdm-pack-build";
+import { AppInfo } from "@atomist/sdm/lib/spi/deploy/Deployment";
 import { VersionedArtifact } from "../../maven/VersionedArtifact";
 import { determineGradleCommand } from "../gradleCommand";
 import { GradleProjectIdentifier } from "../parse/buildGradleParser";
