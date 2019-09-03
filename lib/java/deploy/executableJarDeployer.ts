@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Atomist, Inc.
+ * Copyright © 2019 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import {
     DelimitedWriteProgressLogDecorator,
     DeployableArtifact,
     Deployer,
-    Deployment,
     InterpretLog,
     lastLinesLogInterpreter,
     ProgressLog,
@@ -37,6 +36,7 @@ import {
     SpawnedDeployment,
     StartupInfo,
 } from "@atomist/sdm-core";
+import { Deployment } from "@atomist/sdm/lib/spi/deploy/Deployment";
 import * as spawn from "cross-spawn";
 
 // TODO: should local deployment be its own pack? we could pull it out of sdm then
