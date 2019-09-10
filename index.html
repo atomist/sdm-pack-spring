@@ -1,0 +1,552 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@atomist/sdm-pack-spring</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">@atomist/sdm-pack-spring</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> @atomist/sdm-pack-spring</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#atomistsdm-pack-spring" id="atomistsdm-pack-spring" style="color: inherit; text-decoration: none;">
+					<h1>@atomist/sdm-pack-spring</h1>
+				</a>
+				<p><a href="https://app.atomist.com/workspace/T29E48P34"><img src="http://badge.atomist.com/T29E48P34/atomist/sdm-pack-spring/e514504a-2927-468c-8f8a-93568636b896" alt="atomist sdm goals"></a>
+				<a href="https://www.npmjs.com/package/@atomist/sdm-pack-spring"><img src="https://img.shields.io/npm/v/@atomist/sdm-pack-spring.svg" alt="npm version"></a></p>
+				<p><a href="https://atomist.com/" title="Atomist - How Teams Deliver Software">Atomist</a> software delivery machine (SDM) extension pack
+					providing automated creation, building, and delivery of
+				<a href="https://spring.io/" title="Spring">Spring</a> and <a href="http://spring.io/projects/spring-boot" title="Spring Boot">Spring Boot</a> applications.</p>
+				<p>Also includes Java, Kotlin, Maven and Gradle support and Java formatting support
+				using <code>spring-format</code>.</p>
+				<p>See the <a href="https://docs.atomist.com/" title="Atomist Documentation">Atomist documentation</a> for more information on
+					what SDMs are and what they can do for you using the Atomist API for
+				software.</p>
+				<a href="#purpose" id="purpose" style="color: inherit; text-decoration: none;">
+					<h2>Purpose</h2>
+				</a>
+				<p>This pack adds Spring Boot, Java and Kotlin functionality to an Atomist SDM. It includes:</p>
+				<ul>
+					<li>Building blocks for Atomist generators based on Spring Boot seed projects: core code transforms and parameter definitions</li>
+					<li>Basic Java refactoring support</li>
+					<li>Commands to add and configure Spring Boot starters, based on the <a href="https://spring.io/guides">Spring Guides</a></li>
+					<li>Useful out of the box code transforms such as <code>try to upgrade spring boot</code></li>
+					<li>Code inspections to help ensure Spring Boot best practice, such as removing unnecessary annotations.</li>
+					<li>PushTests supporting Spring, Spring Boot, Java, Kotlin, Maven and Gradle.</li>
+					<li>Local deployment support for Spring Boot projects, using Maven or Gradle.</li>
+				</ul>
+				<blockquote>
+					<p>This pack provides a basis on which to build further Spring Boot and Java functionality, such as custom support for additional Spring Boot starters. Community contributions welcome!</p>
+				</blockquote>
+				<p>This functionality is based on the following low level building blocks:</p>
+				<ul>
+					<li>Code transform primitives for Java, including<ul>
+							<li>Add import to a given class</li>
+							<li>Add annotation to a given class</li>
+							<li>Move package</li>
+							<li>Rename class</li>
+							<li>Add Maven dependency</li>
+						</ul>
+					</li>
+					<li>Code transform primitives for Spring, including<ul>
+							<li>Add Spring Boot starter</li>
+							<li>Add annotation to Spring Boot class</li>
+						</ul>
+					</li>
+					<li>Structural inference<ul>
+							<li>Infer Spring Boot package</li>
+						</ul>
+					</li>
+					<li>XML support<ul>
+							<li>Support for parsing and editing XML using Atomist path expressions</li>
+						</ul>
+					</li>
+					<li>Properties file support<ul>
+							<li><code>PropertiesFile</code> type enabling querying and adding properties </li>
+						</ul>
+					</li>
+				</ul>
+				<p>Java and Kotlin support depends on the support for Java and Kotlin grammars in the <a href="https://github.com/atomist/antlr-ts">@atomist/antlr-ts</a> project.</p>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<p>Install the dependency in your SDM project.</p>
+				<pre><code>$ <span class="hljs-built_in">npm</span> install @atomist/sdm-pack-spring</code></pre><p>Then use its exported method to add the functionality to your SDM in
+				your machine definition.</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {
+    SoftwareDeliveryMachine,
+    SoftwareDeliveryMachineConfiguration,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">"@atomist/sdm"</span>;
+<span class="hljs-keyword">import</span> {
+    createSoftwareDeliveryMachine,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">"@atomist/sdm-core"</span>;
+<span class="hljs-keyword">import</span> { SpringSupport } <span class="hljs-keyword">from</span> <span class="hljs-string">"@atomist/sdm-pack-spring"</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">machine</span>(<span class="hljs-params">configuration: SoftwareDeliveryMachineConfiguration</span>): <span class="hljs-title">SoftwareDeliveryMachine</span> </span>{
+    <span class="hljs-keyword">const</span> sdm = createSoftwareDeliveryMachine({
+        name: <span class="hljs-string">"My Software Delivery Machine"</span>,
+        configuration,
+    });
+    sdm.addExtensionPacks(SpringSupport);
+    <span class="hljs-keyword">return</span> sdm;
+};</code></pre>
+				<a href="#support" id="support" style="color: inherit; text-decoration: none;">
+					<h2>Support</h2>
+				</a>
+				<p>General support questions should be discussed in the <code>#support</code>
+				channel in the <a href="https://join.atomist.com/" title="Atomist Community Slack">Atomist community Slack workspace</a>.</p>
+				<p>If you find a problem, please create an <a href="https://github.com/atomist/sdm-pack-spring/issues">issue</a>.</p>
+				<a href="#development" id="development" style="color: inherit; text-decoration: none;">
+					<h2>Development</h2>
+				</a>
+				<p>You will need to install <a href="https://nodejs.org/" title="Node.js">Node.js</a> to build and test this project.</p>
+				<a href="#build-and-test" id="build-and-test" style="color: inherit; text-decoration: none;">
+					<h3>Build and test</h3>
+				</a>
+				<p>Install dependencies.</p>
+				<pre><code>$ npm <span class="hljs-keyword">install</span></code></pre><p>Use the <code>build</code> package script to compile, test, lint, and build the
+				documentation.</p>
+				<pre><code>$ npm <span class="hljs-keyword">run</span><span class="bash"> build</span></code></pre><p>To use the <code>spring-format</code> support, you need to clone the Atomist <code>spring-format</code>
+					wrapper project from <a href="https://github.com/atomist/spring-format">https://github.com/atomist/spring-format</a> and follow the instructions
+					to create an executable JAR file and specify its path in the <code>sdm.spring.formatJar</code> configuration
+				property or the <code>FORMAT_JAR</code> environment variable.</p>
+				<a href="#release" id="release" style="color: inherit; text-decoration: none;">
+					<h3>Release</h3>
+				</a>
+				<p>Releases are handled via the <a href="https://github.com/atomist/atomist-sdm" title="Atomist Software Delivery Machine">Atomist SDM</a>.  Just press
+				the &#39;Approve&#39; button in the Atomist dashboard or Slack.</p>
+				<a href="#roadmap" id="roadmap" style="color: inherit; text-decoration: none;">
+					<h2>Roadmap</h2>
+				</a>
+				<ul>
+					<li>While Kotlin generators are fully supported, not all code transform commands support Kotlin. This project should fully support Kotlin.</li>
+					<li>Support further Spring Boot starters, including realistic configuration</li>
+				</ul>
+				<p>Community contributions welcome!</p>
+				<a href="#as-a-model" id="as-a-model" style="color: inherit; text-decoration: none;">
+					<h2>As a Model</h2>
+				</a>
+				<p>This pack is intended as an example of an Atomist extension pack targeted at a developer-facing technology.</p>
+				<p>To achieve comparable functionality for any other framework, the following is a rough guide:</p>
+				<ul>
+					<li><em>Add support for the underlying language</em>. Java, Kotlin, TypeScript and JavaScript are already supported in Atomist modules; to integrate other languages, look to Atomist&#39;s ANTLR integration. </li>
+					<li><em>Add support for the relevant configuration formats</em>. XML and properties files are supported in this repository. (Basic functionality can be achieved using regular expressions and microgrammars.)</li>
+					<li><em>Implement language-oriented primitives such as &#39;add import&#39;</em> using language support.</li>
+					<li><em>Implement support for the relevant build system, such as Maven or Gradle</em>. If possible, this should extend beyond build to deployment.</li>
+					<li><em>Add useful code transforms and expose them as commands</em>. For example, <code>setSpringBootVersion</code> in this repository.</li>
+					<li><em>Add useful code inspections</em>, for example to flag common errors.</li>
+				</ul>
+				<hr>
+				<p>Created by <a href="https://atomist.com/" title="Atomist - How Teams Deliver Software">Atomist</a>.
+				Need Help?  <a href="https://join.atomist.com/" title="Atomist Community Slack">Join our Slack workspace</a>.</p>
+				<a href="#riff-support" id="riff-support" style="color: inherit; text-decoration: none;">
+					<h2>Riff Support</h2>
+				</a>
+				<pre><code><span class="hljs-keyword">brew </span>tap starkandwayne/cf
+
+<span class="hljs-keyword">brew </span>install riff </code></pre>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_index_.html">"index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_common_review_reviewcategories_.html">"lib/common/review/review<wbr>Categories"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_gradle_gradleprogressreporter_.html">"lib/gradle/<wbr>Gradle<wbr>Progress<wbr>Reporter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_gradle_build_gradlebuilder_.html">"lib/gradle/build/gradle<wbr>Builder"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_gradle_build_gradleloginterpreter_.html">"lib/gradle/build/gradle<wbr>Log<wbr>Interpreter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_gradle_build_helpers_.html">"lib/gradle/build/helpers"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_gradle_classify_gradletagger_.html">"lib/gradle/classify/gradle<wbr>Tagger"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_gradle_deploy_gradleperbranchspringbootdeploymentgoal_.html">"lib/gradle/deploy/<wbr>Gradle<wbr>Per<wbr>Branch<wbr>Spring<wbr>Boot<wbr>Deployment<wbr>Goal"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_gradle_gradlecommand_.html">"lib/gradle/gradle<wbr>Command"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_gradle_parse_buildgradleparser_.html">"lib/gradle/parse/build<wbr>Gradle<wbr>Parser"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_gradle_pushtest_gradlepushtests_.html">"lib/gradle/pushtest/gradle<wbr>Push<wbr>Tests"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_gradle_review_hasgradleversion_.html">"lib/gradle/review/has<wbr>Gradle<wbr>Version"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_javaprojectstructure_.html">"lib/java/<wbr>Java<wbr>Project<wbr>Structure"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_deploy_mavenperbranchdeployment_.html">"lib/java/deploy/<wbr>Maven<wbr>Per<wbr>Branch<wbr>Deployment"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_deploy_mavenperbranchspringbootdeploymentgoal_.html">"lib/java/deploy/<wbr>Maven<wbr>Per<wbr>Branch<wbr>Spring<wbr>Boot<wbr>Deployment<wbr>Goal"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_deploy_executablejardeployer_.html">"lib/java/deploy/executable<wbr>Jar<wbr>Deployer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_generate_javaprojectcreationparameters_.html">"lib/java/generate/<wbr>Java<wbr>Project<wbr>Creation<wbr>Parameters"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_javapatterns_.html">"lib/java/java<wbr>Patterns"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_javaprojectutils_.html">"lib/java/java<wbr>Project<wbr>Utils"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_pushtest_pushtests_.html">"lib/java/pushtest/push<wbr>Tests"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_query_javapathexpressions_.html">"lib/java/query/java<wbr>Path<wbr>Expressions"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_query_javaqueries_.html">"lib/java/query/java<wbr>Queries"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_query_packageinfo_.html">"lib/java/query/package<wbr>Info"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_review_importdotstarreviewer_.html">"lib/java/review/import<wbr>Dot<wbr>Star<wbr>Reviewer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_review_importiofilereviewer_.html">"lib/java/review/import<wbr>IoFile<wbr>Reviewer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_transform_addannotationtoclass_.html">"lib/java/transform/add<wbr>Annotation<wbr>ToClass"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_transform_bringinfile_.html">"lib/java/transform/bring<wbr>InFile"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_transform_imports_.html">"lib/java/transform/imports"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_java_transform_refactoring_.html">"lib/java/transform/refactoring"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_mavenprogressreporter_.html">"lib/maven/<wbr>Maven<wbr>Progress<wbr>Reporter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_plugin_.html">"lib/maven/<wbr>Plugin"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_versionedartifact_.html">"lib/maven/<wbr>Versioned<wbr>Artifact"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_build_mavenbuilder_.html">"lib/maven/build/<wbr>Maven<wbr>Builder"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_build_helpers_.html">"lib/maven/build/helpers"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_build_mavenloginterpreter_.html">"lib/maven/build/maven<wbr>Log<wbr>Interpreter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_classify_maventagger_.html">"lib/maven/classify/maven<wbr>Tagger"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_deploy_listlocaldeploys_.html">"lib/maven/deploy/list<wbr>Local<wbr>Deploys"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_deploy_mavendeployer_.html">"lib/maven/deploy/maven<wbr>Deployer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_fingerprint_mavenfingerprinter_.html">"lib/maven/fingerprint/<wbr>Maven<wbr>Fingerprinter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_generate_updatepom_.html">"lib/maven/generate/update<wbr>Pom"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_goal_maventest_.html">"lib/maven/goal/maven<wbr>Test"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_inspection_finddependencies_.html">"lib/maven/inspection/find<wbr>Dependencies"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_inspection_finddependenciescommand_.html">"lib/maven/inspection/find<wbr>Dependencies<wbr>Command"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_inspection_finddependencycommand_.html">"lib/maven/inspection/find<wbr>Dependency<wbr>Command"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_mavencommand_.html">"lib/maven/maven<wbr>Command"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_parse_frompom_.html">"lib/maven/parse/from<wbr>Pom"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_parse_pomparser_.html">"lib/maven/parse/pom<wbr>Parser"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_pushtest_pushtests_.html">"lib/maven/pushtest/push<wbr>Tests"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_review_provideddependencyreviewer_.html">"lib/maven/review/provided<wbr>Dependency<wbr>Reviewer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_transform_adddependencytransform_.html">"lib/maven/transform/add<wbr>Dependency<wbr>Transform"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_transform_addplugintransform_.html">"lib/maven/transform/add<wbr>Plugin<wbr>Transform"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_transform_formatpom_.html">"lib/maven/transform/format<wbr>Pom"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_maven_transform_migratedependencies_.html">"lib/maven/transform/migrate<wbr>Dependencies"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_properties_propertiesparser_.html">"lib/properties/properties<wbr>Parser"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_riff_riffdeployment_.html">"lib/riff/<wbr>Riff<wbr>Deployment"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_riff_riffgeneration_.html">"lib/riff/riff<wbr>Generation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_riff_riffpushtests_.html">"lib/riff/riff<wbr>Push<wbr>Tests"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_.html">"lib/spring"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_classify_springtagger_.html">"lib/spring/classify/spring<wbr>Tagger"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_deploy_localspringbootdeployers_.html">"lib/spring/deploy/local<wbr>Spring<wbr>Boot<wbr>Deployers"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_deploy_springloggingpatterns_.html">"lib/spring/deploy/spring<wbr>Logging<wbr>Patterns"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_generate_springbootprojectstructure_.html">"lib/spring/generate/<wbr>Spring<wbr>Boot<wbr>Project<wbr>Structure"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_generate_springprojectcreationparameters_.html">"lib/spring/generate/<wbr>Spring<wbr>Project<wbr>Creation<wbr>Parameters"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_generate_gradlebuildtransforms_.html">"lib/spring/generate/gradle<wbr>Build<wbr>Transforms"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_generate_springboottransforms_.html">"lib/spring/generate/spring<wbr>Boot<wbr>Transforms"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_generate_springbootutils_.html">"lib/spring/generate/spring<wbr>Boot<wbr>Utils"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_generate_springinitializrgenerator_.html">"lib/spring/generate/spring<wbr>Initializr<wbr>Generator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_generate_transformseedtocustomproject_.html">"lib/spring/generate/transform<wbr>Seed<wbr>ToCustom<wbr>Project"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_inspect_springbootversioninspection_.html">"lib/spring/inspect/spring<wbr>Boot<wbr>Version<wbr>Inspection"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_inspect_springsecurityinspection_.html">"lib/spring/inspect/spring<wbr>Security<wbr>Inspection"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_pushtest_pushtests_.html">"lib/spring/pushtest/push<wbr>Tests"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_review_findnonspecificmvcannotations_.html">"lib/spring/review/find<wbr>Non<wbr>Specific<wbr>Mvc<wbr>Annotations"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_review_hardcodedpropertyreviewer_.html">"lib/spring/review/hardcoded<wbr>Property<wbr>Reviewer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_review_mutableinjectionsreviewer_.html">"lib/spring/review/mutable<wbr>Injections<wbr>Reviewer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_review_oldspringbootversionreviewer_.html">"lib/spring/review/old<wbr>Spring<wbr>Boot<wbr>Version<wbr>Reviewer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_review_springreviewcategories_.html">"lib/spring/review/spring<wbr>Review<wbr>Categories"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_transform_addannotationtospringbootclass_.html">"lib/spring/transform/add<wbr>Annotation<wbr>ToSpring<wbr>Boot<wbr>Class"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_transform_addspringbootactuator_.html">"lib/spring/transform/add<wbr>Spring<wbr>Boot<wbr>Actuator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_transform_addspringbootstartertransform_.html">"lib/spring/transform/add<wbr>Spring<wbr>Boot<wbr>Starter<wbr>Transform"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_transform_format_springformat_.html">"lib/spring/transform/format/spring<wbr>Format"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_transform_guide_securingwebapp_.html">"lib/spring/transform/guide/securing<wbr>Web<wbr>App"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_transform_removeunnecessaryautowiredannotations_.html">"lib/spring/transform/remove<wbr>Unnecessary<wbr>Autowired<wbr>Annotations"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_transform_removeunnecessarycomponentscanannotations_.html">"lib/spring/transform/remove<wbr>Unnecessary<wbr>Component<wbr>Scan<wbr>Annotations"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_transform_setspringbootversiontransform_.html">"lib/spring/transform/set<wbr>Spring<wbr>Boot<wbr>Version<wbr>Transform"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_spring_transform_trytoupgradespringbootversion_.html">"lib/spring/transform/try<wbr>ToUpgrade<wbr>Spring<wbr>Boot<wbr>Version"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_typings_prettify_xml_.html">"lib/typings/prettify-<wbr>xml"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_util_boundedelement_.html">"lib/util/<wbr>Bounded<wbr>Element"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_util_formatutils_.html">"lib/util/format<wbr>Utils"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_xml_xmldocfileparser_.html">"lib/xml/<wbr>Xmldoc<wbr>File<wbr>Parser"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
