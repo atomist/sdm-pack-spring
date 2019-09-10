@@ -29,7 +29,7 @@
   "dependencies": {
     "@atomist/antlr": "^1.0.2",
     "@atomist/microgrammar": "^1.2.0",
-    "@atomist/sdm-pack-build": "1.0.6-master.20190903202948",
+    "@atomist/sdm-pack-build": "^1.0.6",
     "@atomist/tree-path": "^1.0.3",
     "@types/cross-spawn": "^6.0.0",
     "@types/dateformat": "^3.0.0",
@@ -48,9 +48,9 @@
     "xmldoc": "^1.1.2"
   },
   "peerDependencies": {
-    "@atomist/automation-client": ">=1.7.0",
-    "@atomist/sdm": ">=1.7.0",
-    "@atomist/sdm-core": ">=1.7.0"
+    "@atomist/automation-client": "^1.7.0",
+    "@atomist/sdm": "^1.7.0",
+    "@atomist/sdm-core": "^1.7.0"
   },
   "devDependencies": {
     "@atomist/automation-client": "^1.7.0",
