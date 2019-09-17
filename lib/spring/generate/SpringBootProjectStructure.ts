@@ -27,13 +27,13 @@ import {
     evaluateScalarValue,
     PathExpression,
 } from "@atomist/tree-path";
+import * as path from "path";
 import { KotlinPackage } from "../../java/JavaProjectStructure";
 import {
     JavaSourceFiles,
     KotlinSourceFiles,
 } from "../../java/javaProjectUtils";
 import { packageInfo } from "../../java/query/packageInfo";
-import * as path from "path";
 
 /**
  * Path expression for a class name annotated with Spring Boot.
