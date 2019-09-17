@@ -130,6 +130,19 @@ describe("SpringBootProjectStructure: Java inference", () => {
             assert(caught, "Expected an exception to be thrown, but it was not");
         });
 
+        it("should find more than one spring boot app", async () => {
+            const found = await SpringBootProjectStructure.inferFromJavaOrKotlin(
+                InMemoryProject.of(
+                    { path: "pom.xml", content: "<xml>" },
+                    { path: "src/main/java/App.java", content: "@SpringBootApplication public\nclass App {}" },
+                    { path: "src/main/java/Oop.java", content: "@SpringBootApplication public\nclass Oop {}" },
+                ),
+            );
+            assert.strictEqual(found.length, 2);
+            assert(found.some(f => f.applicationClass === "App"));
+            assert(found.some(f => f.applicationClass === "Oop"));
+        });
+
         it("should exclude unwanted files in project", async () => {
             const structure = await SpringBootProjectStructure.inferFromJavaSource(
                 InMemoryProject.of(

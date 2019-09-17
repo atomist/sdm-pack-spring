@@ -27,13 +27,13 @@ import {
     evaluateScalarValue,
     PathExpression,
 } from "@atomist/tree-path";
-import * as path from "path";
 import { KotlinPackage } from "../../java/JavaProjectStructure";
 import {
     JavaSourceFiles,
     KotlinSourceFiles,
 } from "../../java/javaProjectUtils";
 import { packageInfo } from "../../java/query/packageInfo";
+import * as path from "path";
 
 /**
  * Path expression for a class name annotated with Spring Boot.
@@ -61,62 +61,70 @@ export const SpringBootAppClassInKotlin = `//classDeclaration
 export class SpringBootProjectStructure {
 
     /**
-     * Infer the Spring project structure of the given project, if found
-     * @param {ProjectAsync} p
-     * @return {Promise<SpringBootProjectStructure>}
+     * Infer the Spring project structure of the given project, if found. Treats > 1 application class as an error.
+     * @deprecated use inferFromJavaOrKotlin
      */
     public static async inferFromJavaSource(p: Project, globOptions: string | string[] = JavaSourceFiles): Promise<SpringBootProjectStructure> {
-        return this.inferFromSourceWithJavaLikeImports(p, Java9FileParser, globOptions, SpringBootAppClassInJava);
+        return zeroOrOneOf(await this.inferFromSourceWithJavaLikeImports(p, Java9FileParser, globOptions, SpringBootAppClassInJava));
     }
 
+    /**
+     * Infer the Spring project structure of the given project, if found. Treats > 1 application class as an error.
+     * @deprecated use inferFromJavaOrKotlin
+     */
     public static async inferFromKotlinSource(p: Project, globOptions: string | string[] = KotlinSourceFiles): Promise<SpringBootProjectStructure> {
-        return this.inferFromSourceWithJavaLikeImports(p, KotlinFileParser, globOptions, SpringBootAppClassInKotlin);
+        return zeroOrOneOf(await this.inferFromSourceWithJavaLikeImports(p, KotlinFileParser, globOptions, SpringBootAppClassInKotlin));
     }
 
+    /**
+     * Infer the Spring project structure of the given project, if found. Treats > 1 application class as an error.
+     * @deprecated use inferFromJavaOrKotlin
+     */
     public static async inferFromJavaOrKotlinSource(p: Project): Promise<SpringBootProjectStructure> {
         return await this.inferFromJavaSource(p) || this.inferFromKotlinSource(p);
+    }
+
+    /**
+     * Infer any number of structures, looking at both Java and Kotlin
+     */
+    public static async inferFromJavaOrKotlin(p: Project): Promise<SpringBootProjectStructure[]> {
+        return (await this.inferFromSourceWithJavaLikeImports(p, Java9FileParser, JavaSourceFiles, SpringBootAppClassInJava))
+            .concat(await this.inferFromSourceWithJavaLikeImports(p, KotlinFileParser, KotlinSourceFiles, SpringBootAppClassInKotlin));
     }
 
     private static async inferFromSourceWithJavaLikeImports(p: Project,
                                                             parserOrRegistry: FileParser | FileParserRegistry,
                                                             globOptions: string | string[],
-                                                            pathExpression: string | PathExpression): Promise<SpringBootProjectStructure> {
+                                                            pathExpression: string | PathExpression): Promise<SpringBootProjectStructure[]> {
         const fileHits = await astUtils.findFileMatches(p, parserOrRegistry, globOptions, pathExpression);
-        if (fileHits.length === 0) {
-            return undefined;
-        }
-        if (fileHits.length > 1) {
-            const msg = `Found more than one Spring Boot application annotation in files: ` +
-                fileHits.map(f => path.join(f.file.path, f.file.name)).join(",");
-            logger.warn(msg);
-            throw new Error(msg);
-        }
-        const fh = fileHits[0];
+        const matches: SpringBootProjectStructure[] = [];
 
-        // It's in the default package if no match found
-        const packageName: { name: string } = {
-            name: fh.file.extension === "java" ?
-                // TODO using package workaround for Antlr bug
-                ((await packageInfo(p, fh.file.path)) || { fqn: "" }).fqn :
-                evaluateScalarValue(fh.fileNode, KotlinPackage) ||
-                "",
-        };
-        const appClass = fh.matches[0].$value;
-        if (packageName && appClass) {
-            logger.debug("Successful Spring Boot inference on %j: packageName '%s', '%s'",
-                p.id, packageName.name, appClass);
-            return new SpringBootProjectStructure(packageName.name, appClass, fh.file);
-        } else {
-            logger.debug("Unsuccessful Spring Boot inference on %j: packageName '%j', '%s'",
-                p.id, packageName, appClass);
-            return undefined;
+        for (const fh of fileHits) {
+            // It's in the default package if no match found
+            const packageName: { name: string } = {
+                name: fh.file.extension === "java" ?
+                    // TODO using package workaround for Antlr bug
+                    ((await packageInfo(p, fh.file.path)) || { fqn: "" }).fqn :
+                    evaluateScalarValue(fh.fileNode, KotlinPackage) ||
+                    "",
+            };
+            const appClass = fh.matches[0].$value;
+            if (packageName && appClass) {
+                logger.debug("Successful Spring Boot inference on %j: packageName '%s', '%s'",
+                    p.id, packageName.name, appClass);
+                matches.push(new SpringBootProjectStructure(packageName.name, appClass, fh.file));
+            } else {
+                logger.debug("Unsuccessful Spring Boot inference on %j: packageName '%j', '%s'",
+                    p.id, packageName, appClass);
+            }
         }
+        return matches;
     }
 
     /**
      * The stem of the application class. Strip "Application" if present.
      */
-    public applicationClassStem = this.applicationClass.replace(/Application$/, "");
+    public readonly applicationClassStem: string = this.applicationClass.replace(/Application$/, "");
 
     /**
      * @param applicationPackage The package with the Spring Boot application class in it.
@@ -128,4 +136,14 @@ export class SpringBootProjectStructure {
                         public readonly appClassFile: ProjectFile) {
     }
 
+}
+
+function zeroOrOneOf(structures: SpringBootProjectStructure[]): SpringBootProjectStructure {
+    if (structures.length > 1) {
+        const msg = `Found more than one Spring Boot application annotation in files: ` +
+            structures.map(s => path.join(s.appClassFile.path, s.appClassFile.name)).join(",");
+        logger.warn(msg);
+        throw new Error(msg);
+    }
+    return structures.length === 1 ? structures[0] : undefined;
 }
