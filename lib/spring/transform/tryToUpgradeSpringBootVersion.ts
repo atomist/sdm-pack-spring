@@ -19,11 +19,6 @@ import { CodeTransformRegistration } from "@atomist/sdm";
 import { makeBuildAware } from "@atomist/sdm-pack-build";
 import { SetSpringBootVersionTransform } from "./setSpringBootVersionTransform";
 
-/**
- * Spring Boot version we want
- */
-export const DesiredSpringBootVersion = "2.0.5.RELEASE";
-
 export interface UpgradeSpringBootParameters {
 
     /**
@@ -37,27 +32,31 @@ export interface UpgradeSpringBootParameters {
  * handler to respond to the build with either a PR and Issue
  * @type {HandleCommand<EditOneOrAllParameters>}
  */
-export const TryToUpgradeSpringBootVersion: CodeTransformRegistration<UpgradeSpringBootParameters> = makeBuildAware({
-    transform: SetSpringBootVersionTransform,
-    parameters: {
-        desiredBootVersion: {
-            displayName: "Desired Spring Boot version",
-            description: "The desired Spring Boot version across these repos",
-            pattern: /^.+$/,
-            validInput: "Semantic version",
-            required: false,
-            defaultValue: DesiredSpringBootVersion,
+export function tryToUpgradeSpringBootVersion(opts: {
+    desiredSpringBootVersion: string,
+}): CodeTransformRegistration<UpgradeSpringBootParameters> {
+    return makeBuildAware({
+        transform: SetSpringBootVersionTransform,
+        parameters: {
+            desiredBootVersion: {
+                displayName: "Desired Spring Boot version",
+                description: "The desired Spring Boot version across these repos",
+                pattern: /^.+$/,
+                validInput: "Semantic version",
+                required: false,
+                defaultValue: opts.desiredSpringBootVersion,
+            },
         },
-    },
-    name: "boot-upgrade",
-    description: `Upgrade Spring Boot version`,
-    intent: "try to upgrade Spring Boot",
-    transformPresentation: ci => new editModes.PullRequest(
-        `boot-upgrade-${ci.parameters.desiredBootVersion}-${guid()}`,
-        `Upgrade Spring Boot version to ${ci.parameters.desiredBootVersion}`,
-    ),
-});
+        name: "boot-upgrade",
+        description: `Upgrade Spring Boot version`,
+        intent: "try to upgrade Spring Boot",
+        transformPresentation: ci => new editModes.PullRequest(
+            `boot-upgrade-${ci.parameters.desiredBootVersion}-${guid()}`,
+            `Upgrade Spring Boot version to ${ci.parameters.desiredBootVersion}`,
+        ),
+    });
+}
 
-function guid() {
+function guid(): string {
     return "" + new Date().getTime();
 }

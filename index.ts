@@ -151,7 +151,7 @@ export {
 } from "./lib/spring/generate/SpringBootProjectStructure";
 export { NonSpecificMvcAnnotationsReviewer } from "./lib/spring/review/findNonSpecificMvcAnnotations";
 export { MutableInjectionsReviewer } from "./lib/spring/review/mutableInjectionsReviewer";
-export { OldSpringBootVersionReviewer } from "./lib/spring/review/oldSpringBootVersionReviewer";
+export { oldSpringBootVersionReviewer } from "./lib/spring/review/oldSpringBootVersionReviewer";
 export { UnnecessaryComponentScanReviewer } from "./lib/spring/transform/removeUnnecessaryComponentScanAnnotations";
 export {
     GradleProjectVersioner,

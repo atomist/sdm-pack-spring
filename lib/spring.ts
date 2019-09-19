@@ -33,7 +33,7 @@ import { springBootTagger } from "./spring/classify/springTagger";
 import { NonSpecificMvcAnnotationsReviewer } from "./spring/review/findNonSpecificMvcAnnotations";
 import { HardcodedPropertyReviewer } from "./spring/review/hardcodedPropertyReviewer";
 import { MutableInjectionsReviewer } from "./spring/review/mutableInjectionsReviewer";
-import { OldSpringBootVersionReviewer } from "./spring/review/oldSpringBootVersionReviewer";
+import { oldSpringBootVersionReviewer } from "./spring/review/oldSpringBootVersionReviewer";
 import { addSpringBootActuator } from "./spring/transform/addSpringBootActuator";
 import { AddSpringBootStarter } from "./spring/transform/addSpringBootStarterTransform";
 import { springFormat } from "./spring/transform/format/springFormat";
@@ -43,7 +43,7 @@ import {
     UnnecessaryComponentScanAutofix,
     UnnecessaryComponentScanReviewer,
 } from "./spring/transform/removeUnnecessaryComponentScanAnnotations";
-import { TryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
+import { tryToUpgradeSpringBootVersion } from "./spring/transform/tryToUpgradeSpringBootVersion";
 
 /**
  * Categories of functionality to enable
@@ -59,6 +59,8 @@ export interface Categories {
  * Options determining what Spring functionality is activated.
  */
 export interface SpringSupportOptions {
+
+    desiredSpringBootVersion: string;
 
     /**
      * Inspect goal to add inspections to.
@@ -102,7 +104,7 @@ export function springSupport(options: SpringSupportOptions): ExtensionPack {
                 .addCodeTransformCommand(AddSpringBootStarter)
                 .addCodeTransformCommand(addSpringBootActuator())
                 .addCodeTransformCommand(ApplySecuredWebAppGuide)
-                .addCodeTransformCommand(TryToUpgradeSpringBootVersion)
+                .addCodeTransformCommand(tryToUpgradeSpringBootVersion(options))
                 .addFirstPushListener(
                     tagRepo(unifiedTagger(
                         springBootTagger,
@@ -121,7 +123,7 @@ export function springSupport(options: SpringSupportOptions): ExtensionPack {
                 }
                 if (options.review.springStyle) {
                     options.inspectGoal
-                        .with(OldSpringBootVersionReviewer)
+                        .with(oldSpringBootVersionReviewer(options))
                         .with(UnnecessaryComponentScanReviewer)
                         .with(MutableInjectionsReviewer)
                         .with(NonSpecificMvcAnnotationsReviewer);
