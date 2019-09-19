@@ -36,7 +36,7 @@ export class NonSpecificMvcAnnotation implements ReviewComment {
     constructor(public raw: string, public sourceLocation: SourceLocation) {
     }
 
-    get detail() {
+    get detail(): string {
         return `Old style Spring MVC \`@RequestAnnotation\`: Use specific mapping`;
     }
 }

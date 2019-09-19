@@ -35,11 +35,12 @@ export class MutableInjection implements ReviewComment {
     public category: string = SpringStyle;
     public subcategory: string = MutableInjectionCategory;
 
-    constructor(public name: string, public type: "field" | "setter",
-                public sourceLocation: SourceLocation) {
+    constructor(public readonly name: string,
+                public readonly type: "field" | "setter",
+                public readonly sourceLocation: SourceLocation) {
     }
 
-    get detail() {
+    get detail(): string {
         return `Improper Spring injection: Mutable ${this.type} ${this.name} is injected`;
     }
 
