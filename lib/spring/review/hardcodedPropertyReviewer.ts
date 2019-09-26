@@ -83,6 +83,6 @@ async function badPropertiesIn(p: Project, f: ProjectFile): Promise<ReviewCommen
     return comments;
 }
 
-function hardcoded(value: string) {
+function hardcoded(value: string): boolean {
     return !value.includes("${");
 }

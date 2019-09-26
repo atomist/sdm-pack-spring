@@ -32,7 +32,6 @@ import { JavaPackage } from "./query/javaPathExpressions";
 
 /**
  * Path expression using the Kotlin grammar for a Java package declaration
- * @type {string}
  */
 export const KotlinPackage = "//packageHeader//identifier";
 

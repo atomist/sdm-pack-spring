@@ -46,7 +46,7 @@ describe("JavaProjectStructure", () => {
         );
         const structure = await JavaProjectStructure.infer(p);
         assert.strictEqual(structure.applicationPackage, "com.smashing.pumpkins");
-    });
+    }).timeout(5000);
 
     it("infer application package when uniquely present, avoiding comments", async () => {
         const p = InMemoryProject.of(
