@@ -24,9 +24,9 @@ import {
 import { ReviewerRegistration } from "@atomist/sdm";
 import * as _ from "lodash";
 import { CloudNative } from "../../common/review/reviewCategories";
+import { ResourcesDir } from "../../java/javaProjectUtils";
 import { parseProperties } from "../../properties/propertiesParser";
 import { HasSpringBootApplicationClass } from "../pushtest/pushTests";
-import { ResourcesDir } from "../../java/javaProjectUtils";
 
 const PropertyKeysToCheck = [
     "server.port",
