@@ -24,6 +24,7 @@ import {
 import { ReviewerRegistration } from "@atomist/sdm";
 import * as _ from "lodash";
 import { CloudNative } from "../../common/review/reviewCategories";
+import { ResourcesDir } from "../../java/javaProjectUtils";
 import { parseProperties } from "../../properties/propertiesParser";
 import { HasSpringBootApplicationClass } from "../pushtest/pushTests";
 
@@ -51,7 +52,7 @@ export const HardcodedPropertyReviewer: ReviewerRegistration = {
 };
 
 async function badPropertiesStrings(p: Project): Promise<ReviewComment[]> {
-    const arrArr = projectUtils.gatherFromFiles(p, "src/main/resources/*.properties",
+    const arrArr = projectUtils.gatherFromFiles(p, `${ResourcesDir}/*.properties`,
         f => badPropertiesIn(p, f));
     return _.flatten(await arrArr);
 }
