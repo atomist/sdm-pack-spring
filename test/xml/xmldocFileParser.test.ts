@@ -26,6 +26,7 @@ import {
     visit,
 } from "@atomist/tree-path";
 import * as assert from "assert";
+import { findDeclaredManagedPlugins, findDeclaredPlugins } from "../../lib/maven/parse/fromPom";
 import {
     isXmldocTreeNode,
     XmldocFileParser,
@@ -33,7 +34,6 @@ import {
 } from "../../lib/xml/XmldocFileParser";
 import { springBootPom } from "../spring/generator/TestPoms";
 import { ZipkinPom } from "./zipkinPom";
-import { findDeclaredManagedPlugins, findDeclaredPlugins } from "../../lib/maven/parse/fromPom";
 
 function positionVerifier(rawdoc: string): TreeVisitor {
     return (n: TreeNode) => {
