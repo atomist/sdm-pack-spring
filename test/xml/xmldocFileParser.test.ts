@@ -32,6 +32,8 @@ import {
     XmldocTreeNode,
 } from "../../lib/xml/XmldocFileParser";
 import { springBootPom } from "../spring/generator/TestPoms";
+import { ZipkinPom } from "./zipkinPom";
+import { findDeclaredManagedPlugins, findDeclaredPlugins } from "../../lib/maven/parse/fromPom";
 
 function positionVerifier(rawdoc: string): TreeVisitor {
     return (n: TreeNode) => {
@@ -116,6 +118,23 @@ describe("xmldocFileParser", () => {
             assert.strictEqual(matches.length, 1);
             assert(f.getContentSync().substr(matches[0].$offset).startsWith("<groupId>org.springframework.boot"),
                 f.getContentSync().substr(matches[0].$offset));
+        });
+
+        it("should parse Zipkin POM", async () => {
+            const f: ProjectFile = new InMemoryProjectFile("pom.xml", ZipkinPom);
+            const p = InMemoryProject.of(f);
+            const matches = await astUtils.findMatches(p, new XmldocFileParser(),
+                "pom.xml",
+                "//project/build/plugins/plugin");
+            assert(matches.length > 0);
+        });
+
+        it("should indirectly parse Zipkin POM", async () => {
+            const f: ProjectFile = new InMemoryProjectFile("pom.xml", ZipkinPom);
+            const p = InMemoryProject.of(f);
+            const matches = await findDeclaredPlugins(p);
+            matches.push(...await findDeclaredManagedPlugins(p));
+            assert(matches.length > 0);
         });
 
         it("should locate node with attribute", async () => {
