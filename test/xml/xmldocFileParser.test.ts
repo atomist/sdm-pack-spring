@@ -26,7 +26,10 @@ import {
     visit,
 } from "@atomist/tree-path";
 import * as assert from "assert";
-import { findDeclaredManagedPlugins, findDeclaredPlugins } from "../../lib/maven/parse/fromPom";
+import {
+    findDeclaredManagedPlugins,
+    findDeclaredPlugins,
+} from "../../lib/maven/parse/fromPom";
 import {
     isXmldocTreeNode,
     XmldocFileParser,
