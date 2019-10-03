@@ -37,7 +37,6 @@ export class XmldocFileParser implements FileParser<XmldocTreeNode> {
         try {
             const content = await f.getContent();
             const document = new XmlDocument(content);
-            // console.log("DOC is " + JSON.stringify(document));
             return new XmldocTreeNodeImpl(document, undefined, content);
         } catch (err) {
             logger.warn("Could not parse XML document at '%s'", f.path, err);
@@ -123,7 +122,6 @@ class XmldocTreeNodeImpl implements XmldocTreeNode {
         // Add attributes to this
         for (const propName of Object.getOwnPropertyNames(this.xd.attr)) {
             (this as any)[propName] = this.xd.attr[propName];
-            logger.debug("Copying property '%s' of '%s': Now have %j", propName, this.xd.attr[propName], this);
         }
     }
 
