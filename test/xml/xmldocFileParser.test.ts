@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Atomist, Inc.
+ * Copyright © 2019 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,16 @@ import {
 } from "@atomist/tree-path";
 import * as assert from "assert";
 import {
+    findDeclaredManagedPlugins,
+    findDeclaredPlugins,
+} from "../../lib/maven/parse/fromPom";
+import {
     isXmldocTreeNode,
     XmldocFileParser,
     XmldocTreeNode,
 } from "../../lib/xml/XmldocFileParser";
 import { springBootPom } from "../spring/generator/TestPoms";
+import { ZipkinPom } from "./zipkinPom";
 
 function positionVerifier(rawdoc: string): TreeVisitor {
     return (n: TreeNode) => {
@@ -116,6 +121,23 @@ describe("xmldocFileParser", () => {
             assert.strictEqual(matches.length, 1);
             assert(f.getContentSync().substr(matches[0].$offset).startsWith("<groupId>org.springframework.boot"),
                 f.getContentSync().substr(matches[0].$offset));
+        });
+
+        it("should parse Zipkin POM", async () => {
+            const f: ProjectFile = new InMemoryProjectFile("pom.xml", ZipkinPom);
+            const p = InMemoryProject.of(f);
+            const matches = await astUtils.findMatches(p, new XmldocFileParser(),
+                "pom.xml",
+                "//project/build/plugins/plugin");
+            assert(matches.length > 0);
+        });
+
+        it("should indirectly parse Zipkin POM", async () => {
+            const f: ProjectFile = new InMemoryProjectFile("pom.xml", ZipkinPom);
+            const p = InMemoryProject.of(f);
+            const matches = await findDeclaredPlugins(p);
+            matches.push(...await findDeclaredManagedPlugins(p));
+            assert(matches.length > 0);
         });
 
         it("should locate node with attribute", async () => {

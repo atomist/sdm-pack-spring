@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Atomist, Inc.
+ * Copyright © 2019 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,11 +138,12 @@ function extractPlugin(n: XmldocTreeNode): Plugin {
     const inherited = n.$children.find(c => c.$value.startsWith("<inherited>"));
     const extensions = n.$children.find(c => c.$value.startsWith("<extensions>"));
 
-    if (!(!!groupId && !!artifactId)) {
-        throw new Error(`groupId and artifactId are required in [${n.$value}]`);
+    // TODO we have cases, like Zipkin, where group is missing
+    if (!artifactId) {
+        throw new Error(`artifactId is required in [${n.$value}]`);
     }
     return {
-        group: groupId.innerValue,
+        group: groupId ? groupId.innerValue : undefined,
         artifact: artifactId.innerValue,
         version: !!version ? version.innerValue : undefined,
         configuration: !!configuration ? parseConfiguration(configuration.$children) : undefined,
@@ -157,8 +158,9 @@ function parseConfigurationNode(n: XmldocTreeNode): any {
     if (n.$children.length === 0) {
         configurations[configurationName] = n.innerValue;
     } else {
-        const configurationValue = parseConfigurationNode(n);
-        configurations[configurationName] = configurationValue;
+        // TODO need to handle this case
+        // const configurationValue = parseConfigurationNode(n);
+        // configurations[configurationName] = configurationValue;
     }
     return configurations;
 }
