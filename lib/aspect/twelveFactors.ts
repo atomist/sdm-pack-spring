@@ -21,11 +21,11 @@ import {
     fingerprintOf,
     FP,
 } from "@atomist/sdm-pack-fingerprint";
+import { isConsoleLoggingFingerprint } from "./consoleLogging";
 import {
     SpringBootAppClassAspectName,
     SpringBootAppData,
 } from "./springBootApps";
-import { isConsoleLoggingFingerprint } from "./consoleLogging";
 
 export interface TwelveFactorElement {
     factor: string;

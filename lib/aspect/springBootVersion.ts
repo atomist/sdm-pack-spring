@@ -21,7 +21,7 @@ import {
 } from "@atomist/sdm-pack-fingerprint";
 import {
     applyParentPom,
-    extractParentPom
+    extractParentPom,
 } from "./maven/parentPom";
 
 const SpringBootVersionType = "spring-boot-version";
