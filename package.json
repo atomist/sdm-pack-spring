@@ -29,7 +29,10 @@
   "dependencies": {
     "@atomist/antlr": "^1.0.2",
     "@atomist/microgrammar": "^1.2.0",
+    "@atomist/sdm-pack-aspect": "^1.0.0-master.20191008192343",
     "@atomist/sdm-pack-build": "^1.0.6",
+    "@atomist/sdm-pack-fingerprint": "^5.0.1-master.20191006120505",
+    "@atomist/slack-messages": "^1.1.2-master.20190916021445",
     "@atomist/tree-path": "^1.0.3",
     "@types/cross-spawn": "^6.0.0",
     "@types/dateformat": "^3.0.0",
@@ -40,9 +43,11 @@
     "cross-spawn": "^6.0.5",
     "dateformat": "^3.0.3",
     "decompress": "^4.2.0",
+    "fs-extra": "^8.1.0",
     "lodash": "^4.17.15",
     "portfinder": "^1.0.13",
     "prettify-xml": "^1.2.0",
+    "temp-file": "^3.3.4",
     "tmp-promise": "^1.0.5",
     "toml": "^2.3.3",
     "xmldoc": "^1.1.2"
