@@ -31,7 +31,7 @@ export const IsJava: PushTest = predicatePushTest(
     async p =>
         projectUtils.fileExists(p, "**/*.java", () => true));
 
-const FileToWatch = ["java", "html", "json", "yml", "xml", "sh", "kt", "properties"];
+const FileToWatch = ["java", "html", "json", "yml", "yaml", "xml", "sh", "kt", "properties"];
 
 /**
  * Veto if change to deployment unit doesn't seem important enough to
