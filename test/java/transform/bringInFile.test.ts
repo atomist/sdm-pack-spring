@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Atomist, Inc.
+ * Copyright © 2020 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,12 @@ describe("bringInFile", () => {
     it("should bring in file to empty project", async () => {
         const p = InMemoryProject.of();
         const trans = bringInFile(
-            "https://raw.githubusercontent.com/spring-guides/gs-securing-web/master/complete/src/main/java/hello/WebSecurityConfig.java",
-            "src/main/java");
+          // tslint:disable-next-line: max-line-length
+          "https://raw.githubusercontent.com/spring-guides/gs-securing-web/master/complete/src/main/java/com/example/securingweb/WebSecurityConfig.java",
+          "src/main/java",
+        );
         await trans(p, undefined);
-        const path = "src/main/java/hello/WebSecurityConfig.java";
+        const path = "src/main/java/com/example/securingweb/WebSecurityConfig.java";
         const f = p.findFileSync(path);
         assert(!!f, `Found ${await p.totalFileCount()} files`);
     });
